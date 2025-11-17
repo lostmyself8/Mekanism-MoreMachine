@@ -39,7 +39,7 @@ body:
       description: The version of Minecraft you were using when this bug was encountered. If you do not know where to find this, it is in the bottom left of the main menu. Any version not listed is not supported. / 遇到此错误时使用的 Minecraft 版本。如果不知道如何查找，它位于主菜单的左下角。未列出的任何版本均不受支持。
       options:
         - "1.20.1 Forge"
-        - "1.19.2 Forge"
+        - "1.21 NeoForge"
     validations:
       required: true
   - type: dropdown
