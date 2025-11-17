@@ -23,7 +23,7 @@ public class FluidSlurryToSlurryUpgradeData extends SlurryToSlurryUpgradeData {
                                           IEnergyContainer energyContainer, int operatingTicks, long usedSoFar, EnergyInventorySlot energySlot,
                                           FluidInventorySlot fluidInputSlot, OutputInventorySlot fluidOutputSlot, ISlurryTank inputSlot,
                                           BasicFluidTank inputTank, ISlurryTank outputTank, List<ITileComponent> components) {
-        this(redstone, controlType, energyContainer, new int[]{operatingTicks}, new long[]{usedSoFar}, energySlot, fluidInputSlot, fluidOutputSlot,
+        this(redstone, controlType, energyContainer, new int[] { operatingTicks }, new long[] { usedSoFar }, energySlot, fluidInputSlot, fluidOutputSlot,
                 Collections.singletonList(inputSlot), inputTank, Collections.singletonList(outputTank), false, components);
     }
 

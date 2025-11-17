@@ -3,13 +3,16 @@ package com.jerry.datagen.common.recipe.impl;
 import com.jerry.datagen.common.recipe.ISubRecipeProvider;
 import com.jerry.datagen.common.recipe.builder.MoreMachineDataShapedRecipeBuilder;
 import com.jerry.datagen.common.recipe.pattern.Pattern;
+
 import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
 import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine.BlockAdvancedFactory;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.item.ItemBlockAdvancedFactory;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
+
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
+
 import mekanism.api.providers.IItemProvider;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.registration.impl.BlockRegistryObject;
@@ -17,6 +20,7 @@ import mekanism.common.resource.PrimaryResource;
 import mekanism.common.resource.ResourceType;
 import mekanism.common.tags.MekanismTags;
 import mekanism.common.tier.FactoryTier;
+
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -48,11 +52,11 @@ class AdvancedFactoryRecipeProvider implements ISubRecipeProvider {
     private void addFactoryRecipe(Consumer<FinishedRecipe> consumer, String basePath, BlockRegistryObject<BlockAdvancedFactory<?>, ?> factory, IItemProvider toUpgrade,
                                   TagKey<Item> ingotTag, TagKey<Item> alloyTag, TagKey<Item> circuitTag) {
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(factory)
-              .pattern(MoreMachineRecipeProvider.TIER_PATTERN)
-              .key(Pattern.PREVIOUS, toUpgrade)
-              .key(Pattern.CIRCUIT, circuitTag)
-              .key(Pattern.INGOT, ingotTag)
-              .key(Pattern.ALLOY, alloyTag)
-              .build(consumer, Mekmm.rl(basePath + Attribute.get(factory, AttributeAdvancedFactoryType.class).getAdvancedFactoryType().getRegistryNameComponent()));
+                .pattern(MoreMachineRecipeProvider.TIER_PATTERN)
+                .key(Pattern.PREVIOUS, toUpgrade)
+                .key(Pattern.CIRCUIT, circuitTag)
+                .key(Pattern.INGOT, ingotTag)
+                .key(Pattern.ALLOY, alloyTag)
+                .build(consumer, Mekmm.rl(basePath + Attribute.get(factory, AttributeAdvancedFactoryType.class).getAdvancedFactoryType().getRegistryNameComponent()));
     }
 }

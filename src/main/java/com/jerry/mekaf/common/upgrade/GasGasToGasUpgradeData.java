@@ -20,14 +20,14 @@ public class GasGasToGasUpgradeData extends GasToGasUpgradeData {
                                   IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot,
                                   GasInventorySlot chemicalSlot, IGasTank inputSlot, IGasTank inputTank, IGasTank outputTank,
                                   List<ITileComponent> components) {
-        this(redstone, controlType, energyContainer, new int[]{operatingTicks}, null, energySlot, chemicalSlot, Collections.singletonList(inputSlot), inputTank, Collections.singletonList(outputTank), false, components);
+        this(redstone, controlType, energyContainer, new int[] { operatingTicks }, null, energySlot, chemicalSlot, Collections.singletonList(inputSlot), inputTank, Collections.singletonList(outputTank), false, components);
     }
 
     public GasGasToGasUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                   IEnergyContainer energyContainer, int operatingTicks, long usedSoFar, EnergyInventorySlot energySlot,
                                   GasInventorySlot chemicalSlot, IGasTank inputSlot, IGasTank inputTank, IGasTank outputTank,
                                   List<ITileComponent> components) {
-        this(redstone, controlType, energyContainer, new int[]{operatingTicks}, new long[]{usedSoFar}, energySlot, chemicalSlot, Collections.singletonList(inputSlot), inputTank, Collections.singletonList(outputTank), false, components);
+        this(redstone, controlType, energyContainer, new int[] { operatingTicks }, new long[] { usedSoFar }, energySlot, chemicalSlot, Collections.singletonList(inputSlot), inputTank, Collections.singletonList(outputTank), false, components);
     }
 
     public GasGasToGasUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,

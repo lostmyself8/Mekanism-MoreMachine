@@ -1,235 +1,103 @@
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-    }
-}
-
 plugins {
+    id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+    id 'maven-publish'
+    alias libs.plugins.modDevGradle
+    alias libs.plugins.spotless
+    alias libs.plugins.lombok
 }
 
-apply plugin: 'org.spongepowered.mixin'
-
-group = mod_group_id
-version = mod_version
-
-base {
-    archivesName = mod_id
-}
+group = maven_group
+boolean isSnapshot = System.getenv("SNAPSHOT")
+version = "${mod_version}" + (isSnapshot ? "-SNAPSHOT" : "")
+boolean isCI = System.getenv("CI") != null
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
-minecraft {
-    accessTransformers.from(file('src/main/resources/META-INF/accesstransformer.cfg'))
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // official   MCVersion             Official field/method names from Mojang mapping files
-    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
-    //
-    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://parchmentmc.org/docs/getting-started
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: mapping_channel, version: mapping_version
+sourceSets {
+    main.resources {
+        srcDir 'src/generated/resources'
+    }
 
-    // When true, this property will have all Eclipse/IntelliJ IDEA run configurations run the "prepareX" task for the given run configuration before launching the game.
-    // In most cases, it is not necessary to enable.
-    // enableEclipsePrepareRuns = true
-    // enableIdeaPrepareRuns = true
+    client {
+        compileClasspath += main.output
+        runtimeClasspath += main.output + main.runtimeClasspath
+    }
 
-    // This property allows configuring Gradle's ProcessResources task(s) to run on IDE output locations before launching the game.
-    // It is REQUIRED to be set to true for this template to function.
-    // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
-    copyIdeResources = true
+    test {
+        compileClasspath += main.output
+        runtimeClasspath += main.output + main.runtimeClasspath
+    }
 
-    // When true, this property will add the folder name of all declared run configurations to generated IDE run configurations.
-    // The folder name can be set on a run configuration using the "folderName" property.
-    // By default, the folder name of a run configuration is the name of the Gradle project containing it.
-    // generateRunFolders = true
+    extra {
+        compileClasspath += main.output
+        runtimeClasspath += main.output + main.runtimeClasspath
+    }
 
-    // This property enables access transformers for use in development.
-    // They will be applied to the Minecraft artifact.
-    // The access transformer file can be anywhere in the project.
-    // However, it must be at "META-INF/accesstransformer.cfg" in the final mod jar to be loaded by Forge.
-    // This default location is a best practice to automatically put the file in the right place in the final jar.
-    // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        // applies to all the run configs below
-        configureEach {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        client {
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            // example of overriding the workingDirectory set in configureEach above
-            workingDirectory project.file('run-data')
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-        }
+    clientExtra {
+        compileClasspath += client.output + extra.compileClasspath
+        runtimeClasspath += client.output + client.runtimeClasspath + extra.runtimeClasspath
     }
 }
 
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
+configurations {
+    library
+    implementation.extendsFrom library
+    // set these as unresolvable so we don't accidentally force all dependents to use them with us
+    clientRuntimeOnly.canBeResolved = false
+    extraRuntimeOnly.canBeResolved = false
+    clientExtraRuntimeOnly.canBeResolved = false
 
-    config "${mod_id}.mixins.json"
-}
+    runtimeClasspath.extendsFrom localRuntime
+    extraRuntimeClasspath.extendsFrom extraLocalRuntime
+    clientRuntimeClasspath.extendsFrom clientLocalRuntime
+    extraClientRuntimeClasspath.extendsFrom clientExtraLocalRuntime
 
-// Include resources generated by data generators.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-
-    maven {
-        url 'https://modmaven.dev/'
-    }
-
-    maven {
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
-
-    maven {
-        url 'https://maven.blamejared.com'
-    }
-
-    maven {
-        url "https://cursemaven.com"
-    }
-
-    mavenLocal()
-
-    maven {
-        url "https://maven.squiddev.cc"
-        content {
-            includeGroup("cc.tweaked")
-        }
-    }
-    maven {
-        url 'https://maven.blakesmods.com'
+    renderNurseCfg {
+        canBeConsumed = false
     }
 }
 
-dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    //Mekanism
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")
-    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")
-
-    //jei
-    implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
-
-    //ImmersiveEngineering
-    implementation fg.deobf("curse.maven:immersive-engineering-231951:6206989")
-
-    //MysticalAgriculture
-    runtimeOnly fg.deobf("com.blakebr0.cucumber:Cucumber:${minecraft_version}-${cucumber_version}")
-    implementation fg.deobf("com.blakebr0.mysticalagriculture:MysticalAgriculture:${minecraft_version}-${mysticalagriculture_version}")
-
-    //EMek
-    runtimeOnly fg.deobf("curse.maven:iglee-library-541199:6987117")
-    implementation fg.deobf("curse.maven:evolved-mekanism-1230085:7117024")
-
-    //Botania
-//    implementation fg.deobf("vazkii.botania:Botania:${botania_version}")
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-
-}
-
-// This block of code expands all declared replace properties in the specified resource targets.
-// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
-// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
-// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-                             forge_version       : forge_version, forge_version_range: forge_version_range,
-                             loader_version_range: loader_version_range,
-                             mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-                             mod_authors         : mod_authors, mod_description: mod_description,]
-
-    inputs.properties replaceProperties
-
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
+afterEvaluate {
+    configurations {
+        // same as above but for the modRuntimeOnly configurations
+        modClientRuntimeOnly.canBeResolved = false
+        modExtraRuntimeOnly.canBeResolved = false
+        modClientExtraRuntimeOnly.canBeResolved = false
     }
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes(["Specification-Title"     : mod_id,
-                    "Specification-Vendor"    : mod_authors,
-                    "Specification-Version"   : "1", // We are version 1 of ourselves
-                    "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : project.jar.archiveVersion,
-                    "Implementation-Vendor"   : mod_authors,
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
-    }
+obfuscation {
+    createRemappingConfiguration(configurations.localRuntime)
+    createRemappingConfiguration(configurations.clientLocalRuntime)
 
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
+    createRemappingConfiguration(configurations.extraLocalRuntime)
+    createRemappingConfiguration(configurations.clientExtraLocalRuntime)
+}
+
+apply from: "$rootDir/gradle/scripts/jars.gradle"
+apply from: "$rootDir/gradle/scripts/moddevgradle.gradle"
+apply from: "$rootDir/gradle/scripts/repositories.gradle"
+apply from: "$rootDir/dependencies.gradle"
+apply from: "$rootDir/gradle/scripts/resources.gradle"
+apply from: "$rootDir/gradle/scripts/publishing.gradle"
+apply from: "$rootDir/gradle/scripts/spotless.gradle"
+
+generateModMetadata.doFirst {
+    mkdir('run/client')
+    mkdir('run/server')
+    mkdir('run/data')
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:-removal"
+    options.compilerArgs << "-Aquiet=true" // Suppress mixin notes
+}
+
+lombok {
+    version = "1.18.38"
 }

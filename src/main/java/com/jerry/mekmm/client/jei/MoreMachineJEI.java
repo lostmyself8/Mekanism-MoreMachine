@@ -1,21 +1,25 @@
 package com.jerry.mekmm.client.jei;
 
 import com.jerry.mekaf.client.jei.AdvancedFactoryCatalystRegistryHelper;
+
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.client.jei.machine.*;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.client.jei.RecipeRegistryHelper;
 import mekanism.client.jei.machine.ItemStackToItemStackRecipeCategory;
 import mekanism.common.registries.MekanismBlocks;
+
+import net.minecraft.resources.ResourceLocation;
+
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
@@ -53,9 +57,10 @@ public class MoreMachineJEI implements IModPlugin {
         MoreMachineRecipeRegistryHelper.registerItemReplicator(registry);
         MoreMachineRecipeRegistryHelper.registerFluidReplicator(registry);
 
-        //这玩意写在这没用，我也不知道为什么，但使用mixin可以使这行代码生效。
-//        registry.addIngredientInfo(MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.getStack(FluidType.BUCKET_VOLUME), MekanismJEI.TYPE_GAS,
-//                MoreMachineLang.JEI_INFO_UNSTABLE_DIMENSIONAL_GAS.translate(MoreMachineConfig.general.gasCollectAmount.get()));
+        // 这玩意写在这没用，我也不知道为什么，但使用mixin可以使这行代码生效。
+        // registry.addIngredientInfo(MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.getStack(FluidType.BUCKET_VOLUME),
+        // MekanismJEI.TYPE_GAS,
+        // MoreMachineLang.JEI_INFO_UNSTABLE_DIMENSIONAL_GAS.translate(MoreMachineConfig.general.gasCollectAmount.get()));
     }
 
     @Override

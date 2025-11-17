@@ -1,22 +1,23 @@
 package com.jerry.mekaf.common.registries;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.tile.*;
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
+
 import com.jerry.mekmm.Mekmm;
+
 import mekanism.common.registration.impl.TileEntityTypeDeferredRegister;
 import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.EnumUtils;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 public class AdvancedFactoryTileEntityTypes {
 
-    private AdvancedFactoryTileEntityTypes() {
-
-    }
+    private AdvancedFactoryTileEntityTypes() {}
 
     public static final TileEntityTypeDeferredRegister AF_TILE_ENTITY_TYPES = new TileEntityTypeDeferredRegister(Mekmm.MOD_ID);
 

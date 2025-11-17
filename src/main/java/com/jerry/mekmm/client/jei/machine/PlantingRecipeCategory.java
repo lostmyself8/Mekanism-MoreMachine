@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.jei.machine;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.client.gui.element.bar.GuiBar;
@@ -15,11 +16,13 @@ import mekanism.client.jei.MekanismJEI;
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.prefab.TileEntityAdvancedElectricMachine;
+
+import net.minecraft.world.item.ItemStack;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +52,10 @@ public class PlantingRecipeCategory extends BaseRecipeCategory<PlantingRecipe> {
         List<ItemStack> gasItemProviders = new ArrayList<>();
         List<GasStack> scaledGases = new ArrayList<>();
         for (GasStack gas : recipe.getGasInput().getRepresentations()) {
-            //额外
+            // 额外
             gasItemProviders.addAll(MekanismJEI.GAS_STACK_HELPER.getStacksFor(gas.getType(), true));
-            //While we are already looping the gases ensure we scale it to get the average amount that will get used over all
+            // While we are already looping the gases ensure we scale it to get the average amount that will get used
+            // over all
             scaledGases.add(new GasStack(gas, gas.getAmount() * TileEntityAdvancedElectricMachine.BASE_TICKS_REQUIRED));
         }
         initChemical(builder, MekanismJEI.TYPE_GAS, RecipeIngredientRole.INPUT, chemicalInput, scaledGases);

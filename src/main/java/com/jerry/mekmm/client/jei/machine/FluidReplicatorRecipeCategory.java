@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.jei.machine;
 
 import com.jerry.mekmm.api.recipes.FluidStackGasToFluidStackRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.math.FloatingLong;
@@ -14,11 +15,13 @@ import mekanism.client.jei.MekanismJEI;
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
+
+import net.minecraft.world.item.ItemStack;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,7 @@ public class FluidReplicatorRecipeCategory extends BaseRecipeCategory<FluidStack
         addSlot(SlotType.POWER, 152, 65).with(SlotOverlay.POWER);
         addSimpleProgress(ProgressType.LARGE_RIGHT, 64, 36);
         addElement(new GuiEnergyGauge(new GuiEnergyGauge.IEnergyInfoHandler() {
+
             @Override
             public FloatingLong getEnergy() {
                 return FloatingLong.ONE;

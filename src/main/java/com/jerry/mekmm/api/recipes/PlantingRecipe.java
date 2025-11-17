@@ -5,9 +5,11 @@ import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient.GasStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

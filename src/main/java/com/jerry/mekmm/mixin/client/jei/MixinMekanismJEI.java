@@ -3,9 +3,12 @@ package com.jerry.mekmm.mixin.client.jei;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
+
 import mekanism.client.jei.MekanismJEI;
-import mezz.jei.api.registration.IRecipeRegistration;
+
 import net.minecraftforge.fluids.FluidType;
+
+import mezz.jei.api.registration.IRecipeRegistration;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

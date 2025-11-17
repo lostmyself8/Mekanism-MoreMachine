@@ -3,20 +3,24 @@ package com.jerry.mekmm;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 import com.jerry.mekaf.common.registries.AdvancedFactoryTileEntityTypes;
+
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.integration.MoreMachineHooks;
 import com.jerry.mekmm.common.network.MoreMachinePacketHandler;
 import com.jerry.mekmm.common.registries.*;
-import com.mojang.logging.LogUtils;
+
 import mekanism.common.Mekanism;
 import mekanism.common.base.IModModule;
 import mekanism.common.lib.Version;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
 @Mod(Mekmm.MOD_ID)
@@ -92,7 +96,5 @@ public class Mekmm implements IModModule {
     }
 
     @Override
-    public void resetClient() {
-
-    }
+    public void resetClient() {}
 }

@@ -1,16 +1,16 @@
 package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
+
 import mekanism.common.registration.impl.ItemDeferredRegister;
 import mekanism.common.registration.impl.ItemRegistryObject;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 public class MoreMachineItems {
 
-    private MoreMachineItems() {
-
-    }
+    private MoreMachineItems() {}
 
     public static final ItemDeferredRegister MM_ITEMS = new ItemDeferredRegister(Mekmm.MOD_ID);
 

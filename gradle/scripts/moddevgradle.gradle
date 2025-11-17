@@ -1,0 +1,104 @@
+ext.isJetbrainsRuntime = System.getProperty('java.vm.vendor').contains('JetBrains')
+
+mixin {
+    var refmap = add sourceSets.main, "mekmm.refmap.json"
+    slimJar.from refmap
+    config "mekmm.mixins.json"
+}
+
+// we have to force LWJGL version 3.3.2, because RenderNurse requires Java 21, and LWJGL 3.3.1 cannot run on Java 21.
+configurations.configureEach {
+    resolutionStrategy {
+        eachDependency {
+            if (it.requested.group == "org.lwjgl") {
+                it.useVersion("3.3.2")
+                it.because("We need a version of LWJGL that supports java 21 for RenderDoc support")
+            }
+        }
+    }
+}
+
+legacyForge {
+    // Specify Forge version
+    version = libs.versions.minecraftForge.get()
+
+    parchment {
+        minecraftVersion = libs.versions.minecraft.get()
+        mappingsVersion = libs.versions.parchment.get()
+    }
+
+    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+
+    addModdingDependenciesTo(sourceSets.test)
+
+    mods {
+        // define mod <-> source bindings
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+            sourceSet(sourceSets.client)
+            sourceSet(sourceSets.test)
+            sourceSet(sourceSets.extra)
+            sourceSet(sourceSets.clientExtra)
+        }
+    }
+    runs {
+        client {
+            client()
+            sourceSet = sourceSets.clientExtra
+            ideName = "Client"
+
+            gameDirectory.set(file('run/Client'))
+            systemProperty('forge.enabledGameTestNamespaces', project.mod_id)
+        }
+
+        server {
+            server()
+            sourceSet = sourceSets.extra
+            ideName = "Server"
+
+            gameDirectory.set(file('run/server'))
+            programArguments.addAll('--nogui', '--world', 'world-extra')
+            systemProperty('forge.enabledGameTestNamespaces', project.mod_id)
+        }
+
+        gameTestServer {
+            type = "gameTestServer"
+            sourceSet = sourceSets.test
+            ideName = "Game Tests"
+
+            gameDirectory.set(file('run/gametest'))
+            systemProperty('forge.enabledGameTestNamespaces', project.mod_id)
+            environment('TEST', 'true')
+        }
+
+        data {
+            data()
+            sourceSet = sourceSets.main
+            ideName = "Data Generation"
+
+            gameDirectory.set(file('run/data'))
+            programArguments.addAll('--mod', project.mod_id)
+            programArguments.addAll('--all')
+            programArguments.addAll('--output', file('src/generated/resources/').getAbsolutePath())
+            programArguments.addAll('--existing', file('src/main/resources/').getAbsolutePath())
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            jvmArgument('-ea:com.jerry...')
+            logLevel = org.slf4j.event.Level.INFO
+        }
+    }
+}
+
+jar {
+    exclude "**/.cache"
+    exclude "**/SimplifiedToTraditional.properties"
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

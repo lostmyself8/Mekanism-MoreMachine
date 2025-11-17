@@ -6,9 +6,11 @@ import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.FluidStackIngredient;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,8 +75,9 @@ public abstract class FluidStackChemicalToFluidStackRecipe<CHEMICAL extends Chem
      * @param inputFluid    Specific fluid input.
      * @param inputChemical Specific chemical input.
      * @return New output.
-     * @apiNote While Mekanism does not currently make use of the inputs, it is important to support it and pass the proper value in case any addons define input based
-     * outputs where things like NBT may be different.
+     * @apiNote While Mekanism does not currently make use of the inputs, it is important to support it and pass the
+     *          proper value in case any addons define input based
+     *          outputs where things like NBT may be different.
      * @implNote The passed in inputs should <strong>NOT</strong> be modified.
      */
     @Contract(value = "_, _ -> new", pure = true)

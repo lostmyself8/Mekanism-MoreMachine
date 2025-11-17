@@ -8,6 +8,7 @@ import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.upgrade.PlantingUpgradeData;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.NBTConstants;
 import mekanism.api.RelativeSide;
@@ -44,11 +45,13 @@ import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,8 +68,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
             NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     public static final int BASE_TICKS_REQUIRED = 200;
     public static final long MAX_GAS = 210;
 
@@ -85,7 +87,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     InputInventorySlot inputSlot;
     OutputInventorySlot mainOutputSlot;
     OutputInventorySlot secondaryOutputSlot;
-    //气罐槽
+    // 气罐槽
     GasInventorySlot gasSlot;
     EnergyInventorySlot energySlot;
 
@@ -109,7 +111,8 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             long baseRemaining = baseTotalUsage - usedSoFar;
             int remainingTicks = getTicksRequired() - operatingTicks;
             if (baseRemaining < remainingTicks) {
-                //If we already used more than we would need to use (due to removing speed upgrades or adding gas upgrades)
+                // If we already used more than we would need to use (due to removing speed upgrades or adding gas
+                // upgrades)
                 // then just don't use any gas this tick
                 return 0;
             } else if (baseRemaining == remainingTicks) {
@@ -173,7 +176,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     @Override
     public @NotNull CachedRecipe<PlantingRecipe> createNewCachedRecipe(@NotNull PlantingRecipe recipe, int cacheIndex) {
         return PlantingCacheRecipe.create(recipe, recheckAllRecipeErrors, itemInputHandler, gasInputHandler, gasUsageMultiplier,
-                        used -> usedSoFar = used, outputHandler)
+                used -> usedSoFar = used, outputHandler)
                 .setErrorsChanged(this::onErrorsChanged)
                 .setCanHolderFunction(() -> MekanismUtils.canFunction(this))
                 .setActive(this::setActive)
@@ -189,7 +192,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
 
     @Override
     public boolean isConfigurationDataCompatible(BlockEntityType<?> tileType) {
-        //Allow exact match or factories of the same type (as we will just ignore the extra data)
+        // Allow exact match or factories of the same type (as we will just ignore the extra data)
         return super.isConfigurationDataCompatible(tileType) || MoreMachineUtils.isSameMMTypeFactory(getBlockType(), tileType);
     }
 

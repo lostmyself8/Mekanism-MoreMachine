@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntityItemToGasFactory;
 import com.jerry.mekaf.common.upgrade.ItemToGasUpgradeData;
+
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.chemical.gas.IGasTank;
 import mekanism.api.math.MathUtils;
@@ -18,9 +19,11 @@ import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +37,7 @@ public class TileEntityOxidizingFactory extends TileEntityItemToGasFactory<ItemS
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
 
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
 

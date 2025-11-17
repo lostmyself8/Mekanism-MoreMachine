@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntityItemToMergedFactory;
 import com.jerry.mekaf.common.upgrade.ItemGasToMergedUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.ChemicalStack;
@@ -39,9 +40,11 @@ import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.StatUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,12 +60,10 @@ public class TileEntityDissolvingFactory extends TileEntityItemToMergedFactory<C
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_SECONDARY_INPUT
-    );
+            RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
     private static final long MAX_CHEMICAL = 10_000;
 
@@ -91,7 +92,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToMergedFactory<C
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.GAS, TransmissionType.INFUSION, TransmissionType.PIGMENT,
-                        TransmissionType.SLURRY)
+                TransmissionType.SLURRY)
                 .setCanTankEject(tank -> tank != injectTank);
 
         gasInputHandler = InputHelper.getConstantInputHandler(injectTank);

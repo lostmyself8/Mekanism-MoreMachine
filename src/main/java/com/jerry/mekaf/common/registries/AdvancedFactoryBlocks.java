@@ -1,14 +1,14 @@
 package com.jerry.mekaf.common.registries;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine.BlockAdvancedFactory;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactory;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.item.ItemBlockAdvancedFactory;
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
+
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
+
 import mekanism.api.tier.ITier;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.content.blocktype.BlockType;
@@ -16,8 +16,12 @@ import mekanism.common.registration.impl.BlockDeferredRegister;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.util.EnumUtils;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -25,9 +29,7 @@ import java.util.function.Supplier;
 
 public class AdvancedFactoryBlocks {
 
-    private AdvancedFactoryBlocks() {
-
-    }
+    private AdvancedFactoryBlocks() {}
 
     public static final BlockDeferredRegister AF_BLOCKS = new BlockDeferredRegister(Mekmm.MOD_ID);
 

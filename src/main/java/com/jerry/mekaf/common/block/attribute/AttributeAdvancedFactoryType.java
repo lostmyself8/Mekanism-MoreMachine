@@ -1,7 +1,9 @@
 package com.jerry.mekaf.common.block.attribute;
 
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
+
 import mekanism.common.block.attribute.Attribute;
+
 import org.jetbrains.annotations.NotNull;
 
 public class AttributeAdvancedFactoryType implements Attribute {

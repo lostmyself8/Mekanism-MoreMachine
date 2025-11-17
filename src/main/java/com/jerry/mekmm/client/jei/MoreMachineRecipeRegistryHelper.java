@@ -4,23 +4,25 @@ import com.jerry.mekmm.api.recipes.FluidStackGasToFluidStackRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
 import com.jerry.mekmm.common.tile.machine.TileEntityFluidReplicator;
 import com.jerry.mekmm.common.tile.machine.TileEntityReplicator;
+
 import mekanism.api.recipes.ItemStackGasToItemStackRecipe;
 import mekanism.client.jei.RecipeRegistryHelper;
 import mekanism.common.util.RegistryUtils;
-import mezz.jei.api.registration.IRecipeRegistration;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import mezz.jei.api.registration.IRecipeRegistration;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoreMachineRecipeRegistryHelper {
 
-    private MoreMachineRecipeRegistryHelper() {
-    }
+    private MoreMachineRecipeRegistryHelper() {}
 
     public static void registerItemReplicator(IRecipeRegistration registry) {
         List<ItemStackGasToItemStackRecipe> list = new ArrayList<>();

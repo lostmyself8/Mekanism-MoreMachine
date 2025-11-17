@@ -1,6 +1,7 @@
 package com.jerry.mekaf.common.tile.base;
 
 import com.jerry.mekaf.common.upgrade.SlurryToSlurryUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.ChemicalTankBuilder;
@@ -23,8 +24,10 @@ import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.SlurrySlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.upgrade.IUpgradeData;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -100,21 +103,22 @@ public abstract class TileEntitySlurryToSlurryFactory<RECIPE extends MekanismRec
     @Nullable
     protected RECIPE getRecipeForInput(int process, @NotNull SlurryStack fallbackInput, @NotNull ISlurryTank outputTank, boolean updateCache) {
         if (!CommonWorldTickHandler.flushTagAndRecipeCaches) {
-            //If our recipe caches are valid, grab our cached recipe and see if it is still valid
+            // If our recipe caches are valid, grab our cached recipe and see if it is still valid
             CachedRecipe<RECIPE> cached = getCachedRecipe(process);
             if (isCachedRecipeValid(cached, fallbackInput)) {
-                //Our input matches the recipe we have cached for this slot
+                // Our input matches the recipe we have cached for this slot
                 return cached.getRecipe();
             }
         }
-        //If there is no cached item input, or it doesn't match our fallback then it is an out of date cache, so we ignore the fact that we have a cache
+        // If there is no cached item input, or it doesn't match our fallback then it is an out of date cache, so we
+        // ignore the fact that we have a cache
         RECIPE foundRecipe = findRecipe(process, fallbackInput, outputTank);
         if (foundRecipe == null) {
-            //We could not find any valid recipe for the given item that matches the items in the current output slots
+            // We could not find any valid recipe for the given item that matches the items in the current output slots
             return null;
         }
         if (updateCache) {
-            //If we want to update the cache, then create a new cache with the recipe we found and update the cache
+            // If we want to update the cache, then create a new cache with the recipe we found and update the cache
             recipeCacheLookupMonitors[process].updateCachedRecipe(foundRecipe);
         }
         return foundRecipe;
@@ -142,7 +146,7 @@ public abstract class TileEntitySlurryToSlurryFactory<RECIPE extends MekanismRec
             energySlot.deserializeNBT(data.energySlot.serializeNBT());
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.inputTanks.size(); i++) {
-                //Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
+                // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
                 inputSlurryTanks.get(i).deserializeNBT(data.inputTanks.get(i).serializeNBT());
             }
             for (int i = 0; i < data.outputTanks.size(); i++) {
@@ -156,6 +160,5 @@ public abstract class TileEntitySlurryToSlurryFactory<RECIPE extends MekanismRec
         }
     }
 
-    public record SlurryToSlurryProcessInfo(int process, @NotNull ISlurryTank inputTank, @NotNull ISlurryTank outputTank) {
-    }
+    public record SlurryToSlurryProcessInfo(int process, @NotNull ISlurryTank inputTank, @NotNull ISlurryTank outputTank) {}
 }

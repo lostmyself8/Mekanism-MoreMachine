@@ -7,6 +7,7 @@ import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 import com.jerry.mekmm.common.util.ValidatorUtils;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
@@ -42,6 +43,7 @@ import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.RegistryUtils;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
@@ -49,6 +51,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidType;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,15 +66,14 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
 
     public static final int BASE_TICKS_REQUIRED = 10 * SharedConstants.TICKS_PER_SECOND;
     public static final long MAX_GAS = 10 * FluidType.BUCKET_VOLUME;
 
     public static HashMap<String, Integer> customRecipeMap = ValidatorUtils.getRecipeFromConfig(MoreMachineConfig.general.itemReplicatorRecipe.get());
 
-    //化学品存储槽
+    // 化学品存储槽
     public IGasTank gasTank;
 
     private MachineEnergyContainer<TileEntityReplicator> energyContainer;
@@ -82,7 +84,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
 
     InputInventorySlot inputSlot;
     OutputInventorySlot outputSlot;
-    //气罐槽
+    // 气罐槽
     GasInventorySlot gasSlot;
     EnergyInventorySlot energySlot;
 
@@ -120,15 +122,15 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
         InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this::getDirection, this::getConfig);
         builder.addSlot(inputSlot = InputInventorySlot.at(TileEntityReplicator::isValidItemInput, recipeCacheListener, 29, 32))
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT)));
-        //输出槽位置
-        //recipeCacheUnpauseListener，输出检测需要使用recipeCacheUnpauseListener，不然满了之后拿走物品不会更新状态
+        // 输出槽位置
+        // recipeCacheUnpauseListener，输出检测需要使用recipeCacheUnpauseListener，不然满了之后拿走物品不会更新状态
         builder.addSlot(outputSlot = OutputInventorySlot.at(listener, 131, 32))
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE)));
-        //化学品罐槽位置
+        // 化学品罐槽位置
         builder.addSlot(gasSlot = GasInventorySlot.fillOrConvert(gasTank, this::getLevel, listener, 8, 65));
-        //能量槽位置
+        // 能量槽位置
         builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 152, 65));
-        //化学品罐槽减号图标
+        // 化学品罐槽减号图标
         gasSlot.setSlotOverlay(SlotOverlay.MINUS);
         return builder.build();
     }
@@ -172,14 +174,13 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
         }
         if (customRecipeMap != null) {
             Item item = itemStack.getItem();
-            //如果为空则赋值为0
+            // 如果为空则赋值为0
             int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(item).toString(), 0);
-            //防止null和配置文件中出现0
+            // 防止null和配置文件中出现0
             if (amount == 0) return null;
             return new ReplicatorIRecipe(item, IngredientCreatorAccess.item().from(item, 1),
                     IngredientCreatorAccess.gas().from(MoreMachineGas.UU_MATTER, amount),
-                    new ItemStack(item, 1)
-            );
+                    new ItemStack(item, 1));
         }
         return null;
     }

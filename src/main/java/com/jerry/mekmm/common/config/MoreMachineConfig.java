@@ -4,8 +4,7 @@ import net.minecraftforge.fml.ModContainer;
 
 public class MoreMachineConfig {
 
-    private MoreMachineConfig() {
-    }
+    private MoreMachineConfig() {}
 
     public static final MoreMachineGeneralConfig general = new MoreMachineGeneralConfig();
     public static final MoreMachineStorageConfig storage = new MoreMachineStorageConfig();

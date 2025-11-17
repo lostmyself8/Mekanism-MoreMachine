@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.jei.machine;
 
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.element.GuiUpArrow;
@@ -13,12 +14,14 @@ import mekanism.client.jei.BaseRecipeCategory;
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.util.text.TextUtils;
+
+import net.minecraft.client.gui.GuiGraphics;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.client.gui.GuiGraphics;
 
 @NothingNullByDefault
 public class RecyclerRecipeCategory extends BaseRecipeCategory<RecyclerRecipe> {

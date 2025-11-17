@@ -1,6 +1,7 @@
 package com.jerry.mekaf.common.tile.base;
 
 import com.jerry.mekaf.common.upgrade.GasToGasUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
@@ -23,8 +24,10 @@ import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.upgrade.IUpgradeData;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,7 +68,7 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
         ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
         if (itemConfig != null) {
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
-            //TODO:或许这玩意并不需要
+            // TODO:或许这玩意并不需要
             itemConfig.fill(DataType.ENERGY);
         }
     }
@@ -103,21 +106,22 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
     @Nullable
     protected RECIPE getRecipeForInput(int process, @NotNull GasStack fallbackInput, @NotNull IGasTank outputTank, boolean updateCache) {
         if (!CommonWorldTickHandler.flushTagAndRecipeCaches) {
-            //If our recipe caches are valid, grab our cached recipe and see if it is still valid
+            // If our recipe caches are valid, grab our cached recipe and see if it is still valid
             CachedRecipe<RECIPE> cached = getCachedRecipe(process);
             if (isCachedRecipeValid(cached, fallbackInput)) {
-                //Our input matches the recipe we have cached for this slot
+                // Our input matches the recipe we have cached for this slot
                 return cached.getRecipe();
             }
         }
-        //If there is no cached item input, or it doesn't match our fallback then it is an out of date cache, so we ignore the fact that we have a cache
+        // If there is no cached item input, or it doesn't match our fallback then it is an out of date cache, so we
+        // ignore the fact that we have a cache
         RECIPE foundRecipe = findRecipe(process, fallbackInput, outputTank);
         if (foundRecipe == null) {
-            //We could not find any valid recipe for the given item that matches the items in the current output slots
+            // We could not find any valid recipe for the given item that matches the items in the current output slots
             return null;
         }
         if (updateCache) {
-            //If we want to update the cache, then create a new cache with the recipe we found and update the cache
+            // If we want to update the cache, then create a new cache with the recipe we found and update the cache
             recipeCacheLookupMonitors[process].updateCachedRecipe(foundRecipe);
         }
         return foundRecipe;
@@ -145,7 +149,7 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
             energySlot.deserializeNBT(data.energySlot.serializeNBT());
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.inputTanks.size(); i++) {
-                //Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
+                // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
                 inputGasTanks.get(i).deserializeNBT(data.inputTanks.get(i).serializeNBT());
             }
             for (int i = 0; i < data.outputTanks.size(); i++) {
@@ -160,12 +164,9 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
     }
 
     @Override
-    protected void sortInventoryOrTank() {
+    protected void sortInventoryOrTank() {}
 
-    }
-
-    public record GasToGasProcessInfo(int process, @NotNull IGasTank inputTank, @NotNull IGasTank outputTank) {
-    }
+    public record GasToGasProcessInfo(int process, @NotNull IGasTank inputTank, @NotNull IGasTank outputTank) {}
 
     public static class GasToGasRecipeProcessInfo {
 
@@ -177,7 +178,7 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
 
         public int getMinPerSlot() {
             if (lazyMinPerSlot != null) {
-                //Get the value lazily
+                // Get the value lazily
                 minPerSlot = lazyMinPerSlot.getAsInt();
                 lazyMinPerSlot = null;
             }

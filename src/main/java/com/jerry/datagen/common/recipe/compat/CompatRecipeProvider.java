@@ -1,7 +1,9 @@
 package com.jerry.datagen.common.recipe.compat;
 
 import com.jerry.datagen.common.recipe.ISubRecipeProvider;
+
 import mekanism.api.annotations.NothingNullByDefault;
+
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -13,7 +15,7 @@ import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import java.util.function.Consumer;
 
-//TODO: Decide if we should have compat recipes go into their own data packs
+// TODO: Decide if we should have compat recipes go into their own data packs
 @NothingNullByDefault
 public abstract class CompatRecipeProvider implements ISubRecipeProvider {
 

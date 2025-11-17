@@ -3,6 +3,7 @@ package com.jerry.mekmm.common.config;
 import mekanism.api.math.FloatingLong;
 import mekanism.common.config.BaseMekanismConfig;
 import mekanism.common.config.value.CachedFloatingLongValue;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -18,7 +19,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
     public final CachedFloatingLongValue itemReplicator;
     public final CachedFloatingLongValue fluidReplicator;
     public final CachedFloatingLongValue ambientGasCollector;
-//    public final CachedFloatingLongValue largeRotaryCondensentrator;
+    // public final CachedFloatingLongValue largeRotaryCondensentrator;
 
     MoreMachineUsageConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -37,8 +38,9 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
         fluidReplicator = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", "fluidReplicator", FloatingLong.createConst(102_400L));
         builder.pop();
 
-        //Large Machine
-//        largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", "largeRotaryCondensentrator", FloatingLong.createConst(500_000L));
+        // Large Machine
+        // largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Energy per operation tick
+        // (Joules).", "largeRotaryCondensentrator", FloatingLong.createConst(500_000L));
         builder.pop();
         configSpec = builder.build();
     }

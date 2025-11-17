@@ -1,0 +1,70 @@
+dependencies {
+    compileOnly(libs.jetbrains.annotations)
+
+    modClientLocalRuntime(forge.jecharacters.get())
+
+    // Mixin (& Extras)
+    annotationProcessor(variantOf(libs.mixin) { classifier("processor") })
+    api(annotationProcessor(forge.mixinExtras.common.get()))
+
+    // Recipe Viewers
+    modCompileOnly(forge.bundles.jei)
+//    modCompileOnly(forge.emi)
+//    modCompileOnly(forge.jer)
+
+    // Mekanism
+    modCompileOnly(forge.mekanism)
+    modCompileOnly(variantOf(forge.mekanism) { classifier("additions") })
+    modCompileOnly(variantOf(forge.mekanism) { classifier("generators") })
+    modCompileOnly(variantOf(forge.mekanism) { classifier("tools") })
+
+    modCompileOnly(forge.mekanismcovers)
+    modCompileOnly(forge.evolvedmekanism)
+
+    // mysticalAgriculture
+    modCompileOnly(forge.mysticalagriculture)
+
+    // immersiveengineering
+    modCompileOnly(forge.immersiveengineering)
+
+    // WAILA-likes
+    modCompileOnly(forge.jade)
+
+    // Standard runtime mods //
+    modLocalRuntime(forge.jade)
+    modLocalRuntime(forge.modernfix)
+    modLocalRuntime(forge.ferritecore)
+
+    // Mekanism
+    modLocalRuntime(forge.mekanism)
+    modLocalRuntime(variantOf(forge.mekanism) { classifier("additions") })
+    modLocalRuntime(variantOf(forge.mekanism) { classifier("generators") })
+    modLocalRuntime(variantOf(forge.mekanism) { classifier("tools") })
+
+    modLocalRuntime(forge.mekanismcovers)
+    modLocalRuntime(forge.igleelibrary)
+    modLocalRuntime(forge.evolvedmekanism)
+
+    // mysticalAgriculture
+    modLocalRuntime(forge.cucumber)
+    modLocalRuntime(forge.mysticalagriculture)
+
+    // immersiveengineering
+    modLocalRuntime(forge.immersiveengineering)
+
+    // Runtime Recipe Viewers - uncomment whichever one you want to use //
+//    modLocalRuntime(forge.jer)
+//    modLocalRuntime(forge.emi)
+    modLocalRuntime(forge.jei.forge.impl)
+
+    modLocalRuntime(forge.modernui)
+
+    // Client-only runtime mods //
+    modClientLocalRuntime(forge.embeddium)
+    modClientLocalRuntime(forge.oculus)
+    renderNurseCfg(libs.renderNurse)
+
+    //////////////////////////////////////////////////////
+    // Runtime mods for dev testing with unclean client //
+    //////////////////////////////////////////////////////
+}

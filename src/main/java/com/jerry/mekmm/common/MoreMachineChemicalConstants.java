@@ -3,6 +3,7 @@ package com.jerry.mekmm.common;
 import mekanism.common.base.IChemicalConstant;
 
 public enum MoreMachineChemicalConstants implements IChemicalConstant {
+
     NUTRITIONAL_PASTE("nutritional_paste", 0xFFEB6CA3, 0, 284F, 1_254F),
     NUTRIENT_SOLUTION("nutrient_solution", 0xFF265F0C, 0, 300F, 1_513F),
     UU_MATTER("uu_matter", 0xFF530570, 0, 300F, 1000F),

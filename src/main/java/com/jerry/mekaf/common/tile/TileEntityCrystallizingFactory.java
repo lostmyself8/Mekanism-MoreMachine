@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntityMergedToItemFactory;
 import com.jerry.mekaf.common.upgrade.MergedToItemUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.merged.MergedChemicalTank;
@@ -18,8 +19,10 @@ import mekanism.common.recipe.lookup.cache.ChemicalCrystallizerInputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,8 +35,7 @@ public class TileEntityCrystallizingFactory extends TileEntityMergedToItemFactor
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
     private static final long MAX_CHEMICAL = 10_000;
 
@@ -52,7 +54,7 @@ public class TileEntityCrystallizingFactory extends TileEntityMergedToItemFactor
     @Override
     protected void presetVariables() {
         super.presetVariables();
-        //在初始化所有储罐之前
+        // 在初始化所有储罐之前
         inputTank = new MergedChemicalTank[tier.processes];
         mergedInputHandlers = new BoxedChemicalInputHandler[tier.processes];
         for (int i = 0; i < tier.processes; i++) {
@@ -60,8 +62,7 @@ public class TileEntityCrystallizingFactory extends TileEntityMergedToItemFactor
                     ChemicalTankBuilder.GAS.input(MAX_CHEMICAL * tier.processes, gas -> getRecipeType().getInputCache().containsInput(level, gas), recipeCacheLookupMonitors[i]),
                     ChemicalTankBuilder.INFUSION.input(MAX_CHEMICAL * tier.processes, infuseType -> getRecipeType().getInputCache().containsInput(level, infuseType), recipeCacheLookupMonitors[i]),
                     ChemicalTankBuilder.PIGMENT.input(MAX_CHEMICAL * tier.processes, pigment -> getRecipeType().getInputCache().containsInput(level, pigment), recipeCacheLookupMonitors[i]),
-                    ChemicalTankBuilder.SLURRY.input(MAX_CHEMICAL * tier.processes, slurry -> getRecipeType().getInputCache().containsInput(level, slurry), recipeCacheLookupMonitors[i])
-            );
+                    ChemicalTankBuilder.SLURRY.input(MAX_CHEMICAL * tier.processes, slurry -> getRecipeType().getInputCache().containsInput(level, slurry), recipeCacheLookupMonitors[i]));
             mergedInputHandlers[i] = new BoxedChemicalInputHandler(inputTank[i], RecipeError.NOT_ENOUGH_INPUT);
         }
     }
@@ -90,7 +91,7 @@ public class TileEntityCrystallizingFactory extends TileEntityMergedToItemFactor
 
     @Override
     public @Nullable IUpgradeData getUpgradeData() {
-        return new MergedToItemUpgradeData(redstone,getControlType(), getEnergyContainer(),
+        return new MergedToItemUpgradeData(redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputChemicalTanks, outputItemSlots, isSorting(), getComponents());
     }
 }

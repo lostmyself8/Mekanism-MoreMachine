@@ -1,6 +1,7 @@
 package com.jerry.mekaf.common.tile.base;
 
 import com.jerry.mekaf.common.upgrade.MergedToItemUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.gas.Gas;
@@ -32,8 +33,10 @@ import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.upgrade.IUpgradeData;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -41,7 +44,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecipe> extends TileEntityAdvancedFactoryBase<RECIPE>{
+public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecipe> extends TileEntityAdvancedFactoryBase<RECIPE> {
 
     protected MergedToItemProcessInfo[] processInfoSlots;
     protected OutputInventorySlot[] outputSlot;
@@ -70,7 +73,7 @@ public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecip
         }
 
         addSupported(TransmissionType.GAS, TransmissionType.INFUSION, TransmissionType.PIGMENT, TransmissionType.SLURRY);
-        //初始化其他储罐
+        // 初始化其他储罐
         inputGasTanks = new ArrayList<>();
         inputInfusionTanks = new ArrayList<>();
         inputPigmentTanks = new ArrayList<>();
@@ -162,7 +165,7 @@ public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecip
             energySlot.deserializeNBT(data.energySlot.serializeNBT());
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.outputSlots.size(); i++) {
-                //Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
+                // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
                 outputItemSlots.get(i).deserializeNBT(data.outputSlots.get(i).serializeNBT());
             }
             for (int i = 0; i < data.inputTanks.size(); i++) {
@@ -180,10 +183,7 @@ public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecip
     }
 
     @Override
-    protected void sortInventoryOrTank() {
+    protected void sortInventoryOrTank() {}
 
-    }
-
-    public record MergedToItemProcessInfo(int process, MergedChemicalTank inputTank, @NotNull IInventorySlot outputSlot) {
-    }
+    public record MergedToItemProcessInfo(int process, MergedChemicalTank inputTank, @NotNull IInventorySlot outputSlot) {}
 }

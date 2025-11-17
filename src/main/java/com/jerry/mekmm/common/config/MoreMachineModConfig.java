@@ -1,13 +1,16 @@
 package com.jerry.mekmm.common.config;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.jerry.mekmm.Mekmm;
+
 import mekanism.common.config.IMekanismConfig;
+
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.config.ConfigFileTypeHandler;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
+
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 
 import java.nio.file.Path;
 import java.util.function.Function;
@@ -35,7 +38,7 @@ public class MoreMachineModConfig extends ModConfig {
     private static class MoreMachineConfigFileTypeHandler extends ConfigFileTypeHandler {
 
         private static Path getPath(Path configBasePath) {
-            //Intercept server config path reading for Mekanism configs and reroute it to the normal config directory
+            // Intercept server config path reading for Mekanism configs and reroute it to the normal config directory
             if (configBasePath.endsWith("serverconfig")) {
                 return FMLPaths.CONFIGDIR.get();
             }

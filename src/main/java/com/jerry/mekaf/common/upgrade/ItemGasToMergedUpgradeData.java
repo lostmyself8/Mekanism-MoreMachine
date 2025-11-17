@@ -21,7 +21,7 @@ public class ItemGasToMergedUpgradeData extends ItemToMergedUpgradeData {
     public ItemGasToMergedUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                       IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot, GasInventorySlot gasSlot,
                                       InputInventorySlot inputSlot, IGasTank inputTank, MergedChemicalTank outputTank, List<ITileComponent> components) {
-        this(redstone, controlType, energyContainer, new int[]{operatingTicks}, energySlot, gasSlot, Collections.singletonList(inputSlot), inputTank,
+        this(redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, gasSlot, Collections.singletonList(inputSlot), inputTank,
                 Collections.singletonList(outputTank), false, components);
     }
 

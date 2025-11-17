@@ -5,6 +5,7 @@ import com.jerry.mekmm.api.recipes.cache.MoreMachineOneInputCachedRecipe;
 import com.jerry.mekmm.api.recipes.outputs.MoreMachineOutputHelper;
 import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlot;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
@@ -24,9 +25,11 @@ import mekanism.common.tier.FactoryTier;
 import mekanism.common.upgrade.MachineUpgradeData;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +42,7 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
 
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
 
@@ -61,7 +63,8 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
         for (int i = 0; i < tier.processes; i++) {
             int xPos = baseX + (i * baseXMult);
             OutputInventorySlot outputSlot = OutputInventorySlot.at(updateSortingListener, xPos, 57);
-            //Note: As we are an item factory that has comparator's based on items we can just use the monitor as a listener directly
+            // Note: As we are an item factory that has comparator's based on items we can just use the monitor as a
+            // listener directly
             MoreMachineFactoryInputInventorySlot inputSlot = MoreMachineFactoryInputInventorySlot.create(this, i, outputSlot, recipeCacheLookupMonitors[i], xPos, 13);
             int index = i;
             builder.addSlot(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));

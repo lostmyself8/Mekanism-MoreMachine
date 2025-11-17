@@ -1,20 +1,23 @@
 package com.jerry.datagen.common.recipe.builder;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.jerry.datagen.common.DataGenJsonConstants;
 import com.jerry.datagen.common.recipe.pattern.RecipePattern;
-import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
-import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
-import it.unimi.dsi.fastutil.chars.CharOpenHashSet;
-import it.unimi.dsi.fastutil.chars.CharSet;
+
 import mekanism.api.annotations.NothingNullByDefault;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
+import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
+import it.unimi.dsi.fastutil.chars.CharOpenHashSet;
+import it.unimi.dsi.fastutil.chars.CharSet;
 
 import java.util.ArrayList;
 import java.util.List;

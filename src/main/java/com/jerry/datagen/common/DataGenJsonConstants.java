@@ -2,11 +2,10 @@ package com.jerry.datagen.common;
 
 public class DataGenJsonConstants {
 
-    private DataGenJsonConstants() {
-    }
+    private DataGenJsonConstants() {}
 
-    //Vanilla constants used in data generators
-    //Recipes
+    // Vanilla constants used in data generators
+    // Recipes
     public static final String BASE = "base";
     public static final String ADDITION = "addition";
     public static final String CATEGORY = "category";
@@ -19,13 +18,13 @@ public class DataGenJsonConstants {
     public static final String RESULT = "result";
     public static final String TEMPLATE = "template";
 
-    //Advancements
+    // Advancements
     public static final String ANNOUNCE_TO_CHAT = "announce_to_chat";
     public static final String FRAME = "frame";
     public static final String HIDDEN = "hidden";
     public static final String REQUIREMENTS = "requirements";
     public static final String SHOW_TOAST = "show_toast";
 
-    //Model builder key constants:
+    // Model builder key constants:
     public static final String PARTICLE = "particle";
 }

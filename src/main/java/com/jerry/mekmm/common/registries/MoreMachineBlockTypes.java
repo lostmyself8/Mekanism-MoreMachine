@@ -1,7 +1,5 @@
 package com.jerry.mekmm.common.registries;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineBlockShapes;
@@ -13,6 +11,7 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineMa
 import com.jerry.mekmm.common.tile.TileEntityDoll;
 import com.jerry.mekmm.common.tile.machine.*;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
+
 import mekanism.api.Upgrade;
 import mekanism.common.block.attribute.AttributeCustomSelectionBox;
 import mekanism.common.block.attribute.AttributeStateFacing;
@@ -22,15 +21,17 @@ import mekanism.common.content.blocktype.BlockTypeTile;
 import mekanism.common.registries.MekanismSounds;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.util.EnumUtils;
+
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
 import java.util.EnumSet;
 
 public class MoreMachineBlockTypes {
 
-    private MoreMachineBlockTypes() {
-
-    }
+    private MoreMachineBlockTypes() {}
 
     private static final Table<FactoryTier, MoreMachineFactoryType, MoreMachineFactory<?>> FACTORIES = HashBasedTable.create();
 

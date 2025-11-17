@@ -4,6 +4,7 @@ import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.api.recipes.cache.StamperCachedRecipe;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.upgrade.StamperUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
@@ -24,9 +25,11 @@ import mekanism.common.recipe.lookup.cache.InputRecipeCache.DoubleItem;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,12 +43,10 @@ public class TileEntityStampingFactory extends TileEntityItemToItemMoreMachineFa
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_SECONDARY_INPUT
-    );
+            RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
     private final IInputHandler<@NotNull ItemStack> extraInputHandler;
 
@@ -87,7 +88,6 @@ public class TileEntityStampingFactory extends TileEntityItemToItemMoreMachineFa
 
     @Override
     protected boolean isCachedRecipeValid(@Nullable CachedRecipe<StamperRecipe> cached, @NotNull ItemStack stack) {
-
         if (cached != null) {
             StamperRecipe cachedRecipe = cached.getRecipe();
             return cachedRecipe.getInput().testType(stack) && (moldSlot.isEmpty() || cachedRecipe.getMold().testType(moldSlot.getStack()));
@@ -99,7 +99,7 @@ public class TileEntityStampingFactory extends TileEntityItemToItemMoreMachineFa
     protected StamperRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @Nullable IInventorySlot secondaryOutputSlot) {
         ItemStack extra = moldSlot.getStack();
         ItemStack output = outputSlot.getStack();
-        //TODO: Give it something that is not empty when we don't have a stored secondary stack for getting the output?
+        // TODO: Give it something that is not empty when we don't have a stored secondary stack for getting the output?
         return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, moldSlot.getStack(),
                 recipe -> InventoryUtils.areItemsStackable(recipe.getOutput(fallbackInput, extra), output));
     }
@@ -132,9 +132,9 @@ public class TileEntityStampingFactory extends TileEntityItemToItemMoreMachineFa
     @Override
     public void parseUpgradeData(@NotNull IUpgradeData upgradeData) {
         if (upgradeData instanceof StamperUpgradeData data) {
-            //Generic factory upgrade data handling
+            // Generic factory upgrade data handling
             super.parseUpgradeData(upgradeData);
-            //Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
+            // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
             moldSlot.deserializeNBT(data.moldSlot.serializeNBT());
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());

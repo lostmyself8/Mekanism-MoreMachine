@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntityGasToGasFactory;
 import com.jerry.mekaf.common.upgrade.GasGasToGasUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.ChemicalTankBuilder;
@@ -35,8 +36,10 @@ import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,12 +55,10 @@ public class TileEntityChemicalInfusingFactory extends TileEntityGasToGasFactory
             RecipeError.NOT_ENOUGH_LEFT_INPUT,
             RecipeError.NOT_ENOUGH_RIGHT_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_RIGHT_INPUT
-    );
+            RecipeError.NOT_ENOUGH_RIGHT_INPUT);
     public static final long MAX_GAS = 10_000;
 
     public IGasTank rightTank;

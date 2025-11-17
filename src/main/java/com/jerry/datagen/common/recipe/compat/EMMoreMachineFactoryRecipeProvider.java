@@ -3,6 +3,7 @@ package com.jerry.datagen.common.recipe.compat;
 import com.jerry.datagen.common.recipe.builder.MoreMachineDataShapedRecipeBuilder;
 import com.jerry.datagen.common.recipe.impl.MoreMachineRecipeProvider;
 import com.jerry.datagen.common.recipe.pattern.Pattern;
+
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.block.attribute.AttributeMoreMachineFactoryType;
 import com.jerry.mekmm.common.block.prefab.BlockMoreMachineFactoryMachine.BlockMoreMachineFactory;
@@ -10,8 +11,7 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
-import fr.iglee42.evolvedmekanism.registries.EMTags;
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
+
 import mekanism.api.annotations.ParametersAreNotNullByDefault;
 import mekanism.api.providers.IItemProvider;
 import mekanism.common.block.attribute.Attribute;
@@ -20,10 +20,14 @@ import mekanism.common.resource.PrimaryResource;
 import mekanism.common.resource.ResourceType;
 import mekanism.common.tags.MekanismTags;
 import mekanism.common.tier.FactoryTier;
+
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.Tags;
+
+import fr.iglee42.evolvedmekanism.registries.EMTags;
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 
 import java.util.function.Consumer;
 

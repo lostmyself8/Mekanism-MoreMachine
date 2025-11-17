@@ -8,6 +8,7 @@ import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlo
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.tile.machine.TileEntityPlantingStation;
 import com.jerry.mekmm.common.upgrade.PlantingUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.NBTConstants;
 import mekanism.api.RelativeSide;
@@ -43,11 +44,13 @@ import mekanism.common.tile.prefab.TileEntityAdvancedElectricMachine;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +59,7 @@ import java.util.List;
 import java.util.Set;
 
 public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<PlantingRecipe> implements IHasDumpButton, ConstantUsageRecipeLookupHandler,
-        ItemChemicalRecipeLookupHandler<Gas, GasStack, PlantingRecipe> {
+                                       ItemChemicalRecipeLookupHandler<Gas, GasStack, PlantingRecipe> {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
@@ -64,12 +67,10 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
             TileEntityPlantingStation.NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_SECONDARY_INPUT
-    );
+            RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
     private IInputHandler<@NotNull ItemStack>[] inputHandlers;
     private final ILongInputHandler<@NotNull GasStack> gasInputHandler;
@@ -95,7 +96,8 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
             long baseRemaining = baseTotalUsage - usedSoFar;
             int remainingTicks = getTicksRequired() - operatingTicks;
             if (baseRemaining < remainingTicks) {
-                //If we already used more than we would need to use (due to removing speed upgrades or adding gas upgrades)
+                // If we already used more than we would need to use (due to removing speed upgrades or adding gas
+                // upgrades)
                 // then just don't use any gas this tick
                 return 0;
             } else if (baseRemaining == remainingTicks) {
@@ -127,7 +129,8 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
             int xPos = baseX + (i * baseXMult);
             OutputInventorySlot outputSlot = OutputInventorySlot.at(updateSortingListener, xPos, 57);
             OutputInventorySlot secondaryOutputSlot = OutputInventorySlot.at(updateSortingListener, xPos, 77);
-            //Note: As we are an item factory that has comparator's based on items we can just use the monitor as a listener directly
+            // Note: As we are an item factory that has comparator's based on items we can just use the monitor as a
+            // listener directly
             MoreMachineFactoryInputInventorySlot inputSlot = MoreMachineFactoryInputInventorySlot.create(this, i, outputSlot, secondaryOutputSlot, recipeCacheLookupMonitors[i], xPos, 13);
             int index = i;
             builder.addSlot(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));
@@ -164,7 +167,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     @Override
     public @NotNull CachedRecipe<PlantingRecipe> createNewCachedRecipe(@NotNull PlantingRecipe recipe, int cacheIndex) {
         return PlantingCacheRecipe.create(recipe, recheckAllRecipeErrors[cacheIndex], inputHandlers[cacheIndex], gasInputHandler,
-                        chemicalUsageMultiplier, used -> usedSoFar[cacheIndex] = used, outputHandlers[cacheIndex])
+                chemicalUsageMultiplier, used -> usedSoFar[cacheIndex] = used, outputHandlers[cacheIndex])
                 .setErrorsChanged(errors -> errorTracker.onErrorsChanged(errors, cacheIndex))
                 .setCanHolderFunction(() -> MekanismUtils.canFunction(this))
                 .setActive(active -> setActiveState(active, cacheIndex))
@@ -187,7 +190,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     protected @Nullable PlantingRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @Nullable IInventorySlot secondaryOutputSlot) {
         GasStack gasInput = gasTank.getStack();
         ItemStack output = secondaryOutputSlot == null ? ItemStack.EMPTY : secondaryOutputSlot.getStack();
-        //TODO: Give it something that is not empty when we don't have a stored gas stack for getting the output?
+        // TODO: Give it something that is not empty when we don't have a stored gas stack for getting the output?
         return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, gasInput,
                 recipe -> InventoryUtils.areItemsStackable(recipe.getOutput(fallbackInput, gasInput).first(), output));
     }
@@ -247,9 +250,9 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     @Override
     public void parseUpgradeData(@NotNull IUpgradeData upgradeData) {
         if (upgradeData instanceof PlantingUpgradeData data) {
-            //Generic factory upgrade data handling
+            // Generic factory upgrade data handling
             super.parseUpgradeData(upgradeData);
-            //Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
+            // Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
             gasTank.deserializeNBT(data.stored.serializeNBT());
             gasSlot.deserializeNBT(data.gasSlot.serializeNBT());
             System.arraycopy(data.usedSoFar, 0, usedSoFar, 0, data.usedSoFar.length);

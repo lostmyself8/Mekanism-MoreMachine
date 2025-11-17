@@ -4,13 +4,16 @@ import com.jerry.mekaf.common.tile.TileEntityPressurizedReactingFactory;
 import com.jerry.mekaf.common.tile.base.TileEntityItemToFluidFactory;
 import com.jerry.mekaf.common.tile.base.TileEntityItemToGasFactory;
 import com.jerry.mekaf.common.tile.base.TileEntityItemToMergedFactory;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.gas.IGasTank;
 import mekanism.api.chemical.merged.MergedChemicalTank;
 import mekanism.api.fluid.IExtendedFluidTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
+
 import net.minecraft.world.item.ItemStack;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

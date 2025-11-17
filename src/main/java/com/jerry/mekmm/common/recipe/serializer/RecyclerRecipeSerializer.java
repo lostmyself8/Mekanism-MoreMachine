@@ -1,19 +1,22 @@
 package com.jerry.mekmm.common.recipe.serializer;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
+
 import mekanism.api.JsonConstants;
 import mekanism.api.SerializerHelper;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 import mekanism.api.recipes.ingredients.creator.IngredientCreatorAccess;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,11 +36,11 @@ public class RecyclerRecipeSerializer<RECIPE extends RecyclerRecipe> implements 
         ItemStackIngredient inputIngredient = IngredientCreatorAccess.item().deserialize(input);
         double getChance;
         JsonElement chance = json.get("chance");
-        //判断有无chance字段
+        // 判断有无chance字段
         if (!GsonHelper.isNumberValue(chance)) {
             throw new JsonSyntaxException("Expected chance to be a number greater than zero.");
         }
-        //获取chance字段的值
+        // 获取chance字段的值
         getChance = chance.getAsJsonPrimitive().getAsDouble();
         if (getChance <= 0 || getChance > 1) {
             throw new JsonSyntaxException("Expected chance to be greater than zero, and less than or equal to  one.");

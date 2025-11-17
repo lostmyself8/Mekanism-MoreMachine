@@ -1,6 +1,7 @@
 package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.FluidStackGasToFluidStackRecipe;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.recipes.ItemStackGasToItemStackRecipe;
@@ -10,8 +11,10 @@ import mekanism.api.recipes.cache.CachedRecipeHelper;
 import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +36,8 @@ public class ReplicatorCachedRecipe<TYPE, RECIPE extends MekanismRecipe & BiPred
     private final BiConsumer<TYPE, GasStack> inputsSetter;
     private final Consumer<TYPE> outputSetter;
 
-    //Note: Our inputs and outputs shouldn't be null in places they are actually used, but we mark them as nullable, so we don't have to initialize them
+    // Note: Our inputs and outputs shouldn't be null in places they are actually used, but we mark them as nullable, so
+    // we don't have to initialize them
     @Nullable
     private TYPE input;
     @Nullable
@@ -43,7 +47,8 @@ public class ReplicatorCachedRecipe<TYPE, RECIPE extends MekanismRecipe & BiPred
 
     /**
      * @param recipe           Recipe.
-     * @param recheckAllErrors Returns {@code true} if processing should be continued even if an error is hit in order to gather all the errors. It is recommended to not
+     * @param recheckAllErrors Returns {@code true} if processing should be continued even if an error is hit in order
+     *                         to gather all the errors. It is recommended to not
      *                         do this every tick or if there is no one viewing recipes.
      */
     protected ReplicatorCachedRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<TYPE> inputHandler, IInputHandler<GasStack> secondaryInputHandler,
@@ -93,16 +98,14 @@ public class ReplicatorCachedRecipe<TYPE, RECIPE extends MekanismRecipe & BiPred
         }
     }
 
-    public static <RECIPE extends ItemStackGasToItemStackRecipe> ReplicatorCachedRecipe<ItemStack, RECIPE>
-    itemReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
-                   IInputHandler<@NotNull GasStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStack> outputHandler) {
+    public static <RECIPE extends ItemStackGasToItemStackRecipe> ReplicatorCachedRecipe<ItemStack, RECIPE> itemReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
+                                                                                                                          IInputHandler<@NotNull GasStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput,
                 recipe::getOutput, ItemStack::isEmpty, GasStack::isEmpty, ItemStack::isEmpty);
     }
 
-    public static <RECIPE extends FluidStackGasToFluidStackRecipe> ReplicatorCachedRecipe<FluidStack, RECIPE>
-    fluidReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull FluidStack> fluidInputHandler,
-                   IInputHandler<@NotNull GasStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStack> outputHandler) {
+    public static <RECIPE extends FluidStackGasToFluidStackRecipe> ReplicatorCachedRecipe<FluidStack, RECIPE> fluidReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull FluidStack> fluidInputHandler,
+                                                                                                                              IInputHandler<@NotNull GasStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, fluidInputHandler, chemicalInputHandler, outputHandler, recipe::getFluidInput, recipe::getChemicalInput,
                 recipe::getOutput, FluidStack::isEmpty, GasStack::isEmpty, FluidStack::isEmpty);
     }

@@ -2,10 +2,12 @@ package com.jerry.mekmm.api.recipes;
 
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
+
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,12 +59,13 @@ public abstract class StamperRecipe extends MekanismRecipe implements BiPredicat
      * Gets a new output based on the given inputs.
      *
      * @param input Specific input.
-     * @param mold Specific mold input.
+     * @param mold  Specific mold input.
      *
      * @return New output.
      *
-     * @apiNote While Mekanism does not currently make use of the inputs, it is important to support it and pass the proper value in case any addons define input based
-     * outputs where things like NBT may be different.
+     * @apiNote While Mekanism does not currently make use of the inputs, it is important to support it and pass the
+     *          proper value in case any addons define input based
+     *          outputs where things like NBT may be different.
      * @implNote The passed in inputs should <strong>NOT</strong> be modified.
      */
     @Contract(value = "_, _ -> new", pure = true)
