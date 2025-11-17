@@ -1,0 +1,109 @@
+name: Bug Report / 错误报告
+description: Report a bug where something is not working as expected. / 报告某物未按预期工作的错误。
+labels: [ "type: bug" ]
+body:
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Checked for existing issues / 已检查现有问题
+      description: You have checked for existing reports of this issue, open or closed. / 您已检查过此问题的现有报告（开放或已关闭）。
+      options:
+        - label: "I have checked for existing issues, and have found none. / 我已检查现有问题，未发现相同报告。"
+          required: true
+  - type: checkboxes
+    id: tried-latest
+    attributes:
+      label: Tested latest version / 已测试最新版本
+      description: You have checked that this issue occurs on the latest version of Mekanism Extras. / 您已确认此问题在 Mekanism Extras 的最新版本中出现。
+      options:
+        - label: "I have checked that this occurs on the latest version. / 我已确认此问题在最新版本中出现。"
+          required: true
+  - type: input
+    id: mekanismextras-version
+    attributes:
+      label: Mekanism Extras Version / Mekanism Extras 版本
+      description: The version of Mekanism Extras you were using when this bug was encountered. If you do not know where to find this, look for the mod jar file in the mods folder, or in the mods viewer in-game. / 遇到此错误时使用的 Mekanism Extras 版本。如果不知道如何查找，请查看 mods 文件夹中的 mod jar 文件，或游戏内的模组查看器。
+      placeholder: "Example: v2.3.4 / 例如：v2.3.4"
+    validations:
+      required: true
+  - type: input
+    id : mekanism-version
+    attributes:
+      label: Mekanism Version / Mekanism 版本
+      description: The version of Mekanism you were using when this bug was encountered. If you do not know where to find this, look for the mod jar file in the mods folder, or in the mods viewer in-game. / 遇到此错误时使用的 Mekanism 版本。如果不知道如何查找，请查看 mods 文件夹中的 mod jar 文件，或游戏内的模组查看器。
+      placeholder: "Example: v1.1.0 / 例如：v1.1.0"
+  - type: dropdown
+    id: mc-version
+    attributes:
+      label: Minecraft Version / Minecraft 版本
+      description: The version of Minecraft you were using when this bug was encountered. If you do not know where to find this, it is in the bottom left of the main menu. Any version not listed is not supported. / 遇到此错误时使用的 Minecraft 版本。如果不知道如何查找，它位于主菜单的左下角。未列出的任何版本均不受支持。
+      options:
+        - "1.20.1 Forge"
+        - "1.19.2 Forge"
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment / 环境
+      description: How you were playing on the world. Hybrid servers are unsupported. / 您在世界中游玩的方式。不支持混合服务器。
+      options:
+        - "Singleplayer / 单人游戏"
+        - "Multiplayer - Open to LAN / 多人游戏 - 开放局域网"
+        - "Multiplayer - Dedicated Server / 多人游戏 - 专用服务器"
+    validations:
+      required: true
+  - type: dropdown
+    id: cross-mod
+    attributes:
+      label: Cross-Mod Interaction / 跨模组交互
+      description: Does this bug occur because of another mod installed alongside Mekanism Extras? / 此错误是否由于与 Mekanism Extras 同时安装的其他模组引起？
+      options:
+        - "Yes / 是"
+        - "No / 否"
+        - "Unsure / 不确定"
+    validations:
+      required: true
+  - type: textarea
+    id: other-mods
+    attributes:
+      label: Other Installed Mods / 其他已安装模组
+      description: Enter the name of the modpack you're playing, or list all mods you have installed here. / 输入您正在游玩的整合包名称，或在此处列出所有已安装的模组。
+      placeholder: "Example: Cosmic Frontiers, Monifactory, Embeddium, NuclearCraft Neoteric, AE2,... / 例如：Cosmic Frontiers, Monifactory, Embeddium, NuclearCraft Neoteric, AE2,..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior / 预期行为
+      description: What you expected to happen. Attach screenshots here as necessary. / 您期望发生什么。必要时在此处附加截图。
+      placeholder: "Example: Expected to produce X by consuming Y. / 例如：期望通过消耗 Y 来生产 X。"
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Actual Behavior / 实际行为
+      description: What happened despite your expectations. Attach screenshots here as necessary. / 与您预期不符的实际发生情况。必要时在此处附加截图。
+      placeholder: "Example: Produced one X but Y was not consumed. / 例如：生产了一个 X 但 Y 未被消耗。"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce / 重现步骤
+      description: How to reproduce the bug. / 如何重现此错误。
+      placeholder: "Example: 1) I did X... / 例如：1) 我做了 X..."
+    validations:
+      required: true
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information / 附加信息
+      description: Any additional information you wish to provide. Please add anything which did not fit into the other sections here. / 您希望提供的任何附加信息。请将不适合其他部分的内容添加在此处。
+      placeholder: "Example: This is likely caused by X because... / 例如：这很可能由 X 引起，因为..."
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: Thank you for taking the time to fill out this bug report. / 感谢您抽出时间填写此错误报告。

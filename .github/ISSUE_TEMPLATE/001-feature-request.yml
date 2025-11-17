@@ -1,0 +1,30 @@
+name: Feature Request / 功能请求
+description: Request a new feature. / 请求新功能。
+labels: [ "type: feature" ]
+body:
+  - type: input
+    id: cross-mod
+    attributes:
+      label: Cross-mod Integration / 跨模组集成
+      description: "Does this feature involve integration with another mod? If so specify the mod(s). Otherwise, leave this blank. / 此功能是否涉及与其他模组的集成？如果是，请指定模组名称。否则留空。"
+      placeholder: "Example: Create Mod / 例如：Create Mod"
+  - type: dropdown
+    id: mc-version
+    attributes:
+      label: Minecraft Version / Minecraft 版本
+      description: The version of Minecraft you wish this feature was added for. / 您希望此功能添加到的 Minecraft 版本。
+      options:
+        - "Both"
+        - "1.20.1 Forge"
+        - "1.19.2 Forge"
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description / 功能描述
+      description: "What feature would you like to have? Please describe it here. / 您希望拥有什么功能？请在此描述。"
+      placeholder: "Example: I want to be able to do... / 例如：我希望能够做..."
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: Thank you for taking the time to fill out this feature request. / 感谢您抽出时间填写此功能请求。

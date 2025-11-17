@@ -1,0 +1,54 @@
+repositories {
+    flatDir {
+        dir "gradle/libs"
+    }
+    mavenLocal()
+    mavenCentral()
+    maven { // JEI
+        name = "Jared's Maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "blakes's Maven"
+        url 'https://maven.blakesmods.com'
+    }
+    maven { // JEI mirror, AE2
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
+    maven { // LDLib, Shimmer
+        name = "FirstDarkDev Maven"
+        url = "https://maven.firstdarkdev.xyz/snapshots"
+    }
+    maven { // ModernUI
+        name = 'IzzelAliz Maven'
+        url = 'https://maven.izzel.io/releases/'
+    }
+    exclusiveContent { // shedaniel - REI, architectury, cloth-config
+        forRepository { maven { url = "https://maven.shedaniel.me/" } }
+        filter {
+            includeGroupAndSubgroups("me.shedaniel")
+            includeGroup("dev.architectury")
+        }
+    }
+    exclusiveContent { // terraformers - EMI
+        forRepository { maven { url = "https://maven.terraformersmc.com/releases/" } }
+        filter { includeGroup("dev.emi") }
+    }
+    exclusiveContent { // Modrinth Maven
+        forRepository { maven { url = "https://api.modrinth.com/maven" } }
+        filter { includeGroup("maven.modrinth") }
+    }
+    exclusiveContent { // Curseforge Maven
+        forRepository { maven { url = "https://cursemaven.com" } }
+        filter { includeGroup("curse.maven") }
+    }
+//
+//    maven {
+//        // saps.dev Maven (KubeJS and Rhino)
+//        url = "https://maven.saps.dev/minecraft"
+//        content {
+//            includeGroup "dev.latvian.mods"
+//        }
+//    }
+}

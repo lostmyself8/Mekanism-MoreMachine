@@ -1,0 +1,58 @@
+[versions]
+mixinExtras = "0.5.0-rc.3"
+
+jei = "15.20.0.116"
+emi = "1.1.22+1.20.1"
+shimmer = "1.20.1-0.2.4"
+modernui = "6ksT8CWg" #3.11.1.6
+mekanism = "1.20.1-10.4.16.80"
+cucumber = "1.20.1-7.0.15"
+mysticalagriculture = "1.20.1-7.0.23"
+
+## modrinth maven ##
+jade = "11.13.2+forge"
+jer = "1.4.0.247"
+embeddium = "0.3.31+mc1.20.1"
+oculus = "1.20.1-1.8.0"
+ferritecore = "6.0.1"
+modernfix = "5.24.4+mc1.20.1"
+
+## curseforge maven ##
+mekanismcovers = "5831281"
+igleelibrary = "6987117"
+evolvedmekanism = "7117024"
+immersiveengineering = "6206989"
+
+## libs ##
+jech = "4.5.16"
+
+
+[libraries]
+mixinExtras-common  = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinExtras" }
+
+jei-common-api      = { module = "mezz.jei:jei-1.20.1-common-api", version.ref = "jei" }
+jei-forge-api       = { module = "mezz.jei:jei-1.20.1-forge-api", version.ref = "jei" }
+jei-forge-impl      = { module = "mezz.jei:jei-1.20.1-forge", version.ref = "jei" }
+emi                 = { module = "dev.emi:emi-forge", version.ref = "emi" }
+jer                 = { module = "maven.modrinth:just-enough-resources-jer", version.ref = "jer" }
+
+mekanism            = { module = "mekanism:Mekanism", version.ref = "mekanism" }
+shimmer             = { module = "com.lowdragmc.shimmer:Shimmer-forge", version.ref = "shimmer" }
+cucumber            = { module = "com.blakebr0.cucumber:Cucumber", version.ref = "cucumber" }
+mysticalagriculture = { module = "com.blakebr0.mysticalagriculture:MysticalAgriculture", version.ref = "mysticalagriculture" }
+
+jade                = { module = "maven.modrinth:jade", version.ref = "jade" }
+embeddium           = { module = "maven.modrinth:embeddium", version.ref = "embeddium" }
+oculus              = { module = "maven.modrinth:oculus", version.ref = "oculus" }
+ferritecore         = { module = "maven.modrinth:uXXizFIs", version.ref = "ferritecore" }
+modernfix           = { module = "maven.modrinth:modernfix", version.ref = "modernfix" }
+modernui            = { module = "maven.modrinth:modern-ui", version.ref = "modernui" }
+
+mekanismcovers      = { module = "curse.maven:mekanism-covers-1119874", version.ref = "mekanismcovers" }
+igleelibrary        = { module = "curse.maven:iglee-library-541199", version.ref = "igleelibrary" }
+evolvedmekanism     = { module = "curse.maven:evolved-mekanism-1230085", version.ref = "evolvedmekanism" }
+immersiveengineering= { module = "curse.maven:immersive-engineering-231951", version.ref = "immersiveengineering" }
+
+jecharacters        = { module = "dev:jecharacters-1.20.1-forge", version.ref = "jech" }
+[bundles]
+jei = ["jei-common-api", "jei-forge-api", "jei-forge-impl"]

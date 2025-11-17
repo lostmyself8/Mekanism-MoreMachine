@@ -1,15 +1,24 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         gradlePluginPortal()
-        maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
+        maven { url = "https://maven.neoforged.net/releases"}
+        maven { url = "https://maven.minecraftforge.net/" }
+    }
+    plugins {
+        id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+    versionCatalogs {
+        forge {
+            from(files("gradle/forge.versions.toml"))
         }
     }
 }
 
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
-}
-
-rootProject.name = 'Mekanism_More_Machine'
+rootProject.name = mod_id
