@@ -1,0 +1,5 @@
+# https://github.com/github/issue-labeler#usage
+master:
+  - '/^1\.21 NeoForge$/m'
+1.20.2:
+  - '/^1\.20\.1 Forge$/m'

@@ -1,0 +1,25 @@
+name: Sync Github Folder
+
+on:
+  push:
+    branches: ['master']
+    paths: ['.github/**']
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '1.20.1'
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -C gh/workflow-sync
+          git fetch origin
+          git checkout origin/master -- .github
+          git commit -am "Sync Workflows"
+          git push --force --set-upstream origin gh/workflow-sync
+          gh pr create -B 1.20.1 -H gh/workflow-sync --title "Sync Workflows with master [no-snapshot]" --body "Created by GH Workflow" --label "ignore changelog"
