@@ -1,6 +1,7 @@
 package com.jerry.datagen.common.recipe;
 
 import mekanism.api.annotations.NothingNullByDefault;
+
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -32,8 +33,7 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
 
     @Override
     protected final void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        Consumer<FinishedRecipe> trackingConsumer = consumer.andThen(recipe ->
-              existingFileHelper.trackGenerated(recipe.getId(), PackType.SERVER_DATA, ".json", "recipes"));
+        Consumer<FinishedRecipe> trackingConsumer = consumer.andThen(recipe -> existingFileHelper.trackGenerated(recipe.getId(), PackType.SERVER_DATA, ".json", "recipes"));
         addRecipes(trackingConsumer);
         getSubRecipeProviders().forEach(subRecipeProvider -> subRecipeProvider.addRecipes(trackingConsumer));
     }
@@ -55,9 +55,8 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
 
     public static Ingredient createIngredient(Collection<TagKey<Item>> itemTags, ItemLike... items) {
         return Ingredient.fromValues(Stream.concat(
-              itemTags.stream().map(Ingredient.TagValue::new),
-              Arrays.stream(items).map(item -> new Ingredient.ItemValue(new ItemStack(item)))
-        ));
+                itemTags.stream().map(Ingredient.TagValue::new),
+                Arrays.stream(items).map(item -> new Ingredient.ItemValue(new ItemStack(item)))));
     }
 
     @SafeVarargs

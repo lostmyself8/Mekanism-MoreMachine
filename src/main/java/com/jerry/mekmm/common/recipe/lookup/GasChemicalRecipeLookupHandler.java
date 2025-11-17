@@ -1,4 +1,3 @@
 package com.jerry.mekmm.common.recipe.lookup;
 
-public class GasChemicalRecipeLookupHandler {
-}
+public class GasChemicalRecipeLookupHandler {}

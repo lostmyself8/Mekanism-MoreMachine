@@ -7,6 +7,7 @@ import com.jerry.mekmm.common.recipe.impl.FluidReplicatorIRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
 import com.jerry.mekmm.common.util.ValidatorUtils;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
@@ -46,12 +47,14 @@ import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.RegistryUtils;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,8 +69,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
 
     public static final int MAX_FLUID = 10 * FluidType.BUCKET_VOLUME;
     public static final long MAX_GAS = 10 * FluidType.BUCKET_VOLUME;
@@ -77,7 +79,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
 
     public BasicFluidTank fluidInputTank;
     public BasicFluidTank fluidOutputTank;
-    //化学品存储槽
+    // 化学品存储槽
     public IGasTank gasTank;
 
     private MachineEnergyContainer<TileEntityFluidReplicator> energyContainer;
@@ -88,10 +90,10 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
 
     FluidInventorySlot lFluidInputSlot;
     FluidInventorySlot rFluidInputSlot;
-    //流体储罐输入输出物品槽
+    // 流体储罐输入输出物品槽
     FluidInventorySlot fluidInputSlot;
     OutputInventorySlot fluidOutputSlot;
-    //气罐槽
+    // 气罐槽
     GasInventorySlot chemicalSlot;
     EnergyInventorySlot energySlot;
 
@@ -145,17 +147,17 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
     @Override
     protected @Nullable IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener) {
         InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this::getDirection, this::getConfig);
-        //输入
+        // 输入
         builder.addSlot(fluidInputSlot = FluidInventorySlot.fill(fluidInputTank, listener, 180, 71));
         builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, 180, 102));
-        //输出
+        // 输出
         builder.addSlot(lFluidInputSlot = FluidInventorySlot.drain(fluidInputTank, listener, 29, 65));
         builder.addSlot(rFluidInputSlot = FluidInventorySlot.drain(fluidOutputTank, listener, 132, 65));
-        //化学品罐槽位置
+        // 化学品罐槽位置
         builder.addSlot(chemicalSlot = GasInventorySlot.fillOrConvert(gasTank, this::getLevel, listener, 8, 65));
-        //能量槽位置
+        // 能量槽位置
         builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 152, 65));
-        //化学品罐槽减号图标
+        // 化学品罐槽减号图标
         chemicalSlot.setSlotOverlay(SlotOverlay.MINUS);
         fluidInputSlot.setSlotOverlay(SlotOverlay.MINUS);
         lFluidInputSlot.setSlotOverlay(SlotOverlay.PLUS);
@@ -217,14 +219,13 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
         }
         if (customRecipeMap != null) {
             Fluid fluid = fluidStack.getFluid();
-            //如果为空则赋值为0
+            // 如果为空则赋值为0
             int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(fluid).toString(), 0);
-            //防止null和配置文件中出现0
+            // 防止null和配置文件中出现0
             if (amount == 0) return null;
             return new FluidReplicatorIRecipe(fluid, IngredientCreatorAccess.fluid().from(fluid, 1000),
                     IngredientCreatorAccess.gas().from(MoreMachineGas.UU_MATTER.getChemical(), amount),
-                    new FluidStack(fluid, FluidType.BUCKET_VOLUME)
-            );
+                    new FluidStack(fluid, FluidType.BUCKET_VOLUME));
         }
         return null;
     }

@@ -7,6 +7,7 @@ import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.component.ITileComponent;
 import mekanism.common.tile.interfaces.IRedstoneControl;
 import mekanism.common.upgrade.IUpgradeData;
+
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.Collections;
@@ -24,11 +25,10 @@ public class MergedToItemUpgradeData implements IUpgradeData {
     public final List<MergedChemicalTank> inputTanks;
     public final CompoundTag components;
 
-
     public MergedToItemUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                    IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot,
                                    MergedChemicalTank inputTank, IInventorySlot outputSlot, List<ITileComponent> components) {
-        this(redstone, controlType, energyContainer, new int[]{operatingTicks}, energySlot, Collections.singletonList(inputTank),
+        this(redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, Collections.singletonList(inputTank),
                 Collections.singletonList(outputSlot), false, components);
     }
 

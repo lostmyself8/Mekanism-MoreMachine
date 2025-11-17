@@ -8,7 +8,5 @@ import mekanism.api.annotations.NothingNullByDefault;
 @NothingNullByDefault
 public class RecipeProviderUtil {
 
-    private RecipeProviderUtil() {
-    }
-
+    private RecipeProviderUtil() {}
 }

@@ -1,13 +1,12 @@
 package com.jerry.mekmm.common.util;
 
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
+
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 
 public class MoreMachineEnumUtils {
 
-    private MoreMachineEnumUtils() {
-
-    }
+    private MoreMachineEnumUtils() {}
 
     /**
      * Cached value of {@link MoreMachineFactoryType#values()}. DO NOT MODIFY THIS LIST.

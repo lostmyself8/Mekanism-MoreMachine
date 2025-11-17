@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntityGasToGasFactory;
 import com.jerry.mekaf.common.upgrade.GasToGasUpgradeData;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.gas.Gas;
@@ -27,8 +28,10 @@ import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,13 +45,11 @@ public class TileEntityCentrifugingFactory extends TileEntityGasToGasFactory<Gas
             RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
 
     public TileEntityCentrifugingFactory(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
-
 
         ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.GAS);
         if (gasConfig != null) {
@@ -94,9 +95,7 @@ public class TileEntityCentrifugingFactory extends TileEntityGasToGasFactory<Gas
     }
 
     @Override
-    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
-
-    }
+    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {}
 
     @Override
     public @NotNull IMekanismRecipeTypeProvider<GasToGasRecipe, InputRecipeCache.SingleChemical<Gas, GasStack, GasToGasRecipe>> getRecipeType() {

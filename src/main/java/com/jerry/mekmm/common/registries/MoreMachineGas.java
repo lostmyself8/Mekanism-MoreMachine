@@ -2,14 +2,14 @@ package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.MoreMachineChemicalConstants;
+
 import mekanism.api.chemical.gas.Gas;
 import mekanism.common.registration.impl.GasDeferredRegister;
 import mekanism.common.registration.impl.GasRegistryObject;
 
 public class MoreMachineGas {
 
-    private MoreMachineGas() {
-    }
+    private MoreMachineGas() {}
 
     public static final GasDeferredRegister MM_GASES = new GasDeferredRegister(Mekmm.MOD_ID);
 

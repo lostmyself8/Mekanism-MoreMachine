@@ -1,6 +1,7 @@
 package com.jerry.datagen.common.recipe.compat;
 
 import mekanism.api.annotations.ParametersAreNotNullByDefault;
+
 import net.minecraft.data.recipes.FinishedRecipe;
 
 import java.util.function.Consumer;
@@ -13,7 +14,5 @@ public class BotaniaRecipeProvider extends CompatRecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<FinishedRecipe> consumer, String basePath) {
-
-    }
+    protected void registerRecipes(Consumer<FinishedRecipe> consumer, String basePath) {}
 }

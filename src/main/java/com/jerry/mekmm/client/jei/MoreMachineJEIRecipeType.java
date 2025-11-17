@@ -5,15 +5,14 @@ import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.recipes.ItemStackGasToItemStackRecipe;
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.client.jei.MekanismJEIRecipeType;
 
 public class MoreMachineJEIRecipeType {
 
-    private MoreMachineJEIRecipeType() {
-
-    }
+    private MoreMachineJEIRecipeType() {}
 
     public static final MekanismJEIRecipeType<RecyclerRecipe> RECYCLING = new MekanismJEIRecipeType<>(MoreMachineBlocks.RECYCLER, RecyclerRecipe.class);
     public static final MekanismJEIRecipeType<PlantingRecipe> PLANTING = new MekanismJEIRecipeType<>(MoreMachineBlocks.PLANTING_STATION, PlantingRecipe.class);
@@ -24,5 +23,4 @@ public class MoreMachineJEIRecipeType {
 
     public static final MekanismJEIRecipeType<ItemStackGasToItemStackRecipe> REPLICATOR = new MekanismJEIRecipeType<>(MoreMachineBlocks.REPLICATOR, ItemStackGasToItemStackRecipe.class);
     public static final MekanismJEIRecipeType<FluidStackGasToFluidStackRecipe> FLUID_REPLICATOR = new MekanismJEIRecipeType<>(MoreMachineBlocks.FLUID_REPLICATOR, FluidStackGasToFluidStackRecipe.class);
-
 }

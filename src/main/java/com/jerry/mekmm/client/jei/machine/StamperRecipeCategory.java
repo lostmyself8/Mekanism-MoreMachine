@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.jei.machine;
 
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.client.gui.element.GuiDownArrow;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.progress.ProgressType;
@@ -10,6 +11,7 @@ import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.jei.BaseRecipeCategory;
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;

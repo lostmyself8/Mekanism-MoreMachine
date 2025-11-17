@@ -1,11 +1,12 @@
 package com.jerry.datagen.common.recipe.builder;
 
-import com.google.gson.JsonObject;
 import com.jerry.datagen.common.DataGenJsonConstants;
+
 import mekanism.api.JsonConstants;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.datagen.recipe.MekanismRecipeBuilder;
 import mekanism.common.util.RegistryUtils;
+
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,8 @@ import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+
+import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -53,7 +56,7 @@ public abstract class BaseRecipeBuilder<BUILDER extends BaseRecipeBuilder<BUILDE
         build(consumer, result);
     }
 
-    //Copied from CraftingRecipeBuilder#determineBookCategory
+    // Copied from CraftingRecipeBuilder#determineBookCategory
     protected StringRepresentable determineBookCategory() {
         return switch (category) {
             case BUILDING_BLOCKS -> CraftingBookCategory.BUILDING;

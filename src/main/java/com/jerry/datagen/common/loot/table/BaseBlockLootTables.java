@@ -1,7 +1,5 @@
 package com.jerry.datagen.common.loot.table;
 
-import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import mekanism.api.NBTConstants;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.annotations.ParametersAreNotNullByDefault;
@@ -20,6 +18,7 @@ import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.interfaces.ISideConfiguration;
 import mekanism.common.tile.interfaces.ISustainedData;
 import mekanism.common.util.EnumUtils;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -47,6 +46,9 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.items.IItemHandler;
+
+import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,17 +62,18 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
             .hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
 
     private final Set<Block> knownBlocks = new ReferenceOpenHashSet<>();
-    //Note: We use an array set as we never expect this to have more than a few elements (in reality it only ever has one)
+    // Note: We use an array set as we never expect this to have more than a few elements (in reality it only ever has
+    // one)
     private final Set<Block> toSkip = new ReferenceArraySet<>();
 
     protected BaseBlockLootTables() {
-        //Note: We manually handle explosion resistance on a case by case basis dynamically
+        // Note: We manually handle explosion resistance on a case by case basis dynamically
         super(Collections.emptySet(), FeatureFlags.VANILLA_SET);
     }
 
     @Override
     protected void add(@NotNull Block block, @NotNull LootTable.Builder table) {
-        //Overwrite the core register method to add to our list of known blocks
+        // Overwrite the core register method to add to our list of known blocks
         super.add(block, table);
         knownBlocks.add(block);
     }
@@ -88,24 +91,22 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     }
 
     protected boolean skipBlock(Block block) {
-        //Skip any blocks that we already registered a table for or have marked to skip
+        // Skip any blocks that we already registered a table for or have marked to skip
         return knownBlocks.contains(block) || toSkip.contains(block);
     }
 
     protected Builder createOreDrop(Block block, ItemLike item) {
         return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.asItem())
-                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
-        ));
+                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
     }
 
     protected Builder droppingWithFortuneOrRandomly(Block block, ItemLike item, UniformGenerator range) {
         return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.asItem())
                 .apply(SetItemCountFunction.setCount(range))
-                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
-        ));
+                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))));
     }
 
-    //IBlockProvider versions of BlockLootTable methods, modified to support varargs
+    // IBlockProvider versions of BlockLootTable methods, modified to support varargs
     protected void dropSelf(List<IBlockProvider> blockProviders) {
         for (IBlockProvider blockProvider : blockProviders) {
             Block block = blockProvider.getBlock();
@@ -135,7 +136,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     }
 
     protected void dropSelfWithContents(List<IBlockProvider> blockProviders) {
-        //TODO: See if there is other stuff we want to be transferring which we currently do not
+        // TODO: See if there is other stuff we want to be transferring which we currently do not
         // For example, when writing this we added dump mode for chemical tanks to getting transferred to the item
         for (IBlockProvider blockProvider : blockProviders) {
             Block block = blockProvider.getBlock();
@@ -145,7 +146,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
             TrackingNbtBuilder nbtBuilder = new TrackingNbtBuilder(ContextNbtProvider.BLOCK_ENTITY);
             boolean hasContents = false;
             LootItem.Builder<?> itemLootPool = LootItem.lootTableItem(block);
-            //delayed items until after NBT copy is added
+            // delayed items until after NBT copy is added
             DelayedLootItemBuilder delayedPool = new DelayedLootItemBuilder();
             @Nullable
             BlockEntity tile = null;
@@ -156,7 +157,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                 nbtBuilder.copy(NBTConstants.COMPONENT_FREQUENCY, NBTConstants.MEK_DATA + "." + NBTConstants.COMPONENT_FREQUENCY);
             }
             if (Attribute.has(block, AttributeSecurity.class)) {
-                //TODO: Should we just save the entire security component?
+                // TODO: Should we just save the entire security component?
                 nbtBuilder.copy(NBTConstants.COMPONENT_SECURITY + "." + NBTConstants.OWNER_UUID, NBTConstants.MEK_DATA + "." + NBTConstants.OWNER_UUID);
                 nbtBuilder.copy(NBTConstants.COMPONENT_SECURITY + "." + NBTConstants.SECURITY_MODE, NBTConstants.MEK_DATA + "." + NBTConstants.SECURITY_MODE);
             }
@@ -195,11 +196,13 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                 if (attributeInventory.hasCustomLoot()) {
                     hasContents = attributeInventory.applyLoot(delayedPool, nbtBuilder);
                 }
-                //If the block has an inventory and no custom loot function, copy the inventory slots,
+                // If the block has an inventory and no custom loot function, copy the inventory slots,
                 // but if it is an IItemHandler, which for most cases of ours it will be,
-                // then only copy the slots if we actually have any slots because otherwise maybe something just went wrong
+                // then only copy the slots if we actually have any slots because otherwise maybe something just went
+                // wrong
                 else if (!(tile instanceof IItemHandler handler) || handler.getSlots() > 0) {
-                    //If we don't actually handle saving an inventory (such as the quantum entangloporter, don't actually add it as something to copy)
+                    // If we don't actually handle saving an inventory (such as the quantum entangloporter, don't
+                    // actually add it as something to copy)
                     if (!(tile instanceof TileEntityMekanism tileMek) || tileMek.persistInventory()) {
                         nbtBuilder.copy(NBTConstants.ITEMS, NBTConstants.MEK_DATA + "." + NBTConstants.ITEMS);
                         hasContents = true;
@@ -207,13 +210,13 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                 }
             }
             if (block instanceof BlockCardboardBox) {
-                //TODO: Do this better so that it doesn't have to be as hard coded to being a cardboard box
+                // TODO: Do this better so that it doesn't have to be as hard coded to being a cardboard box
                 nbtBuilder.copy(NBTConstants.DATA, NBTConstants.MEK_DATA + "." + NBTConstants.DATA);
             }
             if (nbtBuilder.hasData()) {
                 itemLootPool.apply(nbtBuilder);
             }
-            //apply the delayed ones last, so that NBT funcs have happened first
+            // apply the delayed ones last, so that NBT funcs have happened first
             for (LootItemFunction.Builder function : delayedPool.functions) {
                 itemLootPool.apply(function);
             }
@@ -223,13 +226,13 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
             add(block, LootTable.lootTable().withPool(applyExplosionCondition(hasContents, LootPool.lootPool()
                     .name("main")
                     .setRolls(ConstantValue.exactly(1))
-                    .add(itemLootPool)
-            )));
+                    .add(itemLootPool))));
         }
     }
 
     /**
-     * Like vanilla's {@link BlockLootSubProvider#applyExplosionCondition(ItemLike, ConditionUserBuilder)} except with a boolean for if it is explosion resistant.
+     * Like vanilla's {@link BlockLootSubProvider#applyExplosionCondition(ItemLike, ConditionUserBuilder)} except with a
+     * boolean for if it is explosion resistant.
      */
     private static <T extends ConditionUserBuilder<T>> T applyExplosionCondition(boolean explosionResistant, ConditionUserBuilder<T> condition) {
         return explosionResistant ? condition.unwrap() : condition.when(ExplosionCondition.survivesExplosion());
@@ -245,13 +248,9 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                 .name("main")
                 .setRolls(ConstantValue.exactly(1))
                 .add(applyExplosionDecay(slab, LootItem.lootTableItem(slab)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(2))
-                                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(slab)
-                                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE)))
-                                )
-                        )
-                )
-        );
+                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(2))
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(slab)
+                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE)))))));
     }
 
     /**
@@ -271,12 +270,12 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
         return LootTable.lootTable().withPool(applyExplosionCondition(item, LootPool.lootPool()
                 .name("main")
                 .setRolls(ConstantValue.exactly(1))
-                .add(LootItem.lootTableItem(item))
-        ));
+                .add(LootItem.lootTableItem(item))));
     }
 
     /**
-     * Like vanilla's {@link BlockLootSubProvider#createSingleItemTableWithSilkTouch(Block, ItemLike, NumberProvider)} except with a named pool
+     * Like vanilla's {@link BlockLootSubProvider#createSingleItemTableWithSilkTouch(Block, ItemLike, NumberProvider)}
+     * except with a named pool
      */
     @NotNull
     @Override
@@ -285,7 +284,8 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     }
 
     /**
-     * Like vanilla's {@link BlockLootSubProvider#createSilkTouchDispatchTable(Block, LootPoolEntryContainer.Builder)} except with a named pool
+     * Like vanilla's {@link BlockLootSubProvider#createSilkTouchDispatchTable(Block, LootPoolEntryContainer.Builder)}
+     * except with a named pool
      */
     @NotNull
     protected static LootTable.Builder createSilkTouchDispatchTable(@NotNull Block block, @NotNull LootPoolEntryContainer.Builder<?> builder) {
@@ -293,7 +293,9 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     }
 
     /**
-     * Like vanilla's {@link BlockLootSubProvider#createSelfDropDispatchTable(Block, LootItemCondition.Builder, LootPoolEntryContainer.Builder)} except with a named pool
+     * Like vanilla's
+     * {@link BlockLootSubProvider#createSelfDropDispatchTable(Block, LootItemCondition.Builder, LootPoolEntryContainer.Builder)}
+     * except with a named pool
      */
     @NotNull
     protected static LootTable.Builder createSelfDropDispatchTable(@NotNull Block block, @NotNull LootItemCondition.Builder conditionBuilder,
@@ -303,17 +305,16 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                 .setRolls(ConstantValue.exactly(1))
                 .add(LootItem.lootTableItem(block)
                         .when(conditionBuilder)
-                        .otherwise(entry)
-                )
-        );
+                        .otherwise(entry)));
     }
 
     @MethodsReturnNonnullByDefault
     @ParametersAreNotNullByDefault
     public static class TrackingNbtBuilder extends CopyNbtFunction.Builder {
+
         private boolean hasData = false;
 
-        public TrackingNbtBuilder(NbtProvider pNbtSource){
+        public TrackingNbtBuilder(NbtProvider pNbtSource) {
             super(pNbtSource);
         }
 
@@ -330,6 +331,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
 
     @NothingNullByDefault
     public static class DelayedLootItemBuilder implements ConditionUserBuilder<DelayedLootItemBuilder>, FunctionUserBuilder<DelayedLootItemBuilder> {
+
         private final List<LootItemFunction.Builder> functions = new ArrayList<>();
         private final List<LootItemCondition.Builder> conditions = new ArrayList<>();
 

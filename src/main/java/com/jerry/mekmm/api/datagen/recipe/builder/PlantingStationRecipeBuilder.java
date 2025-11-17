@@ -1,15 +1,18 @@
 package com.jerry.mekmm.api.datagen.recipe.builder;
 
-import com.google.gson.JsonObject;
 import com.jerry.mekmm.Mekmm;
+
 import mekanism.api.JsonConstants;
 import mekanism.api.SerializerHelper;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.datagen.recipe.MekanismRecipeBuilder;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient.GasStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+
+import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 @NothingNullByDefault
@@ -19,7 +22,6 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
     private final GasStackIngredient gasInput;
     private final ItemStack mainOutput;
     private final ItemStack secondaryOutput;
-
 
     protected PlantingStationRecipeBuilder(ItemStackIngredient itemInput, GasStackIngredient gasInput, ItemStack mainOutput, ItemStack secondaryOutput) {
         super(ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "planting"));

@@ -1,12 +1,12 @@
 package com.jerry.mekaf.common.registries;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactory;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
+
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineMachineBuilder;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
+
 import mekanism.api.Upgrade;
 import mekanism.common.MekanismLang;
 import mekanism.common.config.MekanismConfig;
@@ -18,13 +18,14 @@ import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.machine.*;
 import mekanism.common.util.EnumUtils;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import java.util.EnumSet;
 
 public class AdvancedFactoryBlockTypes {
 
-    private AdvancedFactoryBlockTypes() {
-
-    }
+    private AdvancedFactoryBlockTypes() {}
 
     private static final Table<FactoryTier, AdvancedFactoryType, AdvancedFactory<?>> AF_FACTORIES = HashBasedTable.create();
 

@@ -2,12 +2,14 @@ package com.jerry.mekmm.api.recipes.outputs;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe.PlantingStationRecipeOutput;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
+
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.outputs.IOutputHandler;
+
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
@@ -15,8 +17,7 @@ import java.util.Objects;
 @NothingNullByDefault
 public class MoreMachineOutputHelper {
 
-    private MoreMachineOutputHelper() {
-    }
+    private MoreMachineOutputHelper() {}
 
     public static IOutputHandler<RecyclerRecipe.ChanceOutput> getOutputHandler(IInventorySlot chanceSlot, CachedRecipe.OperationTracker.RecipeError chanceSlotNotEnoughSpaceError) {
         Objects.requireNonNull(chanceSlot, "Chance slot cannot be null.");
@@ -46,16 +47,19 @@ public class MoreMachineOutputHelper {
      *
      * @param mainSlot                         Main slot to wrap.
      * @param secondarySlot                    Secondary slot to wrap.
-     * @param mainSlotNotEnoughSpaceError      The error to apply if the main output causes the recipe to not be able to perform any operations.
-     * @param secondarySlotNotEnoughSpaceError The error to apply if the secondary output causes the recipe to not be able to perform any operations.
+     * @param mainSlotNotEnoughSpaceError      The error to apply if the main output causes the recipe to not be able to
+     *                                         perform any operations.
+     * @param secondarySlotNotEnoughSpaceError The error to apply if the secondary output causes the recipe to not be
+     *                                         able to perform any operations.
      */
     public static IOutputHandler<PlantingStationRecipeOutput> getOutputHandler(IInventorySlot mainSlot, CachedRecipe.OperationTracker.RecipeError mainSlotNotEnoughSpaceError,
-                                                                                              IInventorySlot secondarySlot, CachedRecipe.OperationTracker.RecipeError secondarySlotNotEnoughSpaceError) {
+                                                                               IInventorySlot secondarySlot, CachedRecipe.OperationTracker.RecipeError secondarySlotNotEnoughSpaceError) {
         Objects.requireNonNull(mainSlot, "Main slot cannot be null.");
         Objects.requireNonNull(secondarySlot, "Secondary/Extra slot cannot be null.");
         Objects.requireNonNull(mainSlotNotEnoughSpaceError, "Main slot not enough space error cannot be null.");
         Objects.requireNonNull(secondarySlotNotEnoughSpaceError, "Secondary/Extra slot not enough space error cannot be null.");
         return new IOutputHandler<>() {
+
             @Override
             public void handleOutput(PlantingStationRecipeOutput toOutput, int operations) {
                 MoreMachineOutputHelper.handleOutput(mainSlot, toOutput.first(), operations);
@@ -78,7 +82,7 @@ public class MoreMachineOutputHelper {
         }
         ItemStack output = toOutput.copy();
         if (operations > 1) {
-            //If we are doing more than one operation we need to make a copy of our stack and change the amount
+            // If we are doing more than one operation we need to make a copy of our stack and change the amount
             // that we are using the fill the tank with
             output.setCount(output.getCount() * operations);
         }
@@ -86,13 +90,14 @@ public class MoreMachineOutputHelper {
     }
 
     private static void calculateOperationsCanSupport(CachedRecipe.OperationTracker tracker, CachedRecipe.OperationTracker.RecipeError notEnoughSpace, IInventorySlot slot, ItemStack toOutput) {
-        //If our output is empty, we have nothing to add, so we treat it as being able to fit all
+        // If our output is empty, we have nothing to add, so we treat it as being able to fit all
         if (!toOutput.isEmpty()) {
-            //Make a copy of the stack we are outputting with its maximum size
+            // Make a copy of the stack we are outputting with its maximum size
             ItemStack output = toOutput.copyWithCount(toOutput.getMaxStackSize());
             ItemStack remainder = slot.insertItem(output, Action.SIMULATE, AutomationType.INTERNAL);
             int amountUsed = output.getCount() - remainder.getCount();
-            //Divide the amount we can actually use by the amount one output operation is equal to, capping it at the max we were told about
+            // Divide the amount we can actually use by the amount one output operation is equal to, capping it at the
+            // max we were told about
             int operations = amountUsed / toOutput.getCount();
             tracker.updateOperations(operations);
             if (operations == 0) {

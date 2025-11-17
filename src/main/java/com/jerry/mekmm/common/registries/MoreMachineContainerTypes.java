@@ -4,15 +4,14 @@ import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.inventory.container.tile.MoreMachineFactoryContainer;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.machine.*;
+
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.registration.impl.ContainerTypeDeferredRegister;
 import mekanism.common.registration.impl.ContainerTypeRegistryObject;
 
 public class MoreMachineContainerTypes {
 
-    private MoreMachineContainerTypes() {
-
-    }
+    private MoreMachineContainerTypes() {}
 
     public static final ContainerTypeDeferredRegister MM_CONTAINER_TYPES = new ContainerTypeDeferredRegister(Mekmm.MOD_ID);
 
@@ -30,7 +29,7 @@ public class MoreMachineContainerTypes {
 
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityMoreMachineFactory<?>>> MM_FACTORY = MM_CONTAINER_TYPES.register("factory", factoryClass(), MoreMachineFactoryContainer::new);
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static Class<TileEntityMoreMachineFactory<?>> factoryClass() {
         return (Class) TileEntityMoreMachineFactory.class;
     }

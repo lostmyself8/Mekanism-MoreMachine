@@ -2,6 +2,7 @@ package com.jerry.mekaf.client.jei;
 
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
+
 import mekanism.api.providers.IBlockProvider;
 import mekanism.api.providers.IItemProvider;
 import mekanism.client.jei.MekanismJEI;
@@ -9,13 +10,13 @@ import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.util.EnumUtils;
+
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 
 public class AdvancedFactoryCatalystRegistryHelper {
 
-    private AdvancedFactoryCatalystRegistryHelper() {
-    }
+    private AdvancedFactoryCatalystRegistryHelper() {}
 
     public static void register(IRecipeCatalystRegistration registry, IBlockProvider mekanismBlock) {
         registerRecipeItem(registry, mekanismBlock, MekanismJEIRecipeType.findType(mekanismBlock.getRegistryName()));

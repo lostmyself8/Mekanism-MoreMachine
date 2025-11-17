@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntityItemToFluidFactory;
 import com.jerry.mekaf.common.upgrade.ItemToFluidUpgradeData;
+
 import mekanism.api.fluid.IExtendedFluidTank;
 import mekanism.api.math.MathUtils;
 import mekanism.api.providers.IBlockProvider;
@@ -16,10 +17,12 @@ import mekanism.common.recipe.impl.NutritionalLiquifierIRecipe;
 import mekanism.common.registries.MekanismFluids;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,18 +31,16 @@ import java.util.Set;
 
 public class TileEntityLiquifyingFactory extends TileEntityItemToFluidFactory<ItemStackToFluidRecipe> {
 
-    //单个槽位报错，例如输入槽和输出槽
+    // 单个槽位报错，例如输入槽和输出槽
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
-    //GLOBAL对应要统一处理的错误例如这里的输出储罐，在监听时应该用GLOBAL声明的Error才能正常报错
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
+    // GLOBAL对应要统一处理的错误例如这里的输出储罐，在监听时应该用GLOBAL声明的Error才能正常报错
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_OUTPUT_SPACE
-    );
+            RecipeError.NOT_ENOUGH_OUTPUT_SPACE);
 
     public TileEntityLiquifyingFactory(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
@@ -82,7 +83,7 @@ public class TileEntityLiquifyingFactory extends TileEntityItemToFluidFactory<It
         }
         FoodProperties food = stack.getFoodProperties(null);
         if (food == null || food.getNutrition() == 0) {
-            //If the food provides no healing don't allow consuming it as it won't provide any paste
+            // If the food provides no healing don't allow consuming it as it won't provide any paste
             return null;
         }
         return new NutritionalLiquifierIRecipe(stack.getItem(), IngredientCreatorAccess.item().from(stack, 1),

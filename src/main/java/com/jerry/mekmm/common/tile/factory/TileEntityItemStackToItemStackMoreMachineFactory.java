@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.tile.factory;
 
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
+
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
 import mekanism.api.providers.IBlockProvider;
@@ -14,25 +15,26 @@ import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.upgrade.MachineUpgradeData;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
 
-//Lathe, Rolling_Mill
+// Lathe, Rolling_Mill
 public class TileEntityItemStackToItemStackMoreMachineFactory extends TileEntityItemToItemMoreMachineFactory<ItemStackToItemStackRecipe> implements
-        ISingleRecipeLookupHandler.ItemRecipeLookupHandler<ItemStackToItemStackRecipe> {
+                                                              ISingleRecipeLookupHandler.ItemRecipeLookupHandler<ItemStackToItemStackRecipe> {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
 
     public TileEntityItemStackToItemStackMoreMachineFactory(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
@@ -41,7 +43,7 @@ public class TileEntityItemStackToItemStackMoreMachineFactory extends TileEntity
 
     @Override
     public boolean isItemValidForSlot(@NotNull ItemStack stack) {
-        //contains recipe in general already validated by isValidInputItem
+        // contains recipe in general already validated by isValidInputItem
         return true;
     }
 
@@ -73,7 +75,7 @@ public class TileEntityItemStackToItemStackMoreMachineFactory extends TileEntity
     public IMekanismRecipeTypeProvider<ItemStackToItemStackRecipe, InputRecipeCache.SingleItem<ItemStackToItemStackRecipe>> getRecipeType() {
         return switch (type) {
             case CNC_LATHING -> MoreMachineRecipeType.LATHING;
-            //TODO: Make it so that it throws an error if it is not one of the three types
+            // TODO: Make it so that it throws an error if it is not one of the three types
             default -> MoreMachineRecipeType.ROLLING_MILL;
         };
     }

@@ -1,6 +1,7 @@
 package com.jerry.mekmm.client.gui.machine;
 
 import com.jerry.mekmm.common.tile.machine.TileEntityReplicator;
+
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.client.gui.GuiConfigurableTile;
 import mekanism.client.gui.element.gauge.GaugeType;
@@ -11,9 +12,11 @@ import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
 import org.jetbrains.annotations.NotNull;
 
 public class GuiReplicator extends GuiConfigurableTile<TileEntityReplicator, MekanismTileContainer<TileEntityReplicator>> {

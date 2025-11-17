@@ -1,7 +1,5 @@
 package com.jerry.mekmm.common.registries;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.block.BlockDoll;
 import com.jerry.mekmm.common.block.prefab.BlockMoreMachineFactoryMachine;
@@ -14,6 +12,7 @@ import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.machine.*;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
+
 import mekanism.api.tier.ITier;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
@@ -24,10 +23,14 @@ import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.resource.BlockResourceInfo;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.util.EnumUtils;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -35,9 +38,7 @@ import java.util.function.Supplier;
 
 public class MoreMachineBlocks {
 
-    private MoreMachineBlocks() {
-
-    }
+    private MoreMachineBlocks() {}
 
     public static final BlockDeferredRegister MM_BLOCKS = new BlockDeferredRegister(Mekmm.MOD_ID);
 

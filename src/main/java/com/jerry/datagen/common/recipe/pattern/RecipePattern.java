@@ -1,9 +1,10 @@
 package com.jerry.datagen.common.recipe.pattern;
 
 import mekanism.api.annotations.NothingNullByDefault;
+
 import org.jetbrains.annotations.Nullable;
 
-//Note: We don't have a 1x1 pattern as that makes more sense to be done via a shapeless recipe
+// Note: We don't have a 1x1 pattern as that makes more sense to be done via a shapeless recipe
 @NothingNullByDefault
 public class RecipePattern {
 
@@ -27,42 +28,42 @@ public class RecipePattern {
         this.row3 = row3;
     }
 
-    //For 1x2 recipes
+    // For 1x2 recipes
     public static RecipePattern createPattern(DoubleLine row1) {
         return new RecipePattern(row1.columns);
     }
 
-    //For 2x1 recipes
+    // For 2x1 recipes
     public static RecipePattern createPattern(char row1, char row2) {
         return new RecipePattern(Character.toString(row1), Character.toString(row2));
     }
 
-    //For 2x2 recipes
+    // For 2x2 recipes
     public static RecipePattern createPattern(DoubleLine row1, DoubleLine row2) {
         return new RecipePattern(row1.columns, row2.columns);
     }
 
-    //For 1x3 recipes
+    // For 1x3 recipes
     public static RecipePattern createPattern(TripleLine row1) {
         return new RecipePattern(row1.columns);
     }
 
-    //For 2x3 recipes
+    // For 2x3 recipes
     public static RecipePattern createPattern(TripleLine row1, TripleLine row2) {
         return new RecipePattern(row1.columns, row2.columns);
     }
 
-    //For 3x1 recipes
+    // For 3x1 recipes
     public static RecipePattern createPattern(char row1, char row2, char row3) {
         return new RecipePattern(Character.toString(row1), Character.toString(row2), Character.toString(row3));
     }
 
-    //For 3x2 recipes
+    // For 3x2 recipes
     public static RecipePattern createPattern(DoubleLine row1, DoubleLine row2, DoubleLine row3) {
         return new RecipePattern(row1.columns, row2.columns, row3.columns);
     }
 
-    //For 3x3 recipes
+    // For 3x3 recipes
     public static RecipePattern createPattern(TripleLine row1, TripleLine row2, TripleLine row3) {
         return new RecipePattern(row1.columns, row2.columns, row3.columns);
     }

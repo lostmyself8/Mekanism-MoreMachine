@@ -4,8 +4,9 @@ import com.jerry.mekaf.client.gui.element.tab.AFGuiSortingTab;
 import com.jerry.mekaf.common.tile.TileEntityPressurizedReactingFactory;
 import com.jerry.mekaf.common.tile.TileEntityWashingFactory;
 import com.jerry.mekaf.common.tile.base.*;
+
 import com.jerry.mekmm.Mekmm;
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
+
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiConfigurableTile;
@@ -23,9 +24,12 @@ import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.interfaces.IHasDumpButton;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.NotNull;
 
 public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFactoryBase<?>, MekanismTileContainer<TileEntityAdvancedFactoryBase<?>>> {
@@ -55,10 +59,10 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             imageWidth += 34;
             inventoryLabelX = 26;
         }
-        //想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
+        // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
-            //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            //这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
             imageWidth += (36 * (index + 2)) + (2 * index);
             inventoryLabelX = (22 * (index + 2)) - (3 * index);
@@ -80,13 +84,13 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             addRenderableWidget(GuiSideHolder.create(this, imageWidth, 66, 57, false, true, SpecialColors.TAB_CHEMICAL_WASHER));
         }
         super.addGuiElements();
-        //由于没有合适的API因此化学品输入的工厂不能自动整理
+        // 由于没有合适的API因此化学品输入的工厂不能自动整理
         if (tile instanceof TileEntityItemToGasFactory<?> || tile instanceof TileEntityItemToMergedFactory<?> || tile instanceof TileEntityItemToFluidFactory<?> || tile instanceof TileEntityPressurizedReactingFactory) {
             addRenderableWidget(new AFGuiSortingTab(this, tile));
         }
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16, getEnergyHeight()))
                 .warning(WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY, 0));
-        //左下角能量面板
+        // 左下角能量面板
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getLastUsage));
 
         if (tile.hasExtrasResourceBar()) {
@@ -181,7 +185,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         for (int i = 0; i < tile.tier.processes; i++) {
             int cacheIndex = i;
             addProgress(new GuiProgress(() -> tile.getScaledProgress(1, cacheIndex), ProgressType.DOWN, this, 4 + tile.getXPos(i), getProgressYPos()))
-                    //Only can happen if recipes change because inputs are sanitized in the factory based on the output
+                    // Only can happen if recipes change because inputs are sanitized in the factory based on the output
                     .warning(WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT, cacheIndex));
         }
     }
@@ -220,8 +224,8 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
 
     private int getBarWidth() {
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
-            //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            //这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
             return 210 + 38 * index;
         }
@@ -230,8 +234,8 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
 
     private int getButtonX() {
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
-            //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            //这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
             return 220 + 38 * index;
         }

@@ -1,23 +1,26 @@
 package com.jerry.mekmm.common;
 
 import com.jerry.mekmm.Mekmm;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.ILangEntry;
+
 import net.minecraft.Util;
 
 @NothingNullByDefault
 public enum MoreMachineLang implements ILangEntry {
-    //Gui lang strings
+
+    // Gui lang strings
     MEKANISM_MORE_MACHINE("constants", "more_machine"),
     MEKANISM_LARGE_MACHINE("constants", "large_machine"),
-    //Factory Type
+    // Factory Type
     RECYCLING("factory", "recycling"),
     PLANTING("factory", "planting"),
     STAMPING("factory", "stamping"),
     LATHING("factory", "lathing"),
     ROLLING_MILL("factory", "rolling_mill"),
     REPLICATING("factory", "replicating"),
-    //Advanced Factory Type
+    // Advanced Factory Type
     OXIDIZING("factory", "oxidizing"),
     CHEMICAL_INFUSING("factory", "chemical_infusing"),
     DISSOLVING("factory", "dissolving"),
@@ -26,7 +29,7 @@ public enum MoreMachineLang implements ILangEntry {
     PRESSURISED_REACTING("factory", "pressurised_reacting"),
     CENTRIFUGING("factory", "centrifuging"),
     LIQUIFYING("factory", "liquifying"),
-    //Descriptions
+    // Descriptions
     DESCRIPTION_RECYCLER("description", "recycler"),
     DESCRIPTION_PLANTING_STATION("description", "planting_station"),
     DESCRIPTION_CNC_STAMPER("description", "cnc_stamper"),
@@ -36,9 +39,9 @@ public enum MoreMachineLang implements ILangEntry {
     DESCRIPTION_FLUID_REPLICATOR("description", "fluid_replicator"),
     DESCRIPTION_AMBIENT_GAS_COLLECTOR("description", "ambient_gas_collector"),
     AUTHOR_DOLL("description", "author_doll"),
-    //JEI
+    // JEI
     JEI_INFO_UNSTABLE_DIMENSIONAL_GAS("info", "jei.unstable_dimensional_gas"),
-    //Tooltip stuff
+    // Tooltip stuff
     IS_BLOCKING("tooltip", "is_blocking"),
     NO_BLOCKING("tooltip", "no_blocking");
 

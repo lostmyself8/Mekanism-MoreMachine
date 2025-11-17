@@ -3,8 +3,10 @@ package com.jerry.mekmm.common.content.blocktype;
 import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
+
 import com.jerry.mekmm.common.block.attribute.AttributeMoreMachineFactoryType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.Upgrade;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.block.attribute.*;
@@ -13,6 +15,7 @@ import mekanism.common.lib.math.Pos3D;
 import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.base.TileEntityMekanism;
+
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 

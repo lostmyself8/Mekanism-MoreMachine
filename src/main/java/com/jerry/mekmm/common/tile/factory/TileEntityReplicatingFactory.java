@@ -5,6 +5,7 @@ import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.recipe.impl.ReplicatorIRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
 import com.jerry.mekmm.common.util.ValidatorUtils;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
@@ -34,10 +35,12 @@ import mekanism.common.upgrade.AdvancedMachineUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.RegistryUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,27 +50,26 @@ import java.util.Objects;
 import java.util.Set;
 
 public class TileEntityReplicatingFactory extends TileEntityItemToItemMoreMachineFactory<ItemStackGasToItemStackRecipe> implements IHasDumpButton,
-        ItemChemicalRecipeLookupHandler<Gas, GasStack, ItemStackGasToItemStackRecipe> {
+                                          ItemChemicalRecipeLookupHandler<Gas, GasStack, ItemStackGasToItemStackRecipe> {
+
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_SECONDARY_INPUT
-    );
+            RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
     public static final long MAX_GAS = 10_000;
 
     public static HashMap<String, Integer> customRecipeMap = ValidatorUtils.getRecipeFromConfig(MoreMachineConfig.general.itemReplicatorRecipe.get());
 
     private final ILongInputHandler<GasStack> chemicalInputHandler;
-    //化学品存储槽
+    // 化学品存储槽
     public IGasTank gasTank;
-    //气罐槽
+    // 气罐槽
     GasInventorySlot gasSlot;
 
     public TileEntityReplicatingFactory(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
@@ -171,14 +173,13 @@ public class TileEntityReplicatingFactory extends TileEntityItemToItemMoreMachin
         }
         if (customRecipeMap != null) {
             Item item = itemStack.getItem();
-            //如果为空则赋值为0
+            // 如果为空则赋值为0
             int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(item).toString(), 0);
-            //防止null和配置文件中出现0
+            // 防止null和配置文件中出现0
             if (amount == 0) return null;
             return new ReplicatorIRecipe(item, IngredientCreatorAccess.item().from(item, 1),
                     IngredientCreatorAccess.gas().from(MoreMachineGas.UU_MATTER, amount),
-                    new ItemStack(item, 1)
-            );
+                    new ItemStack(item, 1));
         }
         return null;
     }
@@ -191,9 +192,9 @@ public class TileEntityReplicatingFactory extends TileEntityItemToItemMoreMachin
     @Override
     public void parseUpgradeData(@NotNull IUpgradeData upgradeData) {
         if (upgradeData instanceof AdvancedMachineUpgradeData data) {
-            //Generic factory upgrade data handling
+            // Generic factory upgrade data handling
             super.parseUpgradeData(upgradeData);
-            //Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
+            // Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
             gasTank.deserializeNBT(data.stored.serializeNBT());
             gasSlot.deserializeNBT(data.gasSlot.serializeNBT());
         } else {

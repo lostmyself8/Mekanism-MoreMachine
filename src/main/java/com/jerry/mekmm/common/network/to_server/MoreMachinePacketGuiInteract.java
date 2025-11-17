@@ -1,11 +1,14 @@
 package com.jerry.mekmm.common.network.to_server;
 
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
+
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
+
 import mekanism.api.functions.TriConsumer;
 import mekanism.common.network.IMekanismPacket;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.WorldUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -69,6 +72,7 @@ public class MoreMachinePacketGuiInteract implements IMekanismPacket {
     }
 
     public enum GuiInteraction {
+
         AUTO_SORT_BUTTON((tile, player, extra) -> {
             if (tile instanceof TileEntityAdvancedFactoryBase<?> factory) {
                 factory.toggleSorting();

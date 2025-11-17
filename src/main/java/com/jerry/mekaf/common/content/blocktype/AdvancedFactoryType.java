@@ -1,8 +1,10 @@
 package com.jerry.mekaf.common.content.blocktype;
 
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlockTypes;
+
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.IHasTranslationKey;
 import mekanism.api.text.ILangEntry;
@@ -14,6 +16,7 @@ import java.util.function.Supplier;
 
 @NothingNullByDefault
 public enum AdvancedFactoryType implements IHasTranslationKey {
+
     OXIDIZING("oxidizing", MoreMachineLang.OXIDIZING, () -> AdvancedFactoryBlockTypes.CHEMICAL_OXIDIZER, () -> MekanismBlocks.CHEMICAL_OXIDIZER),
     CHEMICAL_INFUSING("chemical_infusing", MoreMachineLang.CHEMICAL_INFUSING, () -> AdvancedFactoryBlockTypes.CHEMICAL_INFUSER, () -> MekanismBlocks.CHEMICAL_INFUSER),
 

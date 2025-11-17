@@ -3,10 +3,12 @@ package com.jerry.mekmm.common.recipe.impl;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.FluidStackGasToFluidStackRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient.GasStackIngredient;
 import mekanism.api.recipes.ingredients.FluidStackIngredient;
 import mekanism.common.util.RegistryUtils;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;

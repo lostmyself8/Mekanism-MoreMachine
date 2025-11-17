@@ -3,6 +3,7 @@ package com.jerry.mekmm.common.content.blocktype;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.registries.MoreMachineBlockTypes;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.IHasTranslationKey;
 import mekanism.api.text.ILangEntry;
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
 
 @NothingNullByDefault
 public enum MoreMachineFactoryType implements IHasTranslationKey {
+
     RECYCLING("recycling", MoreMachineLang.RECYCLING, () -> MoreMachineBlockTypes.RECYCLER, () -> MoreMachineBlocks.RECYCLER),
     PLANTING("planting", MoreMachineLang.PLANTING, () -> MoreMachineBlockTypes.PLANTING_STATION, () -> MoreMachineBlocks.PLANTING_STATION),
     CNC_STAMPING("stamping", MoreMachineLang.STAMPING, () -> MoreMachineBlockTypes.CNC_STAMPER, () -> MoreMachineBlocks.CNC_STAMPER),

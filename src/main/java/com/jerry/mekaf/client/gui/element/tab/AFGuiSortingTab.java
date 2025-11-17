@@ -1,7 +1,9 @@
 package com.jerry.mekaf.client.gui.element.tab;
 
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
+
 import com.jerry.mekmm.common.network.to_server.MoreMachinePacketGuiInteract;
+
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.IGuiWrapper;
 import mekanism.client.gui.element.GuiInsetElement;
@@ -10,7 +12,9 @@ import mekanism.common.Mekanism;
 import mekanism.common.MekanismLang;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.text.BooleanStateDisplay;
+
 import net.minecraft.client.gui.GuiGraphics;
+
 import org.jetbrains.annotations.NotNull;
 
 public class AFGuiSortingTab extends GuiInsetElement<TileEntityAdvancedFactoryBase<?>> {

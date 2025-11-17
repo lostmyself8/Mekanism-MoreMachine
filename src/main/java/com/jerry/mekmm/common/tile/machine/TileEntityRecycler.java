@@ -6,6 +6,7 @@ import com.jerry.mekmm.api.recipes.outputs.MoreMachineOutputHelper;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.inputs.IInputHandler;
@@ -29,11 +30,13 @@ import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.upgrade.MachineUpgradeData;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +49,7 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
             CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY,
             CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_INPUT,
             CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            CachedRecipe.OperationTracker.RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            CachedRecipe.OperationTracker.RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
 
     public static final int BASE_TICKS_REQUIRED = 10 * SharedConstants.TICKS_PER_SECOND;
 
@@ -84,13 +86,13 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
     @Override
     protected @Nullable IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener) {
         InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this::getDirection, this::getConfig);
-        //输入槽位置
+        // 输入槽位置
         builder.addSlot(inputSlot = InputInventorySlot.at(this::containsRecipe, recipeCacheListener, 64, 17))
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_INPUT)));
-        //输出槽位置
-        builder.addSlot(chanceOutputSlot = OutputInventorySlot.at(listener,116, 35))
+        // 输出槽位置
+        builder.addSlot(chanceOutputSlot = OutputInventorySlot.at(listener, 116, 35))
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE)));
-        //能量槽位置
+        // 能量槽位置
         builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 64, 53));
         return builder.build();
     }

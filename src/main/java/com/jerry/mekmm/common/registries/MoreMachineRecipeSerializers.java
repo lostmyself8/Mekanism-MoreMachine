@@ -8,6 +8,7 @@ import com.jerry.mekmm.common.recipe.impl.*;
 import com.jerry.mekmm.common.recipe.serializer.PlantingRecipeSerializer;
 import com.jerry.mekmm.common.recipe.serializer.RecyclerRecipeSerializer;
 import com.jerry.mekmm.common.recipe.serializer.StamperRecipeSerializer;
+
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.common.recipe.serializer.ItemStackToItemStackRecipeSerializer;
 import mekanism.common.registration.impl.RecipeSerializerDeferredRegister;
@@ -15,8 +16,7 @@ import mekanism.common.registration.impl.RecipeSerializerRegistryObject;
 
 public class MoreMachineRecipeSerializers {
 
-    private MoreMachineRecipeSerializers() {
-    }
+    private MoreMachineRecipeSerializers() {}
 
     public static final RecipeSerializerDeferredRegister MM_RECIPE_SERIALIZERS = new RecipeSerializerDeferredRegister(Mekmm.MOD_ID);
 
@@ -25,5 +25,4 @@ public class MoreMachineRecipeSerializers {
     public static final RecipeSerializerRegistryObject<StamperRecipe> STAMPING = MM_RECIPE_SERIALIZERS.register("stamper", () -> new StamperRecipeSerializer<>(StamperIRecipe::new));
     public static final RecipeSerializerRegistryObject<ItemStackToItemStackRecipe> LATHING = MM_RECIPE_SERIALIZERS.register("lathe", () -> new ItemStackToItemStackRecipeSerializer<>(LatheIRecipe::new));
     public static final RecipeSerializerRegistryObject<ItemStackToItemStackRecipe> ROLLING_MILL = MM_RECIPE_SERIALIZERS.register("rolling_mill", () -> new ItemStackToItemStackRecipeSerializer<>(RollingMillIRecipe::new));
-
 }

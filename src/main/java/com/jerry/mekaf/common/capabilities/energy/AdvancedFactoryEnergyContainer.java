@@ -1,11 +1,13 @@
 package com.jerry.mekaf.common.capabilities.energy;
 
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
+
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.math.FloatingLong;
 import mekanism.common.block.attribute.AttributeEnergy;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

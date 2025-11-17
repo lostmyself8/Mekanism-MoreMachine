@@ -8,6 +8,7 @@ import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.tile.component.ITileComponent;
 import mekanism.common.tile.interfaces.IRedstoneControl;
 import mekanism.common.upgrade.IUpgradeData;
+
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.Collections;
@@ -25,11 +26,10 @@ public class ItemToFluidUpgradeData implements IUpgradeData {
     public final List<IExtendedFluidTank> outputTanks;
     public final CompoundTag components;
 
-
     public ItemToFluidUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                   IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot,
                                   InputInventorySlot inputSlot, IExtendedFluidTank outputTank, List<ITileComponent> components) {
-        this(redstone, controlType, energyContainer, new int[]{operatingTicks}, energySlot, Collections.singletonList(inputSlot),
+        this(redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, Collections.singletonList(inputSlot),
                 Collections.singletonList(outputTank), false, components);
     }
 

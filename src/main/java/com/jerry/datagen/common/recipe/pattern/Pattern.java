@@ -2,11 +2,10 @@ package com.jerry.datagen.common.recipe.pattern;
 
 public class Pattern {
 
-    private Pattern() {
-    }
+    private Pattern() {}
 
     public static final char EMPTY = ' ';
-    //A misc constant character that is the majority of what the recipe is (such as for recolors or the like)
+    // A misc constant character that is the majority of what the recipe is (such as for recolors or the like)
     public static final char CONSTANT = '#';
     public static final char COBBLESTONE = '_';
     public static final char ALLOY = 'A';

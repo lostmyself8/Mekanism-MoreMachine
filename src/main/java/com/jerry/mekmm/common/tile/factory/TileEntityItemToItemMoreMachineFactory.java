@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.tile.factory;
 
 import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlot;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.providers.IBlockProvider;
 import mekanism.api.recipes.MekanismRecipe;
@@ -13,9 +14,11 @@ import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.tier.FactoryTier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,7 +43,8 @@ public abstract class TileEntityItemToItemMoreMachineFactory<RECIPE extends Meka
         for (int i = 0; i < tier.processes; i++) {
             int xPos = baseX + (i * baseXMult);
             OutputInventorySlot outputSlot = OutputInventorySlot.at(updateSortingListener, xPos, 57);
-            //Note: As we are an item factory that has comparator's based on items we can just use the monitor as a listener directly
+            // Note: As we are an item factory that has comparator's based on items we can just use the monitor as a
+            // listener directly
             MoreMachineFactoryInputInventorySlot inputSlot = MoreMachineFactoryInputInventorySlot.create(this, i, outputSlot, recipeCacheLookupMonitors[i], xPos, 13);
             int index = i;
             builder.addSlot(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));

@@ -2,8 +2,9 @@ package com.jerry.mekaf.common.tile;
 
 import com.jerry.mekaf.common.tile.base.TileEntitySlurryToSlurryFactory;
 import com.jerry.mekaf.common.upgrade.FluidSlurryToSlurryUpgradeData;
+
 import com.jerry.mekmm.Mekmm;
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.slurry.ISlurryTank;
 import mekanism.api.chemical.slurry.Slurry;
@@ -38,9 +39,12 @@ import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
+
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,12 +59,10 @@ public class TileEntityWashingFactory extends TileEntitySlurryToSlurryFactory<Fl
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
-            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT
-    );
+            RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(
             RecipeError.NOT_ENOUGH_ENERGY,
-            RecipeError.NOT_ENOUGH_SECONDARY_INPUT
-    );
+            RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
     private static final int MAX_FLUID = 10_000;
 
     public BasicFluidTank fluidTank;
@@ -112,11 +114,11 @@ public class TileEntityWashingFactory extends TileEntitySlurryToSlurryFactory<Fl
     }
 
     private int getFluidSlotX() {
-        //想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
+        // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
         if (Mekmm.hooks.EMLoaded) {
             if (tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal()) {
-                //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-                //这个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+                // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+                // 这个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
                 int index = tier.ordinal() - 4;
                 return 180 + (36 * (index + 2)) + (2 * index);
             }
@@ -187,9 +189,7 @@ public class TileEntityWashingFactory extends TileEntitySlurryToSlurryFactory<Fl
     }
 
     @Override
-    protected void sortInventoryOrTank() {
-
-    }
+    protected void sortInventoryOrTank() {}
 
     @Override
     public void parseUpgradeData(@NotNull IUpgradeData upgradeData) {

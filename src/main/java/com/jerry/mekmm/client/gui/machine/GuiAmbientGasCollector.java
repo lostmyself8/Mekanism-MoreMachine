@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.gui.machine;
 
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.tile.machine.TileEntityAmbientGasCollector;
+
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
@@ -15,9 +16,11 @@ import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker;
 import mekanism.common.util.text.EnergyDisplay;
 import mekanism.common.util.text.TextUtils;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -63,7 +66,8 @@ public class GuiAmbientGasCollector extends GuiMekanismTile<TileEntityAmbientGas
                 });
         addRenderableWidget(new GuiGasGauge(() -> tile.chemicalTank, () -> tile.getGasTanks(null), GaugeType.STANDARD, this, 6, 13))
                 .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, () -> tile.chemicalTank.getNeeded() < tile.estimateIncrementAmount());
-        //TODO: Eventually we may want to consider showing a warning if the block under the pump is of the wrong type or there wasn't a valid spot to suck
+        // TODO: Eventually we may want to consider showing a warning if the block under the pump is of the wrong type
+        // or there wasn't a valid spot to suck
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::usedEnergy));
     }
 

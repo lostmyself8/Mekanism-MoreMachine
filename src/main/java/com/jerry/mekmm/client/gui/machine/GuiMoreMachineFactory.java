@@ -6,7 +6,7 @@ import com.jerry.mekmm.client.jei.MoreMachineJEIRecipeType;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.factory.TileEntityPlantingFactory;
 import com.jerry.mekmm.common.tile.factory.TileEntityReplicatingFactory;
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
+
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.client.gui.GuiConfigurableTile;
 import mekanism.client.gui.element.GuiDumpButton;
@@ -20,9 +20,12 @@ import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.interfaces.IHasDumpButton;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.NotNull;
 
 public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMachineFactory<?>, MekanismTileContainer<TileEntityMoreMachineFactory<?>>> {
@@ -45,10 +48,10 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
             inventoryLabelX = 26;
         }
 
-        //想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
+        // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
-            //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            //这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
             imageWidth += (36 * (index + 2)) + (2 * index);
             inventoryLabelX = (22 * (index + 2)) - (3 * index);
@@ -92,7 +95,7 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
         for (int i = 0; i < tile.tier.processes; i++) {
             int cacheIndex = i;
             addProgress(new GuiProgress(() -> tile.getScaledProgress(1, cacheIndex), ProgressType.DOWN, this, 4 + baseX + (i * baseXMult), 33))
-                    //Only can happen if recipes change because inputs are sanitized in the factory based on the output
+                    // Only can happen if recipes change because inputs are sanitized in the factory based on the output
                     .warning(WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT, cacheIndex));
         }
     }
@@ -111,8 +114,8 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
 
     private int getBarWidth() {
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
-            //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            //这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
             return 210 + 38 * index;
         }
@@ -121,8 +124,8 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
 
     private int getButtonX() {
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
-            //这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            //这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
             return 220 + 38 * index;
         }

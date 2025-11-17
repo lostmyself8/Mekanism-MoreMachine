@@ -2,6 +2,7 @@ package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.PlantingRecipe.PlantingStationRecipeOutput;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.functions.ConstantPredicates;
@@ -10,7 +11,9 @@ import mekanism.api.recipes.cache.ItemStackConstantChemicalToItemStackCachedReci
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
+
 import net.minecraft.world.item.ItemStack;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +35,8 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
     private long gasUsedSoFar;
 
     private ItemStack recipeItem = ItemStack.EMPTY;
-    //Note: Shouldn't be null in places it is actually used, but we mark it as nullable, so we don't have to initialize it
+    // Note: Shouldn't be null in places it is actually used, but we mark it as nullable, so we don't have to initialize
+    // it
     @Nullable
     private GasStack recipeGas;
     @Nullable
@@ -40,7 +44,8 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
 
     /**
      * @param recipe              Recipe.
-     * @param recheckAllErrors    Returns {@code true} if processing should be continued even if an error is hit in order to gather all the errors. It is recommended
+     * @param recheckAllErrors    Returns {@code true} if processing should be continued even if an error is hit in
+     *                            order to gather all the errors. It is recommended
      *                            to not do this every tick or if there is no one viewing recipes.
      * @param itemInputHandler    Item input handler.
      * @param gasInputHandler     Gas input handler.
@@ -61,7 +66,8 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
     }
 
     /**
-     * Sets the amount of gas that have been used so far. This is used to allow {@link CachedRecipe} holders to persist and load recipe progress.
+     * Sets the amount of gas that have been used so far. This is used to allow {@link CachedRecipe} holders to persist
+     * and load recipe progress.
      *
      * @param gasUsedSoFar Amount of gas that has been used so far.
      */
@@ -81,32 +87,32 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
         super.calculateOperationsThisTick(tracker);
         if (tracker.shouldContinueChecking()) {
             recipeItem = itemInputHandler.getRecipeInput(recipe.getItemInput());
-            //Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputItem)
+            // Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputItem)
             if (recipeItem.isEmpty()) {
-                //No input, we don't know if the recipe matches or not so treat it as not matching
+                // No input, we don't know if the recipe matches or not so treat it as not matching
                 tracker.mismatchedRecipe();
             } else {
-                //Now check the gas input
+                // Now check the gas input
                 recipeGas = gasInputHandler.getRecipeInput(recipe.getGasInput());
-                //Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputGas)
+                // Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputGas)
                 if (recipeGas.isEmpty()) {
-                    //TODO: Allow processing when secondary gas is empty if the usage multiplier is zero?
-                    //Note: we don't force reset based on secondary per tick usages
+                    // TODO: Allow processing when secondary gas is empty if the usage multiplier is zero?
+                    // Note: we don't force reset based on secondary per tick usages
                     tracker.updateOperations(0);
                     if (!tracker.shouldContinueChecking()) {
-                        //If we shouldn't continue checking exit, otherwise see if there is an error with the item
+                        // If we shouldn't continue checking exit, otherwise see if there is an error with the item
                         // though due to not having a gas we won't be able to check if there is errors with the output
                         return;
                     }
                 }
-                //Calculate the current max based on the item input
+                // Calculate the current max based on the item input
                 itemInputHandler.calculateOperationsCanSupport(tracker, recipeItem);
                 if (!recipeGas.isEmpty() && tracker.shouldContinueChecking()) {
-                    //Calculate the current max based on the gas input, and the given usage amount
+                    // Calculate the current max based on the gas input, and the given usage amount
                     gasInputHandler.calculateOperationsCanSupport(tracker, recipeGas, gasUsageMultiplier);
                     if (tracker.shouldContinueChecking()) {
                         output = recipe.getOutput(recipeItem, recipeGas);
-                        //Calculate the max based on the space in the output
+                        // Calculate the max based on the space in the output
                         outputHandler.calculateOperationsCanSupport(tracker, output);
                     }
                 }
@@ -119,7 +125,8 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
         ItemStack itemInput = itemInputHandler.getInput();
         if (!itemInput.isEmpty()) {
             GasStack gasStack = gasInputHandler.getInput();
-            //Ensure that we check that we have enough for that the recipe matches *and* also that we have enough for how much we need to use
+            // Ensure that we check that we have enough for that the recipe matches *and* also that we have enough for
+            // how much we need to use
             if (!gasStack.isEmpty() && recipe.test(itemInput, gasStack)) {
                 GasStack recipeGas = gasInputHandler.getRecipeInput(recipe.getGasInput());
                 return !recipeGas.isEmpty() && gasStack.getAmount() >= recipeGas.getAmount();
@@ -132,13 +139,13 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
     protected void useResources(int operations) {
         super.useResources(operations);
         if (gasUsageMultiplier <= 0) {
-            //We don't need to use the gas
+            // We don't need to use the gas
             return;
         } else if (recipeGas == null || recipeGas.isEmpty()) {
-            //Something went wrong, this if should never really be true if we are in useResources
+            // Something went wrong, this if should never really be true if we are in useResources
             return;
         }
-        //Note: We should have enough because of the getOperationsThisTick call to reduce it based on amounts
+        // Note: We should have enough because of the getOperationsThisTick call to reduce it based on amounts
         long toUse = operations * gasUsageMultiplier;
         gasInputHandler.use(recipeGas, toUse);
         gasUsedSoFar += toUse;
@@ -154,7 +161,7 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
 
     @Override
     protected void finishProcessing(int operations) {
-        //Validate something didn't go horribly wrong
+        // Validate something didn't go horribly wrong
         if (recipeGas != null && output != null && !recipeItem.isEmpty() && !recipeGas.isEmpty() && !outputEmptyCheck.test(output)) {
             itemInputHandler.use(recipeItem, operations);
             if (gasUsageMultiplier > 0) {
