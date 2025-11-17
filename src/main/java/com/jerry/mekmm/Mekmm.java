@@ -20,15 +20,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import com.mojang.logging.LogUtils;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(Mekmm.MOD_ID)
 public class Mekmm implements IModModule {
 
     public static final String MOD_ID = "mekmm";
     public static final String MOD_NAME = "MekanismMoreMachine";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
     /**
      * Mekanism More Machine Packet Pipeline
      */
