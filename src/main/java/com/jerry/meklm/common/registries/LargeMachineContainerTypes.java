@@ -6,6 +6,7 @@ import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
+import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -19,6 +20,7 @@ public class LargeMachineContainerTypes {
 
     public static final ContainerTypeDeferredRegister LM_CONTAINER_TYPES = new ContainerTypeDeferredRegister(Mekmm.MOD_ID);
 
+    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeChemicalTank<?>>> CHEMICAL_TANK = LM_CONTAINER_TYPES.custom("chemical_tank", tankClass()).armorSideBar().build();
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeRotaryCondensentrator>> LARGE_ROTARY_CONDENSENTRATOR = LM_CONTAINER_TYPES.register(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, TileEntityLargeRotaryCondensentrator.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeChemicalInfuser>> LARGE_CHEMICAL_INFUSER = LM_CONTAINER_TYPES.register(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER, TileEntityLargeChemicalInfuser.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeElectrolyticSeparator>> LARGE_ELECTROLYTIC_SEPARATOR = LM_CONTAINER_TYPES.register(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, TileEntityLargeElectrolyticSeparator.class);
@@ -26,4 +28,9 @@ public class LargeMachineContainerTypes {
 
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeHeatGenerator>> LARGE_HEAT_GENERATOR = LM_CONTAINER_TYPES.custom(LargeMachineBlocks.LARGE_HEAT_GENERATOR, TileEntityLargeHeatGenerator.class).armorSideBar(-20, 11, 0).build();
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeGasGenerator>> LARGE_GAS_BURNING_GENERATOR = LM_CONTAINER_TYPES.custom(LargeMachineBlocks.LARGE_GAS_BURNING_GENERATOR, TileEntityLargeGasGenerator.class).armorSideBar(-20, 11, 0).build();
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static Class<TileEntityLargeChemicalTank<?>> tankClass() {
+        return (Class) TileEntityLargeChemicalTank.class;
+    }
 }

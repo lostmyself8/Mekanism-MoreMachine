@@ -9,6 +9,7 @@ import com.jerry.meklm.client.gui.machine.GuiLargeChemicalInfuser;
 import com.jerry.meklm.client.gui.machine.GuiLargeElectrolyticSeparator;
 import com.jerry.meklm.client.gui.machine.GuiLargeRotaryCondensentrator;
 import com.jerry.meklm.client.gui.machine.GuiLargeSolarNeutronActivator;
+import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
 import com.jerry.meklm.client.model.bake.*;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
@@ -53,6 +54,15 @@ public class ClientRegistration {
         addCustomModel(MoreMachineBlocks.WIRELESS_CHARGING_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
         addCustomModel(MoreMachineBlocks.WIRELESS_TRANSMISSION_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        // LargeMachine
+        addCustomModel(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        addCustomModel(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        addCustomModel(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        addCustomModel(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
         // 偏移在LargeRotaryCondensentratorBakedModel中
         addCustomModel(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, (orig, evt) -> new LargeRotaryCondensentratorBakedModel(orig));
@@ -100,6 +110,7 @@ public class ClientRegistration {
         ClientRegistrationUtil.registerScreen(event, AdvancedFactoryContainerTypes.ADVANCED_FACTORY, GuiAdvancedFactory::new);
 
         // Large Machine
+        ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.CHEMICAL_TANK, GuiLargeChemicalTank::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_ROTARY_CONDENSENTRATOR, GuiLargeRotaryCondensentrator::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_CHEMICAL_INFUSER, GuiLargeChemicalInfuser::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR, GuiLargeElectrolyticSeparator::new);
