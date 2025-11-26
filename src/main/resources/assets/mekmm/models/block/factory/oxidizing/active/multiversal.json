@@ -1,3 +1,15 @@
 {
-  "parent":"mekmm:block/factory/oxidizing/multiversal"
+  "loader": "neoforge:composite",
+  "parent": "block/block",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/oxidizing/base"
+    },
+    "front_led": {
+      "parent": "evolvedmekanism:block/factory/front_led/multiversal"
+    }
+  }
 }

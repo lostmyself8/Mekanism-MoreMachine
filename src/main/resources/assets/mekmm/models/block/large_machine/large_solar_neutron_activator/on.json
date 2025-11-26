@@ -1,83 +1,77 @@
 {
-	"loader":"neoforge:composite",
-	"gui_light":"side",
-	"textures":
-	{
-		"particle":"mekanism:block/base/base_bottom"
-	},
-	"children":
-	{
-		"base":
-		{
-			"parent":"mekmm:block/large_machine/large_solar_neutron_activator/base/on"
-		},
-		"translucent":
-		{
-			"render_type":"minecraft:translucent",
-			"textures":
-			{
-				"0": "mekmm:block/large_machine/large_solar_neutron_activator/base",
-				"2": "mekanism:block/laser"
-			},
-			"elements":
-			[
-				{
-				"name": "room_door",
-				"from": [4, 2, -13],
-				"to": [26, 22, -12],
-				"rotation": {"angle": 0, "axis": "y", "origin": [4, 3, -13]},
-				"faces": {
-					"north": {"uv": [0, 6.875, 1.375, 8.125], "texture": "#0"},
-					"east": {"uv": [0, 6.875, 0.0625, 8.125], "texture": "#0"},
-					"south": {"uv": [0, 6.875, 1.375, 8.125], "texture": "#0"},
-					"west": {"uv": [0, 6.875, 0.0625, 8.125], "texture": "#0"},
-					"up": {"uv": [0, 6.875, 1.375, 6.9375], "texture": "#0"},
-					"down": {"uv": [0, 6.875, 1.375, 6.9375], "texture": "#0"}
-					}
-				},
-				{
-					"name": "laser",
-					"from": [14.5, 8, 1.5],
-					"to": [15.5, 16, 2.5],
-					"rotation": {"angle": 0, "axis": "y", "origin": [15, 8, 2]},
-					"faces": {
-						"north": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"east": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"south": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"west": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"up": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"down": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}}
-					}
-				},
-				{
-					"name": "laser",
-					"from": [14.5, 8, 1.5],
-					"to": [15.5, 16, 2.5],
-					"rotation": {"angle": 45, "axis": "z", "origin": [15, 8, 2]},
-					"faces": {
-						"north": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"east": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"south": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"west": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"up": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"down": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}}
-					}
-				},
-				{
-					"name": "laser",
-					"from": [14.5, 8, 1.5],
-					"to": [15.5, 16, 2.5],
-					"rotation": {"angle": -45, "axis": "z", "origin": [15, 8, 2]},
-					"faces": {
-						"north": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"east": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"south": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"west": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"up": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
-						"down": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}}
-					}
-				}
-			]
-		}
-	}
+  "loader": "neoforge:composite",
+  "gui_light": "side",
+  "textures": {
+    "particle": "mekanism:block/base/base_bottom"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/large_machine/large_solar_neutron_activator/base/on"
+    },
+    "translucent": {
+      "render_type": "minecraft:translucent",
+      "textures": {
+        "0": "mekmm:block/large_machine/large_solar_neutron_activator/base",
+        "2": "mekanism:block/laser"
+      },
+      "elements": [
+        {
+          "name": "room_door",
+          "from": [4, 2, -13],
+          "to": [26, 22, -12],
+          "rotation": {"angle": 0, "axis": "y", "origin": [4, 3, -13]},
+          "faces": {
+            "north": {"uv": [0, 6.875, 1.375, 8.125], "texture": "#0"},
+            "east": {"uv": [0, 6.875, 0.0625, 8.125], "texture": "#0"},
+            "south": {"uv": [0, 6.875, 1.375, 8.125], "texture": "#0"},
+            "west": {"uv": [0, 6.875, 0.0625, 8.125], "texture": "#0"},
+            "up": {"uv": [0, 6.875, 1.375, 6.9375], "texture": "#0"},
+            "down": {"uv": [0, 6.875, 1.375, 6.9375], "texture": "#0"}
+          }
+        },
+        {
+          "name": "laser",
+          "from": [14.5, 8, 1.5],
+          "to": [15.5, 16, 2.5],
+          "rotation": {"angle": 0, "axis": "y", "origin": [15, 8, 2]},
+          "faces": {
+            "north": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "east": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "south": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "west": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "up": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "down": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+          }
+        },
+        {
+          "name": "laser",
+          "from": [14.5, 8, 1.5],
+          "to": [15.5, 16, 2.5],
+          "rotation": {"angle": 45, "axis": "z", "origin": [15, 8, 2]},
+          "faces": {
+            "north": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "east": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "south": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "west": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "up": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "down": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+          }
+        },
+        {
+          "name": "laser",
+          "from": [14.5, 8, 1.5],
+          "to": [15.5, 16, 2.5],
+          "rotation": {"angle": -45, "axis": "z", "origin": [15, 8, 2]},
+          "faces": {
+            "north": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "east": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "south": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "west": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "up": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+            "down": {"uv": [0, 0, 2, 2], "texture": "#2", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+          }
+        }
+      ]
+    }
+  }
 }

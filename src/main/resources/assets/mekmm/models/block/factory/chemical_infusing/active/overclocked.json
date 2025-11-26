@@ -1,3 +1,15 @@
 {
-  "parent":"mekmm:block/factory/chemical_infusing/overclocked"
+  "loader": "neoforge:composite",
+  "parent": "block/block",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/chemical_infusing/base"
+    },
+    "front_led": {
+      "parent": "evolvedmekanism:block/factory/front_led/overclocked"
+    }
+  }
 }

@@ -2,6 +2,8 @@ package com.jerry.mekaf.common.tile.factory;
 
 import com.jerry.mekaf.common.upgrade.FluidChemicalToChemicalUpgradeData;
 
+import com.jerry.mekmm.Mekmm;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.ChemicalStack;
@@ -47,6 +49,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -109,9 +112,16 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
 
     @Override
     protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
-        builder.addSlot(fluidSlot = FluidInventorySlot.fill(fluidTank, listener, tier == FactoryTier.ULTIMATE ? 214 : 180, 71));
-        builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, tier == FactoryTier.ULTIMATE ? 214 : 180, 102));
+        builder.addSlot(fluidSlot = FluidInventorySlot.fill(fluidTank, listener, slotX(), 71));
+        builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, slotX(), 102));
         fluidSlot.setSlotOverlay(SlotOverlay.MINUS);
+    }
+
+    private int slotX() {
+        if (Mekmm.hooks.evolvedMekanism.isLoaded() && tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal()) {
+            return 214 + 8 * tier.ordinal();
+        }
+        return tier == FactoryTier.ULTIMATE ? 214 : 180;
     }
 
     public BasicFluidTank getFluidTankBar() {

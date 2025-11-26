@@ -1,7 +1,5 @@
 package com.jerry.mekmm.common.content.blocktype;
 
-import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
-
 import mekanism.common.content.blocktype.BlockShapes;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.util.EnumUtils;
@@ -147,19 +145,6 @@ public class MoreMachineBlockShapes {
             case CNC_LATHING -> BlockShapes.COMPRESSING_FACTORY;
             case CNC_ROLLING_MILL -> BlockShapes.COMBINING_FACTORY;
             case REPLICATING -> BlockShapes.PURIFYING_FACTORY;
-        };
-    }
-
-    public static VoxelShape[] getShape(FactoryTier tier, AdvancedFactoryType type) {
-        return switch (type) {
-            case OXIDIZING -> BlockShapes.CHEMICAL_OXIDIZER;
-            case CHEMICAL_INFUSING -> BlockShapes.CHEMICAL_INFUSER;
-            case DISSOLVING -> BlockShapes.CHEMICAL_DISSOLUTION_CHAMBER;
-            case WASHING -> BlockShapes.CHEMICAL_WASHER;
-            case CRYSTALLIZING -> BlockShapes.CHEMICAL_CRYSTALLIZER;
-            case PRESSURISED_REACTING -> BlockShapes.PRESSURIZED_REACTION_CHAMBER;
-            case CENTRIFUGING -> BlockShapes.ISOTOPIC_CENTRIFUGE;
-            case LIQUIFYING -> FULL_BLOCK_SHAPE;
         };
     }
 }

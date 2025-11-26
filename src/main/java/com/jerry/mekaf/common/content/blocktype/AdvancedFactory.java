@@ -5,7 +5,6 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 import com.jerry.mekaf.common.tile.factory.TileEntityAdvancedFactoryBase;
 
-import com.jerry.mekmm.common.content.blocktype.MoreMachineBlockShapes;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
@@ -64,7 +63,7 @@ public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> exte
             // Note, we can't just return the builder here as then it gets all confused about object types, so we just
             // assign the value here, and then return the builder itself as it is the same object
             builder.withComputerSupport(tier, type.getRegistryNameComponentCapitalized() + "Factory");
-            builder.withCustomShape(MoreMachineBlockShapes.getShape(tier, type));
+            builder.withCustomShape(AdvancedFactoryBlockShapes.getShape(type));
             builder.with(switch (type) {
                 case OXIDIZING, DISSOLVING, CRYSTALLIZING -> AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE;
                 case CHEMICAL_INFUSING, CENTRIFUGING -> AttributeSideConfig.create(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY);

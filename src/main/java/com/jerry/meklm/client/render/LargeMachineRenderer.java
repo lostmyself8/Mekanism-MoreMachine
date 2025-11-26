@@ -1,7 +1,5 @@
 package com.jerry.meklm.client.render;
 
-import com.jerry.meklm.client.render.tile.RenderLargeElectrolyticSeparator;
-
 import com.jerry.mekmm.Mekmm;
 
 import net.neoforged.api.distmarker.Dist;
@@ -13,7 +11,5 @@ import net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent;
 public class LargeMachineRenderer {
 
     @SubscribeEvent
-    public static void onStitch(TextureAtlasStitchedEvent event) {
-        RenderLargeElectrolyticSeparator.resetCached();
-    }
+    public static void onStitch(TextureAtlasStitchedEvent event) {}
 }

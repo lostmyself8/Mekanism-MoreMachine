@@ -1,6 +1,15 @@
 {
-  "parent":"mekmm:block/factory/washing/base",
+  "loader": "neoforge:composite",
+  "parent": "block/block",
   "textures": {
-    "4": "mekmm:block/factory/washing/chemical_washer_elements_ultimate"
+    "particle": "mekanism:block/factory/factory_front_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/washing/base"
+    },
+    "front_led": {
+      "parent": "mekanism:block/factory/front_led/ultimate"
+    }
   }
 }
