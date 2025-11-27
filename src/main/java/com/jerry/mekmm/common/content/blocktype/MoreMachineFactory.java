@@ -57,7 +57,7 @@ public class MoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> ex
             // Note, we can't just return the builder here as then it gets all confused about object types, so we just
             // assign the value here, and then return the builder itself as it is the same object
             builder.withComputerSupport(tier, type.getRegistryNameComponentCapitalized() + "Factory");
-            builder.withCustomShape(MoreMachineBlockShapes.getShape(tier, type));
+            builder.withCustomShape(MoreMachineBlockShapes.getShape(type));
             builder.with(switch (type) {
                 case RECYCLING, CNC_STAMPING, CNC_LATHING, CNC_ROLLING_MILL -> AttributeSideConfig.ELECTRIC_MACHINE;
                 case PLANTING_STATION, REPLICATING -> AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE;
