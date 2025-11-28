@@ -57,11 +57,10 @@ dependencies {
 //    modLocalRuntime(forge.emi)
     modLocalRuntime(forge.jei.forge.impl)
 
-    modLocalRuntime(forge.modernui)
-
     // Client-only runtime mods //
     modClientLocalRuntime(forge.embeddium)
     modClientLocalRuntime(forge.oculus)
+    modClientLocalRuntime(forge.modernui)
     renderNurseCfg(libs.renderNurse)
 
     //////////////////////////////////////////////////////
