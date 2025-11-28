@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.content.blocktype;
 
 import com.jerry.mekmm.common.MoreMachineLang;
+import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 import com.jerry.mekmm.common.registries.MoreMachineBlockTypes;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
@@ -8,6 +9,8 @@ import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.IHasTranslationKey;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
+
+import lombok.Getter;
 
 import java.util.Locale;
 import java.util.function.Supplier;
@@ -22,20 +25,17 @@ public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTra
     CNC_ROLLING_MILL("rolling_mill", MoreMachineLang.ROLLING_MILL, () -> MoreMachineBlockTypes.CNC_ROLLING_MILL, () -> MoreMachineBlocks.CNC_ROLLING_MILL),
     REPLICATING("replicating", MoreMachineLang.REPLICATING, () -> MoreMachineBlockTypes.REPLICATOR, () -> MoreMachineBlocks.REPLICATOR);
 
+    @Getter
     private final String registryNameComponent;
     private final ILangEntry langEntry;
-    private final Supplier<MoreMachineMachine.MoreMachineFactoryMachine<?>> baseMachine;
+    private final Supplier<MoreMachineFactoryMachine<?>> baseMachine;
     private final Supplier<BlockRegistryObject<?, ?>> baseBlock;
 
-    MoreMachineFactoryType(String registryNameComponent, ILangEntry langEntry, Supplier<MoreMachineMachine.MoreMachineFactoryMachine<?>> baseMachine, Supplier<BlockRegistryObject<?, ?>> baseBlock) {
+    MoreMachineFactoryType(String registryNameComponent, ILangEntry langEntry, Supplier<MoreMachineFactoryMachine<?>> baseMachine, Supplier<BlockRegistryObject<?, ?>> baseBlock) {
         this.registryNameComponent = registryNameComponent;
         this.langEntry = langEntry;
         this.baseMachine = baseMachine;
         this.baseBlock = baseBlock;
-    }
-
-    public String getRegistryNameComponent() {
-        return registryNameComponent;
     }
 
     public String getRegistryNameComponentCapitalized() {
@@ -43,7 +43,7 @@ public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTra
         return name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
     }
 
-    public MoreMachineMachine.MoreMachineFactoryMachine<?> getBaseMachine() {
+    public MoreMachineFactoryMachine<?> getBaseMachine() {
         return baseMachine.get();
     }
 

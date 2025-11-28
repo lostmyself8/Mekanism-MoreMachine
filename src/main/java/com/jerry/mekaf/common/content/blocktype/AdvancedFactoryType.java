@@ -11,6 +11,8 @@ import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismBlocks;
 
+import lombok.Getter;
+
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -28,6 +30,7 @@ public enum AdvancedFactoryType implements IHasTranslationKey.IHasEnumNameTransl
     CENTRIFUGING("centrifuging", MoreMachineLang.CENTRIFUGING, () -> AdvancedFactoryBlockTypes.ISOTOPIC_CENTRIFUGE, () -> MekanismBlocks.ISOTOPIC_CENTRIFUGE),
     LIQUIFYING("liquifying", MoreMachineLang.LIQUIFYING, () -> AdvancedFactoryBlockTypes.NUTRITIONAL_LIQUIFIER, () -> MekanismBlocks.NUTRITIONAL_LIQUIFIER);
 
+    @Getter
     private final String registryNameComponent;
     private final ILangEntry langEntry;
     private final Supplier<MoreMachineMachine.MoreMachineFactoryMachine<?>> baseMachine;
@@ -38,10 +41,6 @@ public enum AdvancedFactoryType implements IHasTranslationKey.IHasEnumNameTransl
         this.langEntry = langEntry;
         this.baseMachine = baseMachine;
         this.baseBlock = baseBlock;
-    }
-
-    public String getRegistryNameComponent() {
-        return registryNameComponent;
     }
 
     public String getRegistryNameComponentCapitalized() {

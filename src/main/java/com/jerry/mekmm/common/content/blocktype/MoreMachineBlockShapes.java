@@ -1,6 +1,5 @@
 package com.jerry.mekmm.common.content.blocktype;
 
-import mekanism.common.content.blocktype.BlockShapes;
 import mekanism.common.util.EnumUtils;
 import mekanism.common.util.VoxelShapeUtils;
 
@@ -33,35 +32,39 @@ public class MoreMachineBlockShapes {
 
     static {
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
-                box(4, 3, 0, 12, 12, 16),
-                box(3.5, 4.5, 4, 4, 10, 12),
-                box(12.5, 3, 0, 16, 11.5, 16),
-                box(12.5, 11.5, 3, 16, 12, 13),
-                box(12, 4.5, 4, 12.5, 10, 12),
-                box(0, 11.5, 3, 3.5, 12, 13),
-                box(0, 3, 0, 3.5, 11.5, 16),
-                box(0, 12, 0, 16, 14, 16),
-                box(12.5, 14, 1, 15, 28, 3.5),
-                box(1, 14, 1, 3.5, 28, 3.5),
-                box(1, 14, 12.5, 3.5, 28, 15),
-                box(12.5, 14, 12.5, 15, 28, 15),
-                box(2.4, 14, 3.5, 2.5, 28, 12.5),
-                box(13.5, 14, 3.5, 13.6, 28, 12.5),
-                box(3.5, 14, 2.4, 12.5, 28, 2.5),
-                box(3.5, 14, 13.5, 12.5, 28, 13.6),
-                box(1, 28, 1, 15, 31.98, 15),
-                box(3, 14, 8, 13, 25, 8),
-                box(3, 14, 8, 13, 25, 8),
-                box(0, 0, 0, 16, 3, 16),
-                box(-0.01, 4, 4, -0.01, 12, 12),
-                box(-0.02, 5, 5, -0.02, 11, 11),
-                box(16.01, 4, 4, 16.01, 12, 12),
-                box(16.02, 5, 5, 16.02, 11, 11),
-                box(4, 4, 16.01, 12, 12, 16.01),
-                box(5, 5, 16.02, 11, 11, 16.02),
-                box(4, 31.99, 4, 12, 31.99, 12),
-                box(5, 32, 5, 11, 32, 11),
-                box(6, 26, 6, 10, 28, 10)), PLANTING_STATION);
+                box(4, 4, 16, 12, 12, 16),
+                box(0, 4, 4, 0, 12, 12),
+                box(16, 4, 4, 16, 12, 12),
+                box(4, 32, 4, 12, 32, 12),
+                box(4, 4, 15, 12, 12, 16),
+                box(0, 4, 4, 1, 12, 12),
+                box(15, 4, 4, 16, 12, 12),
+                box(4, 31, 4, 12, 32, 12),
+                box(4, 16, 8, 12, 25, 8),
+                box(4, 16, 8, 12, 25, 8),
+                box(0, 0, 0, 16, 4, 16),
+                box(1, 4, 1, 15, 13, 15),
+                box(0, 4, 0, 3, 12, 3),
+                box(13, 4, 0, 16, 12, 3),
+                box(0, 4, 13, 3, 12, 16),
+                box(13, 4, 13, 16, 12, 16),
+                box(4, 4, 0, 12, 12, 1),
+                box(0, 13, 0, 16, 16, 4),
+                box(0, 13, 12, 16, 16, 16),
+                box(0, 13, 4, 4, 16, 12),
+                box(12, 13, 4, 16, 16, 12),
+                box(4, 13, 4, 12, 15, 12),
+                box(4.5, 15, 4.5, 11.5, 16, 11.5),
+                box(1, 16, 1, 4, 28, 4),
+                box(12, 16, 1, 15, 28, 4),
+                box(1, 16, 12, 4, 28, 15),
+                box(12, 16, 12, 15, 28, 15),
+                box(1, 28, 1, 15, 31, 15),
+                box(6, 26, 6, 10, 28, 10),
+                box(4, 16, 2, 12, 28, 2),
+                box(2, 16, 4, 2, 28, 12),
+                box(4, 16, 14, 12, 28, 14),
+                box(14, 16, 4, 14, 28, 12)), PLANTING_STATION);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 16, 12, 12, 16),
@@ -85,50 +88,55 @@ public class MoreMachineBlockShapes {
                 box(7, 14, 1, 13, 15, 2)), REPLICATOR);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
-                Block.box(4, 4, 16, 12, 12, 16),
-                Block.box(4, 4, 15, 12, 12, 16),
-                Block.box(0, 0, 0, 16, 16, 4),
-                Block.box(0, 0, 12, 7, 12, 16),
-                Block.box(9, 0, 12, 16, 12, 16),
-                Block.box(0, 0, 4, 16, 4, 11),
-                Block.box(1, 4, 4, 15, 12, 12),
-                Block.box(0, 12, 5, 7, 16, 16),
-                Block.box(9, 12, 5, 16, 16, 16),
-                Block.box(1, 0, 11, 15, 4, 12),
-                Block.box(1, 12, 4, 15, 15, 5),
-                Block.box(7, 0, 12, 9, 13, 15),
-                Block.box(7, 13, 5, 9, 16, 15),
-                Block.box(0, 4, 5, 1, 12, 6),
-                Block.box(0, 4, 10, 1, 12, 11),
-                Block.box(15, 4, 5, 16, 12, 6),
-                Block.box(15, 4, 10, 16, 12, 11)), RECYCLING_FACTORY);
+                box(4, 4, 16, 12, 12, 16),
+                box(4, 4, 15, 12, 12, 16),
+                box(0, 0, 0, 16, 16, 4),
+                box(0, 0, 12, 7, 12, 16),
+                box(9, 0, 12, 16, 12, 16),
+                box(0, 0, 4, 16, 4, 11),
+                box(1, 4, 4, 15, 12, 12),
+                box(0, 12, 5, 7, 16, 16),
+                box(9, 12, 5, 16, 16, 16),
+                box(1, 0, 11, 15, 4, 12),
+                box(1, 12, 4, 15, 15, 5),
+                box(7, 0, 12, 9, 13, 15),
+                box(7, 13, 5, 9, 16, 15),
+                box(0, 4, 5, 1, 12, 6),
+                box(0, 4, 10, 1, 12, 11),
+                box(15, 4, 5, 16, 12, 6),
+                box(15, 4, 10, 16, 12, 11)), RECYCLING_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
-                box(4, 4, 0, 12, 12, 0),
-                box(0, 4, 4, 0, 12, 12),
                 box(4, 4, 16, 12, 12, 16),
-                box(16, 4, 4, 16, 12, 12),
-                box(4, -0.01, 4, 12, -0.01, 12),
-                box(4, 4, 0, 12, 12, 1),
-                box(0, 4, 4, 1, 12, 12),
+                box(6, 25, 6, 10, 27, 10),
                 box(4, 4, 15, 12, 12, 16),
-                box(15, 4, 4, 16, 12, 12),
-                box(4, -0.01, 4, 12, 0.99, 12),
-                box(0, 0, 0, 16, 4, 16),
-                box(13, 4, 0, 16, 8, 3),
-                box(0, 4, 0, 3, 8, 3),
-                box(0, 4, 13, 3, 8, 16),
-                box(13, 4, 13, 16, 8, 16),
-                box(1, 4, 1, 15, 12, 15),
-                box(0, 12, 0, 16, 16, 16),
-                box(0, 8, 0, 4, 9, 4),
-                box(0, 10, 0, 4, 11, 4),
-                box(0, 8, 12, 4, 9, 16),
-                box(0, 10, 12, 4, 11, 16),
-                box(12, 8, 12, 16, 9, 16),
-                box(12, 10, 12, 16, 11, 16),
-                box(12, 8, 0, 16, 9, 4),
-                box(12, 10, 0, 16, 11, 4)), PLANTING_FACTORY);
+                box(4, 4, 14, 12, 12, 15),
+                box(4, 16, 8, 12, 25, 8),
+                box(4, 16, 8, 12, 25, 8),
+                box(0, 0, 0, 16, 16, 4),
+                box(0, 0, 4, 16, 4, 16),
+                box(0, 12, 4, 4, 16, 16),
+                box(12, 12, 4, 16, 16, 16),
+                box(4, 12, 12, 12, 16, 16),
+                box(4, 12, 4, 12, 15, 12),
+                box(4.5, 15, 4.5, 11.5, 16, 11.5),
+                box(1, 4, 14, 3, 12, 16),
+                box(0, 4, 11, 1, 12, 14),
+                box(0, 4, 6, 1, 12, 9),
+                box(13, 4, 14, 15, 12, 16),
+                box(15, 4, 11, 16, 12, 14),
+                box(15, 4, 6, 16, 12, 9),
+                box(1, 4, 4, 15, 12, 14),
+                box(12, 16, 0, 16, 27, 4),
+                box(0, 16, 0, 4, 27, 4),
+                box(0, 16, 12, 4, 27, 16),
+                box(12, 16, 12, 16, 27, 16),
+                box(4, 31, 4, 12, 32, 12),
+                box(0, 27, 0, 16, 31, 16),
+                box(4, 16, 2, 12, 27, 2),
+                box(2, 16, 4, 2, 27, 12),
+                box(4, 16, 14, 12, 27, 14),
+                box(14, 16, 4, 14, 27, 12)), PLANTING_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 16, 12, 12, 16),
@@ -192,21 +200,21 @@ public class MoreMachineBlockShapes {
                 box(14, 8, 6, 15, 12, 10)), ROLLING_MILL_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
-                Block.box(4, 4, 16, 12, 12, 16),
-                Block.box(4, 4, 15, 12, 12, 16),
-                Block.box(0, 0, 0, 16, 16, 4),
-                Block.box(0, 0, 4, 16, 4, 16),
-                Block.box(0, 10, 10, 16, 16, 16),
-                Block.box(1, 4, 4, 15, 5, 14),
-                Block.box(1, 9, 9, 15, 15, 14),
-                Block.box(0, 5, 4, 16, 9, 14),
-                Block.box(0, 9, 4, 16, 16, 9),
-                Block.box(1, 4, 14, 2, 10, 15),
-                Block.box(3, 4, 14, 4, 10, 15),
-                Block.box(12, 4, 14, 13, 10, 15),
-                Block.box(14, 4, 14, 15, 10, 15),
-                Block.box(0, 5, 14, 16, 6, 16),
-                Block.box(0, 8, 14, 16, 9, 16)), REPLICATOR_FACTORY);
+                box(4, 4, 16, 12, 12, 16),
+                box(4, 4, 15, 12, 12, 16),
+                box(0, 0, 0, 16, 16, 4),
+                box(0, 0, 4, 16, 4, 16),
+                box(0, 10, 10, 16, 16, 16),
+                box(1, 4, 4, 15, 5, 14),
+                box(1, 9, 9, 15, 15, 14),
+                box(0, 5, 4, 16, 9, 14),
+                box(0, 9, 4, 16, 16, 9),
+                box(1, 4, 14, 2, 10, 15),
+                box(3, 4, 14, 4, 10, 15),
+                box(12, 4, 14, 13, 10, 15),
+                box(14, 4, 14, 15, 10, 15),
+                box(0, 5, 14, 16, 6, 16),
+                box(0, 8, 14, 16, 9, 16)), REPLICATOR_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 0, 12, 12, 0),
@@ -295,7 +303,7 @@ public class MoreMachineBlockShapes {
     public static VoxelShape[] getShape(MoreMachineFactoryType type) {
         return switch (type) {
             case RECYCLING -> RECYCLING_FACTORY;
-            case PLANTING_STATION -> BlockShapes.ENRICHING_FACTORY;
+            case PLANTING_STATION -> STAMPING_FACTORY;
             case CNC_STAMPING -> STAMPING_FACTORY;
             case CNC_LATHING -> LATHING_FACTORY;
             case CNC_ROLLING_MILL -> ROLLING_MILL_FACTORY;

@@ -1,0 +1,72 @@
+{
+  "loader": "neoforge:composite",
+  "gui_light": "side",
+  "parent": "block/block",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/planting/base"
+    },
+    "translucent": {
+      "render_type": "translucent",
+      "textures": {
+        "6": "mekmm:block/factory/planting/planting_factory_front2",
+        "led": "evolvedmekanism:block/factory/led"
+      },
+      "elements":[
+        {
+          "name": "glass",
+          "from": [4, 16, 2],
+          "to": [12, 27, 2],
+          "rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+          "faces": {
+            "north": {"uv": [4, 5, 12, 16], "texture": "#6"},
+            "south": {"uv": [4, 5, 12, 16], "texture": "#6"}
+          }
+        },
+        {
+          "name": "glass",
+          "from": [2, 16, 4],
+          "to": [2, 27, 12],
+          "rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+          "faces": {
+            "east": {"uv": [4, 5, 12, 16], "texture": "#6"},
+            "west": {"uv": [4, 5, 12, 16], "texture": "#6"}
+          }
+        },
+        {
+          "name": "glass",
+          "from": [4, 16, 14],
+          "to": [12, 27, 14],
+          "rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+          "faces": {
+            "north": {"uv": [4, 5, 12, 16], "texture": "#6"},
+            "south": {"uv": [4, 5, 12, 16], "texture": "#6"}
+          }
+        },
+        {
+          "name": "glass",
+          "from": [14, 16, 4],
+          "to": [14, 27, 12],
+          "rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+          "faces": {
+            "east": {"uv": [4, 5, 12, 16], "texture": "#6"},
+            "west": {"uv": [4, 5, 12, 16], "texture": "#6"}
+          }
+        },
+        {
+          "name":"front_panel_led",
+          "from":[4.98,29.99,0.01],
+          "to":[11.02,30.99,1.01],
+          "faces":
+          {
+            "north":{"uv":[0,4,6,5],"texture":"#led","cullface":"north"},
+            "up":{"uv":[0,4,6,5],"rotation":180,"texture":"#led","cullface":"up"}
+          }
+        }
+      ]
+    }
+  }
+}

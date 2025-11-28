@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekanism:block/factory/enriching/advanced"
+      "model": "mekmm:block/factory/planting/advanced"
     },
     "facing=south,active=false": {
-      "model": "mekanism:block/factory/enriching/advanced",
+      "model": "mekmm:block/factory/planting/advanced",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "mekanism:block/factory/enriching/advanced",
+      "model": "mekmm:block/factory/planting/advanced",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekanism:block/factory/enriching/advanced",
+      "model": "mekmm:block/factory/planting/advanced",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekanism:block/factory/enriching/active/advanced"
+      "model": "mekmm:block/factory/planting/active/advanced"
     },
     "facing=south,active=true": {
-      "model": "mekanism:block/factory/enriching/active/advanced",
+      "model": "mekmm:block/factory/planting/active/advanced",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekanism:block/factory/enriching/active/advanced",
+      "model": "mekmm:block/factory/planting/active/advanced",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekanism:block/factory/enriching/active/advanced",
+      "model": "mekmm:block/factory/planting/active/advanced",
       "y": -90
     }
   }

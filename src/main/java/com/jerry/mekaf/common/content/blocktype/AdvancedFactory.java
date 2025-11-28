@@ -71,6 +71,7 @@ public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> exte
                 case PRESSURISED_REACTING -> AttributeSideConfig.create(TransmissionType.ITEM, TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ENERGY);
                 case LIQUIFYING -> AttributeSideConfig.create(TransmissionType.FLUID, TransmissionType.ITEM, TransmissionType.ENERGY);
             });
+            //在注册之前似乎拿不到AttributeHasBounding这个属性，不然可以使用Attribute.get()
             if (type == AdvancedFactoryType.CENTRIFUGING) {
                 builder.with(AttributeHasBounding.ABOVE_ONLY);
             }

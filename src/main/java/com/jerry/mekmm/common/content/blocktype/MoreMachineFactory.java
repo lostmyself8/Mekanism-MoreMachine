@@ -42,7 +42,7 @@ public class MoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> ex
     }
 
     public static class MoreMachineFactoryBuilder<FACTORY extends MoreMachineFactory<TILE>, TILE extends TileEntityMoreMachineFactory<?>, T extends MMMachineBuilder<FACTORY, TILE, T>>
-                                                 extends BlockTileBuilder<FACTORY, TILE, T> {
+            extends BlockTileBuilder<FACTORY, TILE, T> {
 
         protected MoreMachineFactoryBuilder(FACTORY holder) {
             super(holder);
@@ -62,6 +62,10 @@ public class MoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> ex
                 case RECYCLING, CNC_STAMPING, CNC_LATHING, CNC_ROLLING_MILL -> AttributeSideConfig.ELECTRIC_MACHINE;
                 case PLANTING_STATION, REPLICATING -> AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE;
             });
+            //在注册之前似乎拿不到AttributeHasBounding这个属性，不然可以使用Attribute.get()
+            if (type == MoreMachineFactoryType.PLANTING_STATION) {
+                builder.with(AttributeHasBounding.ABOVE_ONLY);
+            }
             builder.replace(new AttributeParticleFX().addDense(ParticleTypes.SMOKE, 5, rand -> new Pos3D(
                     rand.nextFloat() * 0.7F - 0.3F,
                     rand.nextFloat() * 0.1F + 0.7F,
