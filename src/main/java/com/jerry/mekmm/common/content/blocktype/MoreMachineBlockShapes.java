@@ -9,7 +9,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class MoreMachineBlockShapes {
 
-    private MoreMachineBlockShapes() {}
+    private MoreMachineBlockShapes() {
+    }
 
     private static VoxelShape box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         return Block.box(minX, minY, minZ, maxX, maxY, maxZ);
@@ -176,31 +177,20 @@ public class MoreMachineBlockShapes {
                 box(12, 9, 14, 13, 10, 15)), LATHING_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
-                box(4, 4, 0, 12, 12, 0),
-                box(0, 4, 4, 0, 12, 12),
                 box(4, 4, 16, 12, 12, 16),
-                box(16, 4, 4, 16, 12, 12),
-                box(4, -0.01, 4, 12, -0.01, 12),
-                box(4, 4, 0, 12, 12, 1),
-                box(0, 4, 4, 1, 12, 12),
                 box(4, 4, 15, 12, 12, 16),
-                box(15, 4, 4, 16, 12, 12),
-                box(4, -0.01, 4, 12, 0.99, 12),
-                box(0, 0, 0, 16, 4, 16),
-                box(13, 4, 0, 16, 8, 3),
-                box(0, 4, 0, 3, 8, 3),
-                box(0, 4, 13, 3, 8, 16),
-                box(13, 4, 13, 16, 8, 16),
-                box(1, 4, 1, 15, 12, 15),
-                box(0, 12, 0, 16, 16, 16),
-                box(0, 8, 0, 4, 9, 4),
-                box(0, 10, 0, 4, 11, 4),
-                box(0, 8, 12, 4, 9, 16),
-                box(0, 10, 12, 4, 11, 16),
-                box(12, 8, 12, 16, 9, 16),
-                box(12, 10, 12, 16, 11, 16),
-                box(12, 8, 0, 16, 9, 4),
-                box(12, 10, 0, 16, 11, 4)), ROLLING_MILL_FACTORY);
+                box(4, 3, 14, 12, 9, 15),
+                box(2, 3, 4, 14, 12, 14),
+                box(3, 0, 13, 13, 3, 16),
+                box(1, 0, 4, 15, 3, 13),
+                box(13, 0, 13, 16, 12, 16),
+                box(0, 0, 13, 3, 12, 16),
+                box(0, 12, 4, 16, 16, 16),
+                box(0, 0, 0, 16, 16, 4),
+                box(1, 3, 6, 2, 7, 10),
+                box(1, 8, 6, 2, 12, 10),
+                box(14, 3, 6, 15, 7, 10),
+                box(14, 8, 6, 15, 12, 10)), ROLLING_MILL_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 0, 12, 12, 0),
@@ -319,7 +309,7 @@ public class MoreMachineBlockShapes {
             case PLANTING_STATION -> BlockShapes.ENRICHING_FACTORY;
             case CNC_STAMPING -> STAMPING_FACTORY;
             case CNC_LATHING -> LATHING_FACTORY;
-            case CNC_ROLLING_MILL -> BlockShapes.COMBINING_FACTORY;
+            case CNC_ROLLING_MILL -> ROLLING_MILL_FACTORY;
             case REPLICATING -> BlockShapes.PURIFYING_FACTORY;
         };
     }

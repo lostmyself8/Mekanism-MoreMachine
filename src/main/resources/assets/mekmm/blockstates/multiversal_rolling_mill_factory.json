@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/combining/multiversal"
+      "model": "mekmm:block/factory/rolling_mill/multiversal"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/combining/multiversal",
+      "model": "mekmm:block/factory/rolling_mill/multiversal",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/combining/multiversal",
+      "model": "mekmm:block/factory/rolling_mill/multiversal",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/combining/multiversal",
+      "model": "mekmm:block/factory/rolling_mill/multiversal",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/combining/active/multiversal"
+      "model": "mekmm:block/factory/rolling_mill/active/multiversal"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/combining/active/multiversal",
+      "model": "mekmm:block/factory/rolling_mill/active/multiversal",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/combining/active/multiversal",
+      "model": "mekmm:block/factory/rolling_mill/active/multiversal",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/combining/active/multiversal",
+      "model": "mekmm:block/factory/rolling_mill/active/multiversal",
       "y": -90
     }
   }

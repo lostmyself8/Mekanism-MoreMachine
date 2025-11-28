@@ -1,0 +1,24 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "mekanism:alloys/infused"
+    },
+    "O": {
+      "tag": "c:ingots/osmium"
+    },
+    "P": {
+      "item": "mekmm:basic_mid_chemical_tank"
+    }
+  },
+  "pattern": [
+    "AOA",
+    "OPO",
+    "AOA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekmm:advanced_mid_chemical_tank"
+  }
+}
