@@ -57,11 +57,10 @@ dependencies {
 //    modLocalRuntime(forge.emi)
     localRuntime(forge.jei.neoforge.impl)
 
-    localRuntime(forge.modernui)
-
     // Client-only runtime mods //
     clientLocalRuntime(forge.sodium)
     clientLocalRuntime(forge.iris)
+    clientLocalRuntime(forge.modernui)
 
     //////////////////////////////////////////////////////
     // Runtime mods for dev testing with unclean client //
