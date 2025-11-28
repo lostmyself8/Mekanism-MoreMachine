@@ -13,7 +13,7 @@ import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
-import com.jerry.mekmm.common.block.attribute.MoreMachineAttributeHasBounding;
+import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.math.MathUtils;
@@ -64,7 +64,7 @@ public class LargeMachineBlockTypes {
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ROTARY_CONDENSENTRATOR)
             .with(AttributeCustomSelectionBox.JSON)
-            .with(MoreMachineAttributeHasBounding.FULL_JAVA_ENTITY)
+            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeRotaryCondensentrator")
             .build();
 
@@ -77,7 +77,7 @@ public class LargeMachineBlockTypes {
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_CHEMICAL_INFUSER)
             .with(AttributeCustomSelectionBox.JSON)
-            .with(MoreMachineAttributeHasBounding.FULL_JAVA_ENTITY)
+            .with(MoreMachineBounding.FULL_JAVA_ENTITY_BUT_TOP_BACK_2X3)
             .withComputerSupport("largeChemicalInfuser")
             .build();
 
@@ -122,7 +122,7 @@ public class LargeMachineBlockTypes {
             .withCustomShape(LargeMachineBlockShapes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM)
-            .with(MoreMachineAttributeHasBounding.FULL_JAVA_ENTITY)
+            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeSolarNeutronActivator")
             .replace(Attributes.ACTIVE)
             .build();
@@ -136,7 +136,7 @@ public class LargeMachineBlockTypes {
             .withSound(GeneratorsSounds.HEAT_GENERATOR)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
             .with(AttributeCustomSelectionBox.JSON)
-            .with(MoreMachineAttributeHasBounding.FULL_JAVA_ENTITY)
+            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeHeatGenerator")
             .replace(Attributes.ACTIVE_MELT_LIGHT)
             .with(new AttributeParticleFX()
@@ -153,7 +153,7 @@ public class LargeMachineBlockTypes {
             .with(AttributeCustomSelectionBox.JSON)
             .withSound(GeneratorsSounds.GAS_BURNING_GENERATOR)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
-            .with(MoreMachineAttributeHasBounding.FULL_JAVA_ENTITY)
+            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeGasBurningGenerator")
             .replace(Attributes.ACTIVE_MELT_LIGHT)
             .build();

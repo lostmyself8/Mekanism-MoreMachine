@@ -1,6 +1,7 @@
 {
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench, made by TedXenon",
+	"parent": "block/block",
 	"render_type": "cutout",
 	"textures": {
 		"0": "mekanism:block/factory/factory_front_back",
@@ -305,6 +306,46 @@
 				"up": {"uv": [0, 16, 16, 0], "texture": "#10", "cullface": "up"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#9", "cullface": "up"}
 			}
+		},
+		{
+			"name": "glass",
+			"from": [4, 16, 2],
+			"to": [12, 27, 2],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 5, 12, 16], "texture": "#6"},
+				"south": {"uv": [4, 5, 12, 16], "texture": "#6"}
+			}
+		},
+		{
+			"name": "glass",
+			"from": [2, 16, 4],
+			"to": [2, 27, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [4, 5, 12, 16], "texture": "#6"},
+				"west": {"uv": [4, 5, 12, 16], "texture": "#6"}
+			}
+		},
+		{
+			"name": "glass",
+			"from": [4, 16, 14],
+			"to": [12, 27, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [4, 5, 12, 16], "texture": "#6"},
+				"south": {"uv": [4, 5, 12, 16], "texture": "#6"}
+			}
+		},
+		{
+			"name": "glass",
+			"from": [14, 16, 4],
+			"to": [14, 27, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"east": {"uv": [4, 5, 12, 16], "texture": "#6"},
+				"west": {"uv": [4, 5, 12, 16], "texture": "#6"}
+			}
 		}
 	],
 	"groups": [
@@ -351,6 +392,12 @@
 		22,
 		23,
 		24,
-		25
+		25,
+		{
+			"name": "glass",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [26, 27, 28, 29]
+		}
 	]
 }

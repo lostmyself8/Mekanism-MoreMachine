@@ -303,7 +303,7 @@ public class MoreMachineBlockShapes {
     public static VoxelShape[] getShape(MoreMachineFactoryType type) {
         return switch (type) {
             case RECYCLING -> RECYCLING_FACTORY;
-            case PLANTING_STATION -> STAMPING_FACTORY;
+            case PLANTING_STATION -> PLANTING_FACTORY;
             case CNC_STAMPING -> STAMPING_FACTORY;
             case CNC_LATHING -> LATHING_FACTORY;
             case CNC_ROLLING_MILL -> ROLLING_MILL_FACTORY;
