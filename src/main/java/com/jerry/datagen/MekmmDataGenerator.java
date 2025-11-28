@@ -65,7 +65,7 @@ public class MekmmDataGenerator {
     public static void gatherData(GatherDataEvent event) {
         bootstrapConfigs(Mekanism.MODID);
         bootstrapConfigs(Mekmm.MOD_ID);
-         bootstrapIMC();
+        bootstrapIMC();
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
