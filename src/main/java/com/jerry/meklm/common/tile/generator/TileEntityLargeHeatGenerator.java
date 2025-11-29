@@ -2,6 +2,7 @@ package com.jerry.meklm.common.tile.generator;
 
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
 import mekanism.api.Action;
@@ -33,10 +34,8 @@ import mekanism.common.inventory.container.sync.SyncableDouble;
 import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.util.EnumUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
-import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.slot.FluidFuelInventorySlot;
 
 import net.minecraft.core.BlockPos;
@@ -62,10 +61,10 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
 
     // Default configs this is 510 compared to the previous 500
     private static final ConfigBasedCachedLongSupplier MAX_PRODUCTION = new ConfigBasedCachedLongSupplier(() -> {
-        long passiveMax = MekanismGeneratorsConfig.generators.heatGenerationLava.get() * (EnumUtils.DIRECTIONS.length + 1);
-        passiveMax += MekanismGeneratorsConfig.generators.heatGenerationNether.get();
-        return passiveMax + MekanismGeneratorsConfig.generators.heatGeneration.get();
-    }, MekanismGeneratorsConfig.generators.heatGeneration, MekanismGeneratorsConfig.generators.heatGenerationLava, MekanismGeneratorsConfig.generators.heatGenerationNether);
+        long passiveMax = MoreMachineConfig.generators.largeHeatGenerationLava.get() * 81;
+        passiveMax += MoreMachineConfig.generators.largeHeatGenerationNether.get();
+        return passiveMax + MoreMachineConfig.generators.largeHeatGeneration.get();
+    }, MoreMachineConfig.generators.largeHeatGeneration, MoreMachineConfig.generators.largeHeatGenerationLava, MoreMachineConfig.generators.largeHeatGenerationNether);
 
     /**
      * The FluidTank for this generator.
@@ -83,6 +82,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     EnergyInventorySlot energySlot;
 
     private long producingEnergy = 0;
+    private double efficiencyMultiplier = 1.0;
     private double lastTransferLoss;
     private double lastEnvironmentLoss;
     private int numPowering;
@@ -95,7 +95,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected IFluidTankHolder getInitialFluidTanks(IContentsListener listener) {
         FluidTankHelper builder = FluidTankHelper.forSide(facingSupplier);
-        builder.addTank(lavaTank = VariableCapacityFluidTank.input(MekanismGeneratorsConfig.generators.heatTankCapacity,
+        builder.addTank(lavaTank = VariableCapacityFluidTank.input(MoreMachineConfig.generators.largeHeatTankCapacity,
                 fluidStack -> fluidStack.is(FluidTags.LAVA), listener), RelativeSide.BACK);
         return builder.build();
     }
@@ -117,7 +117,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected IHeatCapacitorHolder getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
         HeatCapacitorHelper builder = HeatCapacitorHelper.forSide(facingSupplier);
-        builder.addCapacitor(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener));
+        builder.addCapacitor(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener), RelativeSide.BACK);
         return builder.build();
     }
 
@@ -134,11 +134,16 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
         long prev = getEnergyContainer().getEnergy();
         heatCapacitor.handleHeat(getBoost());
         if (canFunction() && getEnergyContainer().getNeeded() > 0L) {
-            int fluidRate = MekanismGeneratorsConfig.generators.heatGenerationFluidRate.get();
+            // 计算流体占比 (0.0 到 1.0)
+            double fluidRatio = (double) lavaTank.getFluidAmount() / lavaTank.getCapacity();
+            // 使用指数函数实现非线性增长
+            // 流体速率：从 1 增长到约 100
+            efficiencyMultiplier = (int) Math.max(1, Math.pow(10, fluidRatio * 2));
+            int fluidRate = (int) (efficiencyMultiplier * MoreMachineConfig.generators.largeHeatGenerationFluidRate.get());
             if (lavaTank.extract(fluidRate, Action.SIMULATE, AutomationType.INTERNAL).getAmount() == fluidRate) {
                 setActive(true);
                 lavaTank.extract(fluidRate, Action.EXECUTE, AutomationType.INTERNAL);
-                heatCapacitor.handleHeat(MekanismGeneratorsConfig.generators.heatGeneration.get());
+                heatCapacitor.handleHeat(MoreMachineConfig.generators.largeHeatGeneration.get() * efficiencyMultiplier);
             } else {
                 setActive(false);
             }
@@ -149,7 +154,14 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
         lastTransferLoss = loss.adjacentTransfer();
         lastEnvironmentLoss = loss.environmentTransfer();
         producingEnergy = getEnergyContainer().getEnergy() - prev;
+        updateMaxOutputRaw(producingEnergy + MAX_PRODUCTION.getAsLong());
         return sendUpdatePacket;
+    }
+
+    @Override
+    protected BlockPos offSetOutput(BlockPos from, Direction side) {
+        Direction back = getOppositeDirection();
+        return from.offset(new Vec3i(back.getStepX(), 1, back.getStepZ())).relative(side);
     }
 
     private double getBoost() {
@@ -157,7 +169,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             return 0L;
         }
         long boost;
-        long passiveLavaAmount = MekanismGeneratorsConfig.generators.heatGenerationLava.get();
+        long passiveLavaAmount = MoreMachineConfig.generators.largeHeatGenerationLava.get();
         if (passiveLavaAmount == 0L) {
             // If neighboring lava blocks produce no energy, don't bother checking the sides for them
             boost = 0L;
@@ -166,11 +178,26 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             // Only check and add loaded neighbors to the which sides have lava on them
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             int lavaSides = 0;
-            for (Direction dir : EnumUtils.DIRECTIONS) {
-                // Only check and add loaded neighbors to the which sides have lava on them
-                mutable.setWithOffset(worldPosition, dir);
-                if (WorldUtils.getFluidState(level, mutable).filter(state -> state.is(FluidTags.LAVA)).isPresent()) {
-                    lavaSides++;
+            for (int x = -2; x <= 2; x++) {
+                for (int y = -1; y <= 3; y++) {
+                    for (int z = -2; z <= 2; z++) {
+                        if (x != 0 || y != 0 || z != 0) {
+                            // 计算有多少个坐标分量在边界上
+                            int edgeCount = 0;
+                            if (x == -2 || x == 2) edgeCount++;
+                            if (y == -1 || y == 3) edgeCount++;
+                            if (z == -2 || z == 2) edgeCount++;
+
+                            // 排除棱(edgeCount == 2)和顶点(edgeCount == 3)
+                            // 保留内部的点(edgeCount == 0)和面上的点(edgeCount == 1)
+                            if (edgeCount <= 1) {
+                                mutable.setWithOffset(worldPosition, x, y, z);
+                                if (WorldUtils.getFluidState(level, mutable).filter(state -> state.is(FluidTags.LAVA)).isPresent()) {
+                                    lavaSides++;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if (getBlockState().getFluidState().is(FluidTags.LAVA)) {
@@ -181,7 +208,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             boost = passiveLavaAmount * lavaSides;
         }
         if (level.dimensionType().ultraWarm()) {
-            boost += MekanismGeneratorsConfig.generators.heatGenerationNether.get();
+            boost += MoreMachineConfig.generators.largeHeatGenerationNether.get();
         }
         return boost;
     }
@@ -206,7 +233,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
         double heatLost = THERMAL_EFFICIENCY * (temp - ambientTemp);
         heatCapacitor.handleHeat(-heatLost);
         long energyFromHeat = MathUtils.clampToLong(Math.abs(heatLost) * carnotEfficiency);
-        getEnergyContainer().insert(Math.min(energyFromHeat, MAX_PRODUCTION.getAsLong()), Action.EXECUTE, AutomationType.INTERNAL);
+        getEnergyContainer().insert((long) (Math.min(energyFromHeat, MAX_PRODUCTION.getAsLong()) * efficiencyMultiplier), Action.EXECUTE, AutomationType.INTERNAL);
         return super.simulate();
     }
 
@@ -282,6 +309,8 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             return Objects.requireNonNull(fluidHandlerManager, "Expected to have fluid handler").resolve(capability, side);
         } else if (capability == Capabilities.ITEM.block()) {
             return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
+        } else if (capability == Capabilities.HEAT) {
+            return Objects.requireNonNull(heatHandlerManager, "Expected to have heat handler").resolve(capability, side);
         }
         return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);
     }
@@ -294,8 +323,18 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             return notEnergyPort(side, offset);
         } else if (capability == Capabilities.ITEM.block()) {
             return notItemPort(side, offset);
+        } else if (capability == Capabilities.HEAT) {
+            return notHeatPort(side, offset);
         }
-        return notFluidPort(side, offset) && notEnergyPort(side, offset);
+        return notFluidPort(side, offset) && notHeatPort(side, offset) && notEnergyPort(side, offset);
+    }
+
+    private boolean notHeatPort(Direction side, Vec3i offset) {
+        Direction back = getOppositeDirection();
+        if (offset.equals(new Vec3i(back.getStepX(), 0, back.getStepZ())) || offset.equals(new Vec3i(back.getStepX(), 2, back.getStepZ()))) {
+            return side != back;
+        }
+        return true;
     }
 
     private boolean notFluidPort(Direction side, Vec3i offset) {

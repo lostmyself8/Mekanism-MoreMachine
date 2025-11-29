@@ -3,7 +3,7 @@ package com.jerry.meklm.common.tile.machine;
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.fluid.CanAdjustFluidTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.prefab.TileEntityRecipeLargeMachine;
+import com.jerry.meklm.common.tile.INeedConfig;
 
 import mekanism.api.*;
 import mekanism.api.chemical.BasicChemicalTank;
@@ -61,6 +61,7 @@ import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasGasMode;
+import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.NBTUtils;
 import mekanism.common.util.WorldUtils;
@@ -84,7 +85,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeLargeMachine<ElectrolysisRecipe> implements IBoundingBlock, IHasGasMode, FluidRecipeLookupHandler<ElectrolysisRecipe> {
+public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachine<ElectrolysisRecipe> implements IBoundingBlock, IHasGasMode, FluidRecipeLookupHandler<ElectrolysisRecipe>, INeedConfig {
 
     public static final RecipeError NOT_ENOUGH_SPACE_LEFT_OUTPUT_ERROR = RecipeError.create();
     public static final RecipeError NOT_ENOUGH_SPACE_RIGHT_OUTPUT_ERROR = RecipeError.create();
@@ -290,6 +291,11 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeLargeM
     @ComputerMethod(nameOverride = "getEnergyUsage", methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
     public long getEnergyUsed() {
         return clientEnergyUsed;
+    }
+
+    @Override
+    public boolean needConfig() {
+        return false;
     }
 
     @NotNull

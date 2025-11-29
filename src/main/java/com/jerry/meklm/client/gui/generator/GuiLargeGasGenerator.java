@@ -36,6 +36,7 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
         addRenderableWidget(GuiSideHolder.create(this, -26, 6, 98, true, true, SpecialColors.TAB_ARMOR_SLOTS));
         super.addGuiElements();
         addRenderableWidget(new GuiEnergyTab(this, () -> {
+            // 燃料消耗减半了，但实际计算产生的能量时按不减半的算
             long productionAmount = MathUtils.clampToLong(tile.getGenerationRate() * tile.getUsed() * tile.getMaxBurnTicks());
             return List.of(
                     GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(productionAmount)),
@@ -48,7 +49,8 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
     @Override
     protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
-        renderInventoryTextAndOther(guiGraphics, GeneratorsLang.GAS_BURN_RATE.translate(tile.getUsed()));
+        // 燃料消耗减半了
+        renderInventoryTextAndOther(guiGraphics, GeneratorsLang.GAS_BURN_RATE.translate(tile.getUsed() / 2));
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
     }
 }

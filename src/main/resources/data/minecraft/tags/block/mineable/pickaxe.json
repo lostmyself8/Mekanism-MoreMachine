@@ -139,6 +139,21 @@
     {"id": "mekmm:quantum_liquifying_factory", "required": false},
     {"id": "mekmm:dense_liquifying_factory", "required": false},
     {"id": "mekmm:multiversal_liquifying_factory", "required": false},
-    {"id": "mekmm:creative_liquifying_factory", "required": false}
+    {"id": "mekmm:creative_liquifying_factory", "required": false},
+
+    "mekmm:basic_mid_chemical_tank",
+    "mekmm:advanced_mid_chemical_tank",
+    "mekmm:elite_mid_chemical_tank",
+    "mekmm:ultimate_mid_chemical_tank",
+    "mekmm:basic_max_chemical_tank",
+    "mekmm:advanced_max_chemical_tank",
+    "mekmm:elite_max_chemical_tank",
+    "mekmm:ultimate_max_chemical_tank",
+    "mekmm:large_rotary_condensentrator",
+    "mekmm:large_chemical_infuser",
+    "mekmm:large_electrolytic_separator",
+    "mekmm:large_solar_neutron_activator",
+    "mekmm:large_heat_generator",
+    "mekmm:large_gas_burning_generator"
   ]
 }

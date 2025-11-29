@@ -1,0 +1,27 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "E": {
+      "item": "mekmm:advanced_electrolysis_core"
+    },
+    "R": {
+      "item": "mekanism:robit"
+    },
+    "T": {
+      "item": "mekmm:ultimate_max_chemical_tank"
+    }
+  },
+  "pattern": [
+    "TET",
+    "BRB",
+    "TET"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekmm:large_gas_burning_generator"
+  }
+}

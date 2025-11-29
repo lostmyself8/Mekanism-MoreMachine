@@ -2,7 +2,7 @@ package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.prefab.TileEntityRecipeLargeMachine;
+import com.jerry.meklm.common.tile.INeedConfig;
 
 import com.jerry.mekmm.common.util.WorldUtil;
 
@@ -46,6 +46,7 @@ import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ChemicalRecipeLo
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
+import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
@@ -65,7 +66,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeMachine<ChemicalToChemicalRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<ChemicalToChemicalRecipe> {
+public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachine<ChemicalToChemicalRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<ChemicalToChemicalRecipe>, INeedConfig {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_INPUT,
@@ -73,7 +74,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeM
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     public static final long MAX_GAS = 10L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
     protected LargeSNA solarCheck;
-    private final LargeSNA[] solarChecks = new LargeSNA[9];
+    private final LargeSNA[] solarChecks = new LargeSNA[8];
 
     @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
                             methodNames = { "getInput", "getInputCapacity", "getInputNeeded",
@@ -88,7 +89,6 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeM
 
     @SyntheticComputerMethod(getter = "getProductionRate")
     private float productionRate;
-    private boolean settingsChecked;
     private int baselineMaxOperations = 1;
     private int numPowering;
     private byte seeSunCount = 0;
@@ -157,13 +157,12 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeM
                 solarChecks[i] = new LargeSNA(level, topPos.offset(1, 0, i - 6));
             }
         }
-        settingsChecked = true;
     }
 
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        if (!settingsChecked) {
+        if (solarCheck == null) {
             recheckSettings();
         }
         updateSeeSunCount();
@@ -178,10 +177,6 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeM
      * 更新能看到太阳的太阳能板数量(每tick调用一次)
      */
     private void updateSeeSunCount() {
-        if (solarCheck == null || level == null) {
-            return;
-        }
-
         solarCheck.recheckCanSeeSun();
         byte count = solarCheck.canSeeSun() ? (byte) 1 : 0;
         for (LargeSNA check : solarChecks) {
@@ -191,6 +186,11 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeM
             }
         }
         seeSunCount = count;
+    }
+
+    @Override
+    public boolean needConfig() {
+        return false;
     }
 
     @NotNull
@@ -227,6 +227,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeLargeM
      * @return 效率减小倍数
      */
     private float reduceMultiplier() {
+        // TODO:这里的倍率有点问题，会导致在遮住第六个板子时将为0
         int panelCount = solarChecks.length + 1;
         byte notSeeSunCount = (byte) (panelCount - seeSunCount);
         // 无遮挡或意外情况

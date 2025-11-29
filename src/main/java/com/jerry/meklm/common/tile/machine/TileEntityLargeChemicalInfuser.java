@@ -2,7 +2,7 @@ package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.prefab.TileEntityRecipeLargeMachine;
+import com.jerry.meklm.common.tile.INeedConfig;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
@@ -50,6 +50,7 @@ import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
+import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
@@ -66,7 +67,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeChemicalInfuser extends TileEntityRecipeLargeMachine<ChemicalChemicalToChemicalRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<ChemicalChemicalToChemicalRecipe> {
+public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<ChemicalChemicalToChemicalRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<ChemicalChemicalToChemicalRecipe>, INeedConfig {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
@@ -193,6 +194,11 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeLargeMachine
     @ComputerMethod(nameOverride = "getEnergyUsage", methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
     public long getEnergyUsed() {
         return clientEnergyUsed;
+    }
+
+    @Override
+    public boolean needConfig() {
+        return false;
     }
 
     @NotNull

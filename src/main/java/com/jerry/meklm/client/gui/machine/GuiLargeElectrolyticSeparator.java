@@ -3,7 +3,7 @@ package com.jerry.meklm.client.gui.machine;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
 
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiElement;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.button.GuiGasMode;
@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GuiLargeElectrolyticSeparator extends GuiConfigurableTile<TileEntityLargeElectrolyticSeparator, MekanismTileContainer<TileEntityLargeElectrolyticSeparator>> {
+public class GuiLargeElectrolyticSeparator extends GuiMekanismTile<TileEntityLargeElectrolyticSeparator, MekanismTileContainer<TileEntityLargeElectrolyticSeparator>> {
 
     private GuiElement fluidGauge;
 

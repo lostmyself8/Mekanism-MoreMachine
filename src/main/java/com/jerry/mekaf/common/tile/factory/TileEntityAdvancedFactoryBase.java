@@ -63,6 +63,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,6 +109,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     protected final AdvancedFactoryType type;
 
     // 为了加压工厂而更改
+    @Getter
     protected AdvancedFactoryEnergyContainer energyContainer;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
@@ -418,10 +420,6 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
 
     public boolean hasExtraResourceBar() {
         return false;
-    }
-
-    public AdvancedFactoryEnergyContainer getEnergyContainer() {
-        return energyContainer;
     }
 
     @Override

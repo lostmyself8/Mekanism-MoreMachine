@@ -3,7 +3,7 @@ package com.jerry.meklm.client.gui.machine.base;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
 import mekanism.api.chemical.IChemicalTank;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.GuiSideHolder;
 import mekanism.client.gui.element.bar.GuiChemicalBar;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiLargeChemicalTank extends GuiConfigurableTile<TileEntityLargeChemicalTank<?>, MekanismTileContainer<TileEntityLargeChemicalTank<?>>> {
+public class GuiLargeChemicalTank extends GuiMekanismTile<TileEntityLargeChemicalTank<?>, MekanismTileContainer<TileEntityLargeChemicalTank<?>>> {
 
     public GuiLargeChemicalTank(MekanismTileContainer<TileEntityLargeChemicalTank<?>> container, Inventory inv, Component title) {
         super(container, inv, title);

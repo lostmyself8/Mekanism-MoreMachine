@@ -3,7 +3,7 @@ package com.jerry.meklm.client.gui.machine;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
 
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.bar.GuiHorizontalPowerBar;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiChemicalGauge;
@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GuiLargeChemicalInfuser extends GuiConfigurableTile<TileEntityLargeChemicalInfuser, MekanismTileContainer<TileEntityLargeChemicalInfuser>> {
+public class GuiLargeChemicalInfuser extends GuiMekanismTile<TileEntityLargeChemicalInfuser, MekanismTileContainer<TileEntityLargeChemicalInfuser>> {
 
     private GuiGauge<?> centerGauge;
 

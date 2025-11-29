@@ -3,7 +3,7 @@ package com.jerry.meklm.common.tile.machine;
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.fluid.CanAdjustFluidTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.prefab.TileEntityRecipeLargeMachine;
+import com.jerry.meklm.common.tile.INeedConfig;
 
 import mekanism.api.*;
 import mekanism.api.chemical.BasicChemicalTank;
@@ -54,6 +54,7 @@ import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasMode;
+import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.NBTUtils;
 import mekanism.common.util.WorldUtils;
@@ -79,7 +80,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
-public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeLargeMachine<RotaryRecipe> implements IHasMode, IBoundingBlock {
+public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachine<RotaryRecipe> implements IHasMode, IBoundingBlock, INeedConfig {
 
     public static final RecipeError NOT_ENOUGH_FLUID_INPUT_ERROR = RecipeError.create();
     public static final RecipeError NOT_ENOUGH_GAS_INPUT_ERROR = RecipeError.create();
@@ -242,6 +243,11 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeLargeM
     @ComputerMethod(nameOverride = "getEnergyUsage", methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
     public long getEnergyUsed() {
         return clientEnergyUsed;
+    }
+
+    @Override
+    public boolean needConfig() {
+        return false;
     }
 
     @Override

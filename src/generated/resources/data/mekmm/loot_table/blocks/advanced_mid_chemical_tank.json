@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "mekanism:dump_mode",
+                "mekanism:ejector",
+                "mekanism:owner",
+                "mekanism:redstone_control",
+                "mekanism:security",
+                "mekanism:side_config",
+                "mekanism:items",
+                "mekanism:chemicals"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "mekmm:advanced_mid_chemical_tank"
+        }
+      ],
+      "name": "main",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "mekmm:blocks/advanced_mid_chemical_tank"
+}

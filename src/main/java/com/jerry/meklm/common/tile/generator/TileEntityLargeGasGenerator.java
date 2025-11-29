@@ -2,6 +2,7 @@ package com.jerry.meklm.common.tile.generator;
 
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
 import mekanism.api.Action;
@@ -36,7 +37,6 @@ import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
-import mekanism.generators.common.config.MekanismGeneratorsConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -73,13 +73,14 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Getter
     private long generationRate = 0;
     private double gasUsedLastTick;
+    private double efficiencyMultiplier = 1.0;
     private int numPowering;
 
     public TileEntityLargeGasGenerator(BlockPos pos, BlockState state) {
         super(LargeMachineBlocks.LARGE_GAS_BURNING_GENERATOR, pos, state, ChemicalUtil::hydrogenEnergyPerTick);
     }
 
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSide(facingSupplier);
@@ -87,7 +88,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         return builder.build();
     }
 
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     @Override
     protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
         InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier);
@@ -108,6 +109,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         energySlot.drainContainer();
         fuelSlot.fillTank();
 
+        updateEfficiency();
+
         if (!fuelTank.isEmpty() && canFunction() && getEnergyContainer().insert(generationRate, Action.SIMULATE, AutomationType.INTERNAL) == 0L) {
             setActive(true);
             if (!fuelTank.isEmpty()) {
@@ -115,12 +118,15 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
                 if (fuel != null) {
                     // Ensure valid data
                     maxBurnTicks = Math.max(1, fuel.burnTicks());
+                    // 不能在此处倍增，会在gui计算中倍增两次
                     generationRate = fuel.energyPerTick();
                 }
             }
 
-            long toUse = getToUse();
-            long toUseGeneration = MathUtils.multiplyClamped(generationRate, toUse);
+            // 准备使用多少燃料， 燃料消耗减半
+            long toUse = (long) (getToUse() * efficiencyMultiplier);
+            // 应当在这里倍增
+            long toUseGeneration = MathUtils.multiplyClamped((long) (generationRate * efficiencyMultiplier), toUse);
             updateMaxOutputRaw(Math.max(ChemicalUtil.hydrogenEnergyPerTick(), toUseGeneration));
 
             long total = burnTicks + fuelTank.getStored() * maxBurnTicks;
@@ -142,6 +148,11 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         return sendUpdatePacket;
     }
 
+    @Override
+    protected BlockPos offSetOutput(BlockPos from, Direction side) {
+        return from.offset(new Vec3i(0, 2, 0)).relative(side);
+    }
+
     private void reset() {
         burnTicks = 0;
         maxBurnTicks = 0;
@@ -153,15 +164,33 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         if (generationRate == 0L || fuelTank.isEmpty()) {
             return 0;
         }
+        // 向上取整
         long max = (long) Math.ceil(256 * (fuelTank.getStored() / (double) fuelTank.getCapacity()));
+        // 最大燃烧时间*储量 + 燃烧时间（一开始为0） 与 max取最小
         max = Math.min(maxBurnTicks * fuelTank.getStored() + burnTicks, max);
+        // 剩余能量容量/燃料每tick生成的能量 与 max取最小
         max = Math.min(MathUtils.clampToLong(getEnergyContainer().getNeeded() / (double) generationRate), max);
         return max;
     }
 
+    @ComputerMethod(nameOverride = "getEfficiencyMultiplier")
+    public double getEfficiencyMultiplier() {
+        return Math.round(efficiencyMultiplier * 100) / 100D;
+    }
+
     @ComputerMethod(nameOverride = "getBurnRate")
     public double getUsed() {
-        return Math.round(gasUsedLastTick * 100) / 100D;
+        return Math.round(gasUsedLastTick * efficiencyMultiplier * 100) / 100D;
+    }
+
+    private void updateEfficiency() {
+        if (fuelTank.isEmpty()) {
+            efficiencyMultiplier = 1.0;
+            return;
+        }
+        double fillPercentage = fuelTank.getStored() / (double) fuelTank.getCapacity();
+        // 三次方曲线: 前期增长慢,后期加速
+        efficiencyMultiplier = 1.0 + 21.0 * Math.pow(fillPercentage, 3);
     }
 
     @Override
@@ -279,7 +308,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     public class FuelTank extends VariableCapacityChemicalTank {
 
         protected FuelTank(@Nullable IContentsListener listener) {
-            super(MekanismGeneratorsConfig.generators.gbgTankCapacity, ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrueBi(), HAS_FUEL, null, listener);
+            super(MoreMachineConfig.generators.LGBGTankCapacity, ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrueBi(), HAS_FUEL, null, listener);
         }
 
         @Override

@@ -61,7 +61,22 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
 
     // General Config
     GAS_COLLECT_AMOUNT("general.collect.amount", "Gas Collect Amount", "mB of Unstable Dimensional Gas collected by the Ambient Gas Collector."),
-    WIRELESS_CHARGING_STATION_CHARGING_RATE("general.charging.rate", "Charge Rate", "Amount of Energy(joules) an item can receive per tick from a Wireless Charging Station.");
+    WIRELESS_CHARGING_STATION_CHARGING_RATE("general.charging.rate", "Charge Rate", "Amount of Energy(joules) an item can receive per tick from a Wireless Charging Station."),
+
+    // Generator Config
+    SERVER_GENERATOR_LARGE_HEAT("server.generator.heat", "Large Heat Generator", "Settings for configuring Large Heat Generators", true),
+    SERVER_GENERATOR_LARGE_HEAT_GENERATION("server.generator.heat.gen", "Energy Generation",
+            "Amount of energy in Joules the Large Heat Generator produces per tick. largeHeatGeneration + largeHeatGenerationLava * lavaSides + largeHeatGenerationNether. " + "Note: lavaSides is how many sides are adjacent to lava, this includes the block itself if it is lava logged allowing for a max of 81 \"sides\"."),
+    SERVER_GENERATOR_LARGE_HEAT_GEN_LAVA("server.generator.heat.gen.lava", "Submerged Energy Generation",
+            "Multiplier of effectiveness of Lava that is adjacent to the Large Heat Generator."),
+    SERVER_GENERATOR_LARGE_HEAT_GEN_NETHER("server.generator.heat.gen.nether", "Nether Energy Generation",
+            "Add this amount of Joules to the energy produced by a large heat generator if it is in an 'ultrawarm' dimension, in vanilla this is just the Nether."),
+    SERVER_GENERATOR_LARGE_HEAT_TANK_CAPACITY("server.generator.heat.tank_capacity", "Tank Capacity", "The capacity in mB of the fluid tank in the Large Heat Generator."),
+    SERVER_GENERATOR_LARGE_HEAT_FLUID_RATE("server.generator.heat.fluid_rate", "Fluid Rate",
+            "The amount of lava in mB that gets consumed to transfer largeHeatGeneration Joules to the Large Heat Generator."),
+
+    SERVER_GENERATOR_LARGE_GAS("server.generator.gas", "Large Gas-Burning Generator", "Settings for configuring Large Gas-Burning Generators", true),
+    SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY("server.generator.gas.tank_capacity", "Tank Capacity", "The capacity in mB of the chemical tank in the Large Gas-Burning Generator.");
 
     private final String key;
     private final String title;

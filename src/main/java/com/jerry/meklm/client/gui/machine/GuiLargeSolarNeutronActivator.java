@@ -3,7 +3,7 @@ package com.jerry.meklm.client.gui.machine;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
 
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiChemicalGauge;
 import mekanism.client.gui.element.progress.GuiProgress;
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GuiLargeSolarNeutronActivator extends GuiConfigurableTile<TileEntityLargeSolarNeutronActivator, MekanismTileContainer<TileEntityLargeSolarNeutronActivator>> {
+public class GuiLargeSolarNeutronActivator extends GuiMekanismTile<TileEntityLargeSolarNeutronActivator, MekanismTileContainer<TileEntityLargeSolarNeutronActivator>> {
 
     public GuiLargeSolarNeutronActivator(MekanismTileContainer<TileEntityLargeSolarNeutronActivator> container, Inventory inv, Component title) {
         super(container, inv, title);

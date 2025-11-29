@@ -75,12 +75,16 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
                 outputCaches = new ArrayList<>(energySides.length);
                 for (RelativeSide energySide : energySides) {
                     Direction side = energySide.getDirection(direction);
-                    outputCaches.add(BlockEnergyCapabilityCache.create((ServerLevel) level, worldPosition.relative(side), side.getOpposite()));
+                    outputCaches.add(BlockEnergyCapabilityCache.create((ServerLevel) level, offSetOutput(worldPosition, side), side.getOpposite()));
                 }
             }
             CableUtils.emit(outputCaches, energyContainer, getMaxOutput());
         }
         return sendUpdatePacket;
+    }
+
+    protected BlockPos offSetOutput(BlockPos from, Direction side) {
+        return from.relative(side);
     }
 
     @Override

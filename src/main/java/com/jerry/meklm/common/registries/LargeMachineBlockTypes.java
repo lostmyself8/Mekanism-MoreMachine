@@ -148,7 +148,7 @@ public class LargeMachineBlockTypes {
     public static final Generator<TileEntityLargeGasGenerator> LARGE_GAS_BURNING_GENERATOR = Generator.GeneratorBuilder
             .createGenerator(() -> LargeMachineTileEntityTypes.LARGE_GAS_BURNING_GENERATOR, GeneratorsLang.DESCRIPTION_GAS_BURNING_GENERATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_GAS_BURNING_GENERATOR)
-            .withEnergyConfig(() -> MathUtils.multiplyClamped(1_024_000_000L, ChemicalUtil.hydrogenEnergyDensity()))
+            .withEnergyConfig(() -> MathUtils.multiplyClamped(20_480_000L, ChemicalUtil.hydrogenEnergyDensity()))
             .withCustomShape(LargeMachineBlockShapes.LARGE_GAS_BURNING_GENERATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withSound(GeneratorsSounds.GAS_BURNING_GENERATOR)
