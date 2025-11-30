@@ -74,6 +74,6 @@ jobs:
           prerelease: true
           body: |
             The latest build of Mekanism: MoreMachine for Minecraft ${{ steps.set_display_name.outputs.display_branch }}.
-            Please report any [issues](https://github.com/lostmyself8/Mekanism-Extras/issues).
+            Please report any [issues](https://github.com/lostmyself8/Mekanism-MoreMachine/issues).
             ${{ steps.changelog.outputs.changelog }}
           files: build/libs/*.jar
