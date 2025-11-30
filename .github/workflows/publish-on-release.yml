@@ -40,7 +40,7 @@ jobs:
     with:
       simulate: ${{ startsWith(github.event.release.name, 'simulate') || github.repository_owner != 'lostmyself8' }}
       branch: 'master'
-      tag-name: 1.21.1
+      tag-name: ${{ github.ref_name }}
       release-body: ${{ github.event.release.body }}
       changelog-body: ${{ needs.meta.outputs.CHANGELOG }}
 
@@ -53,6 +53,6 @@ jobs:
     with:
       simulate: ${{ startsWith(github.event.release.name, 'simulate') || github.repository_owner != 'lostmyself8' }}
       branch: '1.20.1'
-      tag-name: 1.20.1
+      tag-name: ${{ github.ref_name }}
       release-body: ${{ github.event.release.body }}
       changelog-body: ${{ needs.meta.outputs.CHANGELOG }}
