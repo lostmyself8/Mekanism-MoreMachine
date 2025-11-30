@@ -2,7 +2,7 @@ package com.jerry.mekaf.common.item.block.machine;
 
 import com.jerry.mekaf.common.attachments.component.AdvancedFactoryAttachedSideConfig;
 import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
-import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine;
+import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine.BlockAdvancedFactory;
 
 import mekanism.api.text.EnumColor;
 import mekanism.common.MekanismLang;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class ItemBlockAdvancedFactory extends ItemBlockTooltip<BlockTile<?, ?>> {
 
-    private static AttachedSideConfig getSideConfig(BlockAdvancedFactoryMachine.BlockAdvancedFactory<?> block) {
+    private static AttachedSideConfig getSideConfig(BlockAdvancedFactory<?> block) {
         return switch (Attribute.getOrThrow(block.builtInRegistryHolder(), AttributeAdvancedFactoryType.class).getAdvancedFactoryType()) {
             case OXIDIZING -> AttachedSideConfig.CHEMICAL_OUT_MACHINE;
             case DISSOLVING -> AttachedSideConfig.DISSOLUTION;
@@ -39,7 +39,7 @@ public class ItemBlockAdvancedFactory extends ItemBlockTooltip<BlockTile<?, ?>> 
         };
     }
 
-    public ItemBlockAdvancedFactory(BlockAdvancedFactoryMachine.BlockAdvancedFactory<?> block, Properties properties) {
+    public ItemBlockAdvancedFactory(BlockAdvancedFactory<?> block, Properties properties) {
         super(block, true, properties
                 .component(MekanismDataComponents.SORTING, false)
                 .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)

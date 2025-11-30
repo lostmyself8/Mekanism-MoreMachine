@@ -263,10 +263,10 @@ public class MoreMachineBlocks {
                             .build()));
 
     public static final BlockRegistryObject<BlockAuthorDoll, ItemBlockAuthorDoll> AUTHOR_DOLL = MM_BLOCKS.register("author_doll",
-            () -> new BlockAuthorDoll(MoreMachineBlockTypes.AUTHOR_DOLL, properties -> properties.sound(SoundType.WOOL).destroyTime(0).strength(0)), ItemBlockAuthorDoll::new);
+            () -> new BlockAuthorDoll(MoreMachineBlockTypes.AUTHOR_DOLL, properties -> properties.sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockAuthorDoll::new);
 
     public static final BlockRegistryObject<BlockModelerDoll, ItemBlockModelerDoll> MODELER_DOLL = MM_BLOCKS.register("modeler_doll",
-            () -> new BlockModelerDoll(MoreMachineBlockTypes.MODELER_DOLL, properties -> properties.sound(SoundType.WOOL).destroyTime(0).strength(0)), ItemBlockModelerDoll::new);
+            () -> new BlockModelerDoll(MoreMachineBlockTypes.MODELER_DOLL, properties -> properties.sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockModelerDoll::new);
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(ITier tier, String suffix,
                                                                                                                       Supplier<? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {

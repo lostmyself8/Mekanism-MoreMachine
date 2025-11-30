@@ -2,7 +2,7 @@ package com.jerry.mekaf.common.registries;
 
 import com.jerry.mekaf.common.attachments.containers.chemical.AFChemicalTanksBuilder;
 import com.jerry.mekaf.common.attachments.containers.item.AFItemSlotsBuilder;
-import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine;
+import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine.BlockAdvancedFactory;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactory;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.item.block.machine.ItemBlockAdvancedFactory;
@@ -45,7 +45,7 @@ public class AdvancedFactoryBlocks {
 
     public static final BlockDeferredRegister AF_BLOCKS = new BlockDeferredRegister(Mekmm.MOD_ID);
 
-    private static final Table<FactoryTier, AdvancedFactoryType, BlockRegistryObject<BlockAdvancedFactoryMachine.BlockAdvancedFactory<?>, ItemBlockAdvancedFactory>> AF_FACTORIES = HashBasedTable.create();
+    private static final Table<FactoryTier, AdvancedFactoryType, BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory>> AF_FACTORIES = HashBasedTable.create();
 
     static {
         // factories
@@ -56,9 +56,9 @@ public class AdvancedFactoryBlocks {
         }
     }
 
-    private static <TILE extends TileEntityAdvancedFactoryBase<?>> BlockRegistryObject<BlockAdvancedFactoryMachine.BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> registerMMFactory(AdvancedFactory<TILE> type) {
+    private static <TILE extends TileEntityAdvancedFactoryBase<?>> BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> registerMMFactory(AdvancedFactory<TILE> type) {
         FactoryTier tier = (FactoryTier) Objects.requireNonNull(type.get(AttributeTier.class)).tier();
-        BlockRegistryObject<BlockAdvancedFactoryMachine.BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> factory = registerTieredBlock(tier, "_" + type.getAdvancedFactoryType().getRegistryNameComponent() + "_factory", () -> new BlockAdvancedFactoryMachine.BlockAdvancedFactory<>(type), ItemBlockAdvancedFactory::new);
+        BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> factory = registerTieredBlock(tier, "_" + type.getAdvancedFactoryType().getRegistryNameComponent() + "_factory", () -> new BlockAdvancedFactory<>(type), ItemBlockAdvancedFactory::new);
         factory.forItemHolder(holder -> {
             int processes = tier.processes;
             Predicate<ItemStack> recipeItemInputPredicate = switch (type.getAdvancedFactoryType()) {
@@ -79,33 +79,39 @@ public class AdvancedFactoryBlocks {
             };
             switch (type.getAdvancedFactoryType()) {
                 // 没问题
-                case OXIDIZING -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> AFChemicalTanksBuilder.builder()
-                        // 化学品输出（多个）
-                        .addOutputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * tier.processes)
-                        .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> AFItemSlotsBuilder.builder()
+                case OXIDIZING -> holder
+                        .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> AFChemicalTanksBuilder.builder()
+                                // 化学品输出（多个）
+                                .addOutputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * tier.processes)
+                                .build())
+                        .addAttachmentOnlyContainers(ContainerType.ITEM, () -> AFItemSlotsBuilder.builder()
                                 // 物品输入（多个）
                                 .addInputFactorySlots(processes, recipeItemInputPredicate)
                                 .addEnergy()
                                 .build());
                 // 输入储罐错位，输出储罐气体消失
-                case DISSOLVING -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> AFChemicalTanksBuilder.builder()
-                        // 化学品输入
-                        .addBasic(TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes, recipeChemicalInputPredicate)
-                        // 化学品输出（多个）
-                        .addOutputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes)
-                        .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> AFItemSlotsBuilder.builder()
+                case DISSOLVING -> holder
+                        .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> AFChemicalTanksBuilder.builder()
+                                // 化学品输入
+                                .addBasic(TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes, recipeChemicalInputPredicate)
+                                // 化学品输出（多个）
+                                .addOutputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes)
+                                .build())
+                        .addAttachmentOnlyContainers(ContainerType.ITEM, () -> AFItemSlotsBuilder.builder()
                                 .addInputFactorySlots(processes, recipeItemInputPredicate)
                                 .addChemicalFillOrConvertSlot(0)
                                 .addEnergy()
                                 .build());
                 // 输出储罐错位
-                case CHEMICAL_INFUSING -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> AFChemicalTanksBuilder.builder()
-                        // Left
-                        .addInputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes, recipeChemicalInputPredicate)
-                        .addOutputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes)
-                        // Right
-                        .addBasic(TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes, recipeChemicalInputPredicate)
-                        .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                case CHEMICAL_INFUSING -> holder
+                        .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> AFChemicalTanksBuilder.builder()
+                                // Left
+                                .addInputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes, recipeChemicalInputPredicate)
+                                .addOutputFactoryTank(processes, TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes)
+                                // Right
+                                .addBasic(TileEntityAdvancedFactoryBase.MAX_CHEMICAL * processes, recipeChemicalInputPredicate)
+                                .build())
+                        .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 // 将右侧的储罐槽保留
                                 .addChemicalFillOrConvertSlot(1)
                                 .addEnergy()
@@ -153,6 +159,7 @@ public class AdvancedFactoryBlocks {
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 .addEnergy()
                                 .build());
+                // 偶现升级后槽位不可以的情况
                 case LIQUIFYING -> holder
                         .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
                                 .addBasic(TileEntityLiquifyingFactory.MAX_FLUID * processes)
@@ -178,12 +185,12 @@ public class AdvancedFactoryBlocks {
      * @param type - recipe type to add to the Factory
      * @return factory with defined tier and recipe type
      */
-    public static BlockRegistryObject<BlockAdvancedFactoryMachine.BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> getAdvancedFactory(@NotNull FactoryTier tier, @NotNull AdvancedFactoryType type) {
+    public static BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> getAdvancedFactory(@NotNull FactoryTier tier, @NotNull AdvancedFactoryType type) {
         return AF_FACTORIES.get(tier, type);
     }
 
     @SuppressWarnings("unchecked")
-    public static BlockRegistryObject<BlockAdvancedFactoryMachine.BlockAdvancedFactory<?>, ItemBlockAdvancedFactory>[] getAdvancedFactoryBlocks() {
+    public static BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory>[] getAdvancedFactoryBlocks() {
         return AF_FACTORIES.values().toArray(new BlockRegistryObject[0]);
     }
 }

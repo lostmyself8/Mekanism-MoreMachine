@@ -14,6 +14,7 @@ import mekanism.client.gui.tooltip.TooltipUtils;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.network.PacketUtils;
 import mekanism.common.network.to_server.button.PacketTileButtonPress;
+import mekanism.common.util.text.EnergyDisplay;
 import mekanism.common.util.text.InputValidator;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -66,7 +67,7 @@ public class GuiWirelessTransmissionStationConfig extends GuiConnectListHolder<T
     protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
         renderTitleTextWithOffset(guiGraphics, 14);// Adjust spacing for back button
-        drawScreenText(guiGraphics, MoreMachineLang.WTS_ENERGY_RATE.translate(tile.getEnergyRate()), 18);
+        drawScreenText(guiGraphics, MoreMachineLang.WTS_ENERGY_RATE.translate(EnergyDisplay.of(tile.getEnergyRate())), 18);
         drawScreenText(guiGraphics, MoreMachineLang.WTS_FLUIDS_RATE.translate(tile.getFluidsRate()), 44);
         drawScreenText(guiGraphics, MoreMachineLang.WTS_CHEMICALS_RATE.translate(tile.getChemicalsRate()), 71);
         drawScreenText(guiGraphics, MoreMachineLang.WTS_ITEMS_RATE.translate(tile.getItemsRate()), 99);

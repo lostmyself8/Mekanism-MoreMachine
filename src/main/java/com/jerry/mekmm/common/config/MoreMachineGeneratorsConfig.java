@@ -51,7 +51,7 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
 
     @Override
     public String getTranslation() {
-        return "General Config";
+        return "Generators Config";
     }
 
     @Override

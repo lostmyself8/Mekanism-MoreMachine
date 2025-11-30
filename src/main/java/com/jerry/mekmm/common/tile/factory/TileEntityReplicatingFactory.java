@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidType;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +75,7 @@ public class TileEntityReplicatingFactory extends TileEntityItemToItemMMFactory<
 
     private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
     // 化学品存储槽
+    @Getter
     public IChemicalTank chemicalTank;
     // 气罐槽
     ChemicalInventorySlot chemicalSlot;
@@ -86,10 +88,6 @@ public class TileEntityReplicatingFactory extends TileEntityItemToItemMMFactory<
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
 
         chemicalInputHandler = InputHelper.getConstantInputHandler(chemicalTank);
-    }
-
-    public IChemicalTank getChemicalTank() {
-        return chemicalTank;
     }
 
     @Nullable

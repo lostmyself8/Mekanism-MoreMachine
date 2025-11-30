@@ -50,7 +50,7 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
     protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
         // 燃料消耗减半了
-        renderInventoryTextAndOther(guiGraphics, GeneratorsLang.GAS_BURN_RATE.translate(tile.getUsed() / 2));
+        renderInventoryTextAndOther(guiGraphics, GeneratorsLang.GAS_BURN_RATE.translate(tile.getUsed()));
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
     }
 }

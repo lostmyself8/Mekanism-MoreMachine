@@ -7,6 +7,7 @@
   "item.mekmm.empty_crystal": "Empty Crystal",
   "item.mekmm.uu_matter": "UU Matter",
   "item.mekmm.connector": "Connector",
+  "item.mekmm.advanced_electrolysis_core": "Advanced Electrolysis Core",
 
   "block.mekmm.basic_oxidizing_factory": "Basic Oxidizing Factory",
   "block.mekmm.advanced_oxidizing_factory": "Advanced Oxidizing Factory",
@@ -357,7 +358,7 @@
   "tooltip.mekmm.no_blocking": "Not blocked above the machine",
 
   "gui.mekmm.configuration": "Configuration",
-  "gui.mekmm.wts.energy_rate": "energy transmission Rate:%1$s J/t",
+  "gui.mekmm.wts.energy_rate": "energy transmission Rate:%1$s/t",
   "gui.mekmm.wts.fluids_rate": "fluids transmission Rate:%1$s mb/t",
   "gui.mekmm.wts.chemicals_rate": "chemicals transmission Rate:%1$s mb/t",
   "gui.mekmm.wts.items_rate": "items transmission Rate:%1$s",
