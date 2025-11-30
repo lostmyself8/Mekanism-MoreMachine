@@ -21,8 +21,8 @@ body:
   - type: input
     id: mekanismextras-version
     attributes:
-      label: Mekanism Extras Version / Mekanism Extras 版本
-      description: The version of Mekanism Extras you were using when this bug was encountered. If you do not know where to find this, look for the mod jar file in the mods folder, or in the mods viewer in-game. / 遇到此错误时使用的 Mekanism Extras 版本。如果不知道如何查找，请查看 mods 文件夹中的 mod jar 文件，或游戏内的模组查看器。
+      label: Mekanism MoreMachine Version / Mekanism MoreMachine 版本
+      description: The version of Mekanism MoreMachine you were using when this bug was encountered. If you do not know where to find this, look for the mod jar file in the mods folder, or in the mods viewer in-game. / 遇到此错误时使用的 Mekanism MoreMachine 版本。如果不知道如何查找，请查看 mods 文件夹中的 mod jar 文件，或游戏内的模组查看器。
       placeholder: "Example: v2.3.4 / 例如：v2.3.4"
     validations:
       required: true
