@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,active=false": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/off"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/off",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/off",
+      "y": -90
+    },
+    "facing=east,active=false": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/off",
+      "y": 90
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/on"
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/on",
+      "y": 180
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/on",
+      "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/large_machine/large_solar_neutron_activator/on",
+      "y": -90
+    }
+  }
+}

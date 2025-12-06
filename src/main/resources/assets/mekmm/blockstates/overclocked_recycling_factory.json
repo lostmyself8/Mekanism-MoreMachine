@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/overclocked"
+      "model": "mekmm:block/factory/recycling/overclocked"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/overclocked",
+      "model": "mekmm:block/factory/recycling/overclocked",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/overclocked",
+      "model": "mekmm:block/factory/recycling/overclocked",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/overclocked",
+      "model": "mekmm:block/factory/recycling/overclocked",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/overclocked"
+      "model": "mekmm:block/factory/recycling/active/overclocked"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/overclocked",
+      "model": "mekmm:block/factory/recycling/active/overclocked",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/overclocked",
+      "model": "mekmm:block/factory/recycling/active/overclocked",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/overclocked",
+      "model": "mekmm:block/factory/recycling/active/overclocked",
       "y": -90
     }
   }

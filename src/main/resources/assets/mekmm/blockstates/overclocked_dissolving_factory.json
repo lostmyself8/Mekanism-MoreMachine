@@ -1,10 +1,10 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekmm:block/factory/dissolving/advanced"
+      "model": "mekmm:block/factory/dissolving/overclocked"
     },
     "facing=south,active=false": {
-      "model": "mekmm:block/factory/dissolving/advanced",
+      "model": "mekmm:block/factory/dissolving/overclocked",
       "y": 180
     },
     "facing=east,active=false": {
@@ -12,22 +12,22 @@
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekmm:block/factory/dissolving/advanced",
+      "model": "mekmm:block/factory/dissolving/overclocked",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekmm:block/factory/dissolving/active/advanced"
+      "model": "mekmm:block/factory/dissolving/active/overclocked"
     },
     "facing=south,active=true": {
-      "model": "mekmm:block/factory/dissolving/active/advanced",
+      "model": "mekmm:block/factory/dissolving/active/overclocked",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekmm:block/factory/dissolving/active/advanced",
+      "model": "mekmm:block/factory/dissolving/active/overclocked",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekmm:block/factory/dissolving/active/advanced",
+      "model": "mekmm:block/factory/dissolving/active/overclocked",
       "y": -90
     }
   }

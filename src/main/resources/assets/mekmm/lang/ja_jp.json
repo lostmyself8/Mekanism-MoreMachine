@@ -6,6 +6,7 @@
   "item.mekmm.scrap_box": "スクラップボックス",
   "item.mekmm.empty_crystal": "純粋なクリスタル",
   "item.mekmm.uu_matter": "UUマター",
+  "item.mekmm.advanced_electrolysis_core": "Advanced Electrolysis Core",
 
   "block.mekmm.basic_oxidizing_factory": "基本酸化ファクトリー",
   "block.mekmm.advanced_oxidizing_factory": "発展酸化ファクトリー",
@@ -143,7 +144,8 @@
   "block.mekmm.chemical_replicator": "Chemical Replicator",
   "block.mekmm.ambient_gas_collector": "環境ガス収集機",
   "block.mekmm.wireless_charging_station": "Wireless Charging Station",
-  "block.mekmm.author_doll": "作者のぬいぐるみ",
+  "block.mekmm.author_doll": "LostMyself",
+  "block.mekmm.modeler_doll": "TedXenon",
 
   "block.mekmm.large_gas_burning_generator": "大型ガス燃焼発電機",
   "block.mekmm.large_electrolytic_separator": "大型電解分離機",
@@ -326,7 +328,8 @@
   "description.mekmm.chemical_replicator": "A machine that violates the laws of physics and can replicate chemicals using a certain substance.",
   "description.mekmm.ambient_gas_collector": "大気中から謎の物質を抽出する機械です。",
   "description.mekmm.wireless_charging_station": "A machine for wireless charging of inventory and armor (including Curios, if you have one).",
-  "description.mekmm.author_doll": "このModの作者のスキンを纏った人形です。愛でましょう。",
+  "description.mekmm.author_doll": "A doll with the author's skin.(Just decorations)",
+  "description.mekmm.modeler_doll": "A doll with the modeler's skin.(Thanks to everyone who provided textures and models for mekmm)",
 
   "tooltip.mekmm.is_blocking": "機械の上部が塞がれています",
   "tooltip.mekmm.no_blocking": "機械の上部は塞がれていません",

@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/multiversal"
+      "model": "mekmm:block/factory/recycling/multiversal"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/multiversal",
+      "model": "mekmm:block/factory/recycling/multiversal",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/multiversal",
+      "model": "mekmm:block/factory/recycling/multiversal",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/multiversal",
+      "model": "mekmm:block/factory/recycling/multiversal",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/multiversal"
+      "model": "mekmm:block/factory/recycling/active/multiversal"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/multiversal",
+      "model": "mekmm:block/factory/recycling/active/multiversal",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/multiversal",
+      "model": "mekmm:block/factory/recycling/active/multiversal",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/multiversal",
+      "model": "mekmm:block/factory/recycling/active/multiversal",
       "y": -90
     }
   }

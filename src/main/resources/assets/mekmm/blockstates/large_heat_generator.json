@@ -1,19 +1,34 @@
 {
-	"variants": {
-		"facing=north": {
-			"model": "mekmm:block/large_heat_generator"
-		},
-		"facing=south": {
-			"model": "mekmm:block/large_heat_generator",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "mekmm:block/large_heat_generator",
-			"y": -90
-		},
-		"facing=east": {
-			"model": "mekmm:block/large_heat_generator",
-			"y": 90
-		}
-	}
+  "variants": {
+    "facing=north,active=false": {
+      "model": "mekmm:block/large_machine/large_heat_generator/off"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/large_machine/large_heat_generator/off",
+      "y": 180
+    },
+    "facing=east,active=false": {
+      "model": "mekmm:block/large_machine/large_heat_generator/off",
+      "y": 90
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/large_machine/large_heat_generator/off",
+      "y": -90
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/large_machine/large_heat_generator/on"
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/large_machine/large_heat_generator/on",
+      "y": 180
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/large_machine/large_heat_generator/on",
+      "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/large_machine/large_heat_generator/on",
+      "y": -90
+    }
+  }
 }

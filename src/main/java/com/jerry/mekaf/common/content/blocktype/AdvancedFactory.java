@@ -5,7 +5,6 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
 
-import com.jerry.mekmm.common.content.blocktype.MoreMachineBlockShapes;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 
 import mekanism.common.MekanismLang;
@@ -58,11 +57,11 @@ public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> exte
             AdvancedFactoryBuilder<AdvancedFactory<TILE>, TILE, ?> builder = new AdvancedFactoryBuilder<>(new AdvancedFactory<>((Supplier<TileEntityTypeRegistryObject<TILE>>) tileEntityRegistrar,
                     () -> AdvancedFactoryContainerTypes.ADVANCED_FACTORY, type.getBaseMachine(), tier));
             builder.withComputerSupport(tier, type.getRegistryNameComponentCapitalized() + "Factory");
-            builder.withCustomShape(MoreMachineBlockShapes.getShape(tier, type));
+            builder.withCustomShape(AdvancedFactoryBlockShapes.getShape(type));
             // 由于1.20.1Mek没有将BoundingBlock加入到ItemTierInstaller中，导致升级有BoundingBlock方块会导致直接消失
-            // if (type == AdvancedFactoryType.CENTRIFUGING) {
-            // builder.withBounding((pos, state, builderPos) -> builderPos.add(pos.above()));
-            // }
+            if (type == AdvancedFactoryType.CENTRIFUGING) {
+                builder.withBounding((pos, state, builderPos) -> builderPos.add(pos.above()));
+            }
             builder.replace(new AttributeParticleFX().addDense(ParticleTypes.SMOKE, 5, rand -> new Pos3D(
                     rand.nextFloat() * 0.7F - 0.3F,
                     rand.nextFloat() * 0.1F + 0.7F,

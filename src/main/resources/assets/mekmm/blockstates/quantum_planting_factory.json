@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/quantum"
+      "model": "mekmm:block/factory/planting/quantum"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/quantum",
+      "model": "mekmm:block/factory/planting/quantum",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/quantum",
+      "model": "mekmm:block/factory/planting/quantum",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/quantum",
+      "model": "mekmm:block/factory/planting/quantum",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/quantum"
+      "model": "mekmm:block/factory/planting/active/quantum"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/quantum",
+      "model": "mekmm:block/factory/planting/active/quantum",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/quantum",
+      "model": "mekmm:block/factory/planting/active/quantum",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/quantum",
+      "model": "mekmm:block/factory/planting/active/quantum",
       "y": -90
     }
   }

@@ -1,0 +1,38 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "mekmm:item/connector_energy"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "mekmm:mode": 1
+      },
+      "model": "mekmm:item/connector_items"
+    },
+    {
+      "predicate": {
+        "mekmm:mode": 2
+      },
+      "model": "mekmm:item/connector_fluids"
+    },
+    {
+      "predicate": {
+        "mekmm:mode": 3
+      },
+      "model": "mekmm:item/connector_chemicals"
+    },
+    {
+      "predicate": {
+        "mekmm:mode": 4
+      },
+      "model": "mekmm:item/connector_energy"
+    },
+    {
+      "predicate": {
+        "mekmm:mode": 5
+      },
+      "model": "mekmm:item/connector_heat"
+    }
+  ]
+}

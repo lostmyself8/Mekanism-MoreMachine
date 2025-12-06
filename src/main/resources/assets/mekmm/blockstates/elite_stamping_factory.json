@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekanism:block/factory/crushing/elite"
+      "model": "mekmm:block/factory/stamping/elite"
     },
     "facing=south,active=false": {
-      "model": "mekanism:block/factory/crushing/elite",
+      "model": "mekmm:block/factory/stamping/elite",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "mekanism:block/factory/crushing/elite",
+      "model": "mekmm:block/factory/stamping/elite",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekanism:block/factory/crushing/elite",
+      "model": "mekmm:block/factory/stamping/elite",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekanism:block/factory/crushing/active/elite"
+      "model": "mekmm:block/factory/stamping/active/elite"
     },
     "facing=south,active=true": {
-      "model": "mekanism:block/factory/crushing/active/elite",
+      "model": "mekmm:block/factory/stamping/active/elite",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekanism:block/factory/crushing/active/elite",
+      "model": "mekmm:block/factory/stamping/active/elite",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekanism:block/factory/crushing/active/elite",
+      "model": "mekmm:block/factory/stamping/active/elite",
       "y": -90
     }
   }

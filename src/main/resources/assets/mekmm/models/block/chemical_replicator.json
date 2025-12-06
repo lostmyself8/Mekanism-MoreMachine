@@ -1,0 +1,46 @@
+{
+  "loader": "forge:composite",
+  "gui_light": "side",
+  "parent": "block/block",
+  "textures": {
+    "particle": "mekmm:block/replicator/replicator_bottom"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/replicator_base",
+      "textures": {
+        "back": "mekmm:block/replicator/replicator_back_chemical",
+        "side": "mekmm:block/replicator/replicator_side_chemical",
+        "top": "mekmm:block/replicator/replicator_top_chemical"
+      }
+    },
+    "translucent": {
+      "render_type": "translucent",
+      "textures": {
+        "3": "mekanism:block/glass"
+      },
+      "elements":[
+        {
+          "name": "glass",
+          "from": [7, 8, 1],
+          "to": [13, 15, 1],
+          "rotation": {"angle": 0, "axis": "y", "origin": [7, 8, 1]},
+          "faces": {
+            "north": {"uv": [0, 0, 6, 7], "texture": "#3"},
+            "south": {"uv": [0, 0, 6, 7], "texture": "#3"}
+          }
+        },
+        {
+          "name": "glass",
+          "from": [7, 15, 1],
+          "to": [13, 15, 9],
+          "rotation": {"angle": 0, "axis": "y", "origin": [7, 15, 1]},
+          "faces": {
+            "up": {"uv": [0, 0, 6, 8], "texture": "#3"},
+            "down": {"uv": [0, 0, 6, 8], "texture": "#3"}
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mekmm:block/modeler_doll"
+    },
+    "facing=south": {
+      "model": "mekmm:block/modeler_doll",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mekmm:block/modeler_doll",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "mekmm:block/modeler_doll",
+      "y": 90
+    }
+  }
+}

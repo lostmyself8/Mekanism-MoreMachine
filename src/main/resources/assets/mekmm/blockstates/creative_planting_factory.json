@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/creative"
+      "model": "mekmm:block/factory/planting/creative"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/creative",
+      "model": "mekmm:block/factory/planting/creative",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/creative",
+      "model": "mekmm:block/factory/planting/creative",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/enriching/creative",
+      "model": "mekmm:block/factory/planting/creative",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/creative"
+      "model": "mekmm:block/factory/planting/active/creative"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/creative",
+      "model": "mekmm:block/factory/planting/active/creative",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/creative",
+      "model": "mekmm:block/factory/planting/active/creative",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/enriching/active/creative",
+      "model": "mekmm:block/factory/planting/active/creative",
       "y": -90
     }
   }

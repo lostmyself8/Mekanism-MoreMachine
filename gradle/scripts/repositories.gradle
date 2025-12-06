@@ -10,7 +10,7 @@ repositories {
     }
     maven {
         name = "blakes's Maven"
-        url 'https://maven.blakesmods.com'
+        url = 'https://maven.blakesmods.com'
     }
     maven { // JEI mirror, AE2
         name = "ModMaven"

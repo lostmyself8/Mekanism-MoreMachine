@@ -1,10 +1,6 @@
 {
-  "parent": "mekanism:block/osmium_compressor",
+  "parent": "mekmm:block/cnc_lathe",
   "textures": {
-    "front": "mekanism:block/osmium_compressor/front_active",
-    "west": "mekanism:block/osmium_compressor/right_active",
-    "east": "mekanism:block/osmium_compressor/left_active",
-    "south": "mekanism:block/osmium_compressor/back_active",
-    "up": "mekanism:block/osmium_compressor/top_active"
+    "front": "mekmm:block/cnc_lathe/front_active"
   }
 }

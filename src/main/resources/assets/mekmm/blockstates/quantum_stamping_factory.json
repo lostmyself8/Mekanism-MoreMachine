@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/quantum"
+      "model": "mekmm:block/factory/stamping/quantum"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/quantum",
+      "model": "mekmm:block/factory/stamping/quantum",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/quantum",
+      "model": "mekmm:block/factory/stamping/quantum",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/quantum",
+      "model": "mekmm:block/factory/stamping/quantum",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/quantum"
+      "model": "mekmm:block/factory/stamping/active/quantum"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/quantum",
+      "model": "mekmm:block/factory/stamping/active/quantum",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/quantum",
+      "model": "mekmm:block/factory/stamping/active/quantum",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/quantum",
+      "model": "mekmm:block/factory/stamping/active/quantum",
       "y": -90
     }
   }

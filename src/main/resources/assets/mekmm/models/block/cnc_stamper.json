@@ -1,12 +1,27 @@
 {
-  "parent": "mekanism:block/machine",
+  "format_version": "1.9.0",
+  "credit": "Made with Blockbench",
+  "parent": "block/block",
   "textures": {
-    "sides": "mekanism:block/crusher/side",
-    "front": "mekanism:block/crusher/front",
-    "west": "mekanism:block/crusher/side",
-    "east": "mekanism:block/crusher/side",
-    "south": "mekanism:block/crusher/back",
-    "up": "mekanism:block/crusher/top",
-    "down": "mekanism:block/crusher/bottom"
-  }
+    "0": "mekanism:block/bottom",
+    "1": "mekmm:block/cnc_stamper/top",
+    "2": "mekmm:block/cnc_stamper/back",
+    "3": "mekmm:block/cnc_stamper/front",
+    "4": "mekmm:block/cnc_stamper/side",
+    "particle": "mekanism:block/bottom"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "north"},
+        "east": {"uv": [16, 0, 0, 16], "texture": "#4", "cullface": "east"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "south"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#4", "cullface": "west"},
+        "up": {"uv": [0, 16, 16, 0], "texture": "#1", "cullface": "up"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
+      }
+    }
+  ]
 }

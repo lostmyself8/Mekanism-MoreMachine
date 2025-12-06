@@ -6,6 +6,7 @@
   "item.mekmm.scrap_box": "废料盒",
   "item.mekmm.empty_crystal": "空晶体",
   "item.mekmm.uu_matter": "UU物质",
+  "item.mekmm.advanced_electrolysis_core": "高级电解核心",
 
   "block.mekmm.basic_oxidizing_factory": "基础氧化工厂",
   "block.mekmm.advanced_oxidizing_factory": "高级氧化工厂",
@@ -143,7 +144,8 @@
   "block.mekmm.chemical_replicator": "化学品复制机",
   "block.mekmm.ambient_gas_collector": "环境气体收集器",
   "block.mekmm.wireless_charging_station": "无线充电站",
-  "block.mekmm.author_doll": "作者玩偶",
+  "block.mekmm.author_doll": "LostMyself",
+  "block.mekmm.modeler_doll": "TedXenon",
 
   "block.mekmm.large_gas_burning_generator": "大型燃气发电机",
   "block.mekmm.large_electrolytic_separator": "大型电解分离机",
@@ -326,7 +328,8 @@
   "description.mekmm.chemical_replicator": "一台违反物理学定律的机器，它可以利用某种物质复制化学品",
   "description.mekmm.ambient_gas_collector": "一台抽取大气中神秘物质的机器",
   "description.mekmm.wireless_charging_station": "一台为物品栏和盔甲进行无线充电的机器（当然还有饰品栏，如果你有的话）",
-  "description.mekmm.author_doll": "一个有着作者皮肤的玩偶",
+  "description.mekmm.author_doll": "一个有着作者皮肤的玩偶（只是装饰品）",
+  "description.mekmm.modeler_doll": "一个有着模型师皮肤的玩偶（感谢所有为mekmm提供纹理和模型的人）",
 
   "tooltip.mekmm.is_blocking": "机器上方有阻挡物",
   "tooltip.mekmm.no_blocking": "机器上方无阻挡物",

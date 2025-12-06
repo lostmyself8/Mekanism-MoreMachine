@@ -1,12 +1,12 @@
 package com.jerry.mekmm.common.item.block;
 
-import com.jerry.mekmm.common.block.BlockDoll;
+import com.jerry.mekmm.common.block.prefab.BlockDoll;
 
 import mekanism.common.item.block.ItemBlockTooltip;
 
-public class ItemBlockDoll extends ItemBlockTooltip<BlockDoll> {
+public class ItemBlockDoll<BLOCK extends BlockDoll<?>> extends ItemBlockTooltip<BLOCK> {
 
-    public ItemBlockDoll(BlockDoll block) {
-        super(block, new Properties().stacksTo(64));
+    public ItemBlockDoll(BLOCK block, Properties properties) {
+        super(block, properties);
     }
 }

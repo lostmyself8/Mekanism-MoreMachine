@@ -1,19 +1,34 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "mekmm:block/large_electrolytic_separator"
+    "facing=north,active=false": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/off"
     },
-    "facing=south": {
-      "model": "mekmm:block/large_electrolytic_separator",
+    "facing=south,active=false": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/off",
       "y": 180
     },
-    "facing=west": {
-      "model": "mekmm:block/large_electrolytic_separator",
+    "facing=west,active=false": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/off",
       "y": -90
     },
-    "facing=east": {
-      "model": "mekmm:block/large_electrolytic_separator",
+    "facing=east,active=false": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/off",
       "y": 90
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/on"
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/on",
+      "y": 180
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/on",
+      "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/large_machine/large_electrolytic_separator/on",
+      "y": -90
     }
   }
 }

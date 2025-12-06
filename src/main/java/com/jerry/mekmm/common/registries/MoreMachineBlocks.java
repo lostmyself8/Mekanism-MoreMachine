@@ -1,14 +1,17 @@
 package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
-import com.jerry.mekmm.common.block.BlockDoll;
+import com.jerry.mekmm.common.block.BlockAuthorDoll;
+import com.jerry.mekmm.common.block.BlockModelerDoll;
 import com.jerry.mekmm.common.block.prefab.BlockMoreMachineFactoryMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactory;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
-import com.jerry.mekmm.common.item.block.ItemBlockDoll;
+import com.jerry.mekmm.common.item.block.ItemBlockAuthorDoll;
+import com.jerry.mekmm.common.item.block.ItemBlockModelerDoll;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
+import com.jerry.mekmm.common.tile.TileEntityWirelessChargingStation;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.machine.*;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
@@ -27,7 +30,6 @@ import mekanism.common.util.EnumUtils;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -64,9 +66,13 @@ public class MoreMachineBlocks {
     public static final BlockRegistryObject<BlockMoreMachineFactoryMachine<TileEntityFluidReplicator, MoreMachineFactoryMachine<TileEntityFluidReplicator>>, ItemBlockMachine> FLUID_REPLICATOR = MM_BLOCKS.register("fluid_replicator", () -> new BlockMoreMachineFactoryMachine<>(MoreMachineBlockTypes.FLUID_REPLICATOR, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockMachine::new);
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityAmbientGasCollector, MoreMachineMachine<TileEntityAmbientGasCollector>>, ItemBlockMachine> AMBIENT_GAS_COLLECTOR = MM_BLOCKS.register("ambient_gas_collector", () -> new BlockTileModel<>(MoreMachineBlockTypes.AMBIENT_GAS_COLLECTOR, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockMachine::new);
+    public static final BlockRegistryObject<BlockTileModel<TileEntityWirelessChargingStation, MoreMachineMachine<TileEntityWirelessChargingStation>>, ItemBlockMachine> WIRELESS_CHARGING_STATION = MM_BLOCKS.register("wireless_charging_station", () -> new BlockTileModel<>(MoreMachineBlockTypes.WIRELESS_CHARGING_STATION, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockMachine::new);
 
-    public static final BlockRegistryObject<BlockDoll, ItemBlockDoll> AUTHOR_DOLL = MM_BLOCKS.register("author_doll",
-            () -> new BlockDoll(MoreMachineBlockTypes.AUTHOR_DOLL, BlockBehaviour.Properties.of().sound(SoundType.WOOL).destroyTime(0).strength(0)), ItemBlockDoll::new);
+    public static final BlockRegistryObject<BlockAuthorDoll, ItemBlockAuthorDoll> AUTHOR_DOLL = MM_BLOCKS.register("author_doll",
+            () -> new BlockAuthorDoll(MoreMachineBlockTypes.AUTHOR_DOLL, properties -> properties.sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockAuthorDoll::new);
+
+    public static final BlockRegistryObject<BlockModelerDoll, ItemBlockModelerDoll> MODELER_DOLL = MM_BLOCKS.register("modeler_doll",
+            () -> new BlockModelerDoll(MoreMachineBlockTypes.MODELER_DOLL, properties -> properties.sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockModelerDoll::new);
 
     private static <TILE extends TileEntityMoreMachineFactory<?>> BlockRegistryObject<BlockMoreMachineFactoryMachine.BlockMoreMachineFactory<?>, ItemBlockMoreMachineFactory> registerFactory(MoreMachineFactory<TILE> type) {
         return registerTieredBlock(type, "_" + type.getMMFactoryType().getRegistryNameComponent() + "_factory", () -> new BlockMoreMachineFactoryMachine.BlockMoreMachineFactory<>(type), ItemBlockMoreMachineFactory::new);

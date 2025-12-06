@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/overclocked"
+      "model": "mekmm:block/factory/stamping/overclocked"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/overclocked",
+      "model": "mekmm:block/factory/stamping/overclocked",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/overclocked",
+      "model": "mekmm:block/factory/stamping/overclocked",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/overclocked",
+      "model": "mekmm:block/factory/stamping/overclocked",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/overclocked"
+      "model": "mekmm:block/factory/stamping/active/overclocked"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/overclocked",
+      "model": "mekmm:block/factory/stamping/active/overclocked",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/overclocked",
+      "model": "mekmm:block/factory/stamping/active/overclocked",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/overclocked",
+      "model": "mekmm:block/factory/stamping/active/overclocked",
       "y": -90
     }
   }

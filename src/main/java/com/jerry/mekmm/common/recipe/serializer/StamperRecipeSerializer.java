@@ -1,5 +1,6 @@
 package com.jerry.mekmm.common.recipe.serializer;
 
+import com.jerry.mekmm.api.MoreMachineSerializationConstants;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
 import mekanism.api.JsonConstants;
@@ -33,8 +34,8 @@ public class StamperRecipeSerializer<RECIPE extends StamperRecipe> implements Re
         JsonElement input = GsonHelper.isArrayNode(json, JsonConstants.INPUT) ? GsonHelper.getAsJsonArray(json, JsonConstants.INPUT) :
                 GsonHelper.getAsJsonObject(json, JsonConstants.INPUT);
         ItemStackIngredient inputIngredient = IngredientCreatorAccess.item().deserialize(input);
-        JsonElement mold = GsonHelper.isArrayNode(json, "mold") ? GsonHelper.getAsJsonArray(json, "mold") :
-                GsonHelper.getAsJsonObject(json, "mold");
+        JsonElement mold = GsonHelper.isArrayNode(json, MoreMachineSerializationConstants.MOLD) ? GsonHelper.getAsJsonArray(json, MoreMachineSerializationConstants.MOLD) :
+                GsonHelper.getAsJsonObject(json, MoreMachineSerializationConstants.MOLD);
         ItemStackIngredient moldIngredient = IngredientCreatorAccess.item().deserialize(mold);
         ItemStack output = SerializerHelper.getItemStack(json, JsonConstants.OUTPUT);
         if (output.isEmpty()) {

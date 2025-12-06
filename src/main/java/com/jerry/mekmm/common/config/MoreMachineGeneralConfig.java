@@ -2,8 +2,10 @@ package com.jerry.mekmm.common.config;
 
 import com.jerry.mekmm.common.util.ValidatorUtils;
 
+import mekanism.api.math.FloatingLong;
 import mekanism.common.config.BaseMekanismConfig;
 import mekanism.common.config.value.CachedConfigValue;
+import mekanism.common.config.value.CachedFloatingLongValue;
 import mekanism.common.config.value.CachedIntValue;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -22,6 +24,7 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
     public final CachedConfigValue<List<? extends String>> fluidReplicatorRecipe;
 
     public final CachedIntValue gasCollectAmount;
+    public final CachedFloatingLongValue wirelessChargingStationChargingRate;
 
     MoreMachineGeneralConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -36,6 +39,9 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
 
         gasCollectAmount = CachedIntValue.wrap(this, builder.comment("mB of Unstable Dimensional Gas collected by the Ambient Gas Collector.")
                 .defineInRange("gasCollectAmount", 1, 1, FluidType.BUCKET_VOLUME));
+
+        wirelessChargingStationChargingRate = CachedFloatingLongValue.define(this, builder, "mB of Unstable Dimensional Gas collected by the Ambient Gas Collector.",
+                "gasCollectAmount", FloatingLong.createConst(100_000L));
 
         builder.pop();
         configSpec = builder.build();

@@ -1,0 +1,31 @@
+{
+  "loader": "forge:composite",
+  "gui_light": "side",
+  "parent": "block/block",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/planting/base_active"
+    },
+    "led": {
+      "render_type": "cutout",
+      "textures": {
+        "led": "mekanism:block/factory/led"
+      },
+      "elements":[
+        {
+          "name":"front_panel_led",
+          "from":[4.98,29.99,0.01],
+          "to":[11.02,30.99,1.01],
+          "faces":
+          {
+            "north":{"uv":[0,1,6,2],"texture":"#led","cullface":"north", "forge_data": {"block_light": 15, "sky_light": 15}},
+            "up":{"uv":[0,1,6,2],"rotation":180,"texture":"#led","cullface":"up", "forge_data": {"block_light": 15, "sky_light": 15}}
+          }
+        }
+      ]
+    }
+  }
+}
