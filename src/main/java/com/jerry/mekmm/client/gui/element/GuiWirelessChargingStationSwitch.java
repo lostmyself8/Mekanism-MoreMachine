@@ -1,7 +1,6 @@
 package com.jerry.mekmm.client.gui.element;
 
 import mekanism.client.gui.IGuiWrapper;
-import mekanism.client.gui.element.GuiDigitalSwitch;
 import mekanism.client.gui.element.GuiTexturedElement;
 import mekanism.common.MekanismLang;
 import mekanism.common.registries.MekanismSounds;

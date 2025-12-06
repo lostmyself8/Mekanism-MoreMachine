@@ -7,9 +7,7 @@ import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 
 import mekanism.api.functions.TriConsumer;
 import mekanism.common.network.IMekanismPacket;
-import mekanism.common.tile.TileEntityLogisticalSorter;
 import mekanism.common.tile.base.TileEntityMekanism;
-import mekanism.common.tile.machine.TileEntityDigitalMiner;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;

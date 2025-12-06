@@ -4,8 +4,6 @@ import com.jerry.mekmm.api.MoreMachineSerializationConstants;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.Getter;
 import mekanism.api.*;
 import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.energy.IStrictEnergyHandler;
@@ -37,8 +35,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import net.minecraftforge.items.IItemHandler;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -245,21 +245,21 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         super.load(nbt);
     }
 
-//    @Override
-//    protected void collectImplicitComponents(DataComponentMap.@NotNull Builder builder) {
-//        super.collectImplicitComponents(builder);
-//        builder.set(MoreMachineDataComponents.CHARGE_EQUIPMENT, getChargeEquipment());
-//        builder.set(MoreMachineDataComponents.CHARGE_INVENTORY, getChargeInventory());
-//        builder.set(MoreMachineDataComponents.CHARGE_CURIOS, getChargeCurios());
-//    }
-//
-//    @Override
-//    protected void applyImplicitComponents(@NotNull DataComponentInput input) {
-//        super.applyImplicitComponents(input);
-//        chargeEquipment = input.getOrDefault(MoreMachineDataComponents.CHARGE_EQUIPMENT, chargeEquipment);
-//        chargeInventory = input.getOrDefault(MoreMachineDataComponents.CHARGE_INVENTORY, chargeInventory);
-//        chargeCurios = input.getOrDefault(MoreMachineDataComponents.CHARGE_CURIOS, chargeCurios);
-//    }
+    // @Override
+    // protected void collectImplicitComponents(DataComponentMap.@NotNull Builder builder) {
+    // super.collectImplicitComponents(builder);
+    // builder.set(MoreMachineDataComponents.CHARGE_EQUIPMENT, getChargeEquipment());
+    // builder.set(MoreMachineDataComponents.CHARGE_INVENTORY, getChargeInventory());
+    // builder.set(MoreMachineDataComponents.CHARGE_CURIOS, getChargeCurios());
+    // }
+    //
+    // @Override
+    // protected void applyImplicitComponents(@NotNull DataComponentInput input) {
+    // super.applyImplicitComponents(input);
+    // chargeEquipment = input.getOrDefault(MoreMachineDataComponents.CHARGE_EQUIPMENT, chargeEquipment);
+    // chargeInventory = input.getOrDefault(MoreMachineDataComponents.CHARGE_INVENTORY, chargeInventory);
+    // chargeCurios = input.getOrDefault(MoreMachineDataComponents.CHARGE_CURIOS, chargeCurios);
+    // }
 
     @Override
     public void addContainerTrackers(MekanismContainer container) {
