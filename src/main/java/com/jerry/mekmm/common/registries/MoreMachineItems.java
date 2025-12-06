@@ -18,4 +18,5 @@ public class MoreMachineItems {
     public static final ItemRegistryObject<Item> SCRAP_BOX = MM_ITEMS.register("scrap_box", Rarity.UNCOMMON);
     public static final ItemRegistryObject<Item> EMPTY_CRYSTAL = MM_ITEMS.register("empty_crystal", Rarity.RARE);
     public static final ItemRegistryObject<Item> UU_MATTER = MM_ITEMS.register("uu_matter", Rarity.EPIC);
+    public static final ItemRegistryObject<Item> ADVANCED_ELECTROLYSIS_CORE = MM_ITEMS.register("advanced_electrolysis_core");
 }

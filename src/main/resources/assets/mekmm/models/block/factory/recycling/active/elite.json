@@ -1,0 +1,15 @@
+{
+  "loader": "forge:composite",
+  "parent": "block/block",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/recycling/base"
+    },
+    "front_led": {
+      "parent": "mekanism:block/factory/front_led/active/elite"
+    }
+  }
+}

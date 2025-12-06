@@ -1,7 +1,6 @@
 {
-  "parent": "mekanism:block/energized_smelter",
+  "parent": "mekmm:block/recycler",
   "textures": {
-    "front": "mekanism:block/energized_smelter/front_active",
-    "down": "mekanism:block/energized_smelter/bottom_active"
+    "front": "mekmm:block/recycler/front_active"
   }
 }

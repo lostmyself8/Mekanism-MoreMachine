@@ -1,19 +1,34 @@
 {
   "variants": {
-    "facing=north": {
-      "model": "mekmm:block/large_gas_burning_generator"
+    "facing=north,active=false": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/off"
     },
-    "facing=south": {
-      "model": "mekmm:block/large_gas_burning_generator",
+    "facing=south,active=false": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/off",
       "y": 180
     },
-    "facing=west": {
-      "model": "mekmm:block/large_gas_burning_generator",
+    "facing=east,active=false": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/off",
+      "y": 90
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/off",
       "y": -90
     },
-    "facing=east": {
-      "model": "mekmm:block/large_gas_burning_generator",
+    "facing=north,active=true": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/on"
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/on",
+      "y": 180
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/on",
       "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/large_machine/large_gas_burning_generator/on",
+      "y": -90
     }
   }
 }

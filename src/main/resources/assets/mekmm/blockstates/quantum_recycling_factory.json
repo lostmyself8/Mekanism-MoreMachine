@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/quantum"
+      "model": "mekmm:block/factory/recycling/quantum"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/quantum",
+      "model": "mekmm:block/factory/recycling/quantum",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/quantum",
+      "model": "mekmm:block/factory/recycling/quantum",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/quantum",
+      "model": "mekmm:block/factory/recycling/quantum",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/quantum"
+      "model": "mekmm:block/factory/recycling/active/quantum"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/quantum",
+      "model": "mekmm:block/factory/recycling/active/quantum",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/quantum",
+      "model": "mekmm:block/factory/recycling/active/quantum",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/quantum",
+      "model": "mekmm:block/factory/recycling/active/quantum",
       "y": -90
     }
   }

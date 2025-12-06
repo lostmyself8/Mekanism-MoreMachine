@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekanism:block/factory/purifying/basic"
+      "model": "mekmm:block/factory/replicating/basic"
     },
     "facing=south,active=false": {
-      "model": "mekanism:block/factory/purifying/basic",
+      "model": "mekmm:block/factory/replicating/basic",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "mekanism:block/factory/purifying/basic",
+      "model": "mekmm:block/factory/replicating/basic",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekanism:block/factory/purifying/basic",
+      "model": "mekmm:block/factory/replicating/basic",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekanism:block/factory/purifying/active/basic"
+      "model": "mekmm:block/factory/replicating/active/basic"
     },
     "facing=south,active=true": {
-      "model": "mekanism:block/factory/purifying/active/basic",
+      "model": "mekmm:block/factory/replicating/active/basic",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekanism:block/factory/purifying/active/basic",
+      "model": "mekmm:block/factory/replicating/active/basic",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekanism:block/factory/purifying/active/basic",
+      "model": "mekmm:block/factory/replicating/active/basic",
       "y": -90
     }
   }

@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=north,active=false": {
+    "facing=north": {
       "model": "mekmm:block/replicator"
     },
-    "facing=south,active=false": {
+    "facing=south": {
       "model": "mekmm:block/replicator",
       "y": 180
     },
-    "facing=east,active=false": {
+    "facing=east": {
       "model": "mekmm:block/replicator",
       "y": 90
     },
-    "facing=west,active=false": {
+    "facing=west": {
       "model": "mekmm:block/replicator",
-      "y": -90
-    },
-    "facing=north,active=true": {
-      "model": "mekmm:block/replicator_active"
-    },
-    "facing=south,active=true": {
-      "model": "mekmm:block/replicator_active",
-      "y": 180
-    },
-    "facing=east,active=true": {
-      "model": "mekmm:block/replicator_active",
-      "y": 90
-    },
-    "facing=west,active=true": {
-      "model": "mekmm:block/replicator_active",
       "y": -90
     }
   }

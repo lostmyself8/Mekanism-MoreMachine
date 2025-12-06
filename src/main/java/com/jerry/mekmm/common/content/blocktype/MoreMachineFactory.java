@@ -59,7 +59,7 @@ public class MoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> ex
             // Note, we can't just return the builder here as then it gets all confused about object types, so we just
             // assign the value here, and then return the builder itself as it is the same object
             builder.withComputerSupport(tier, type.getRegistryNameComponentCapitalized() + "Factory");
-            builder.withCustomShape(MoreMachineBlockShapes.getShape(tier, type));
+            builder.withCustomShape(MoreMachineBlockShapes.getShape(type));
             builder.replace(new AttributeParticleFX().addDense(ParticleTypes.SMOKE, 5, rand -> new Pos3D(
                     rand.nextFloat() * 0.7F - 0.3F,
                     rand.nextFloat() * 0.1F + 0.7F,

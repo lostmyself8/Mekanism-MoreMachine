@@ -1,8 +1,7 @@
 {
-  "parent": "mekanism:block/crusher",
+  "parent": "mekmm:block/cnc_stamper",
   "textures": {
-    "front": "mekanism:block/crusher/front_active",
-    "west": "mekanism:block/crusher/side_active",
-    "east": "mekanism:block/crusher/side_active"
+    "3": "mekmm:block/cnc_stamper/front_active",
+    "4": "mekmm:block/cnc_stamper/side_active"
   }
 }

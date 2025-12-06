@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mekmm:block/wireless_transmission_station"
+    },
+    "facing=south": {
+      "model": "mekmm:block/wireless_transmission_station",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mekmm:block/wireless_transmission_station",
+      "y": -90
+    },
+    "facing=east": {
+      "model": "mekmm:block/wireless_transmission_station",
+      "y": 90
+    }
+  }
+}

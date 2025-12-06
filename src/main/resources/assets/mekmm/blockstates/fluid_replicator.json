@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=north,active=false": {
-      "model": "mekmm:block/replicator"
+    "facing=north": {
+      "model": "mekmm:block/fluid_replicator"
     },
-    "facing=south,active=false": {
-      "model": "mekmm:block/replicator",
+    "facing=south": {
+      "model": "mekmm:block/fluid_replicator",
       "y": 180
     },
-    "facing=east,active=false": {
-      "model": "mekmm:block/replicator",
+    "facing=east": {
+      "model": "mekmm:block/fluid_replicator",
       "y": 90
     },
-    "facing=west,active=false": {
-      "model": "mekmm:block/replicator",
-      "y": -90
-    },
-    "facing=north,active=true": {
-      "model": "mekmm:block/replicator_active"
-    },
-    "facing=south,active=true": {
-      "model": "mekmm:block/replicator_active",
-      "y": 180
-    },
-    "facing=east,active=true": {
-      "model": "mekmm:block/replicator_active",
-      "y": 90
-    },
-    "facing=west,active=true": {
-      "model": "mekmm:block/replicator_active",
+    "facing=west": {
+      "model": "mekmm:block/fluid_replicator",
       "y": -90
     }
   }

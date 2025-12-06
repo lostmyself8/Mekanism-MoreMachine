@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/creative"
+      "model": "mekmm:block/factory/recycling/creative"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/creative",
+      "model": "mekmm:block/factory/recycling/creative",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/creative",
+      "model": "mekmm:block/factory/recycling/creative",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/smelting/creative",
+      "model": "mekmm:block/factory/recycling/creative",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/creative"
+      "model": "mekmm:block/factory/recycling/active/creative"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/creative",
+      "model": "mekmm:block/factory/recycling/active/creative",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/creative",
+      "model": "mekmm:block/factory/recycling/active/creative",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/smelting/active/creative",
+      "model": "mekmm:block/factory/recycling/active/creative",
       "y": -90
     }
   }

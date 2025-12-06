@@ -1,6 +1,7 @@
 {
-  "parent": "mekanism:block/combiner",
+  "parent": "mekmm:block/cnc_rolling_mill",
   "textures": {
-    "front": "mekanism:block/combiner/front_active"
+    "front": "mekmm:block/cnc_rolling_mill/front_active",
+    "side": "mekmm:block/cnc_rolling_mill/side_active"
   }
 }

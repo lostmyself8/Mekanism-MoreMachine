@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/dense"
+      "model": "mekmm:block/factory/stamping/dense"
     },
     "facing=south,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/dense",
+      "model": "mekmm:block/factory/stamping/dense",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/dense",
+      "model": "mekmm:block/factory/stamping/dense",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "evolvedmekanism:block/factory/crushing/dense",
+      "model": "mekmm:block/factory/stamping/dense",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/dense"
+      "model": "mekmm:block/factory/stamping/active/dense"
     },
     "facing=south,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/dense",
+      "model": "mekmm:block/factory/stamping/active/dense",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/dense",
+      "model": "mekmm:block/factory/stamping/active/dense",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "evolvedmekanism:block/factory/crushing/active/dense",
+      "model": "mekmm:block/factory/stamping/active/dense",
       "y": -90
     }
   }

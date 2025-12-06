@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekanism:block/factory/combining/ultimate"
+      "model": "mekmm:block/factory/rolling_mill/ultimate"
     },
     "facing=south,active=false": {
-      "model": "mekanism:block/factory/combining/ultimate",
+      "model": "mekmm:block/factory/rolling_mill/ultimate",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "mekanism:block/factory/combining/ultimate",
+      "model": "mekmm:block/factory/rolling_mill/ultimate",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekanism:block/factory/combining/ultimate",
+      "model": "mekmm:block/factory/rolling_mill/ultimate",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekanism:block/factory/combining/active/ultimate"
+      "model": "mekmm:block/factory/rolling_mill/active/ultimate"
     },
     "facing=south,active=true": {
-      "model": "mekanism:block/factory/combining/active/ultimate",
+      "model": "mekmm:block/factory/rolling_mill/active/ultimate",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekanism:block/factory/combining/active/ultimate",
+      "model": "mekmm:block/factory/rolling_mill/active/ultimate",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekanism:block/factory/combining/active/ultimate",
+      "model": "mekmm:block/factory/rolling_mill/active/ultimate",
       "y": -90
     }
   }

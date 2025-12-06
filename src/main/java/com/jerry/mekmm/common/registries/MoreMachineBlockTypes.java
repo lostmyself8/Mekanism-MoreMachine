@@ -8,13 +8,16 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineMachineBuilder;
-import com.jerry.mekmm.common.tile.TileEntityDoll;
+import com.jerry.mekmm.common.tile.TileEntityAuthorDoll;
+import com.jerry.mekmm.common.tile.TileEntityModelerDoll;
+import com.jerry.mekmm.common.tile.TileEntityWirelessChargingStation;
 import com.jerry.mekmm.common.tile.machine.*;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 
 import mekanism.api.Upgrade;
 import mekanism.common.block.attribute.AttributeCustomSelectionBox;
 import mekanism.common.block.attribute.AttributeStateFacing;
+import mekanism.common.block.attribute.AttributeUpgradeSupport;
 import mekanism.common.block.attribute.Attributes;
 import mekanism.common.content.blocktype.BlockShapes;
 import mekanism.common.content.blocktype.BlockTypeTile;
@@ -50,6 +53,8 @@ public class MoreMachineBlockTypes {
             .withSound(MekanismSounds.PRECISION_SAWMILL)
             .withEnergyConfig(MoreMachineConfig.usage.plantingStation, MoreMachineConfig.storage.plantingStation)
             .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.MUFFLING, Upgrade.GAS))
+            .withBounding((pos, state, builder) -> builder.add(pos.above()))
+            .withCustomShape(MoreMachineBlockShapes.PLANTING_STATION)
             .withComputerSupport("plantingStation")
             .build();
     // CNC Stamper
@@ -98,14 +103,39 @@ public class MoreMachineBlockTypes {
             .withGui(() -> MoreMachineContainerTypes.AMBIENT_GAS_COLLECTOR)
             .withEnergyConfig(MoreMachineConfig.usage.ambientGasCollector, MoreMachineConfig.storage.ambientGasCollector)
             .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY))
-            .withCustomShape(BlockShapes.ELECTRIC_PUMP)
+            .withCustomShape(MoreMachineBlockShapes.AMBIENT_GAS_COLLECTOR)
             .withComputerSupport("ambientGasCollector")
             .replace(Attributes.ACTIVE)
             .build();
+    // Wireless Charging Station
+    public static final MoreMachineMachine<TileEntityWirelessChargingStation> WIRELESS_CHARGING_STATION = MoreMachineMachineBuilder
+            .createMMMachine(() -> MoreMachineTileEntityTypes.WIRELESS_CHARGING_STATION, MoreMachineLang.DESCRIPTION_WIRELESS_CHARGING_STATION)
+            .withGui(() -> MoreMachineContainerTypes.WIRELESS_CHARGING_STATION)
+            .withEnergyConfig(MoreMachineConfig.storage.wirelessChargingStation)
+            .withCustomShape(MoreMachineBlockShapes.WIRELESS_CHARGING_STATION)
+            .with(AttributeCustomSelectionBox.JSON)
+            .without(AttributeUpgradeSupport.class)
+            .withBounding((pos, state, builder) -> {
+                for (int i = 0; i < 2; i++) {
+                    builder.add(pos.above(i + 1));
+                }
+            })
+            .withComputerSupport("wirelessChargingStation")
+            .replace(Attributes.ACTIVE)
+            .build();
     // Author Doll
-    public static final BlockTypeTile<TileEntityDoll> AUTHOR_DOLL = BlockTypeTile.BlockTileBuilder
-            .createBlock(() -> MoreMachineTileEntityTypes.AUTHOR_DOLL, MoreMachineLang.AUTHOR_DOLL)
+    public static final BlockTypeTile<TileEntityAuthorDoll> AUTHOR_DOLL = BlockTypeTile.BlockTileBuilder
+            .createBlock(() -> MoreMachineTileEntityTypes.AUTHOR_DOLL, MoreMachineLang.DESCRIPTION_AUTHOR_DOLL)
             .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
+            .withCustomShape(MoreMachineBlockShapes.AUTHOR_DOLL)
+            .with(AttributeCustomSelectionBox.JSON)
+            .build();
+
+    // Modeler Doll
+    public static final BlockTypeTile<TileEntityModelerDoll> MODELER_DOLL = BlockTypeTile.BlockTileBuilder
+            .createBlock(() -> MoreMachineTileEntityTypes.MODELER_DOLL, MoreMachineLang.DESCRIPTION_MODELER_DOLL)
+            .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
+            // 玩偶的模型都是一样的
             .withCustomShape(MoreMachineBlockShapes.AUTHOR_DOLL)
             .with(AttributeCustomSelectionBox.JSON)
             .build();

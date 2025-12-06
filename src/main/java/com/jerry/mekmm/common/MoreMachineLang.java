@@ -13,6 +13,10 @@ public enum MoreMachineLang implements ILangEntry {
     // Gui lang strings
     MEKANISM_MORE_MACHINE("constants", "more_machine"),
     MEKANISM_LARGE_MACHINE("constants", "large_machine"),
+    // Charging
+    CHARGING_EQUIPS("charging", "equips"),
+    CHARGING_INVENTORY("charging", "inventory"),
+    CHARGING_CURIOS("charging", "curios"),
     // Factory Type
     RECYCLING("factory", "recycling"),
     PLANTING("factory", "planting"),
@@ -38,7 +42,9 @@ public enum MoreMachineLang implements ILangEntry {
     DESCRIPTION_REPLICATOR("description", "replicator"),
     DESCRIPTION_FLUID_REPLICATOR("description", "fluid_replicator"),
     DESCRIPTION_AMBIENT_GAS_COLLECTOR("description", "ambient_gas_collector"),
-    AUTHOR_DOLL("description", "author_doll"),
+    DESCRIPTION_WIRELESS_CHARGING_STATION("description", "wireless_charging_station"),
+    DESCRIPTION_AUTHOR_DOLL("description", "author_doll"),
+    DESCRIPTION_MODELER_DOLL("description", "modeler_doll"),
     // JEI
     JEI_INFO_UNSTABLE_DIMENSIONAL_GAS("info", "jei.unstable_dimensional_gas"),
     // Tooltip stuff

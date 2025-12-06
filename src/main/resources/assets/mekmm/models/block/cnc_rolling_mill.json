@@ -1,12 +1,27 @@
 {
-  "parent": "mekanism:block/machine",
+  "format_version": "1.9.0",
+  "credit": "Made with Blockbench",
+  "parent": "block/block",
   "textures": {
-    "sides": "mekanism:block/combiner/right",
-    "front": "mekanism:block/combiner/front",
-    "west": "mekanism:block/combiner/right",
-    "east": "mekanism:block/combiner/left",
-    "south": "mekanism:block/combiner/back",
-    "up": "mekanism:block/combiner/top",
-    "down": "mekanism:block/combiner/bottom"
-  }
+    "particle": "mekanism:block/bottom",
+    "bottom": "mekanism:block/bottom",
+    "back": "mekmm:block/cnc_rolling_mill/back",
+    "front": "mekmm:block/cnc_rolling_mill/front",
+    "side": "mekmm:block/cnc_rolling_mill/side",
+    "top": "mekmm:block/cnc_rolling_mill/top"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#front", "cullface": "north"},
+        "east": {"uv": [16, 0, 0, 16], "texture": "#side", "cullface": "east"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#back", "cullface": "south"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#side", "cullface": "west"},
+        "up": {"uv": [0, 16, 16, 0], "texture": "#top", "cullface": "up"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#bottom", "cullface": "down"}
+      }
+    }
+  ]
 }

@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekanism:block/factory/smelting/advanced"
+      "model": "mekmm:block/factory/recycling/advanced"
     },
     "facing=south,active=false": {
-      "model": "mekanism:block/factory/smelting/advanced",
+      "model": "mekmm:block/factory/recycling/advanced",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "mekanism:block/factory/smelting/advanced",
+      "model": "mekmm:block/factory/recycling/advanced",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekanism:block/factory/smelting/advanced",
+      "model": "mekmm:block/factory/recycling/advanced",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekanism:block/factory/smelting/active/advanced"
+      "model": "mekmm:block/factory/recycling/active/advanced"
     },
     "facing=south,active=true": {
-      "model": "mekanism:block/factory/smelting/active/advanced",
+      "model": "mekmm:block/factory/recycling/active/advanced",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekanism:block/factory/smelting/active/advanced",
+      "model": "mekmm:block/factory/recycling/active/advanced",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekanism:block/factory/smelting/active/advanced",
+      "model": "mekmm:block/factory/recycling/active/advanced",
       "y": -90
     }
   }

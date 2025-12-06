@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=north,active=false": {
-      "model": "mekanism:block/factory/compressing/ultimate"
+      "model": "mekmm:block/factory/lathing/ultimate"
     },
     "facing=south,active=false": {
-      "model": "mekanism:block/factory/compressing/ultimate",
+      "model": "mekmm:block/factory/lathing/ultimate",
       "y": 180
     },
     "facing=east,active=false": {
-      "model": "mekanism:block/factory/compressing/ultimate",
+      "model": "mekmm:block/factory/lathing/ultimate",
       "y": 90
     },
     "facing=west,active=false": {
-      "model": "mekanism:block/factory/compressing/ultimate",
+      "model": "mekmm:block/factory/lathing/ultimate",
       "y": -90
     },
     "facing=north,active=true": {
-      "model": "mekanism:block/factory/compressing/active/ultimate"
+      "model": "mekmm:block/factory/lathing/active/ultimate"
     },
     "facing=south,active=true": {
-      "model": "mekanism:block/factory/compressing/active/ultimate",
+      "model": "mekmm:block/factory/lathing/active/ultimate",
       "y": 180
     },
     "facing=east,active=true": {
-      "model": "mekanism:block/factory/compressing/active/ultimate",
+      "model": "mekmm:block/factory/lathing/active/ultimate",
       "y": 90
     },
     "facing=west,active=true": {
-      "model": "mekanism:block/factory/compressing/active/ultimate",
+      "model": "mekmm:block/factory/lathing/active/ultimate",
       "y": -90
     }
   }

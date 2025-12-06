@@ -6,6 +6,7 @@
   "item.mekmm.scrap_box": "Scrap Box",
   "item.mekmm.empty_crystal": "Empty Crystal",
   "item.mekmm.uu_matter": "UU Matter",
+  "item.mekmm.advanced_electrolysis_core": "Advanced Electrolysis Core",
 
   "block.mekmm.basic_oxidizing_factory": "Basic Oxidizing Factory",
   "block.mekmm.advanced_oxidizing_factory": "Advanced Oxidizing Factory",
@@ -143,7 +144,8 @@
   "block.mekmm.chemical_replicator": "Chemical Replicator",
   "block.mekmm.ambient_gas_collector": "Ambient Gas Collector",
   "block.mekmm.wireless_charging_station": "Wireless Charging Station",
-  "block.mekmm.author_doll": "Author Doll",
+  "block.mekmm.author_doll": "LostMyself",
+  "block.mekmm.modeler_doll": "TedXenon",
 
   "block.mekmm.large_gas_burning_generator": "Large Gas Burning Generator",
   "block.mekmm.large_electrolytic_separator": "Large Electrolytic Separator",
@@ -326,7 +328,8 @@
   "description.mekmm.chemical_replicator": "A machine that violates the laws of physics and can replicate chemicals using a certain substance.",
   "description.mekmm.ambient_gas_collector": "A machine that extracts mysterious substances from the atmosphere.",
   "description.mekmm.wireless_charging_station": "A machine for wireless charging of inventory and armor (including Curios, if you have one).",
-  "description.mekmm.author_doll": "A doll with the author's skin.",
+  "description.mekmm.author_doll": "A doll with the author's skin.(Just decorations)",
+  "description.mekmm.modeler_doll": "A doll with the modeler's skin.(Thanks to everyone who provided textures and models for mekmm)",
 
   "tooltip.mekmm.is_blocking": "Blocked above the machine",
   "tooltip.mekmm.no_blocking": "Not blocked above the machine",

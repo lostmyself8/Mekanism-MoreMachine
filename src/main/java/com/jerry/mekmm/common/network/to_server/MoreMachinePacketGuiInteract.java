@@ -2,11 +2,14 @@ package com.jerry.mekmm.common.network.to_server;
 
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
 
+import com.jerry.mekmm.common.tile.TileEntityWirelessChargingStation;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 
 import mekanism.api.functions.TriConsumer;
 import mekanism.common.network.IMekanismPacket;
+import mekanism.common.tile.TileEntityLogisticalSorter;
 import mekanism.common.tile.base.TileEntityMekanism;
+import mekanism.common.tile.machine.TileEntityDigitalMiner;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
@@ -78,6 +81,21 @@ public class MoreMachinePacketGuiInteract implements IMekanismPacket {
                 factory.toggleSorting();
             } else if (tile instanceof TileEntityMoreMachineFactory<?> factory) {
                 factory.toggleSorting();
+            }
+        }),
+        CHARGING_EQUIPS((tile, player, extra) -> {
+            if (tile instanceof TileEntityWirelessChargingStation charging) {
+                charging.toggleChargeEquipment();
+            }
+        }),
+        CHARGING_INVENTORY((tile, player, extra) -> {
+            if (tile instanceof TileEntityWirelessChargingStation charging) {
+                charging.toggleChargeInventory();
+            }
+        }),
+        CHARGING_CURIOS((tile, player, extra) -> {
+            if (tile instanceof TileEntityWirelessChargingStation charging) {
+                charging.toggleChargeCurios();
             }
         });
 

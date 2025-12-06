@@ -24,6 +24,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
+import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
@@ -31,6 +32,9 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.GasHandlerManager;
+import mekanism.common.capabilities.resolver.manager.EnergyHandlerManager;
+import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
@@ -41,24 +45,33 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
+import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
-public class TileEntityPlantingStation extends TileEntityProgressMachine<PlantingRecipe> implements ItemChemicalRecipeLookupHandler<Gas, GasStack, PlantingRecipe>, ConstantUsageRecipeLookupHandler {
+public class TileEntityPlantingStation extends TileEntityProgressMachine<PlantingRecipe> implements ItemChemicalRecipeLookupHandler<Gas, GasStack, PlantingRecipe>, ConstantUsageRecipeLookupHandler, IBoundingBlock {
 
     public static final RecipeError NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR = RecipeError.create();
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
@@ -82,6 +95,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     protected final IInputHandler<@NotNull ItemStack> itemInputHandler;
     protected final ILongInputHandler<@NotNull GasStack> gasInputHandler;
 
+    @Getter
     private MachineEnergyContainer<TileEntityPlantingStation> energyContainer;
 
     InputInventorySlot inputSlot;
@@ -186,10 +200,6 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
                 .setOperatingTicksChanged(this::setOperatingTicks);
     }
 
-    public MachineEnergyContainer<TileEntityPlantingStation> getEnergyContainer() {
-        return energyContainer;
-    }
-
     @Override
     public boolean isConfigurationDataCompatible(BlockEntityType<?> tileType) {
         // Allow exact match or factories of the same type (as we will just ignore the extra data)
@@ -216,5 +226,62 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     public void saveAdditional(@NotNull CompoundTag nbtTags) {
         super.saveAdditional(nbtTags);
         nbtTags.putLong(NBTConstants.USED_SO_FAR, usedSoFar);
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getOffsetCapabilityIfEnabled(@NotNull Capability<T> capability, Direction side, @NotNull Vec3i offset) {
+        Field energyField, gasField;
+        try {
+            gasField = TileEntityMekanism.class.getDeclaredField("gasHandlerManager");
+            gasField.setAccessible(true);
+            energyField = TileEntityMekanism.class.getDeclaredField("energyHandlerManager");
+            energyField.setAccessible(true);
+            if (capability == Capabilities.GAS_HANDLER) {
+                return ((GasHandlerManager) (gasField.get(this))).resolve(capability, side);
+            } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+                return ((EnergyHandlerManager) (energyField.get(this))).resolve(capability, side);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        if (capability == ForgeCapabilities.ITEM_HANDLER) {
+            return itemHandlerManager.resolve(capability, side);
+        }
+        return getCapability(capability, side);
+    }
+
+    @Override
+    public boolean isOffsetCapabilityDisabled(@NotNull Capability<?> capability, Direction side, @NotNull Vec3i offset) {
+        if (!capability.isRegistered()) {
+            return true;
+        } else if (capability == Capabilities.GAS_HANDLER) {
+            return notChemicalPort(side, offset);
+        } else if (capability == ForgeCapabilities.ITEM_HANDLER) {
+            return notItemPort(side, offset);
+        } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+            return notEnergyPort(side, offset);
+        }
+        return notChemicalPort(side, offset) && notItemPort(side, offset) && notEnergyPort(side, offset);
+    }
+
+    private boolean notChemicalPort(Direction side, Vec3i offset) {
+        if (offset.equals(new Vec3i(0, 1, 0))) {
+            return side != Direction.UP;
+        }
+        return true;
+    }
+
+    private boolean notItemPort(Direction side, Vec3i offset) {
+        if (offset.equals(new Vec3i(0, 1, 0))) {
+            return side != Direction.UP;
+        }
+        return true;
+    }
+
+    private boolean notEnergyPort(Direction side, Vec3i offset) {
+        if (offset.equals(new Vec3i(0, 1, 0))) {
+            return side != Direction.UP;
+        }
+        return true;
     }
 }
