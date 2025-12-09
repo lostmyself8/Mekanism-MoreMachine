@@ -4,6 +4,17 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
+    maven {//CrT
+        url = 'https://maven.blamejared.com'
+        name = 'BlameJared Maven'
+    }
+    maven {//KJS
+        url "https://maven.latvian.dev/releases"
+        content {
+            includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
+        }
+    }
     maven { // JEI
         name = "Jared's Maven"
         url = "https://maven.blamejared.com/"

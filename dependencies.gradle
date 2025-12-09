@@ -2,6 +2,7 @@ dependencies {
     compileOnly(libs.jetbrains.annotations)
 
     modClientLocalRuntime(forge.jecharacters.get())
+    modClientLocalRuntime(forge.rhino.get())
 
     // Mixin (& Extras)
     annotationProcessor(variantOf(libs.mixin) { classifier("processor") })
@@ -20,6 +21,12 @@ dependencies {
 
     modCompileOnly(forge.mekanismcovers)
     modCompileOnly(forge.evolvedmekanism)
+
+    // Crt
+    modCompileOnly(forge.crt)
+
+    // KubeJs
+    modCompileOnly(forge.kubejs)
 
     // mysticalAgriculture
     modCompileOnly(forge.mysticalagriculture)
