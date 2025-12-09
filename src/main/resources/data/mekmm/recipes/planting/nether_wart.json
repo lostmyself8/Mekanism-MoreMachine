@@ -10,7 +10,7 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "count": 3,
+    "count": 6,
     "item": "minecraft:nether_wart"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "com/jerry/mekmm/mixin/MixinItemConfigurator": {
+      "useOn": "Lmekanism/common/item/ItemConfigurator;m_6225_(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;"
+    }
+  },
+  "data": {
+    "searge": {
+      "com/jerry/mekmm/mixin/MixinItemConfigurator": {
+        "useOn": "Lmekanism/common/item/ItemConfigurator;m_6225_(Lnet/minecraft/world/item/context/UseOnContext;)Lnet/minecraft/world/InteractionResult;"
+      }
+    }
+  }
+}

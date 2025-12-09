@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:flux_infused_gem_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:flux_infused_gem_essence"
   }
 }

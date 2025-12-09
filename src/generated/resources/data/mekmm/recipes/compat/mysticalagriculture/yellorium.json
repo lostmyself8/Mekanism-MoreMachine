@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:yellorium_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:yellorium_essence"
   }
 }

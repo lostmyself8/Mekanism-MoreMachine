@@ -16,11 +16,11 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "count": 1,
-    "item": "kaleidoscope_cookery:lettuce_seed"
+    "count": 3,
+    "item": "kaleidoscope_cookery:lettuce"
   },
   "secondaryOutput": {
-    "count": 1,
-    "item": "kaleidoscope_cookery:lettuce"
-  }
+    "item": "kaleidoscope_cookery:lettuce_seed"
+  },
+  "secondaryChance": 0.95
 }

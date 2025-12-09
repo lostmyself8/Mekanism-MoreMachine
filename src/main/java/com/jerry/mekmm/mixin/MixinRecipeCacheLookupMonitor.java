@@ -7,6 +7,7 @@ import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.ICachedRecipeHolder;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler;
+import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.recipe.lookup.monitor.RecipeCacheLookupMonitor;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public abstract class MixinRecipeCacheLookupMonitor<RECIPE extends MekanismRecip
 
     @Inject(method = "loadSavedData", at = @At(value = "INVOKE", target = "Lmekanism/api/recipes/cache/ICachedRecipeHolder;loadSavedData(Lmekanism/api/recipes/cache/CachedRecipe;I)V", shift = At.Shift.AFTER, by = 1))
     public void mixinLoadSavedData(@NotNull CachedRecipe<RECIPE> cached, int cacheIndex, CallbackInfo ci) {
-        if (cached instanceof PlantingCacheRecipe c && handler instanceof IRecipeLookupHandler.ConstantUsageRecipeLookupHandler handler) {
+        if (cached instanceof PlantingCacheRecipe c && handler instanceof ConstantUsageRecipeLookupHandler handler) {
             c.loadSavedUsageSoFar(handler.getSavedUsedSoFar(cacheIndex));
         }
     }

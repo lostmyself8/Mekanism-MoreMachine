@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:terrasteel_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:terrasteel_essence"
   }
 }

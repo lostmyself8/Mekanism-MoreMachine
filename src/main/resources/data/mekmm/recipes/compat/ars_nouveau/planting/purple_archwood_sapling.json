@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "ars_nouveau:purple_archwood_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "ars_nouveau:purple_archwood_log"
   }

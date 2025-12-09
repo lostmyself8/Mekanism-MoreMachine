@@ -16,10 +16,11 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "item": "farmersdelight:tomato_seeds"
-  },
-  "secondaryOutput": {
     "count": 3,
     "item": "farmersdelight:tomato"
-  }
+  },
+  "secondaryOutput": {
+    "item": "farmersdelight:tomato_seeds"
+  },
+  "secondaryChance": 0.95
 }

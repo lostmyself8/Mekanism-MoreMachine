@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:wood_seeds"
-  },
-  "secondaryOutput": {
     "count": 5,
     "item": "mysticalagriculture:wood_essence"
   }

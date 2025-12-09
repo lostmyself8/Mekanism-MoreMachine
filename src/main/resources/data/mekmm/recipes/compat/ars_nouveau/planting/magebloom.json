@@ -16,9 +16,7 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "item": "ars_nouveau:magebloom_crop"
-  },
-  "secondaryOutput": {
+    "count": 3,
     "item": "ars_nouveau:magebloom"
   }
 }

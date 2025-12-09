@@ -62,15 +62,21 @@ public class MoreMachineOutputHelper {
 
             @Override
             public void handleOutput(PlantingStationRecipeOutput toOutput, int operations) {
-                MoreMachineOutputHelper.handleOutput(mainSlot, toOutput.first(), operations);
-                MoreMachineOutputHelper.handleOutput(secondarySlot, toOutput.second(), operations);
+                MoreMachineOutputHelper.handleOutput(mainSlot, toOutput.getMainOutput(), operations);
+                ItemStack secondaryOutput = toOutput.getSecondaryOutput();
+                for (int i = 0; i < operations; i++) {
+                    MoreMachineOutputHelper.handleOutput(secondarySlot, secondaryOutput, operations);
+                    if (i < operations - 1) {
+                        secondaryOutput = toOutput.nextSecondaryOutput();
+                    }
+                }
             }
 
             @Override
             public void calculateOperationsCanSupport(CachedRecipe.OperationTracker tracker, PlantingStationRecipeOutput toOutput) {
-                MoreMachineOutputHelper.calculateOperationsCanSupport(tracker, mainSlotNotEnoughSpaceError, mainSlot, toOutput.first());
+                MoreMachineOutputHelper.calculateOperationsCanSupport(tracker, mainSlotNotEnoughSpaceError, mainSlot, toOutput.getMainOutput());
                 if (tracker.shouldContinueChecking()) {
-                    MoreMachineOutputHelper.calculateOperationsCanSupport(tracker, secondarySlotNotEnoughSpaceError, secondarySlot, toOutput.second());
+                    MoreMachineOutputHelper.calculateOperationsCanSupport(tracker, secondarySlotNotEnoughSpaceError, secondarySlot, toOutput.getMaxSecondaryOutput());
                 }
             }
         };

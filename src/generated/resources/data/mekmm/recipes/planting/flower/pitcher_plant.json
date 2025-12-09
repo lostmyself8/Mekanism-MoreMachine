@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:pitcher_pod"
-  },
-  "secondaryOutput": {
     "item": "minecraft:pitcher_plant"
   }
 }

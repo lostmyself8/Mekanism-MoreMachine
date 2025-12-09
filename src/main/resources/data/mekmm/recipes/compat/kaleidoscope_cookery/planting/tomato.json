@@ -16,11 +16,11 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "count": 2,
-    "item": "kaleidoscope_cookery:tomato_seed"
+    "count": 3,
+    "item": "kaleidoscope_cookery:tomato"
   },
   "secondaryOutput": {
-    "count": 1,
-    "item": "kaleidoscope_cookery:tomato"
-  }
+    "item": "kaleidoscope_cookery:tomato_seed"
+  },
+  "secondaryChance": 0.95
 }

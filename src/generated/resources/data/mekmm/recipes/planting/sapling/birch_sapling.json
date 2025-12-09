@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:birch_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:birch_log"
   }

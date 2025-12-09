@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:rock_crystal_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:rock_crystal_essence"
   }
 }

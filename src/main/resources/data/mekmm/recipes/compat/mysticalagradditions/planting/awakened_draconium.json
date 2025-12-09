@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:awakened_draconium_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:awakened_draconium_essence"
   }
 }

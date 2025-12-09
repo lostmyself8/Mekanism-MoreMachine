@@ -50,7 +50,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemHandlerHelper;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,6 +80,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
 
     GasInventorySlot gasSlot;
 
+    @Getter
     IGasTank gasTank;
 
     private final ChemicalUsageMultiplier chemicalUsageMultiplier;
@@ -144,10 +147,6 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
         builder.addSlot(gasSlot = GasInventorySlot.fillOrConvert(gasTank, this::getLevel, listener, 7, 77));
     }
 
-    public IGasTank getGasTank() {
-        return gasTank;
-    }
-
     @Nullable
     @Override
     public GasInventorySlot getExtraSlot() {
@@ -189,10 +188,19 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     @Override
     protected @Nullable PlantingRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @Nullable IInventorySlot secondaryOutputSlot) {
         GasStack gasInput = gasTank.getStack();
-        ItemStack output = secondaryOutputSlot == null ? ItemStack.EMPTY : secondaryOutputSlot.getStack();
-        // TODO: Give it something that is not empty when we don't have a stored gas stack for getting the output?
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, gasInput,
-                recipe -> InventoryUtils.areItemsStackable(recipe.getOutput(fallbackInput, gasInput).first(), output));
+        ItemStack output = outputSlot.getStack();
+        ItemStack extra = secondaryOutputSlot == null ? ItemStack.EMPTY : secondaryOutputSlot.getStack();
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, gasInput, recipe -> {
+            PlantingStationRecipeOutput chanceOutput = recipe.getOutput(fallbackInput, gasInput);
+            if (InventoryUtils.areItemsStackable(chanceOutput.getMainOutput(), output)) {
+                if (extra.isEmpty()) {
+                    return true;
+                }
+                ItemStack secondaryOutput = chanceOutput.getMaxSecondaryOutput();
+                return secondaryOutput.isEmpty() || ItemHandlerHelper.canItemStacksStack(secondaryOutput, extra);
+            }
+            return false;
+        });
     }
 
     @Override

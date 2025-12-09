@@ -39,20 +39,40 @@ public class PlantingRecipeSerializer<RECIPE extends PlantingRecipe> implements 
                 GsonHelper.getAsJsonObject(json, JsonConstants.GAS_INPUT);
         GasStackIngredient gasInputIngredient = IngredientCreatorAccess.gas().deserialize(gasInput);
 
-        ItemStack mainOutput = SerializerHelper.getItemStack(json, JsonConstants.MAIN_OUTPUT);
-        // 第二输出可能为空物品，但不能为null。因此先将其设定为空物品状态。待读取到之后再进行更改，若没读取到则直接使用空物品。
+        // 输出可能为空物品，但不能为null。因此先将其设定为空物品状态。待读取到之后再进行更改，若没读取到则直接使用空物品。
+        ItemStack mainOutput = ItemStack.EMPTY;
         ItemStack secondaryOutput = ItemStack.EMPTY;
-        if (json.has(JsonConstants.SECONDARY_OUTPUT)) {
-            if (mainOutput.isEmpty()) {
-                throw new JsonSyntaxException("Planting main recipe output must not be empty, if it is defined.");
+        double secondaryChance = 0;
+        if (json.has(JsonConstants.SECONDARY_OUTPUT) || json.has(JsonConstants.SECONDARY_CHANCE)) {
+            if (json.has(JsonConstants.MAIN_OUTPUT)) {
+                // Allow for the main output to be optional if we have a secondary output
+                mainOutput = SerializerHelper.getItemStack(json, JsonConstants.MAIN_OUTPUT);
+                if (mainOutput.isEmpty()) {
+                    throw new JsonSyntaxException("planting main recipe output must not be empty, if it is defined.");
+                }
+            }
+            // If we have either json element for secondary information, assume we have both and fail if we can't get
+            // one of them
+            JsonElement chance = json.get(JsonConstants.SECONDARY_CHANCE);
+            if (!GsonHelper.isNumberValue(chance)) {
+                throw new JsonSyntaxException("Expected secondaryChance to be a number greater than zero.");
+            }
+            secondaryChance = chance.getAsJsonPrimitive().getAsDouble();
+            if (secondaryChance <= 0 || secondaryChance > 1) {
+                throw new JsonSyntaxException("Expected secondaryChance to be greater than zero, and less than or equal to one.");
             }
             secondaryOutput = SerializerHelper.getItemStack(json, JsonConstants.SECONDARY_OUTPUT);
+            if (secondaryOutput.isEmpty()) {
+                throw new JsonSyntaxException("planting secondary recipe output must not be empty, if there is no main output.");
+            }
         } else {
+            // If we don't have a secondary output require a main output
+            mainOutput = SerializerHelper.getItemStack(json, JsonConstants.MAIN_OUTPUT);
             if (mainOutput.isEmpty()) {
-                throw new JsonSyntaxException("Planting main recipe output must not be empty, if it is defined.");
+                throw new JsonSyntaxException("planting main recipe output must not be empty, if there is no secondary output.");
             }
         }
-        return factory.create(recipeId, itemInputIngredient, gasInputIngredient, mainOutput, secondaryOutput);
+        return factory.create(recipeId, itemInputIngredient, gasInputIngredient, mainOutput, secondaryOutput, secondaryChance);
     }
 
     @Override
@@ -62,7 +82,8 @@ public class PlantingRecipeSerializer<RECIPE extends PlantingRecipe> implements 
             GasStackIngredient gasStackIngredient = IngredientCreatorAccess.gas().read(buffer);
             ItemStack mainOutput = buffer.readItem();
             ItemStack secondaryOutput = buffer.readItem();
-            return factory.create(recipeId, itemInputIngredient, gasStackIngredient, mainOutput, secondaryOutput);
+            double secondaryChance = buffer.readDouble();
+            return this.factory.create(recipeId, itemInputIngredient, gasStackIngredient, mainOutput, secondaryOutput, secondaryChance);
         } catch (Exception e) {
             Mekmm.LOGGER.error("Error reading planting recipe from packet.", e);
             throw e;
@@ -82,6 +103,6 @@ public class PlantingRecipeSerializer<RECIPE extends PlantingRecipe> implements 
     @FunctionalInterface
     public interface IFactory<RECIPE extends PlantingRecipe> {
 
-        RECIPE create(ResourceLocation id, ItemStackIngredient itemInput, GasStackIngredient gasInput, ItemStack mainOutput, ItemStack secondaryOutput);
+        RECIPE create(ResourceLocation id, ItemStackIngredient itemInput, GasStackIngredient gasInput, ItemStack mainOutput, ItemStack secondaryOutput, double secondaryChance);
     }
 }

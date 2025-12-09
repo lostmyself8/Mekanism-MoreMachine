@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:jungle_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:jungle_log"
   }

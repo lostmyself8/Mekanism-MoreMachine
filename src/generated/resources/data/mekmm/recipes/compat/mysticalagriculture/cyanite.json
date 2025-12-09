@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:cyanite_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:cyanite_essence"
   }
 }

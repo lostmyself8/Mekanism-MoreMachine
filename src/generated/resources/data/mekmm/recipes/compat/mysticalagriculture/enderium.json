@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:enderium_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:enderium_essence"
   }
 }

@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:spirited_crystal_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:spirited_crystal_essence"
   }
 }

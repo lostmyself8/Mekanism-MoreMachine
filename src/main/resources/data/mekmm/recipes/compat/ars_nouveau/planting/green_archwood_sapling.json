@@ -16,10 +16,6 @@
     }
   },
   "mainOutput": {
-    "count": 1,
-    "item": "ars_nouveau:green_archwood_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "ars_nouveau:green_archwood_log"
   }

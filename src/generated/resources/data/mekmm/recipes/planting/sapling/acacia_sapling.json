@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:acacia_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:acacia_log"
   }

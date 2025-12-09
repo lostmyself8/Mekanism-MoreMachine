@@ -8,11 +8,11 @@
     "MixinItemConfigurator",
     "MixinPacketHandler",
     "MixinRecipeCacheLookupMonitor",
-    "client.jei.MixinMekanismJEI",
-    "client.render.MixinRenderTickHandler",
     "recipe.MixinMekanismRecipeType"
   ],
   "client": [
+    "client.jei.MixinMekanismJEI",
+    "client.render.MixinRenderTickHandler"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:dark_oak_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:dark_oak_log"
   }

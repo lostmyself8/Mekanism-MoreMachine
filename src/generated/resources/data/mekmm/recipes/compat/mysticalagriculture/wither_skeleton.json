@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:wither_skeleton_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:wither_skeleton_essence"
   }
 }

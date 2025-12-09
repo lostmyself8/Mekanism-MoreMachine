@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:platinum_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:platinum_essence"
   }
 }

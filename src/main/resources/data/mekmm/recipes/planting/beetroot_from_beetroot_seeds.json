@@ -10,9 +10,11 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "item": "minecraft:beetroot_seeds"
+    "count": 4,
+    "item": "minecraft:beetroot"
   },
   "secondaryOutput": {
-    "item": "minecraft:beetroot"
-  }
+    "item": "minecraft:beetroot_seeds"
+  },
+  "secondaryChance": 0.95
 }

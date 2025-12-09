@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:nether_star_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:nether_star_essence"
   }
 }

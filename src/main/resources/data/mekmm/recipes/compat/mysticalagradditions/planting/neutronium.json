@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:neutronium_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:neutronium_essence"
   }
 }

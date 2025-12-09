@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "quark:blue_blossom_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "quark:blossom_log"
   }

@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:diamond_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:diamond_essence"
   }
 }

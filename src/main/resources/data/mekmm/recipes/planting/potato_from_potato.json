@@ -10,7 +10,11 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "count": 4,
+    "count": 9,
     "item": "minecraft:potato"
-  }
+  },
+  "secondaryOutput": {
+    "item": "minecraft:poisonous_potato"
+  },
+  "secondaryChance": 0.27
 }

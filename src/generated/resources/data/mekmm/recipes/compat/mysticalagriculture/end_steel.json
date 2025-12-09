@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:end_steel_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:end_steel_essence"
   }
 }
