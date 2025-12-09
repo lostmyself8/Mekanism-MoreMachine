@@ -32,18 +32,22 @@ public class Mekmm implements IModModule {
     public static final String MOD_ID = "mekmm";
     public static final String MOD_NAME = "MekanismMoreMachine";
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
+
     /**
      * Mekanism More Machine Packet Pipeline
      */
     private final MoreMachinePacketHandler packetHandler;
+
     /**
      * Mekanism More Machine mod instance
      */
     public static Mekmm instance;
+
     /**
      * Mekanism More Machine hooks instance
      */
     public static final MoreMachineHooks hooks = new MoreMachineHooks();
+
     /**
      * Mekanism More Machine version number
      */

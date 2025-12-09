@@ -2,10 +2,9 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.jerry.mekmm.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "refmap": "mekmm.refmap.json",
   "mixins": [
-    "MixinItemConfigurator",
     "MixinPacketHandler",
     "MixinRecipeCacheLookupMonitor",
     "recipe.MixinMekanismRecipeType"
