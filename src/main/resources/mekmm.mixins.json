@@ -5,14 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mekmm.refmap.json",
   "mixins": [
-    "MixinItemConfigurator",
     "MixinPacketHandler",
     "MixinRecipeCacheLookupMonitor",
     "client.jei.MixinMekanismJEI",
     "recipe.MixinMekanismRecipeType"
   ],
   "client": [
-    "client.render.MixinRenderTickHandler"
   ],
   "injectors": {
     "defaultRequire": 1
