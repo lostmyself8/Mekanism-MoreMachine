@@ -8,6 +8,8 @@ import com.jerry.mekmm.common.MoreMachineLang;
 import mekanism.common.registration.impl.CreativeTabDeferredRegister;
 import mekanism.common.registration.impl.CreativeTabRegistryObject;
 
+import com.jerry.meklm.common.registries.LargeMachineBlocks;
+
 public class MoreMachineCreativeTabs {
 
     public static final CreativeTabDeferredRegister MM_CREATIVE_TABS = new CreativeTabDeferredRegister(Mekmm.MOD_ID);
@@ -16,5 +18,6 @@ public class MoreMachineCreativeTabs {
         CreativeTabDeferredRegister.addToDisplay(MoreMachineItems.MM_ITEMS, output);
         CreativeTabDeferredRegister.addToDisplay(MoreMachineBlocks.MM_BLOCKS, output);
         CreativeTabDeferredRegister.addToDisplay(AdvancedFactoryBlocks.AF_BLOCKS, output);
+        CreativeTabDeferredRegister.addToDisplay(LargeMachineBlocks.LM_BLOCKS, output);
     }));
 }

@@ -1,0 +1,16 @@
+{
+  "type": "mekanism:compressing",
+  "chemicalInput": {
+    "amount": 1,
+    "gas": "mekmm:uu_matter"
+  },
+  "itemInput": {
+    "amount": 64,
+    "ingredient": {
+      "item": "mekmm:uu_matter"
+    }
+  },
+  "output": {
+    "item": "mekmm:modeler_doll"
+  }
+}

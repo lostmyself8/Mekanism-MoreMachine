@@ -33,6 +33,7 @@
     "mekmm:fluid_replicator",
     "mekmm:ambient_gas_collector",
     "mekmm:author_doll",
+    "mekmm:modeler_doll",
     {"id": "mekmm:overclocked_recycling_factory", "required": false},
     {"id": "mekmm:quantum_recycling_factory", "required": false},
     {"id": "mekmm:dense_recycling_factory", "required": false},
@@ -135,6 +136,15 @@
     {"id": "mekmm:quantum_liquifying_factory", "required": false},
     {"id": "mekmm:dense_liquifying_factory", "required": false},
     {"id": "mekmm:multiversal_liquifying_factory", "required": false},
-    {"id": "mekmm:creative_liquifying_factory", "required": false}
+    {"id": "mekmm:creative_liquifying_factory", "required": false},
+
+    "mekmm:basic_mid_chemical_tank",
+    "mekmm:advanced_mid_chemical_tank",
+    "mekmm:elite_mid_chemical_tank",
+    "mekmm:ultimate_mid_chemical_tank",
+    "mekmm:basic_max_chemical_tank",
+    "mekmm:advanced_max_chemical_tank",
+    "mekmm:elite_max_chemical_tank",
+    "mekmm:ultimate_max_chemical_tank"
   ]
 }

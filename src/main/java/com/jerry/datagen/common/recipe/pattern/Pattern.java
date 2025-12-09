@@ -25,4 +25,5 @@ public class Pattern {
     public static final char TANK = 'T';
     public static final char WOOD = 'W';
     public static final char STEEL_CASING = 'X';
+    public static final char ROBIT = 'R';
 }

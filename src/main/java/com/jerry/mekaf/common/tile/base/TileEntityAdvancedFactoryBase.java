@@ -74,6 +74,8 @@ import net.minecraftforge.fluids.FluidStack;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,8 +104,10 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     /**
      * How many ticks it takes, with upgrades, to run an operation
      */
+    @Setter
     private int ticksRequired = 200;
-    private int baselineMaxOperations = 1;
+    @Getter
+    protected int baselineMaxOperations = 1;
     protected boolean sorting;
     private boolean sortingNeeded = true;
     private FloatingLong lastUsage = FloatingLong.ZERO;
@@ -399,14 +403,6 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     @ComputerMethod(methodDescription = "Total number of ticks it takes currently for the recipe to complete")
     public int getTicksRequired() {
         return ticksRequired;
-    }
-
-    public int getBaselineMaxOperations() {
-        return this.baselineMaxOperations;
-    }
-
-    public void setTicksRequired(int value) {
-        ticksRequired = value;
     }
 
     @Override

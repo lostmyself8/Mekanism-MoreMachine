@@ -6,6 +6,7 @@ import com.jerry.mekaf.common.upgrade.FluidSlurryToSlurryUpgradeData;
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.api.IContentsListener;
+import mekanism.api.Upgrade;
 import mekanism.api.chemical.slurry.ISlurryTank;
 import mekanism.api.chemical.slurry.Slurry;
 import mekanism.api.chemical.slurry.SlurryStack;
@@ -39,8 +40,10 @@ import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -186,6 +189,21 @@ public class TileEntityWashingFactory extends TileEntitySlurryToSlurryFactory<Fl
                 .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
                 .setBaselineMaxOperations(this::getBaselineMaxOperations)
                 .setOnFinish(this::markForSave);
+    }
+
+    @Override
+    public void recalculateUpgrades(Upgrade upgrade) {
+        super.recalculateUpgrades(upgrade);
+        if (upgrade == Upgrade.SPEED) {
+            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
+        }
+    }
+
+    // 更改加速升级的显示的，默认是10x，气体工厂是256x，当然只有速度升级需要更改
+    @NotNull
+    @Override
+    public List<Component> getInfo(@NotNull Upgrade upgrade) {
+        return upgrade == Upgrade.SPEED ? UpgradeUtils.getExpScaledInfo(this, upgrade) : super.getInfo(upgrade);
     }
 
     @Override
