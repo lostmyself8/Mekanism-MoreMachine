@@ -21,6 +21,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
+import com.jerry.meklm.client.gui.GuiLargeChemicalTank;
+import com.jerry.meklm.common.registries.LargeMachineBlocks;
+import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
+
 @Mod.EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientRegistration {
 
@@ -29,6 +33,15 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         mekanism.client.ClientRegistration.addCustomModel(MoreMachineBlocks.WIRELESS_CHARGING_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+
+        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+                QuadTransformation.translate(0, 1, 0)));
+        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
     }
 
@@ -50,6 +63,8 @@ public class ClientRegistration {
 
             ClientRegistrationUtil.registerScreen(MoreMachineContainerTypes.MM_FACTORY, GuiMoreMachineFactory::new);
             ClientRegistrationUtil.registerScreen(AdvancedFactoryContainerTypes.ADVANCED_FACTORY, GuiAdvancedFactory::new);
+            // Large Machine
+            ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_CHEMICAL_TANK, GuiLargeChemicalTank::new);
         });
     }
 }

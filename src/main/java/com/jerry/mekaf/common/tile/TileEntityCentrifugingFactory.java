@@ -5,6 +5,7 @@ import com.jerry.mekaf.common.upgrade.GasToGasUpgradeData;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
+import mekanism.api.Upgrade;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.chemical.gas.IGasTank;
@@ -28,8 +29,10 @@ import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
+import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.NotNull;
@@ -117,6 +120,21 @@ public class TileEntityCentrifugingFactory extends TileEntityGasToGasFactory<Gas
                 .setOnFinish(this::markForSave)
                 .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
                 .setBaselineMaxOperations(this::getBaselineMaxOperations);
+    }
+
+    @Override
+    public void recalculateUpgrades(Upgrade upgrade) {
+        super.recalculateUpgrades(upgrade);
+        if (upgrade == Upgrade.SPEED) {
+            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
+        }
+    }
+
+    // 更改加速升级的显示的，默认是10x，气体工厂是256x，当然只有速度升级需要更改
+    @NotNull
+    @Override
+    public List<Component> getInfo(@NotNull Upgrade upgrade) {
+        return upgrade == Upgrade.SPEED ? UpgradeUtils.getExpScaledInfo(this, upgrade) : super.getInfo(upgrade);
     }
 
     @Override

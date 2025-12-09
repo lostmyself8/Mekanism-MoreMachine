@@ -4,11 +4,14 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
+import com.jerry.meklm.common.registries.LargeMachineBlocks;
+
 public class MoreMachineBlockLootTables extends BaseBlockLootTables {
 
     @Override
     protected void generate() {
         dropSelfWithContents(MoreMachineBlocks.MM_BLOCKS.getAllBlocks());
         dropSelfWithContents(AdvancedFactoryBlocks.AF_BLOCKS.getAllBlocks());
+        dropSelfWithContents(LargeMachineBlocks.LM_BLOCKS.getAllBlocks());
     }
 }

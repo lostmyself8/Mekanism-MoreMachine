@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import com.jerry.meklm.common.registries.LargeMachineBlocks;
+import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
+import com.jerry.meklm.common.registries.LargeMachineTileEntityTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,6 +70,7 @@ public class Mekmm implements IModModule {
         MoreMachineGas.MM_GASES.register(modEventBus);
 
         registerAdvancedFactory(modEventBus);
+        registerLargeMachine(modEventBus);
 
         packetHandler = new MoreMachinePacketHandler();
     }
@@ -83,10 +87,18 @@ public class Mekmm implements IModModule {
         hooks.hookCommonSetup();
     }
 
+    // 注册高级工厂
     private void registerAdvancedFactory(IEventBus modEventBus) {
         AdvancedFactoryBlocks.AF_BLOCKS.register(modEventBus);
         AdvancedFactoryTileEntityTypes.AF_TILE_ENTITY_TYPES.register(modEventBus);
         AdvancedFactoryContainerTypes.AF_CONTAINER_TYPES.register(modEventBus);
+    }
+
+    // 注册大型机器
+    private void registerLargeMachine(IEventBus modEventBus) {
+        LargeMachineBlocks.LM_BLOCKS.register(modEventBus);
+        LargeMachineTileEntityTypes.LM_TILE_ENTITY_TYPES.register(modEventBus);
+        LargeMachineContainerTypes.LM_CONTAINER_TYPES.register(modEventBus);
     }
 
     @Override

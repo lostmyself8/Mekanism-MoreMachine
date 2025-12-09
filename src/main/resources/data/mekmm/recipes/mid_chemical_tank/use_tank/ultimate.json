@@ -1,0 +1,20 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "mekanism:dynamic_tank"
+    },
+    "C": {
+      "item": "mekanism:ultimate_chemical_tank"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "ACA",
+    "ACA"
+  ],
+  "result": {
+    "item": "mekmm:ultimate_mid_chemical_tank"
+  }
+}

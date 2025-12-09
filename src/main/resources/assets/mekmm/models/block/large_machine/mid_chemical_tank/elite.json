@@ -1,0 +1,7 @@
+{
+  "parent": "mekmm:block/large_machine/mid_chemical_tank/base",
+  "texture_size": [64, 64],
+  "textures": {
+    "1": "mekmm:block/large_machine/elite_valve"
+  }
+}

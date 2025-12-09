@@ -1,0 +1,69 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_name",
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "componentSecurity.owner",
+                  "target": "mekData.owner"
+                },
+                {
+                  "op": "replace",
+                  "source": "componentSecurity.securityMode",
+                  "target": "mekData.securityMode"
+                },
+                {
+                  "op": "replace",
+                  "source": "componentConfig",
+                  "target": "mekData.componentConfig"
+                },
+                {
+                  "op": "replace",
+                  "source": "componentEjector",
+                  "target": "mekData.componentEjector"
+                },
+                {
+                  "op": "replace",
+                  "source": "radius",
+                  "target": "mekData.radius"
+                },
+                {
+                  "op": "replace",
+                  "source": "controlType",
+                  "target": "mekData.controlType"
+                },
+                {
+                  "op": "replace",
+                  "source": "EnergyContainers",
+                  "target": "mekData.EnergyContainers"
+                },
+                {
+                  "op": "replace",
+                  "source": "Items",
+                  "target": "mekData.Items"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "mekmm:wireless_charging_station"
+        }
+      ],
+      "name": "main",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "mekmm:blocks/wireless_charging_station"
+}
