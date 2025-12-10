@@ -48,12 +48,7 @@ public class GuiAmbientGasCollector extends GuiMekanismTile<TileEntityAmbientGas
             }
             GasStack gasStack = tile.chemicalTank.getStack();
             if (gasStack.isEmpty()) {
-                GasStack fallBack = tile.getActiveType();
-                if (fallBack.isEmpty()) {
-                    list.add(MekanismLang.NO_GAS.translate());
-                } else {
-                    list.add(fallBack.getTextComponent());
-                }
+                list.add(MekanismLang.NO_GAS.translate());
             } else {
                 list.add(MekanismLang.GENERIC_STORED_MB.translate(gasStack, TextUtils.format(gasStack.getAmount())));
             }

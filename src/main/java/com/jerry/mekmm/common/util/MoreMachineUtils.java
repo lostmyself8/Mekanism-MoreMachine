@@ -15,7 +15,15 @@ import mekanism.common.util.EnumUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.List;
+
 public class MoreMachineUtils {
+
+    /**
+     * 用于mixin更改recipeType的命名空间，在改列表中的recipe将会被替换为mekmm，而不是mekanism
+     */
+    // TODO:考虑到底要不要进行替换？
+    public static List<String> RECIPES_STRING = List.of("recycling", "planting", "stamping", "lathing", "rolling_mill");
 
     // 从MekanismUtils的isSameTypeFactory单拎出来的
     public static boolean isSameMMTypeFactory(Block block, BlockEntityType<?> factoryTileType) {

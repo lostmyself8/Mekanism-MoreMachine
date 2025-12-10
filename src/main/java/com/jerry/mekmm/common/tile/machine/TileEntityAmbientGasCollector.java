@@ -21,7 +21,6 @@ import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
-import mekanism.common.inventory.container.sync.chemical.SyncableGasStack;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.chemical.GasInventorySlot;
 import mekanism.common.tile.base.SubstanceType;
@@ -39,6 +38,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidType;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,11 +57,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
 
     // 化学品存储槽
     public IGasTank chemicalTank;
-    /**
-     * The type of chemical this collector is collecting
-     */
-    @NotNull
-    private GasStack activeType = GasStack.EMPTY;
+
     public int ticksRequired = BASE_TICKS_REQUIRED;
     /**
      * How many ticks this machine has been operating for.
@@ -72,6 +68,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
 
     private boolean noBlocking = true;
 
+    @Getter
     private MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer;
     GasInventorySlot chemicalSlot;
     EnergyInventorySlot energySlot;
@@ -113,14 +110,6 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
         if (MekanismUtils.canFunction(this) && (chemicalTank.isEmpty() || estimateIncrementAmount() <= chemicalTank.getNeeded())) {
             FloatingLong energyPerTick = energyContainer.getEnergyPerTick();
             if (energyContainer.extract(energyPerTick, Action.SIMULATE, AutomationType.INTERNAL).equals(energyPerTick)) {
-                if (!activeType.isEmpty()) {
-                    // If we have an active type of fluid, use energy. This can cause there to be ticks where there
-                    // isn't actually
-                    // anything to suck that use energy, but those will balance out with the first set of ticks where it
-                    // doesn't
-                    // use any energy until it actually picks up the first block
-                    clientEnergyUsed = energyContainer.extract(energyPerTick, Action.EXECUTE, AutomationType.INTERNAL);
-                }
                 operatingTicks++;
                 if (operatingTicks >= ticksRequired) {
                     operatingTicks = 0;
@@ -131,8 +120,6 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
                             // energy
                             clientEnergyUsed = energyContainer.extract(energyPerTick, Action.EXECUTE, AutomationType.INTERNAL);
                         }
-                    } else {
-                        reset();
                     }
                 }
             }
@@ -144,7 +131,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
     }
 
     public int estimateIncrementAmount() {
-        return 1;
+        return MoreMachineConfig.general.gasCollectAmount.get();
     }
 
     private boolean suck(BlockPos pos) {
@@ -153,8 +140,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
             BlockState blockState = state.get();
             Block block = blockState.getBlock();
             if (isAir(block)) {
-                GasStack gasStack = new GasStack(MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS, MoreMachineConfig.general.gasCollectAmount.get());
-                activeType = gasStack;
+                GasStack gasStack = new GasStack(MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS, estimateIncrementAmount());
                 chemicalTank.insert(gasStack, Action.EXECUTE, AutomationType.INTERNAL);
                 return true;
             }
@@ -170,28 +156,14 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
         return noBlocking;
     }
 
-    public void reset() {
-        activeType = GasStack.EMPTY;
-    }
-
-    @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags) {
-        super.saveAdditional(nbtTags);
-        if (!activeType.isEmpty()) {
-            nbtTags.put(NBTConstants.GAS_STORED, activeType.write(new CompoundTag()));
-        }
-    }
-
     @Override
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         operatingTicks = nbt.getInt(NBTConstants.PROGRESS);
-        NBTUtils.setGasStackIfPresent(nbt, NBTConstants.GAS_STORED, gas -> activeType = gas);
     }
 
     @Override
     public InteractionResult onSneakRightClick(Player player) {
-        reset();
         player.displayClientMessage(MekanismLang.PUMP_RESET.translate(), true);
         return InteractionResult.SUCCESS;
     }
@@ -231,17 +203,8 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
         return UpgradeUtils.getMultScaledInfo(this, upgrade);
     }
 
-    public MachineEnergyContainer<TileEntityAmbientGasCollector> getEnergyContainer() {
-        return energyContainer;
-    }
-
     public boolean usedEnergy() {
         return usedEnergy;
-    }
-
-    @NotNull
-    public GasStack getActiveType() {
-        return this.activeType;
     }
 
     @Override
@@ -249,6 +212,5 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
         super.addContainerTrackers(container);
         container.track(SyncableBoolean.create(this::usedEnergy, value -> usedEnergy = value));
         container.track(SyncableBoolean.create(this::getNotBlocking, value -> noBlocking = value));
-        container.track(SyncableGasStack.create(this::getActiveType, value -> activeType = value));
     }
 }
