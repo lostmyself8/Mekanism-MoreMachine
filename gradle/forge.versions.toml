@@ -22,6 +22,7 @@ modernfix = "5.24.4+mc1.20.1"
 ## curseforge maven ##
 mekanismcovers = "5831281"
 igleelibrary = "6987117"
+architectury = "5137938"
 evolvedmekanism = "7117024"
 immersiveengineering = "6206989"
 
@@ -55,6 +56,7 @@ modernui            = { module = "maven.modrinth:modern-ui", version.ref = "mode
 
 mekanismcovers      = { module = "curse.maven:mekanism-covers-1119874", version.ref = "mekanismcovers" }
 igleelibrary        = { module = "curse.maven:iglee-library-541199", version.ref = "igleelibrary" }
+architectury        = { module = "curse.maven:architectury-api-419699", version.ref = "architectury" }
 evolvedmekanism     = { module = "curse.maven:evolved-mekanism-1230085", version.ref = "evolvedmekanism" }
 immersiveengineering= { module = "curse.maven:immersive-engineering-231951", version.ref = "immersiveengineering" }
 
