@@ -52,6 +52,12 @@ dependencies {
     modLocalRuntime(forge.igleelibrary)
     modLocalRuntime(forge.evolvedmekanism)
 
+    // Crt
+    modLocalRuntime(forge.crt)
+
+    // KubeJs
+    modLocalRuntime(forge.kubejs)
+
     // mysticalAgriculture
     modLocalRuntime(forge.cucumber)
     modLocalRuntime(forge.mysticalagriculture)

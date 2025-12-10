@@ -34,12 +34,5 @@ afterEvaluate {
                 'Implementation-Version': version,
                 'Implementation-Vendor': 'Mekanism: More Machine Team',
         ])
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        if (it.name == 'jar') {
-            from(sourceSets.main.output) {
-                include 'mekmm.refmap.json'
-                include 'META-INF/mekmm.refmap.json'
-            }
-        }
     }
 }

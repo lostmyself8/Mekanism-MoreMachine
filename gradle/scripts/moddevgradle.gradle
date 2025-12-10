@@ -1,88 +1,10 @@
 ext.isJetbrainsRuntime = System.getProperty('java.vm.vendor').contains('JetBrains')
 
 mixin {
-    var refmap = add sourceSets.main, "mekmm.refmap.json"
-    refmap = "build/classes/java/main/mekmm.refmap.json"
-    slimJar.from refmap
+    //目前不需要自动生成refmap
+//    var refmap = add sourceSets.main, "mekmm.refmap.json"
+//    slimJar.from refmap
     config "mekmm.mixins.json"
-}
-
-tasks.register('mergeRefmaps') {
-    dependsOn compileJava
-    mustRunAfter tasks.named('compileJava')
-    group = 'build'
-    description = '合并手写refmap到自动生成的refmap中'
-
-    doLast {
-        // 检查可能的refmap路径
-        def possiblePaths = [
-                "build/classes/java/main/mekmm.refmap.json",
-                "build/classes/java/main/META-INF/mekmm.refmap.json",
-                "${sourceSets.main.output.classesDirs.singleFile}/mekmm.refmap.json"
-        ]
-
-        def generatedRefmap = null
-        for (path in possiblePaths) {
-            def file = file(path)
-            if (file.exists()) {
-                generatedRefmap = file
-                println "找到自动生成refmap: ${file}"
-                break
-            }
-        }
-
-        def manualRefmap = file("src/main/resources/mekmm.refmap.json")
-
-        if (generatedRefmap != null && generatedRefmap.exists() && manualRefmap.exists()) {
-            println "正在合并refmap文件..."
-            println "自动生成位置: ${generatedRefmap}"
-            println "手写位置: ${manualRefmap}"
-
-            // 读取两个JSON文件
-            def generatedJson = new groovy.json.JsonSlurper().parse(generatedRefmap)
-            def manualJson = new groovy.json.JsonSlurper().parse(manualRefmap)
-
-            // 深度合并
-            def merged = deepMerge(generatedJson, manualJson)
-
-            // 写回生成的refmap文件
-            generatedRefmap.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(merged))
-            println "refmap合并完成"
-        } else {
-            if (generatedRefmap == null) {
-                println "警告: 未找到自动生成的refmap文件"
-                println "可能的原因:"
-                println "1. Mixin配置可能有问题"
-                println "2. 可能没有使用@Mixin注解的类"
-                println "3. 编译过程可能被中断"
-            }
-            if (!manualRefmap.exists()) {
-                println "警告: 手写refmap文件不存在"
-            }
-        }
-    }
-}
-
-// 深度合并方法
-def deepMerge(Map target, Map source) {
-    source.each { key, value ->
-        if (target.containsKey(key) && target[key] instanceof Map && value instanceof Map) {
-            deepMerge(target[key] as Map, value as Map)
-        } else {
-            target[key] = value
-        }
-    }
-    return target
-}
-
-// 确保合并任务在打包前执行
-tasks.named('jar') {
-    dependsOn 'mergeRefmaps'
-}
-
-// 让slimJar也依赖合并任务
-tasks.named('slimJar') {
-    dependsOn 'mergeRefmaps'
 }
 
 // we have to force LWJGL version 3.3.2, because RenderNurse requires Java 21, and LWJGL 3.3.1 cannot run on Java 21.
@@ -173,12 +95,6 @@ legacyForge {
 jar {
     exclude "**/.cache"
     exclude "**/SimplifiedToTraditional.properties"
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    // 排除可能重复的refmap文件
-    exclude "mekmm.refmap.json"
-    exclude "META-INF/mekmm.refmap.json"
 }
 
 idea {
