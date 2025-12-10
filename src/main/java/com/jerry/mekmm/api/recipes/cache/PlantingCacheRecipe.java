@@ -163,7 +163,7 @@ public class PlantingCacheRecipe extends CachedRecipe<PlantingRecipe> {
     protected void finishProcessing(int operations) {
         // Validate something didn't go horribly wrong
         if (recipeGas != null && output != null && !recipeItem.isEmpty() && !recipeGas.isEmpty() && !outputEmptyCheck.test(output)) {
-            itemInputHandler.use(recipeItem, operations);
+            // itemInputHandler.use(recipeItem, operations);
             if (gasUsageMultiplier > 0) {
                 gasInputHandler.use(recipeGas, operations * gasUsageMultiplier);
             }
