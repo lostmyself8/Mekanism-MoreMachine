@@ -1,9 +1,68 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 ext.isJetbrainsRuntime = System.getProperty('java.vm.vendor').contains('JetBrains')
 
 mixin {
     var refmap = add sourceSets.main, "mekmm.refmap.json"
     slimJar.from refmap
     config "mekmm.mixins.json"
+}
+
+tasks.register('mergeRefmaps') {
+    dependsOn compileJava
+    group = 'build'
+    description = '合并手写refmap到自动生成的refmap中'
+
+    doLast {
+        def generatedRefmap = file("${sourceSets.main.output.classesDirs.asPath}/mekmm.refmap.json")
+        def manualRefmap = file("src/main/resources/mekmm.refmap.json")
+
+        if (generatedRefmap.exists() && manualRefmap.exists()) {
+            println "正在合并refmap文件..."
+            println "自动生成位置: ${generatedRefmap}"
+            println "手写位置: ${manualRefmap}"
+
+            // 读取两个JSON文件
+            def generatedJson = new JsonSlurper().parse(generatedRefmap)
+            def manualJson = new JsonSlurper().parse(manualRefmap)
+
+            // 合并两个refmap，手动refmap覆盖自动生成的
+            // 注意：refmap通常有特定的结构，我们需要按需合并
+            if (manualJson.containsKey('data')) {
+                // 如果手写refmap有data部分，合并它
+                if (!generatedJson.containsKey('data')) {
+                    generatedJson.data = [:]
+                }
+                generatedJson.data.putAll(manualJson.data)
+            }
+
+            // 如果手写refmap有mappings部分，合并它
+            if (manualJson.containsKey('mappings')) {
+                if (!generatedJson.containsKey('mappings')) {
+                    generatedJson.mappings = [:]
+                }
+                generatedJson.mappings.putAll(manualJson.mappings)
+            }
+
+            // 写回生成的refmap文件
+            generatedRefmap.text = JsonOutput.toJson(generatedJson)
+            println "refmap合并完成"
+        } else {
+            println "其中一个refmap文件不存在，跳过合并"
+            println "自动生成refmap存在: ${generatedRefmap.exists()}"
+            println "手写refmap存在: ${manualRefmap.exists()}"
+        }
+    }
+}
+// 确保合并任务在打包前执行
+tasks.named('slimJar') {
+    mustRunAfter 'mergeRefmaps'
+}
+
+// 让classes任务依赖合并任务
+tasks.named('classes') {
+    dependsOn 'mergeRefmaps'
 }
 
 // we have to force LWJGL version 3.3.2, because RenderNurse requires Java 21, and LWJGL 3.3.1 cannot run on Java 21.
