@@ -1,7 +1,7 @@
 ext.isJetbrainsRuntime = System.getProperty('java.vm.vendor').contains('JetBrains')
 
 mixin {
-    var refmap = add sourceSets.main, "mekmm.refmap.json"
+//    var refmap = add sourceSets.main, "mekmm.refmap.json"
     slimJar.from refmap
     config "mekmm.mixins.json"
 }
