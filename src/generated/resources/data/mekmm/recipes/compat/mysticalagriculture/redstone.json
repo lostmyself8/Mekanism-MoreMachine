@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:redstone_seeds"
-  },
-  "secondaryOutput": {
     "count": 3,
     "item": "mysticalagriculture:redstone_essence"
   }

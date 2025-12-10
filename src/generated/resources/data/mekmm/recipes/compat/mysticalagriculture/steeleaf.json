@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:steeleaf_seeds"
-  },
-  "secondaryOutput": {
     "count": 3,
     "item": "mysticalagriculture:steeleaf_essence"
   }

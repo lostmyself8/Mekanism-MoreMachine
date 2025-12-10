@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:dirt_seeds"
-  },
-  "secondaryOutput": {
     "count": 5,
     "item": "mysticalagriculture:dirt_essence"
   }

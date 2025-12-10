@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:certus_quartz_seeds"
-  },
-  "secondaryOutput": {
     "count": 3,
     "item": "mysticalagriculture:certus_quartz_essence"
   }

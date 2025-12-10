@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:gaia_spirit_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:gaia_spirit_essence"
   }
 }

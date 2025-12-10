@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:energetic_alloy_seeds"
-  },
-  "secondaryOutput": {
     "count": 2,
     "item": "mysticalagriculture:energetic_alloy_essence"
   }

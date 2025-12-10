@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:slime_seeds"
-  },
-  "secondaryOutput": {
     "count": 4,
     "item": "mysticalagriculture:slime_essence"
   }

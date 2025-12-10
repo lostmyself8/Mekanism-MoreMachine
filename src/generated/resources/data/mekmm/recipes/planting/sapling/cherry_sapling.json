@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:cherry_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:cherry_log"
   }

@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:silver_seeds"
-  },
-  "secondaryOutput": {
     "count": 3,
     "item": "mysticalagriculture:silver_essence"
   }

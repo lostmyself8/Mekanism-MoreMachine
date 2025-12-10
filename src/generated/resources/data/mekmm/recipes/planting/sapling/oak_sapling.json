@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:oak_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:oak_log"
   }

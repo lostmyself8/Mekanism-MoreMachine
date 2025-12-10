@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:emerald_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:emerald_essence"
   }
 }

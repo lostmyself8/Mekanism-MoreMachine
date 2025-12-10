@@ -16,11 +16,12 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
+    "count": 5,
+    "item": "kaleidoscope_cookery:rice_panicle"
+  },
+  "secondaryOutput": {
     "count": 2,
     "item": "kaleidoscope_cookery:wild_rice"
   },
-  "secondaryOutput": {
-    "count": 3,
-    "item": "kaleidoscope_cookery:rice_panicle"
-  }
+  "secondaryChance": 0.65
 }

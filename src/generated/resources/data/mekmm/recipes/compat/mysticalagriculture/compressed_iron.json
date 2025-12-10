@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:compressed_iron_seeds"
-  },
-  "secondaryOutput": {
     "count": 2,
     "item": "mysticalagriculture:compressed_iron_essence"
   }

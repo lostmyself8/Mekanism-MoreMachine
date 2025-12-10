@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:spruce_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:spruce_log"
   }

@@ -10,9 +10,12 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "item": "minecraft:wheat_seeds"
+    "count": 5,
+    "item": "minecraft:wheat"
   },
   "secondaryOutput": {
-    "item": "minecraft:wheat"
-  }
+    "count": 2,
+    "item": "minecraft:wheat_seeds"
+  },
+  "secondaryChance": 0.8
 }

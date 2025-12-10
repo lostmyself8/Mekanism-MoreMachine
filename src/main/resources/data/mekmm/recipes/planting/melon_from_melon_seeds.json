@@ -10,9 +10,7 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "item": "minecraft:melon_seeds"
-  },
-  "secondaryOutput": {
+    "count": 2,
     "item": "minecraft:melon"
   }
 }

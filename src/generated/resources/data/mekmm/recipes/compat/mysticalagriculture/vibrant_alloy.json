@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:vibrant_alloy_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:vibrant_alloy_essence"
   }
 }

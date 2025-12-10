@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:starmetal_seeds"
-  },
-  "secondaryOutput": {
     "count": 2,
     "item": "mysticalagriculture:starmetal_essence"
   }

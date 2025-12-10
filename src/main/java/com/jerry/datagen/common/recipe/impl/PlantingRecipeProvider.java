@@ -27,49 +27,41 @@ public class PlantingRecipeProvider implements ISubRecipeProvider {
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.OAK_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.OAK_SAPLING),
                 new ItemStack(Items.OAK_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/oak_sapling"));
         // Dark Oak
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.DARK_OAK_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.DARK_OAK_SAPLING),
                 new ItemStack(Items.DARK_OAK_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/dark_oak_sapling"));
         // Spruce
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.SPRUCE_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.SPRUCE_SAPLING),
                 new ItemStack(Items.SPRUCE_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/spruce_sapling"));
         // Birch
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.BIRCH_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.BIRCH_SAPLING),
                 new ItemStack(Items.BIRCH_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/birch_sapling"));
         // Jungle
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.JUNGLE_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.JUNGLE_SAPLING),
                 new ItemStack(Items.JUNGLE_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/jungle_sapling"));
         // Acacia
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.ACACIA_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.ACACIA_SAPLING),
                 new ItemStack(Items.ACACIA_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/acacia_sapling"));
         // Mangrove
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.MANGROVE_PROPAGULE),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.MANGROVE_PROPAGULE),
                 new ItemStack(Items.MANGROVE_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/mangrove_propagule"));
         // Cherry
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.CHERRY_SAPLING),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.CHERRY_SAPLING),
                 new ItemStack(Items.CHERRY_LOG, 6)).build(consumer, Mekmm.rl(basePath + "sapling/cherry_sapling"));
 
         // Flower
@@ -132,7 +124,6 @@ public class PlantingRecipeProvider implements ISubRecipeProvider {
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.TORCHFLOWER_SEEDS),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.TORCHFLOWER_SEEDS),
                 new ItemStack(Items.TORCHFLOWER)).build(consumer, Mekmm.rl(basePath + "flower/torchflower"));
         // 粉红色花簇
         PlantingStationRecipeBuilder.planting(
@@ -164,7 +155,6 @@ public class PlantingRecipeProvider implements ISubRecipeProvider {
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.PITCHER_POD),
                 IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                new ItemStack(Items.PITCHER_POD),
                 new ItemStack(Items.PITCHER_PLANT)).build(consumer, Mekmm.rl(basePath + "flower/pitcher_plant"));
 
         // Misc

@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:hepatizon_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:hepatizon_essence"
   }
 }

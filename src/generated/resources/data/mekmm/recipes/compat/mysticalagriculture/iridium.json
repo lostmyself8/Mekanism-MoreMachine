@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:iridium_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:iridium_essence"
   }
 }

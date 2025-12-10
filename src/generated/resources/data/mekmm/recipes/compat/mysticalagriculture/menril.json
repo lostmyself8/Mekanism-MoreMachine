@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:menril_seeds"
-  },
-  "secondaryOutput": {
     "count": 4,
     "item": "mysticalagriculture:menril_essence"
   }

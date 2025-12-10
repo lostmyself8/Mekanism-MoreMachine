@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:refined_obsidian_seeds"
-  },
-  "secondaryOutput": {
     "count": 2,
     "item": "mysticalagriculture:refined_obsidian_essence"
   }

@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:lead_seeds"
-  },
-  "secondaryOutput": {
     "count": 3,
     "item": "mysticalagriculture:lead_essence"
   }

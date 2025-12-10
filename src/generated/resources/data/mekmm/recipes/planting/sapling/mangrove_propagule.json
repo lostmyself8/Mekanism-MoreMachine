@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:mangrove_propagule"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "minecraft:mangrove_log"
   }

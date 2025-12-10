@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:niotic_crystal_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:niotic_crystal_essence"
   }
 }

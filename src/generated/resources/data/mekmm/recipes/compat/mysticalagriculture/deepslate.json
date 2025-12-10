@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:deepslate_seeds"
-  },
-  "secondaryOutput": {
     "count": 5,
     "item": "mysticalagriculture:deepslate_essence"
   }

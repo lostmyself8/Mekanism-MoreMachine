@@ -10,7 +10,7 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "count": 3,
+    "count": 5,
     "item": "minecraft:cactus"
   }
 }

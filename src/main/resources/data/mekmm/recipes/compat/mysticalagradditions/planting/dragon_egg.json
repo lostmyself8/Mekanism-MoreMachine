@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:dragon_egg_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:dragon_egg_essence"
   }
 }

@@ -20,7 +20,7 @@
     "item": "kaleidoscope_cookery:red_chili"
   },
   "secondaryOutput": {
-    "count": 1,
     "item": "kaleidoscope_cookery:green_chili"
-  }
+  },
+  "secondaryChance": 0.95
 }

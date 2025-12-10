@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:soularium_seeds"
-  },
-  "secondaryOutput": {
     "count": 2,
     "item": "mysticalagriculture:soularium_essence"
   }

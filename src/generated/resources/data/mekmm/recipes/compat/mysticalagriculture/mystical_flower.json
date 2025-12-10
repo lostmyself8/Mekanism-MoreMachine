@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:mystical_flower_seeds"
-  },
-  "secondaryOutput": {
     "count": 4,
     "item": "mysticalagriculture:mystical_flower_essence"
   }

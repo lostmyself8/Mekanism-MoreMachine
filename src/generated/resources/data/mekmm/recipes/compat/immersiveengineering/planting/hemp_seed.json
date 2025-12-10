@@ -16,10 +16,6 @@
     }
   },
   "mainOutput": {
-    "count": 3,
-    "item": "immersiveengineering:seed"
-  },
-  "secondaryOutput": {
     "item": "immersiveengineering:hemp_fiber"
   }
 }

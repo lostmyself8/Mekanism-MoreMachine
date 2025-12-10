@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:netherite_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:netherite_essence"
   }
 }

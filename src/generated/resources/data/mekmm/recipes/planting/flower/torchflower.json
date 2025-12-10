@@ -10,9 +10,6 @@
     }
   },
   "mainOutput": {
-    "item": "minecraft:torchflower_seeds"
-  },
-  "secondaryOutput": {
     "item": "minecraft:torchflower"
   }
 }

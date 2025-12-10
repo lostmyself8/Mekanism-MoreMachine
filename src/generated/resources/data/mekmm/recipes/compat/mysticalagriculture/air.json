@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:air_seeds"
-  },
-  "secondaryOutput": {
     "count": 5,
     "item": "mysticalagriculture:air_essence"
   }

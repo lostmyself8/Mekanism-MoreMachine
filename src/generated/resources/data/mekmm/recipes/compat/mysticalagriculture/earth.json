@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:earth_seeds"
-  },
-  "secondaryOutput": {
     "count": 5,
     "item": "mysticalagriculture:earth_essence"
   }

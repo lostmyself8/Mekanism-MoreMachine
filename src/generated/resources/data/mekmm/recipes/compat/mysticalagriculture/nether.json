@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:nether_seeds"
-  },
-  "secondaryOutput": {
     "count": 4,
     "item": "mysticalagriculture:nether_essence"
   }

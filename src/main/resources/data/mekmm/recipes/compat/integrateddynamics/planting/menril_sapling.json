@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "integrateddynamics:menril_sapling"
-  },
-  "secondaryOutput": {
     "count": 6,
     "item": "integrateddynamics:menril_log"
   }

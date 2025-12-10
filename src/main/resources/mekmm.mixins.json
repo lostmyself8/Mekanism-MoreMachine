@@ -7,10 +7,11 @@
   "mixins": [
     "MixinPacketHandler",
     "MixinRecipeCacheLookupMonitor",
-    "client.jei.MixinMekanismJEI",
     "recipe.MixinMekanismRecipeType"
   ],
   "client": [
+    "client.jei.MixinMekanismJEI",
+    "client.render.MixinRenderTickHandler"
   ],
   "injectors": {
     "defaultRequire": 1

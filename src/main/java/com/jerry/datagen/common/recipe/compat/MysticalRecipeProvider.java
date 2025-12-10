@@ -28,7 +28,6 @@ public class MysticalRecipeProvider extends CompatRecipeProvider {
             PlantingStationRecipeBuilder.planting(
                     IngredientCreatorAccess.item().from(crop.getSeedsItem()),
                     IngredientCreatorAccess.gas().from(MoreMachineGas.NUTRIENT_SOLUTION, 1),
-                    new ItemStack(crop.getSeedsItem()),
                     new ItemStack(crop.getEssenceItem(), switch (crop.getTier().getValue()) {
                         case 1 -> 5;
                         case 2 -> 4;

@@ -16,10 +16,11 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "count": 3,
-    "item": "farmersdelight:cabbage_seeds"
+    "count": 4,
+    "item": "farmersdelight:cabbage"
   },
   "secondaryOutput": {
-    "item": "farmersdelight:cabbage"
-  }
+    "item": "farmersdelight:cabbage_seeds"
+  },
+  "secondaryChance": 0.95
 }

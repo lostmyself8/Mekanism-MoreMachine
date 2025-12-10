@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:nitro_crystal_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:nitro_crystal_essence"
   }
 }

@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:nature_seeds"
-  },
-  "secondaryOutput": {
     "count": 4,
     "item": "mysticalagriculture:nature_essence"
   }

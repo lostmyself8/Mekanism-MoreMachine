@@ -5,6 +5,7 @@ import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.gas.GasStack;
+import mekanism.client.SpecialColors;
 import mekanism.client.gui.element.bar.GuiBar;
 import mekanism.client.gui.element.bar.GuiEmptyBar;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
@@ -16,10 +17,13 @@ import mekanism.client.jei.MekanismJEI;
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.prefab.TileEntityAdvancedElectricMachine;
+import mekanism.common.util.text.TextUtils;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -60,18 +64,18 @@ public class PlantingRecipeCategory extends BaseRecipeCategory<PlantingRecipe> {
         }
         initChemical(builder, MekanismJEI.TYPE_GAS, RecipeIngredientRole.INPUT, chemicalInput, scaledGases);
 
-        List<ItemStack> firstOutputs = new ArrayList<>();
-        List<ItemStack> secondOutputs = new ArrayList<>();
-        for (PlantingRecipe.PlantingStationRecipeOutput output : recipe.getOutputDefinition()) {
-            firstOutputs.add(output.first());
-            secondOutputs.add(output.second());
-        }
-
-        initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 32, output.getY() + 20, firstOutputs);
-        if (!secondOutputs.stream().allMatch(ItemStack::isEmpty)) {
-            initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 48, output.getY() + 20, secondOutputs);
-        }
+        initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 32, output.getY() + 20, recipe.getMainOutputDefinition());
+        initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 48, output.getY() + 20, recipe.getSecondaryOutputDefinition());
 
         initItem(builder, RecipeIngredientRole.CATALYST, extra, gasItemProviders);
+    }
+
+    @Override
+    public void draw(PlantingRecipe recipe, IRecipeSlotsView recipeSlotView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        super.draw(recipe, recipeSlotView, guiGraphics, mouseX, mouseY);
+        double secondaryChance = recipe.getSecondaryChance();
+        if (secondaryChance > 0) {
+            guiGraphics.drawString(getFont(), TextUtils.getPercent(secondaryChance), 104, 41, SpecialColors.TEXT_TITLE.argb(), false);
+        }
     }
 }

@@ -10,9 +10,7 @@
     "gas": "mekmm:nutrient_solution"
   },
   "mainOutput": {
-    "item": "minecraft:pumpkin_seeds"
-  },
-  "secondaryOutput": {
+    "count": 2,
     "item": "minecraft:pumpkin"
   }
 }

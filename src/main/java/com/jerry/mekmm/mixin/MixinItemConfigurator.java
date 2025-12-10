@@ -20,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+// BYD这里会出现映射错误，将refmap设为false，在开发环境正常，在开发环境之外就不正常了。
+// 所以主动提供refmap.json，防止缺失映射；同时避免将refmap设为默认值，导致编译器报错。
+// 如再有类似情况可将refmap删除打包后将自动生成的refmap.json文件复制过来，再将refmap加回来。
 @Mixin(value = ItemConfigurator.class, remap = false)
 public class MixinItemConfigurator {
 

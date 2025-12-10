@@ -17,8 +17,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 @NothingNullByDefault
 public class PlantingIRecipe extends PlantingRecipe {
 
-    public PlantingIRecipe(ResourceLocation id, ItemStackIngredient itemInput, ChemicalStackIngredient.GasStackIngredient gasInput, ItemStack mainOutput, ItemStack secondaryOutput) {
-        super(id, itemInput, gasInput, mainOutput, secondaryOutput);
+    public PlantingIRecipe(ResourceLocation id, ItemStackIngredient itemInput, ChemicalStackIngredient.GasStackIngredient gasInput, ItemStack mainOutput, ItemStack secondaryOutput, double secondaryChance) {
+        super(id, itemInput, gasInput, mainOutput, secondaryOutput, secondaryChance);
     }
 
     @Override

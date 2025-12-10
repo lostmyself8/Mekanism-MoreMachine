@@ -16,9 +16,6 @@
     }
   },
   "mainOutput": {
-    "item": "mysticalagriculture:manyullyn_seeds"
-  },
-  "secondaryOutput": {
     "item": "mysticalagriculture:manyullyn_essence"
   }
 }
