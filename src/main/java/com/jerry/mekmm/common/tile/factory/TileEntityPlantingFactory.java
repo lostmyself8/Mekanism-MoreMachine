@@ -1,9 +1,8 @@
 package com.jerry.mekmm.common.tile.factory;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
-import com.jerry.mekmm.api.recipes.cache.MoreMachineTwoInputCachedRecipe;
-import com.jerry.mekmm.api.recipes.cache.PlantingStationCachedRecipe;
-import com.jerry.mekmm.api.recipes.outputs.MoreMachineOutputHelper;
+import com.jerry.mekmm.api.recipes.cache.PlantingCachedRecipe;
+import com.jerry.mekmm.api.recipes.cache.PlantingNoPerTickUsageCacheRecipe;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
 import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlot;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
@@ -19,6 +18,7 @@ import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
+import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
@@ -26,6 +26,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
+import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.Mekanism;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
@@ -59,6 +60,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +71,19 @@ import java.util.Set;
 public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<PlantingRecipe> implements IBoundingBlock, IHasDumpButton, ConstantUsageRecipeLookupHandler,
                                        ItemChemicalRecipeLookupHandler<PlantingRecipe> {
 
-    protected static final DoubleInputRecipeCache.CheckRecipeType<ItemStack, ChemicalStack, PlantingRecipe, ItemStack> OUTPUT_CHECK = (recipe, input, extra, output) -> InventoryUtils.areItemsStackable(recipe.getOutput(input, extra).first(), output);
+    protected static final DoubleInputRecipeCache.CheckRecipeType<ItemStack, ChemicalStack, PlantingRecipe, PackedStack> OUTPUT_CHECK = (recipe, itemStack, chemicalStack, output) -> {
+        ChanceOutput chanceOutput = recipe.getOutput(itemStack, chemicalStack);
+        ItemStack firstStack = output.firstStack;
+        ItemStack secondaryStack = output.secondaryStack;
+        if (InventoryUtils.areItemsStackable(chanceOutput.getMainOutput(), firstStack)) {
+            if (secondaryStack.isEmpty()) {
+                return true;
+            }
+            ItemStack secondaryOutput = chanceOutput.getMaxSecondaryOutput();
+            return secondaryOutput.isEmpty() || ItemStack.isSameItemSameComponents(secondaryOutput, secondaryStack);
+        }
+        return false;
+    };
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
@@ -84,10 +98,11 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
 
     private IInputHandler<@NotNull ItemStack>[] inputHandlers;
     private final ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
-    private IOutputHandler<PlantingRecipe.PlantingStationRecipeOutput>[] outputHandlers;
+    private IOutputHandler<ChanceOutput>[] outputHandlers;
 
     ChemicalInventorySlot chemicalSlot;
 
+    @Getter
     IChemicalTank chemicalTank;
 
     private final ChemicalUsageMultiplier chemicalUsageMultiplier;
@@ -144,7 +159,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
             builder.addSlot(secondaryOutputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_SPACE_IN_OUTPUT,
                     getWarningCheck(TileEntityPlantingStation.NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR, index)));
             inputHandlers[i] = InputHelper.getInputHandler(inputSlot, RecipeError.NOT_ENOUGH_INPUT);
-            outputHandlers[i] = MoreMachineOutputHelper.getOutputHandler(outputSlot, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, secondaryOutputSlot,
+            outputHandlers[i] = OutputHelper.getOutputHandler(outputSlot, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, secondaryOutputSlot,
                     TileEntityPlantingStation.NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR);
             processInfoSlots[i] = new ProcessInfo(i, inputSlot, outputSlot, secondaryOutputSlot);
         }
@@ -153,10 +168,6 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
 
     protected boolean useStatisticalMechanics() {
         return MekanismConfig.usage.randomizedConsumption.get();
-    }
-
-    public IChemicalTank getChemicalTank() {
-        return chemicalTank;
     }
 
     @Nullable
@@ -184,10 +195,10 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     public @NotNull CachedRecipe<PlantingRecipe> createNewCachedRecipe(@NotNull PlantingRecipe recipe, int cacheIndex) {
         CachedRecipe<PlantingRecipe> cachedRecipe;
         if (recipe.perTickUsage()) {
-            cachedRecipe = PlantingStationCachedRecipe.planting(recipe, recheckAllRecipeErrors[cacheIndex], inputHandlers[cacheIndex], chemicalInputHandler,
+            cachedRecipe = PlantingCachedRecipe.planting(recipe, recheckAllRecipeErrors[cacheIndex], inputHandlers[cacheIndex], chemicalInputHandler,
                     chemicalUsageMultiplier, used -> usedSoFar[cacheIndex] = used, outputHandlers[cacheIndex]);
         } else {
-            cachedRecipe = MoreMachineTwoInputCachedRecipe.planting(recipe, recheckAllRecipeErrors[cacheIndex], inputHandlers[cacheIndex], chemicalInputHandler, outputHandlers[cacheIndex]);
+            cachedRecipe = PlantingNoPerTickUsageCacheRecipe.planting(recipe, recheckAllRecipeErrors[cacheIndex], inputHandlers[cacheIndex], chemicalInputHandler, outputHandlers[cacheIndex]);
         }
         return cachedRecipe
                 // 设置错误更改
@@ -211,8 +222,8 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
 
     @Override
     protected @Nullable PlantingRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @Nullable IInventorySlot secondaryOutputSlot) {
-        // TODO: Give it something that is not empty when we don't have a stored gas stack for getting the output?
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chemicalTank.getStack(), outputSlot.getStack(), OUTPUT_CHECK);
+        ItemStack extra = secondaryOutputSlot == null ? ItemStack.EMPTY : secondaryOutputSlot.getStack();
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chemicalTank.getStack(), new PackedStack(outputSlot.getStack(), extra), OUTPUT_CHECK);
     }
 
     @Override
@@ -303,5 +314,9 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     @Override
     public void dump() {
         chemicalTank.setEmpty();
+    }
+
+    protected record PackedStack(ItemStack firstStack, ItemStack secondaryStack) {
+
     }
 }

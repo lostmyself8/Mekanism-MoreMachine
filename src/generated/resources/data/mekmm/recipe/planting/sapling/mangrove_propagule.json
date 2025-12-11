@@ -9,12 +9,8 @@
     "item": "minecraft:mangrove_propagule"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:mangrove_propagule"
-  },
-  "per_tick_usage": true,
-  "secondary_output": {
     "count": 6,
     "id": "minecraft:mangrove_log"
-  }
+  },
+  "per_tick_usage": true
 }

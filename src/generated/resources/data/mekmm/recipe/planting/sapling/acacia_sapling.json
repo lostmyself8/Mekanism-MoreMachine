@@ -9,12 +9,8 @@
     "item": "minecraft:acacia_sapling"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:acacia_sapling"
-  },
-  "per_tick_usage": true,
-  "secondary_output": {
     "count": 6,
     "id": "minecraft:acacia_log"
-  }
+  },
+  "per_tick_usage": true
 }

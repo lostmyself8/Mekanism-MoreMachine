@@ -15,12 +15,13 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "main_output": {
-    "count": 1,
-    "id": "kaleidoscope_cookery:lettuce_seed"
-  },
-  "secondary_output": {
     "count": 3,
     "id": "kaleidoscope_cookery:lettuce"
   },
-  "per_tick_usage":true
+  "secondary_output": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:lettuce_seed"
+  },
+  "secondaryChance": 0.95,
+  "per_tick_usage": true
 }

@@ -21,11 +21,13 @@ public class MoreMachineConfig {
     public static final MoreMachineGeneralConfig general = new MoreMachineGeneralConfig();
     public static final MoreMachineStorageConfig storage = new MoreMachineStorageConfig();
     public static final MoreMachineUsageConfig usage = new MoreMachineUsageConfig();
+    public static final MoreMachineTierConfig tier = new MoreMachineTierConfig();
     public static final MoreMachineGeneratorsConfig generators = new MoreMachineGeneratorsConfig();
 
     public static void registerConfigs(ModContainer modContainer) {
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, general);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, storage);
+        MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, tier);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, usage);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, generators);
     }

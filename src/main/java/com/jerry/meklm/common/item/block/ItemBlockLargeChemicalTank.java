@@ -1,6 +1,5 @@
 package com.jerry.meklm.common.item.block;
 
-import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
 import mekanism.api.RelativeSide;
@@ -49,10 +48,6 @@ public class ItemBlockLargeChemicalTank<TILE extends TileEntityLargeChemicalTank
         super(block, true, properties
                 .component(MekanismDataComponents.DUMP_MODE, TileEntityChemicalTank.GasMode.IDLE)
                 .component(MekanismDataComponents.SIDE_CONFIG, SIDE_CONFIG));
-    }
-
-    public ILargeChemicalTankTier getILargeTier() {
-        return null;
     }
 
     @Override

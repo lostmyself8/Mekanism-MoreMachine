@@ -15,12 +15,13 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "main_output": {
-    "count": 1,
-    "id": "farmersdelight:tomato_seeds"
-  },
-  "secondary_output": {
     "count": 3,
     "id": "farmersdelight:tomato"
   },
-  "per_tick_usage":true
+  "secondary_output": {
+    "count": 1,
+    "id": "farmersdelight:tomato_seeds"
+  },
+  "secondaryChance": 0.95,
+  "per_tick_usage": true
 }

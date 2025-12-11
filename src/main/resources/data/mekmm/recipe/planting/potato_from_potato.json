@@ -12,5 +12,10 @@
     "count": 9,
     "id": "minecraft:potato"
   },
+  "secondary_output": {
+    "count": 1,
+    "id": "minecraft:poisonous_potato"
+  },
+  "secondary_chance": 0.27,
   "per_tick_usage": true
 }

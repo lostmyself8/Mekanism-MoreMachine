@@ -15,11 +15,7 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "main_output": {
-    "count": 1,
-    "id": "ars_nouveau:magebloom_crop"
-  },
-  "secondary_output": {
-    "count": 1,
+    "count": 3,
     "id": "ars_nouveau:magebloom"
   },
   "per_tick_usage":true

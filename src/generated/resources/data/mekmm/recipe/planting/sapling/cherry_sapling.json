@@ -9,12 +9,8 @@
     "item": "minecraft:cherry_sapling"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:cherry_sapling"
-  },
-  "per_tick_usage": true,
-  "secondary_output": {
     "count": 6,
     "id": "minecraft:cherry_log"
-  }
+  },
+  "per_tick_usage": true
 }

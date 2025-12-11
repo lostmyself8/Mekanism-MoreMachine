@@ -3,7 +3,6 @@ package com.jerry.meklm.common.tier;
 import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 
 import mekanism.api.tier.BaseTier;
-import mekanism.api.tier.ITier;
 import mekanism.common.config.value.CachedLongValue;
 
 import net.minecraft.util.StringRepresentable;
@@ -14,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public enum MaxChemicalTankTier implements ITier, StringRepresentable, ILargeChemicalTankTier {
+public enum MaxChemicalTankTier implements StringRepresentable, ILargeChemicalTankTier {
 
     BASIC(BaseTier.BASIC, 4 * 64 * FluidType.BUCKET_VOLUME, 4 * FluidType.BUCKET_VOLUME),
     ADVANCED(BaseTier.ADVANCED, 4 * 256 * FluidType.BUCKET_VOLUME, 4 * 16 * FluidType.BUCKET_VOLUME),
@@ -54,6 +53,11 @@ public enum MaxChemicalTankTier implements ITier, StringRepresentable, ILargeChe
     @Override
     public long getOutput() {
         return outputReference == null ? getBaseOutput() : outputReference.getOrDefault();
+    }
+
+    @Override
+    public String getType() {
+        return "Max";
     }
 
     /**

@@ -25,7 +25,6 @@ public class RecipeProviderUtil {
             build(consumer, PlantingStationRecipeBuilder.planting(
                     IngredientCreatorAccess.item().from(crop.getSeedsItem()),
                     IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.UU_MATTER.asStack(1)),
-                    new ItemStack(crop.getSeedsItem()),
                     new ItemStack(crop.getEssenceItem()),
                     true), basePath + "compat/myth" + crop.getName(), condition);
         }

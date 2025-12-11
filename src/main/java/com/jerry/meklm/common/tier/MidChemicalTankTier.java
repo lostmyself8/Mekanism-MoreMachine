@@ -3,7 +3,6 @@ package com.jerry.meklm.common.tier;
 import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 
 import mekanism.api.tier.BaseTier;
-import mekanism.api.tier.ITier;
 import mekanism.common.config.value.CachedLongValue;
 
 import net.minecraft.util.StringRepresentable;
@@ -14,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public enum MidChemicalTankTier implements ITier, StringRepresentable, ILargeChemicalTankTier {
+public enum MidChemicalTankTier implements StringRepresentable, ILargeChemicalTankTier {
 
     BASIC(BaseTier.BASIC, (long) (2.5 * 64 * FluidType.BUCKET_VOLUME), (long) (2.5 * FluidType.BUCKET_VOLUME)),
     ADVANCED(BaseTier.ADVANCED, (long) (2.5 * 256 * FluidType.BUCKET_VOLUME), (long) (2.5 * 16 * FluidType.BUCKET_VOLUME)),
@@ -54,6 +53,11 @@ public enum MidChemicalTankTier implements ITier, StringRepresentable, ILargeChe
     @Override
     public long getOutput() {
         return outputReference == null ? getBaseOutput() : outputReference.getOrDefault();
+    }
+
+    @Override
+    public String getType() {
+        return "Mid";
     }
 
     /**

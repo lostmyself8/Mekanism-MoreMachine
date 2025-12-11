@@ -9,12 +9,8 @@
     "item": "minecraft:dark_oak_sapling"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:dark_oak_sapling"
-  },
-  "per_tick_usage": true,
-  "secondary_output": {
     "count": 6,
     "id": "minecraft:dark_oak_log"
-  }
+  },
+  "per_tick_usage": true
 }

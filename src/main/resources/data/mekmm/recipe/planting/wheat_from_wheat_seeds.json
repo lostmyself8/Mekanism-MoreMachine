@@ -9,12 +9,13 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:wheat_seeds"
-  },
-  "secondary_output": {
     "count": 5,
     "id": "minecraft:wheat"
   },
-  "per_tick_usage":true
+  "secondary_output": {
+    "count": 1,
+    "id": "minecraft:wheat_seeds"
+  },
+  "secondary_chance": 0.8,
+  "per_tick_usage": true
 }

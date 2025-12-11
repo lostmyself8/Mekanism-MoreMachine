@@ -1,10 +1,8 @@
 package com.jerry.mekmm.common.tile.machine;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
-import com.jerry.mekmm.api.recipes.PlantingRecipe.PlantingStationRecipeOutput;
-import com.jerry.mekmm.api.recipes.cache.MoreMachineTwoInputCachedRecipe;
-import com.jerry.mekmm.api.recipes.cache.PlantingStationCachedRecipe;
-import com.jerry.mekmm.api.recipes.outputs.MoreMachineOutputHelper;
+import com.jerry.mekmm.api.recipes.cache.PlantingCachedRecipe;
+import com.jerry.mekmm.api.recipes.cache.PlantingNoPerTickUsageCacheRecipe;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -18,6 +16,7 @@ import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.functions.ConstantPredicates;
+import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
@@ -25,6 +24,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
+import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
@@ -87,7 +87,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private final ChemicalUsageMultiplier chemicalUsageMultiplier;
-    private final IOutputHandler<PlantingStationRecipeOutput> outputHandler;
+    private final IOutputHandler<ChanceOutput> outputHandler;
     private final IInputHandler<ItemStack> itemInputHandler;
     private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
     // 化学品存储槽
@@ -121,7 +121,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
 
         itemInputHandler = InputHelper.getInputHandler(inputSlot, RecipeError.NOT_ENOUGH_INPUT);
         chemicalInputHandler = InputHelper.getConstantInputHandler(chemicalTank);
-        outputHandler = MoreMachineOutputHelper.getOutputHandler(mainOutputSlot, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, secondaryOutputSlot, NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR);
+        outputHandler = OutputHelper.getOutputHandler(mainOutputSlot, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, secondaryOutputSlot, NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR);
 
         baseTotalUsage = baseTicksRequired;
         if (useStatisticalMechanics()) {
@@ -196,10 +196,10 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     public @NotNull CachedRecipe<PlantingRecipe> createNewCachedRecipe(@NotNull PlantingRecipe recipe, int cacheIndex) {
         CachedRecipe<PlantingRecipe> cachedRecipe;
         if (recipe.perTickUsage()) {
-            cachedRecipe = PlantingStationCachedRecipe.planting(recipe, recheckAllRecipeErrors, itemInputHandler, chemicalInputHandler, chemicalUsageMultiplier,
+            cachedRecipe = PlantingCachedRecipe.planting(recipe, recheckAllRecipeErrors, itemInputHandler, chemicalInputHandler, chemicalUsageMultiplier,
                     used -> usedSoFar = used, outputHandler);
         } else {
-            cachedRecipe = MoreMachineTwoInputCachedRecipe.planting(recipe, recheckAllRecipeErrors, itemInputHandler, chemicalInputHandler, outputHandler);
+            cachedRecipe = PlantingNoPerTickUsageCacheRecipe.planting(recipe, recheckAllRecipeErrors, itemInputHandler, chemicalInputHandler, outputHandler);
         }
         return cachedRecipe
                 // 设置错误更改

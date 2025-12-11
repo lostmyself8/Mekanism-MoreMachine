@@ -9,12 +9,12 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:beetroot_seeds"
-  },
-  "secondary_output": {
     "count": 4,
     "id": "minecraft:beetroot"
   },
-  "per_tick_usage":true
+  "secondaryOutput": {
+    "item": "minecraft:poisonous_potato"
+  },
+  "secondaryChance": 0.27,
+  "per_tick_usage": true
 }

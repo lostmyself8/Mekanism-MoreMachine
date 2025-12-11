@@ -2,6 +2,9 @@ package com.jerry.mekmm.common.util;
 
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 
+import com.jerry.meklm.common.tier.MaxChemicalTankTier;
+import com.jerry.meklm.common.tier.MidChemicalTankTier;
+
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 
@@ -22,6 +25,16 @@ public class MoreMachineEnumUtils {
      * Cached value of {@link AdvancedFactoryType#values()}. DO NOT MODIFY THIS LIST.
      */
     public static final AdvancedFactoryType[] ADVANCED_FACTORY_TYPES = AdvancedFactoryType.values();
+
+    /**
+     * Cached value of {@link MaxChemicalTankTier#values()}. DO NOT MODIFY THIS LIST.
+     */
+    public static final MaxChemicalTankTier[] MAX_CHEMICAL_TANK_TIERS = MaxChemicalTankTier.values();
+
+    /**
+     * Cached value of {@link MidChemicalTankTier#values()}. DO NOT MODIFY THIS LIST.
+     */
+    public static final MidChemicalTankTier[] MID_CHEMICAL_TANK_TIERS = MidChemicalTankTier.values();
 
     /**
      * Cached value of {@link EMFactoryTier()}(If you load it). DO NOT MODIFY THIS LIST.

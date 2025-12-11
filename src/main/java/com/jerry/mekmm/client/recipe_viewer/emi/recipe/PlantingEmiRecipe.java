@@ -3,7 +3,6 @@ package com.jerry.mekmm.client.recipe_viewer.emi.recipe;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.common.tile.machine.TileEntityPlantingStation;
 
-import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 import mekanism.client.gui.element.bar.GuiEmptyBar;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
@@ -18,11 +17,11 @@ import mekanism.common.inventory.container.slot.SlotOverlay;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
+import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PlantingEmiRecipe extends MekanismEmiHolderRecipe<PlantingRecipe> {
@@ -33,20 +32,13 @@ public class PlantingEmiRecipe extends MekanismEmiHolderRecipe<PlantingRecipe> {
         super(category, recipeHolder);
         addInputDefinition(recipe.getItemInput());
         super.addInputDefinition(recipe.getChemicalInput(), recipe.perTickUsage() ? PROCESS_TIME : 1);
-        List<ItemStack> firstOutput = new ArrayList<>();
-        List<ItemStack> secondOutput = new ArrayList<>();
-        for (PlantingRecipe.PlantingStationRecipeOutput output : recipe.getOutputDefinition()) {
-            firstOutput.add(output.first());
-            secondOutput.add(output.second());
+        addItemOutputDefinition(recipe.getMainOutputDefinition());
+        List<ItemStack> secondaryOutputDefinition = recipe.getSecondaryOutputDefinition();
+        List<EmiStack> list = new ArrayList<>(secondaryOutputDefinition.size());
+        for (ItemStack itemStack : secondaryOutputDefinition) {
+            list.add(EmiStack.of(itemStack).setChance((float) recipe.getSecondaryChance()));
         }
-        // 第一个输出一定有
-        addItemOutputDefinition(firstOutput);
-        // 第二个输出不一定有
-        if (secondOutput.stream().allMatch(ConstantPredicates.ITEM_EMPTY)) {
-            addOutputDefinition(Collections.emptyList());
-        } else {
-            addItemOutputDefinition(secondOutput);
-        }
+        addOutputDefinition(list);
         addCatalsyst(recipe.getChemicalInput());
     }
 

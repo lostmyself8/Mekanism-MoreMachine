@@ -1,5 +1,8 @@
 package com.jerry.meklm.common.content.blocktype;
 
+import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
+import com.jerry.meklm.common.tier.MidChemicalTankTier;
+
 import mekanism.common.util.EnumUtils;
 import mekanism.common.util.VoxelShapeUtils;
 
@@ -605,6 +608,10 @@ public class LargeMachineBlockShapes {
                 box(2, 6, 28, 5, 10, 29),
                 box(5, 21, 28, 11, 27, 31),
                 box(4, 20, 31, 12, 28, 32)).move(0, 1, 0), LARGE_HEAT_GENERATOR);
+    }
+
+    public static VoxelShape[] getLargeChemicalTank(ILargeChemicalTankTier tier) {
+        return tier instanceof MidChemicalTankTier ? MID_CHEMICAL_TANK : MAX_CHEMICAL_TANK;
     }
 
     private LargeMachineBlockShapes() {}

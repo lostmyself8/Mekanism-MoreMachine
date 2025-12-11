@@ -32,11 +32,6 @@ public class ItemBlockMidChemicalTank extends ItemBlockLargeChemicalTank<TileEnt
     }
 
     @Override
-    public MidChemicalTankTier getILargeTier() {
-        return getTier();
-    }
-
-    @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         MidChemicalTankTier tier = getTier();
         StorageUtils.addStoredSubstance(stack, tooltip, false);

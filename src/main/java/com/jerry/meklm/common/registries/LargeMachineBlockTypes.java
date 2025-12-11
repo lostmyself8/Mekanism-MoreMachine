@@ -1,5 +1,6 @@
 package com.jerry.meklm.common.registries;
 
+import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 import com.jerry.meklm.common.content.blocktype.LargeMachineBlockShapes;
 import com.jerry.meklm.common.tier.MaxChemicalTankTier;
 import com.jerry.meklm.common.tier.MidChemicalTankTier;
@@ -16,6 +17,7 @@ import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
+import mekanism.api.Upgrade;
 import mekanism.api.math.MathUtils;
 import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.*;
@@ -44,16 +46,16 @@ public class LargeMachineBlockTypes {
 
     // TODO:看看能不能缩减成一个方法
     // Mid-Chemical Tanks
-    public static final Machine<TileEntityMidChemicalTank> BASIC_MID_CHEMICAL_TANK = createMidChemicalTank(MidChemicalTankTier.BASIC, () -> LargeMachineTileEntityTypes.BASIC_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK);
-    public static final Machine<TileEntityMidChemicalTank> ADVANCED_MID_CHEMICAL_TANK = createMidChemicalTank(MidChemicalTankTier.ADVANCED, () -> LargeMachineTileEntityTypes.ADVANCED_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK);
-    public static final Machine<TileEntityMidChemicalTank> ELITE_MID_CHEMICAL_TANK = createMidChemicalTank(MidChemicalTankTier.ELITE, () -> LargeMachineTileEntityTypes.ELITE_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ULTIMATE_MID_CHEMICAL_TANK);
-    public static final Machine<TileEntityMidChemicalTank> ULTIMATE_MID_CHEMICAL_TANK = createMidChemicalTank(MidChemicalTankTier.ULTIMATE, () -> LargeMachineTileEntityTypes.ULTIMATE_MID_CHEMICAL_TANK, null);
+    public static final Machine<TileEntityMidChemicalTank> BASIC_MID_CHEMICAL_TANK = createLargeChemicalTank(MidChemicalTankTier.BASIC, () -> LargeMachineTileEntityTypes.BASIC_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK);
+    public static final Machine<TileEntityMidChemicalTank> ADVANCED_MID_CHEMICAL_TANK = createLargeChemicalTank(MidChemicalTankTier.ADVANCED, () -> LargeMachineTileEntityTypes.ADVANCED_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK);
+    public static final Machine<TileEntityMidChemicalTank> ELITE_MID_CHEMICAL_TANK = createLargeChemicalTank(MidChemicalTankTier.ELITE, () -> LargeMachineTileEntityTypes.ELITE_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ULTIMATE_MID_CHEMICAL_TANK);
+    public static final Machine<TileEntityMidChemicalTank> ULTIMATE_MID_CHEMICAL_TANK = createLargeChemicalTank(MidChemicalTankTier.ULTIMATE, () -> LargeMachineTileEntityTypes.ULTIMATE_MID_CHEMICAL_TANK, null);
 
     // Max-Chemical Tanks
-    public static final Machine<TileEntityMaxChemicalTank> BASIC_MAX_CHEMICAL_TANK = createMaxChemicalTank(MaxChemicalTankTier.BASIC, () -> LargeMachineTileEntityTypes.BASIC_MAX_CHEMICAL_TANK, () -> LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK);
-    public static final Machine<TileEntityMaxChemicalTank> ADVANCED_MAX_CHEMICAL_TANK = createMaxChemicalTank(MaxChemicalTankTier.ADVANCED, () -> LargeMachineTileEntityTypes.ADVANCED_MAX_CHEMICAL_TANK, () -> LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK);
-    public static final Machine<TileEntityMaxChemicalTank> ELITE_MAX_CHEMICAL_TANK = createMaxChemicalTank(MaxChemicalTankTier.ELITE, () -> LargeMachineTileEntityTypes.ELITE_MAX_CHEMICAL_TANK, () -> LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK);
-    public static final Machine<TileEntityMaxChemicalTank> ULTIMATE_MAX_CHEMICAL_TANK = createMaxChemicalTank(MaxChemicalTankTier.ULTIMATE, () -> LargeMachineTileEntityTypes.ULTIMATE_MAX_CHEMICAL_TANK, null);
+    public static final Machine<TileEntityMaxChemicalTank> BASIC_MAX_CHEMICAL_TANK = createLargeChemicalTank(MaxChemicalTankTier.BASIC, () -> LargeMachineTileEntityTypes.BASIC_MAX_CHEMICAL_TANK, () -> LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK);
+    public static final Machine<TileEntityMaxChemicalTank> ADVANCED_MAX_CHEMICAL_TANK = createLargeChemicalTank(MaxChemicalTankTier.ADVANCED, () -> LargeMachineTileEntityTypes.ADVANCED_MAX_CHEMICAL_TANK, () -> LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK);
+    public static final Machine<TileEntityMaxChemicalTank> ELITE_MAX_CHEMICAL_TANK = createLargeChemicalTank(MaxChemicalTankTier.ELITE, () -> LargeMachineTileEntityTypes.ELITE_MAX_CHEMICAL_TANK, () -> LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK);
+    public static final Machine<TileEntityMaxChemicalTank> ULTIMATE_MAX_CHEMICAL_TANK = createLargeChemicalTank(MaxChemicalTankTier.ULTIMATE, () -> LargeMachineTileEntityTypes.ULTIMATE_MAX_CHEMICAL_TANK, null);
 
     // Rotary Condensentrator
     public static final Machine<TileEntityLargeRotaryCondensentrator> LARGE_ROTARY_CONDENSENTRATOR = MachineBuilder
@@ -118,7 +120,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, MekanismLang.DESCRIPTION_SOLAR_NEUTRON_ACTIVATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
             .without(AttributeParticleFX.class)
-            .with(AttributeUpgradeSupport.SPEED_ONLY)
+            .withSupportedUpgrades(Upgrade.SPEED, Upgrade.MUFFLING)
             .withCustomShape(LargeMachineBlockShapes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM)
@@ -158,37 +160,22 @@ public class LargeMachineBlockTypes {
             .replace(Attributes.ACTIVE_MELT_LIGHT)
             .build();
 
-    private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createMidChemicalTank(MidChemicalTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {
+    private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createLargeChemicalTank(ILargeChemicalTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {
         return MachineBuilder.createMachine(tile, MekanismLang.DESCRIPTION_CHEMICAL_TANK)
                 .withGui(() -> LargeMachineContainerTypes.CHEMICAL_TANK)
-                .withCustomShape(LargeMachineBlockShapes.MID_CHEMICAL_TANK)
+                .withCustomShape(LargeMachineBlockShapes.getLargeChemicalTank(tier))
                 .with(new AttributeTier<>(tier), new AttributeUpgradeable(upgradeBlock))
                 .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM)
                 .without(AttributeParticleFX.class, AttributeStateActive.class, AttributeUpgradeSupport.class)
                 // 使用json选框会显示所有小方块，不使用则只有外轮廓。如果有倾斜模型需要使用json选框，不然可能会出现选框位置不对以及严重卡顿的情况
                 // .with(AttributeCustomSelectionBox.JSON)
-                .with(AttributeHasBounding.ABOVE_ONLY)
-                .withComputerSupport(tier, "MidChemicalTank")
+                .with(getBounding(tier))
+                .withComputerSupport(tier, tier.getType() + "ChemicalTank")
                 .build();
     }
 
-    private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createMaxChemicalTank(MaxChemicalTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {
-        return MachineBuilder.createMachine(tile, MekanismLang.DESCRIPTION_CHEMICAL_TANK)
-                .withGui(() -> LargeMachineContainerTypes.CHEMICAL_TANK)
-                .withCustomShape(LargeMachineBlockShapes.MAX_CHEMICAL_TANK)
-                .with(new AttributeTier<>(tier), new AttributeUpgradeable(upgradeBlock))
-                .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM)
-                .without(AttributeParticleFX.class, AttributeStateActive.class, AttributeUpgradeSupport.class)
-                // .with(AttributeCustomSelectionBox.JSON)
-                .withBounding(new HandleBoundingBlock() {
-
-                    @Override
-                    public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> consumer) {
-                        return consumer.accept(level, pos.above(), data) && consumer.accept(level, pos.above().above(), data);
-                    }
-                })
-                .withComputerSupport(tier, "MaxChemicalTank")
-                .build();
+    private static AttributeHasBounding getBounding(ILargeChemicalTankTier tier) {
+        return tier instanceof MidChemicalTankTier ? AttributeHasBounding.ABOVE_ONLY : MoreMachineBounding.VERTICAL_THREE_BLOCK;
     }
 
     private LargeMachineBlockTypes() {}

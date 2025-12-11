@@ -15,12 +15,13 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "main_output": {
-    "count": 2,
-    "id": "kaleidoscope_cookery:tomato_seed"
-  },
-  "secondary_output": {
     "count": 3,
     "id": "kaleidoscope_cookery:tomato"
   },
-  "per_tick_usage":true
+  "secondary_output": {
+    "count": 1,
+    "id": "kaleidoscope_cookery:tomato_seed"
+  },
+  "secondaryChance": 0.95,
+  "per_tick_usage": true
 }

@@ -14,12 +14,8 @@
     "count": 1,
     "item": "ars_nouveau:purple_archwood_sapling"
   },
-  "main_output": {
-    "count": 1,
-    "id": "ars_nouveau:purple_archwood_sapling"
-  },
   "per_tick_usage": true,
-  "secondary_output": {
+  "main_output": {
     "count": 6,
     "id": "ars_nouveau:purple_archwood_log"
   }

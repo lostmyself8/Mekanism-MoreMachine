@@ -1,8 +1,11 @@
 package com.jerry.mekmm.api.recipes.cache;
 
+import com.jerry.mekmm.api.recipes.PlantingRecipe;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.recipes.ItemStackChemicalToObjectRecipe;
+import mekanism.api.functions.ConstantPredicates;
+import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
 import mekanism.api.recipes.cache.TwoInputCachedRecipe;
@@ -26,10 +29,10 @@ import java.util.function.*;
  * @since 10.7.0
  */
 @NothingNullByDefault
-public class MMItemStackConstantChemicalToObjectCachedRecipe<OUTPUT, RECIPE extends ItemStackChemicalToObjectRecipe<OUTPUT>> extends CachedRecipe<RECIPE> {
+public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
 
-    protected final Predicate<OUTPUT> outputEmptyCheck;
-    protected final IOutputHandler<@NotNull OUTPUT> outputHandler;
+    protected final Predicate<ChanceOutput> outputEmptyCheck;
+    protected final IOutputHandler<@NotNull ChanceOutput> outputHandler;
     protected final IInputHandler<@NotNull ItemStack> itemInputHandler;
     protected final ILongInputHandler<ChemicalStack> chemicalInputHandler;
     protected final ChemicalUsageMultiplier chemicalUsage;
@@ -43,7 +46,7 @@ public class MMItemStackConstantChemicalToObjectCachedRecipe<OUTPUT, RECIPE exte
     @Nullable
     protected ChemicalStack recipeChemical;
     @Nullable
-    protected OUTPUT output;
+    protected ChanceOutput output;
 
     /**
      * @param recipe                   Recipe.
@@ -56,9 +59,9 @@ public class MMItemStackConstantChemicalToObjectCachedRecipe<OUTPUT, RECIPE exte
      * @param chemicalUsedSoFarChanged Called when the number chemical usage so far changes.
      * @param outputHandler            Output handler.
      */
-    public MMItemStackConstantChemicalToObjectCachedRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
-                                                           ILongInputHandler<ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, LongConsumer chemicalUsedSoFarChanged,
-                                                           IOutputHandler<@NotNull OUTPUT> outputHandler, Predicate<OUTPUT> outputEmptyCheck) {
+    public PlantingCachedRecipe(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
+                                ILongInputHandler<ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, LongConsumer chemicalUsedSoFarChanged,
+                                IOutputHandler<@NotNull ChanceOutput> outputHandler, Predicate<ChanceOutput> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
         this.itemInputHandler = Objects.requireNonNull(itemInputHandler, "Item input handler cannot be null.");
         this.chemicalInputHandler = Objects.requireNonNull(chemicalInputHandler, "Chemical input handler cannot be null.");
@@ -165,13 +168,18 @@ public class MMItemStackConstantChemicalToObjectCachedRecipe<OUTPUT, RECIPE exte
 
     @Override
     protected void finishProcessing(int operations) {
-        // Validate something didn't go horribly wrong
         if (recipeChemical != null && output != null && !recipeItem.isEmpty() && !recipeChemical.isEmpty() && !outputEmptyCheck.test(output)) {
-            itemInputHandler.use(recipeItem, operations);
             if (chemicalUsageMultiplier > 0) {
                 chemicalInputHandler.use(recipeChemical, operations * chemicalUsageMultiplier);
             }
             outputHandler.handleOutput(output, operations);
         }
+    }
+
+    public static PlantingCachedRecipe planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
+                                                ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
+                                                LongConsumer chemicalUsedSoFarChanged, IOutputHandler<ChanceOutput> outputHandler) {
+        return new PlantingCachedRecipe(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, chemicalUsage,
+                chemicalUsedSoFarChanged, outputHandler, ConstantPredicates.alwaysFalse());
     }
 }

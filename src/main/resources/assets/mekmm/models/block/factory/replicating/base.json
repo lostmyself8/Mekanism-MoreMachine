@@ -24,6 +24,44 @@
 			}
 		},
 		{
+			"name": "wire",
+			"from": [1, 4, 14],
+			"to": [2, 10, 15],
+			"faces": {
+				"east": {"uv": [1, 6, 2, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+				"south": {"uv": [1, 6, 2, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+				"west": {"uv": [1, 6, 2, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+			}
+		},
+		{
+			"name": "wire",
+			"from": [3, 4, 14],
+			"to": [4, 10, 15],
+			"faces": {
+				"south": {"uv": [3, 6, 4, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+				"west": {"uv": [3, 6, 4, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+			}
+		},
+		{
+			"name": "wire",
+			"from": [12, 4, 14],
+			"to": [13, 10, 15],
+			"faces": {
+				"east": {"uv": [12, 6, 13, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+				"south": {"uv": [12, 6, 13, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+			}
+		},
+		{
+			"name": "wire",
+			"from": [14, 4, 14],
+			"to": [15, 10, 15],
+			"faces": {
+				"east": {"uv": [14, 6, 15, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+				"south": {"uv": [14, 6, 15, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}},
+				"west": {"uv": [14, 6, 15, 12], "texture": "#3", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+			}
+		},
+		{
 			"name": "port_back",
 			"from": [4, 4, 15.01],
 			"to": [12, 12, 16.01],
@@ -117,44 +155,6 @@
 			}
 		},
 		{
-			"name": "wire",
-			"from": [1, 4, 14],
-			"to": [2, 10, 15],
-			"faces": {
-				"east": {"uv": [1, 6, 2, 12], "texture": "#3"},
-				"south": {"uv": [1, 6, 2, 12], "texture": "#3"},
-				"west": {"uv": [1, 6, 2, 12], "texture": "#3"}
-			}
-		},
-		{
-			"name": "wire",
-			"from": [3, 4, 14],
-			"to": [4, 10, 15],
-			"faces": {
-				"south": {"uv": [3, 6, 4, 12], "texture": "#3"},
-				"west": {"uv": [3, 6, 4, 12], "texture": "#3"}
-			}
-		},
-		{
-			"name": "wire",
-			"from": [12, 4, 14],
-			"to": [13, 10, 15],
-			"faces": {
-				"east": {"uv": [12, 6, 13, 12], "texture": "#3"},
-				"south": {"uv": [12, 6, 13, 12], "texture": "#3"}
-			}
-		},
-		{
-			"name": "wire",
-			"from": [14, 4, 14],
-			"to": [15, 10, 15],
-			"faces": {
-				"east": {"uv": [14, 6, 15, 12], "texture": "#3"},
-				"south": {"uv": [14, 6, 15, 12], "texture": "#3"},
-				"west": {"uv": [14, 6, 15, 12], "texture": "#3"}
-			}
-		},
-		{
 			"name": "connector",
 			"from": [0, 5, 14],
 			"to": [16, 6, 16],
@@ -187,15 +187,17 @@
 			"children": [0]
 		},
 		{
+			"name": "light",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [1, 2, 3, 4]
+		},
+		{
 			"name": "ports",
 			"origin": [0, 0, 0],
 			"color": 0,
-			"children": [1]
+			"children": [5]
 		},
-		2,
-		3,
-		4,
-		5,
 		6,
 		7,
 		8,

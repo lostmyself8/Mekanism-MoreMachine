@@ -21,7 +21,7 @@ public class ComponentBackedLargeChemicalTankTank extends ComponentBackedChemica
         if (!(attachedTo.getItem() instanceof ItemBlockLargeChemicalTank<?> item)) {
             throw new IllegalStateException("Attached to should always be a large chemical tank item");
         }
-        return new ComponentBackedLargeChemicalTankTank(attachedTo, tankIndex, item.getILargeTier());
+        return new ComponentBackedLargeChemicalTankTank(attachedTo, tankIndex, (ILargeChemicalTankTier) item.getTier());
     }
 
     private ComponentBackedLargeChemicalTankTank(ItemStack attachedTo, int tankIndex, ILargeChemicalTankTier tier) {

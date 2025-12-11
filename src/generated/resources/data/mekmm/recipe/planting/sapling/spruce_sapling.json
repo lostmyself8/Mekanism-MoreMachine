@@ -9,12 +9,8 @@
     "item": "minecraft:spruce_sapling"
   },
   "main_output": {
-    "count": 1,
-    "id": "minecraft:spruce_sapling"
-  },
-  "per_tick_usage": true,
-  "secondary_output": {
     "count": 6,
     "id": "minecraft:spruce_log"
-  }
+  },
+  "per_tick_usage": true
 }

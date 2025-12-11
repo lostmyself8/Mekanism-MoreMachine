@@ -10,11 +10,7 @@
   },
   "main_output": {
     "count": 1,
-    "id": "minecraft:torchflower_seeds"
-  },
-  "per_tick_usage": true,
-  "secondary_output": {
-    "count": 1,
     "id": "minecraft:torchflower"
-  }
+  },
+  "per_tick_usage": true
 }

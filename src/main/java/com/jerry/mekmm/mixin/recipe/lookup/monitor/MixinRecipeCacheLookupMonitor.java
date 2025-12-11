@@ -1,6 +1,6 @@
 package com.jerry.mekmm.mixin.recipe.lookup.monitor;
 
-import com.jerry.mekmm.api.recipes.cache.MMItemStackConstantChemicalToObjectCachedRecipe;
+import com.jerry.mekmm.api.recipes.cache.PlantingCachedRecipe;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.recipes.MekanismRecipe;
@@ -27,7 +27,7 @@ public abstract class MixinRecipeCacheLookupMonitor<RECIPE extends MekanismRecip
 
     @Inject(method = "loadSavedData", at = @At(value = "INVOKE", target = "Lmekanism/api/recipes/cache/ICachedRecipeHolder;loadSavedData(Lmekanism/api/recipes/cache/CachedRecipe;I)V"))
     public void mixinLoadSavedData(@NotNull CachedRecipe<RECIPE> cached, int cacheIndex, CallbackInfo ci) {
-        if (cached instanceof MMItemStackConstantChemicalToObjectCachedRecipe<?, ?> c &&
+        if (cached instanceof PlantingCachedRecipe c &&
                 handler instanceof ConstantUsageRecipeLookupHandler lookupHandler) {
             c.loadSavedUsageSoFar(lookupHandler.getSavedUsedSoFar(cacheIndex));
         }

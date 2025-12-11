@@ -31,8 +31,9 @@ public class IERecipeProvider extends CompatRecipeProvider {
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(IEItems.Misc.HEMP_SEEDS),
                 IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.NUTRIENT_SOLUTION.asStack(1)),
-                new ItemStack(IEItems.Misc.HEMP_SEEDS, 3),
                 new ItemStack(IEItems.Ingredients.HEMP_FIBER),
+                new ItemStack(IEItems.Misc.HEMP_SEEDS, 2),
+                0.8,
                 true).addCondition(modLoaded).build(consumer, Mekmm.rl(basePath + "planting/hemp_seed"));
 
         StamperRecipeBuilder.stamping(

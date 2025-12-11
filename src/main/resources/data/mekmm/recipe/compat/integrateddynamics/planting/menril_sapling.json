@@ -14,12 +14,8 @@
     "count": 1,
     "item": "integrateddynamics:menril_sapling"
   },
-  "main_output": {
-    "count": 1,
-    "id": "integrateddynamics:menril_sapling"
-  },
   "per_tick_usage": true,
-  "secondary_output": {
+  "main_output": {
     "count": 12,
     "id": "integrateddynamics:menril_log"
   }

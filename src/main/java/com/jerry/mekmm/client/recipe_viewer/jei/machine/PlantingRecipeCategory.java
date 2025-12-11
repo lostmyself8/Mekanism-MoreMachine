@@ -5,7 +5,6 @@ import com.jerry.mekmm.common.tile.machine.TileEntityPlantingStation;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.functions.ConstantPredicates;
 import mekanism.client.gui.element.bar.GuiBar;
 import mekanism.client.gui.element.bar.GuiEmptyBar;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
@@ -16,16 +15,17 @@ import mekanism.client.recipe_viewer.RecipeViewerUtils;
 import mekanism.client.recipe_viewer.jei.HolderRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
+import mekanism.common.util.text.TextUtils;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.placement.HorizontalAlignment;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @NothingNullByDefault
@@ -48,6 +48,19 @@ public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe>
     }
 
     @Override
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<PlantingRecipe> recipeHolder, IFocusGroup focuses) {
+        super.createRecipeExtras(builder, recipeHolder, focuses);
+        double secondaryChance = recipeHolder.value().getSecondaryChance();
+        if (secondaryChance > 0) {
+            builder.addText(TextUtils.getPercent(secondaryChance), output.getWidth() - 2, font().lineHeight)
+                    // Perform the same translations as super does
+                    .setPosition(getGuiLeft() + output.getRelativeX() + 1, getGuiTop() + output.getRelativeBottom() + 1)
+                    .setTextAlignment(HorizontalAlignment.RIGHT)
+                    .setColor(titleTextColor());
+        }
+    }
+
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<PlantingRecipe> recipeHolder, IFocusGroup focusGroup) {
         PlantingRecipe recipe = recipeHolder.value();
         initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getItemInput().getRepresentations());
@@ -58,19 +71,8 @@ public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe>
                     .toList();
         }
         initChemical(builder, RecipeIngredientRole.INPUT, chemicalInput, scaledChemicals);
-        List<ItemStack> firstOutputs = new ArrayList<>();
-        List<ItemStack> secondOutputs = new ArrayList<>();
-        for (PlantingRecipe.PlantingStationRecipeOutput output : recipe.getOutputDefinition()) {
-            firstOutputs.add(output.first());
-            secondOutputs.add(output.second());
-        }
-        // if (!firstOutputs.stream().allMatch(ConstantPredicates.ITEM_EMPTY)) {
-        // initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 4, output.getY() + 4, firstOutputs);
-        // }
-        initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 4, output.getY() + 4, firstOutputs);
-        if (!secondOutputs.stream().allMatch(ConstantPredicates.ITEM_EMPTY)) {
-            initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 20, output.getY() + 4, secondOutputs);
-        }
+        initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 4, output.getY() + 4, recipe.getMainOutputDefinition());
+        initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 20, output.getY() + 4, recipe.getSecondaryOutputDefinition());
         initItem(builder, RecipeIngredientRole.CATALYST, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
     }
 }

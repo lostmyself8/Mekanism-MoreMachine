@@ -14,6 +14,14 @@ import java.util.Map;
 
 public class MoreMachineBounding {
 
+    public static final AttributeHasBounding VERTICAL_THREE_BLOCK = new AttributeHasBounding(new HandleBoundingBlock() {
+
+        @Override
+        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> consumer) {
+            return consumer.accept(level, pos.above(), data) && consumer.accept(level, pos.above().above(), data);
+        }
+    });
+
     public static final AttributeHasBounding FULL_JAVA_ENTITY = new AttributeHasBounding(new HandleBoundingBlock() {
 
         @Override
