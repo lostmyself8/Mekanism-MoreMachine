@@ -1,6 +1,7 @@
 [versions]
 jei = "19.21.0.247"
 emi = "1.1.22+1.21.1"
+crt = "21.0.35"
 mekanism = "1.21.1-10.7.17.83"
 shimmer = "1.20.1-0.2.4"
 ccTweaked = "1.113.1"
@@ -39,6 +40,7 @@ cc-tweaked-forge-impl = { module = "cc.tweaked:cc-tweaked-1.21.1-forge", version
 
 mekanism            = { module = "mekanism:Mekanism", version.ref = "mekanism" }
 shimmer             = { module = "com.lowdragmc.shimmer:Shimmer-forge", version.ref = "shimmer" }
+crt                 = { module = "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1", version.ref = "crt" }
 cucumber            = { module = "com.blakebr0.cucumber:Cucumber", version.ref = "cucumber" }
 mysticalagriculture = { module = "com.blakebr0.mysticalagriculture:MysticalAgriculture", version.ref = "mysticalagriculture" }
 

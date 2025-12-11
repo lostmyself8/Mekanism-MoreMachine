@@ -17,6 +17,9 @@ dependencies {
     compileOnly(forge.mekanismcovers)
     compileOnly(forge.evolvedmekanism)
 
+    // Crt
+    compileOnly(forge.crt)
+
     // mysticalAgriculture
     compileOnly(forge.mysticalagriculture)
 
@@ -44,6 +47,9 @@ dependencies {
     localRuntime(forge.mekanismcovers)
     localRuntime(forge.igleelibrary)
     localRuntime(forge.evolvedmekanism)
+
+    // Crt
+    localRuntime(forge.crt)
 
     // mysticalAgriculture
     localRuntime(forge.cucumber)

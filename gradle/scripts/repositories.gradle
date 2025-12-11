@@ -4,6 +4,10 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
+    maven {//CrT
+        url = 'https://maven.blamejared.com'
+        name = 'BlameJared Maven'
+    }
     maven { // JEI
         name = "Jared's Maven"
         url = "https://maven.blamejared.com/"
