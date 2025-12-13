@@ -34,6 +34,8 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
+import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -232,7 +234,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .build(consumer, Mekmm.rl("large_solar_neutron_activator"));
 
         // 大热力
-        MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_HEAT_GENERATOR)
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.BLOCK, 'S', Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
@@ -241,10 +243,11 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .key('S', MekanismBlocks.SUPERHEATING_ELEMENT)
                 .key(Pattern.TANK, MekanismBlocks.ULTIMATE_FLUID_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
+                .addCondition(new ModLoadedCondition("mekanismgenerators"))
                 .build(consumer, Mekmm.rl("large_heat_generator"));
 
         // 大燃气
-        MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_GAS_BURNING_GENERATOR)
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.TANK, 'E', Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.ROBIT, Pattern.BLOCK),
@@ -253,6 +256,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .key('E', MoreMachineItems.ADVANCED_ELECTROLYSIS_CORE)
                 .key(Pattern.BLOCK, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
+                .addCondition(new ModLoadedCondition("mekanismgenerators"))
                 .build(consumer, Mekmm.rl("large_gas_burning_generator"));
     }
 

@@ -4,8 +4,6 @@ import com.jerry.meklm.common.item.block.ItemBlockMaxChemicalTank;
 import com.jerry.meklm.common.item.block.ItemBlockMidChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.generator.TileEntityLargeGasGenerator;
-import com.jerry.meklm.common.tile.generator.TileEntityLargeHeatGenerator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
@@ -75,20 +73,6 @@ public class LargeMachineTileEntityTypes {
 
     public static final TileEntityTypeRegistryObject<TileEntityLargeSolarNeutronActivator> LARGE_SOLAR_NEUTRON_ACTIVATOR = LM_TILE_ENTITY_TYPES
             .mekBuilder(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, TileEntityLargeSolarNeutronActivator::new)
-            .serverTicker(TileEntityMekanism::tickServer)
-            .withSimple(Capabilities.CONFIG_CARD)
-            .build();
-
-    public static final TileEntityTypeRegistryObject<TileEntityLargeHeatGenerator> LARGE_HEAT_GENERATOR = LM_TILE_ENTITY_TYPES
-            .mekBuilder(LargeMachineBlocks.LARGE_HEAT_GENERATOR, TileEntityLargeHeatGenerator::new)
-            .clientTicker(TileEntityMekanism::tickClient)
-            .serverTicker(TileEntityMekanism::tickServer)
-            .withSimple(Capabilities.CONFIG_CARD)
-            .build();
-
-    public static final TileEntityTypeRegistryObject<TileEntityLargeGasGenerator> LARGE_GAS_BURNING_GENERATOR = LM_TILE_ENTITY_TYPES
-            .mekBuilder(LargeMachineBlocks.LARGE_GAS_BURNING_GENERATOR, TileEntityLargeGasGenerator::new)
-            .clientTicker(TileEntityMekanism::tickClient)
             .serverTicker(TileEntityMekanism::tickServer)
             .withSimple(Capabilities.CONFIG_CARD)
             .build();

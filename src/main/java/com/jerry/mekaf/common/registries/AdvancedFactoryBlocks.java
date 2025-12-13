@@ -51,12 +51,12 @@ public class AdvancedFactoryBlocks {
         // factories
         for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
             for (AdvancedFactoryType type : MoreMachineEnumUtils.ADVANCED_FACTORY_TYPES) {
-                AF_FACTORIES.put(tier, type, registerMMFactory(AdvancedFactoryBlockTypes.getAdvancedFactory(tier, type)));
+                AF_FACTORIES.put(tier, type, registerAdvancedFactory(AdvancedFactoryBlockTypes.getAdvancedFactory(tier, type)));
             }
         }
     }
 
-    private static <TILE extends TileEntityAdvancedFactoryBase<?>> BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> registerMMFactory(AdvancedFactory<TILE> type) {
+    private static <TILE extends TileEntityAdvancedFactoryBase<?>> BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> registerAdvancedFactory(AdvancedFactory<TILE> type) {
         FactoryTier tier = (FactoryTier) Objects.requireNonNull(type.get(AttributeTier.class)).tier();
         BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> factory = registerTieredBlock(tier, "_" + type.getAdvancedFactoryType().getRegistryNameComponent() + "_factory", () -> new BlockAdvancedFactory<>(type), ItemBlockAdvancedFactory::new);
         factory.forItemHolder(holder -> {

@@ -1,6 +1,6 @@
-package com.jerry.meklm.client.model.bake;
+package com.jerry.meklg.client.model.bake;
 
-import com.jerry.meklm.common.base.holiday.holiday_info.GasGeneratorHolidayInfo;
+import com.jerry.meklm.common.base.holiday.holiday_info.HeatGeneratorHolidayInfo;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.model.baked.ExtensionBakedModel.TransformedBakedModel;
@@ -12,16 +12,16 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
-public class LargeGasGeneratorBakedModel extends TransformedBakedModel<Void> {
+public class LargeHeatGeneratorBakedModel extends TransformedBakedModel<Void> {
 
-    public LargeGasGeneratorBakedModel(BakedModel original) {
+    public LargeHeatGeneratorBakedModel(BakedModel original) {
         super(original, QuadTransformation.translate(0, 1, 0));
     }
 
     @Nullable
     @Override
     protected QuadsKey<Void> createKey(QuadsKey<Void> key, ModelData data) {
-        QuadTransformation holidayTransform = GasGeneratorHolidayInfo.getTransform();
+        QuadTransformation holidayTransform = HeatGeneratorHolidayInfo.getTransform();
         if (holidayTransform != null) {
             return key.transform(holidayTransform.and(QuadTransformation.translate(0, 1, 0)));
         }
@@ -29,7 +29,7 @@ public class LargeGasGeneratorBakedModel extends TransformedBakedModel<Void> {
     }
 
     @Override
-    protected LargeGasGeneratorBakedModel wrapModel(BakedModel model) {
-        return new LargeGasGeneratorBakedModel(model);
+    protected LargeHeatGeneratorBakedModel wrapModel(BakedModel model) {
+        return new LargeHeatGeneratorBakedModel(model);
     }
 }

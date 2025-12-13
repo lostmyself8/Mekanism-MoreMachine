@@ -1,10 +1,9 @@
 package com.jerry.mekmm.client;
 
 import com.jerry.mekaf.client.gui.machine.GuiAdvancedFactory;
+import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 
-import com.jerry.meklm.client.gui.generator.GuiLargeGasGenerator;
-import com.jerry.meklm.client.gui.generator.GuiLargeHeatGenerator;
 import com.jerry.meklm.client.gui.machine.GuiLargeChemicalInfuser;
 import com.jerry.meklm.client.gui.machine.GuiLargeElectrolyticSeparator;
 import com.jerry.meklm.client.gui.machine.GuiLargeRotaryCondensentrator;
@@ -41,6 +40,13 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
+import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
+import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
+import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
+import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
+import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
+
 import static mekanism.client.ClientRegistration.addCustomModel;
 
 @EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT)
@@ -69,8 +75,10 @@ public class ClientRegistration {
         addCustomModel(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER, (orig, evt) -> new LargeChemicalInfuserBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, (orig, evt) -> new LargeElectrolyticSeparatorBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, (orig, evt) -> new LargeSNABakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_HEAT_GENERATOR, (orig, evt) -> new LargeHeatGeneratorBakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_GAS_BURNING_GENERATOR, (orig, evt) -> new LargeGasGeneratorBakedModel(orig));
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            addCustomModel(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, (orig, evt) -> new LargeHeatGeneratorBakedModel(orig));
+            addCustomModel(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR, (orig, evt) -> new LargeGasGeneratorBakedModel(orig));
+        }
 
         ClientRegistrationUtil.setPropertyOverride(MoreMachineItems.CONNECTOR, Mekmm.rl("mode"), (stack, world, entity, seed) -> {
             ConnectorMode mode = ((ItemConnector) stack.getItem()).getMode(stack);
@@ -115,12 +123,19 @@ public class ClientRegistration {
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_CHEMICAL_INFUSER, GuiLargeChemicalInfuser::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR, GuiLargeElectrolyticSeparator::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, GuiLargeSolarNeutronActivator::new);
-        ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
-        ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
+            ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
+        }
     }
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        ClientRegistrationUtil.registerBlockExtensions(event, MoreMachineBlocks.MM_BLOCKS);
+        ClientRegistrationUtil.registerBlockExtensions(event, AdvancedFactoryBlocks.AF_BLOCKS);
         ClientRegistrationUtil.registerBlockExtensions(event, LargeMachineBlocks.LM_BLOCKS);
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            ClientRegistrationUtil.registerBlockExtensions(event, LargeGeneratorBlocks.LG_BLOCKS);
+        }
     }
 }

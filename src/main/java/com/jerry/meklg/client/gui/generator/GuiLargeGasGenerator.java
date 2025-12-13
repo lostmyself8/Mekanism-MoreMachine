@@ -1,6 +1,4 @@
-package com.jerry.meklm.client.gui.generator;
-
-import com.jerry.meklm.common.tile.generator.TileEntityLargeGasGenerator;
+package com.jerry.meklg.client.gui.generator;
 
 import mekanism.api.math.MathUtils;
 import mekanism.client.SpecialColors;
@@ -19,6 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
+import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

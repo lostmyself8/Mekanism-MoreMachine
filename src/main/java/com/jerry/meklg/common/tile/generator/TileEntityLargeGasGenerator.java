@@ -1,6 +1,4 @@
-package com.jerry.meklm.common.tile.generator;
-
-import com.jerry.meklm.common.registries.LargeMachineBlocks;
+package com.jerry.meklg.common.tile.generator;
 
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
@@ -44,6 +42,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
+import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +76,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     private int numPowering;
 
     public TileEntityLargeGasGenerator(BlockPos pos, BlockState state) {
-        super(LargeMachineBlocks.LARGE_GAS_BURNING_GENERATOR, pos, state, ChemicalUtil::hydrogenEnergyPerTick);
+        super(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR, pos, state, ChemicalUtil::hydrogenEnergyPerTick);
     }
 
     @NotNull

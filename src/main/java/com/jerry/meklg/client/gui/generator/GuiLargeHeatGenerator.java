@@ -1,6 +1,4 @@
-package com.jerry.meklm.client.gui.generator;
-
-import com.jerry.meklm.common.tile.generator.TileEntityLargeHeatGenerator;
+package com.jerry.meklg.client.gui.generator;
 
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiMekanismTile;
@@ -23,6 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
+import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

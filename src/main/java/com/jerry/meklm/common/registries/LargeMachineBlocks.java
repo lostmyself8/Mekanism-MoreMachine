@@ -5,21 +5,17 @@ import com.jerry.meklm.common.item.block.ItemBlockMaxChemicalTank;
 import com.jerry.meklm.common.item.block.ItemBlockMidChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.generator.TileEntityLargeGasGenerator;
-import com.jerry.meklm.common.tile.generator.TileEntityLargeHeatGenerator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
 
 import com.jerry.mekmm.Mekmm;
-import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.tier.ITier;
 import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.attachments.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
-import mekanism.common.attachments.containers.heat.HeatCapacitorsBuilder;
 import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
@@ -34,9 +30,7 @@ import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.resource.BlockResourceInfo;
 import mekanism.common.tile.TileEntityChemicalTank;
-import mekanism.generators.common.content.blocktype.Generator;
 
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -123,30 +117,6 @@ public class LargeMachineBlocks {
                     .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                             .addChemicalFillSlot(0)
                             .addChemicalDrainSlot(1)
-                            .build()));
-
-    // Generator
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeHeatGenerator, Generator<TileEntityLargeHeatGenerator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeHeatGenerator, Generator<TileEntityLargeHeatGenerator>>>> LARGE_HEAT_GENERATOR = LM_BLOCKS.registerDetails("large_heat_generator", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_HEAT_GENERATOR, properties -> properties.mapColor(MapColor.METAL)))
-            .forItemHolder(holder -> holder
-                    .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
-                            .addBasic(MoreMachineConfig.generators.largeHeatTankCapacity, fluid -> fluid.is(FluidTags.LAVA))
-                            .build())
-                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorsBuilder.builder()
-                            .addBasic(TileEntityLargeHeatGenerator.HEAT_CAPACITY, TileEntityLargeHeatGenerator.INVERSE_CONDUCTION_COEFFICIENT, TileEntityLargeHeatGenerator.INVERSE_INSULATION_COEFFICIENT)
-                            .build())
-                    .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
-                            .addFluidFuelSlot(0, s -> s.getBurnTime(null) != 0)
-                            .addEnergy()
-                            .build()));
-
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeGasGenerator, Generator<TileEntityLargeGasGenerator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeGasGenerator, Generator<TileEntityLargeGasGenerator>>>> LARGE_GAS_BURNING_GENERATOR = LM_BLOCKS.registerDetails("large_gas_burning_generator", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_GAS_BURNING_GENERATOR, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())))
-            .forItemHolder(holder -> holder
-                    .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
-                            .addBasic(MoreMachineConfig.generators.LGBGTankCapacity, TileEntityLargeGasGenerator.HAS_FUEL)
-                            .build())
-                    .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
-                            .addChemicalFillSlot(0)
-                            .addEnergy()
                             .build()));
 
     private static BlockRegistryObject<BlockTileModel<TileEntityMidChemicalTank, Machine<TileEntityMidChemicalTank>>, ItemBlockMidChemicalTank> registerMidChemicalTank(

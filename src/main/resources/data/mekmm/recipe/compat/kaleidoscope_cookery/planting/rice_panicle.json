@@ -22,6 +22,6 @@
     "count": 2,
     "id": "kaleidoscope_cookery:wild_rice"
   },
-  "secondaryChance": 0.65,
+  "secondary_chance": 0.65,
   "per_tick_usage": true
 }

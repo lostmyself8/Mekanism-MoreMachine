@@ -22,6 +22,6 @@
     "count": 1,
     "id": "farmersdelight:tomato_seeds"
   },
-  "secondaryChance": 0.95,
+  "secondary_chance": 0.95,
   "per_tick_usage": true
 }

@@ -1,6 +1,4 @@
-package com.jerry.meklm.common.tile.generator;
-
-import com.jerry.meklm.common.registries.LargeMachineBlocks;
+package com.jerry.meklg.common.tile.generator;
 
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
@@ -47,6 +45,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,7 +87,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     private int numPowering;
 
     public TileEntityLargeHeatGenerator(BlockPos pos, BlockState state) {
-        super(LargeMachineBlocks.LARGE_HEAT_GENERATOR, pos, state, MAX_PRODUCTION);
+        super(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, pos, state, MAX_PRODUCTION);
     }
 
     @NotNull

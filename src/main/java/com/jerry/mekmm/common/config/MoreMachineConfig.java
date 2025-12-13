@@ -29,7 +29,9 @@ public class MoreMachineConfig {
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, storage);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, tier);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, usage);
-        MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, generators);
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, generators);
+        }
     }
 
     public static void onConfigLoad(ModConfigEvent configEvent) {

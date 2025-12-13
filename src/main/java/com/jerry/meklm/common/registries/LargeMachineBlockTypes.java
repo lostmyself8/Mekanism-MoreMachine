@@ -6,8 +6,6 @@ import com.jerry.meklm.common.tier.MaxChemicalTankTier;
 import com.jerry.meklm.common.tier.MidChemicalTankTier;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.generator.TileEntityLargeGasGenerator;
-import com.jerry.meklm.common.tile.generator.TileEntityLargeHeatGenerator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
@@ -25,18 +23,13 @@ import mekanism.common.block.attribute.AttributeHasBounding.HandleBoundingBlock;
 import mekanism.common.block.attribute.AttributeHasBounding.TriBooleanFunction;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.content.blocktype.Machine.MachineBuilder;
-import mekanism.common.lib.math.Pos3D;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
 import mekanism.common.registries.MekanismSounds;
 import mekanism.common.util.ChemicalUtil;
-import mekanism.generators.common.GeneratorsLang;
-import mekanism.generators.common.content.blocktype.Generator;
-import mekanism.generators.common.registries.GeneratorsSounds;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -44,7 +37,6 @@ import java.util.function.Supplier;
 
 public class LargeMachineBlockTypes {
 
-    // TODO:看看能不能缩减成一个方法
     // Mid-Chemical Tanks
     public static final Machine<TileEntityMidChemicalTank> BASIC_MID_CHEMICAL_TANK = createLargeChemicalTank(MidChemicalTankTier.BASIC, () -> LargeMachineTileEntityTypes.BASIC_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK);
     public static final Machine<TileEntityMidChemicalTank> ADVANCED_MID_CHEMICAL_TANK = createLargeChemicalTank(MidChemicalTankTier.ADVANCED, () -> LargeMachineTileEntityTypes.ADVANCED_MID_CHEMICAL_TANK, () -> LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK);
@@ -127,37 +119,6 @@ public class LargeMachineBlockTypes {
             .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeSolarNeutronActivator")
             .replace(Attributes.ACTIVE)
-            .build();
-
-    // Heat Generator
-    public static final Generator<TileEntityLargeHeatGenerator> LARGE_HEAT_GENERATOR = Generator.GeneratorBuilder
-            .createGenerator(() -> LargeMachineTileEntityTypes.LARGE_HEAT_GENERATOR, GeneratorsLang.DESCRIPTION_HEAT_GENERATOR)
-            .withGui(() -> LargeMachineContainerTypes.LARGE_HEAT_GENERATOR)
-            .withEnergyConfig(MoreMachineConfig.storage.largeHeatGenerator)
-            .withCustomShape(LargeMachineBlockShapes.LARGE_HEAT_GENERATOR)
-            .withSound(GeneratorsSounds.HEAT_GENERATOR)
-            .with(AttributeUpgradeSupport.MUFFLING_ONLY)
-            .with(AttributeCustomSelectionBox.JSON)
-            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
-            .withComputerSupport("largeHeatGenerator")
-            .replace(Attributes.ACTIVE_MELT_LIGHT)
-            .with(new AttributeParticleFX()
-                    .add(ParticleTypes.SMOKE, rand -> new Pos3D(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, -0.52))
-                    .add(ParticleTypes.FLAME, rand -> new Pos3D(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, -0.52)))
-            .build();
-
-    // Gas Burning Generator
-    public static final Generator<TileEntityLargeGasGenerator> LARGE_GAS_BURNING_GENERATOR = Generator.GeneratorBuilder
-            .createGenerator(() -> LargeMachineTileEntityTypes.LARGE_GAS_BURNING_GENERATOR, GeneratorsLang.DESCRIPTION_GAS_BURNING_GENERATOR)
-            .withGui(() -> LargeMachineContainerTypes.LARGE_GAS_BURNING_GENERATOR)
-            .withEnergyConfig(() -> MathUtils.multiplyClamped(20_480_000L, ChemicalUtil.hydrogenEnergyDensity()))
-            .withCustomShape(LargeMachineBlockShapes.LARGE_GAS_BURNING_GENERATOR)
-            .with(AttributeCustomSelectionBox.JSON)
-            .withSound(GeneratorsSounds.GAS_BURNING_GENERATOR)
-            .with(AttributeUpgradeSupport.MUFFLING_ONLY)
-            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
-            .withComputerSupport("largeGasBurningGenerator")
-            .replace(Attributes.ACTIVE_MELT_LIGHT)
             .build();
 
     private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createLargeChemicalTank(ILargeChemicalTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {

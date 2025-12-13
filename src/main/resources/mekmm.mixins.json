@@ -6,11 +6,12 @@
   "refmap": "mekmm.refmap.json",
   "mixins": [
     "MixinItemConfigurator",
-    "client.render.MixinRenderTickHandler",
     "recipe.MixinMekanismRecipeType",
     "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor"
   ],
   "client": [
+    "client.recipe_viewer.type.MixinRotaryRVRecipeType",
+    "client.render.MixinRenderTickHandler",
     "client.MixinRecipeViewerRecipeType"
   ],
   "injectors": {

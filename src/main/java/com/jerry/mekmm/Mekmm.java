@@ -26,6 +26,9 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
+import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
+import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,6 +80,7 @@ public class Mekmm implements IModModule {
         // LMConfig.registerConfigs(modContainer);
         registerAdvancedFactory(modEventBus);
         registerLargeMachine(modEventBus);
+        registerLargeGenerator(modEventBus);
 
         packetHandler = new MoreMachinePacketHandler(modEventBus, versionNumber);
     }
@@ -99,6 +103,14 @@ public class Mekmm implements IModModule {
         LargeMachineBlocks.LM_BLOCKS.register(modEventBus);
         LargeMachineTileEntityTypes.LM_TILE_ENTITY_TYPES.register(modEventBus);
         LargeMachineContainerTypes.LM_CONTAINER_TYPES.register(modEventBus);
+    }
+
+    private void registerLargeGenerator(IEventBus modEventBus) {
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            LargeGeneratorBlocks.LG_BLOCKS.register(modEventBus);
+            LargeGeneratorTileEntityTypes.LG_TILE_ENTITY_TYPES.register(modEventBus);
+            LargeGeneratorContainerTypes.LG_CONTAINER_TYPES.register(modEventBus);
+        }
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
