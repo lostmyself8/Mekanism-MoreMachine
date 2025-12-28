@@ -17,7 +17,7 @@ jobs:
       - name: Get Config
         uses: actions/checkout@v4
         with:
-          ref: 'master'
+          ref: ${{ github.ref_name }}
           sparse-checkout: '.github/json'
       - name: Generate changelog
         id: changelog
@@ -39,7 +39,7 @@ jobs:
     uses: ./.github/workflows/publish.yml
     with:
       simulate: ${{ startsWith(github.event.release.name, 'simulate') || github.repository_owner != 'lostmyself8' }}
-      branch: 'master'
+      branch: '1.21.1'
       tag-name: ${{ github.ref_name }}
       release-body: ${{ github.event.release.body }}
       changelog-body: ${{ needs.meta.outputs.CHANGELOG }}

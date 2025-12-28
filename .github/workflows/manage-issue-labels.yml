@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 'master'
+          ref: '1.21.1'
           sparse-checkout: '.github/labeler.yml'
       - uses: github/issue-labeler@v3.3
         with:
