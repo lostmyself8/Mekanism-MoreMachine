@@ -2,7 +2,7 @@ name: Latest Build
 
 on:
   push:
-    branches: ['master', '1.20.1']
+    branches: ['1.21.1', '1.20.1']
     paths: ['src/**', '**/*.gradle', 'gradle.properties']
 
 concurrency:
@@ -57,23 +57,15 @@ jobs:
           toTag: ${{ github.ref }}
           fetchViaCommits: true
           failOnError: false
-      - name: Set Display Branch Name
-        id: set_display_name
-        run: |
-          if [ "${{ github.ref_name }}" = "master" ]; then
-            echo "display_branch=1.21.1" >> $GITHUB_OUTPUT
-          else
-            echo "display_branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
-          fi
       - name: Release Latest
         if: ${{ env.PUBLISH == 'true' }}
         uses: andelf/nightly-release@46e2d5f80828ecc5c2c3c819eb31186a7cf2156c
         with:
           tag_name: latest-${{ github.ref_name }}
-          name: '${{ steps.set_display_name.outputs.display_branch }}-${{ steps.ver.outputs.version}} SNAPSHOT ${{ env.VERSION_SUFFIX }}'
+          name: '${{ github.ref_name }}-${{ steps.ver.outputs.version}} SNAPSHOT ${{ env.VERSION_SUFFIX }}'
           prerelease: true
           body: |
-            The latest build of Mekanism: MoreMachine for Minecraft ${{ steps.set_display_name.outputs.display_branch }}.
+            The latest build of Mekanism: MoreMachine for Minecraft ${{ github.ref_name }}.
             Please report any [issues](https://github.com/lostmyself8/Mekanism-MoreMachine/issues).
             ${{ steps.changelog.outputs.changelog }}
           files: build/libs/*.jar

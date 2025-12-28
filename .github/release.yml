@@ -2,7 +2,6 @@ changelog:
 
   exclude:
     labels:
-      - "1.20.1"
       - "ignore changelog"
 
   categories:
