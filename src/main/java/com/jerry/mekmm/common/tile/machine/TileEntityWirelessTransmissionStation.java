@@ -100,9 +100,9 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     private double lastTransferLoss;
     private double lastEnvironmentLoss;
 
-    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class, methodNames = { "getFluid", "getFluidCapacity", "getFluidNeeded", "getFluidFilledPercentage" }, docPlaceholder = "fluid tank")
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class, methodNames = {"getFluid", "getFluidCapacity", "getFluidNeeded", "getFluidFilledPercentage"}, docPlaceholder = "fluid tank")
     public BasicFluidTank fluidTank;
-    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" }, docPlaceholder = "chemical tank")
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = {"getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage"}, docPlaceholder = "chemical tank")
     public IChemicalTank chemicalTank;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getItemSlot", docPlaceholder = "item slot")
     public BasicInventorySlot inventorySlot;
@@ -213,14 +213,16 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
             connectionManager.validateConnections();
         }
         // TODO:添加一个延时，不需要每tick都发送（2秒发送一次应该可以）
-        // 传输能量
-        CableUtils.emit(connectionManager.getEnergyCaches(), energyContainer, getEnergyRate());
-        // 传输流体
-        FluidUtils.emit(connectionManager.getFluidCaches(), fluidTank, getFluidsRate());
-        // 传输化学品
-        ChemicalUtil.emit(connectionManager.getChemicalCaches(), chemicalTank, getChemicalsRate());
-        // 传输物品
-        transportItems();
+        if (canFunction()) {
+            // 传输能量
+            CableUtils.emit(connectionManager.getEnergyCaches(), energyContainer, getEnergyRate());
+            // 传输流体
+            FluidUtils.emit(connectionManager.getFluidCaches(), fluidTank, getFluidsRate());
+            // 传输化学品
+            ChemicalUtil.emit(connectionManager.getChemicalCaches(), chemicalTank, getChemicalsRate());
+            // 传输物品
+            transportItems();
+        }
         // 传输热量
         HeatTransfer loss = simulate();
         // 如果有无线交换热量缓存时要加上无线交换的热量损失
@@ -233,7 +235,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
 
     private void transportItems() {
         if (itemsRate <= 0) return;
-        // TODO:似乎还不能平分
+        // TODO:在某种情况下可以平分，希望可以做到不需要给定面即可输出
         // 获取自身的弹出能力
         IItemHandler selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
         if (selfHandler == null) return;
@@ -449,7 +451,8 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         addConfigContainerTrackers(container);
         container.track(SyncableDouble.create(this::getLastTransferLoss, value -> lastTransferLoss = value));
         container.track(SyncableDouble.create(this::getLastEnvironmentLoss, value -> lastEnvironmentLoss = value));
-        container.track(SyncableInt.create(connectionManager::getConnectionCount, count -> {}));
+        container.track(SyncableInt.create(connectionManager::getConnectionCount, count -> {
+        }));
     }
 
     public void addConfigContainerTrackers(MekanismContainer container) {

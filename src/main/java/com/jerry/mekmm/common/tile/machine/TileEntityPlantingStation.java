@@ -235,7 +235,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     @Override
     public void recalculateUpgrades(Upgrade upgrade) {
         super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED || (upgrade == Upgrade.CHEMICAL && supportsUpgrade(Upgrade.CHEMICAL))) {
+        if (upgrade == Upgrade.SPEED || upgrade == Upgrade.CHEMICAL) {
             if (useStatisticalMechanics()) {
                 chemicalPerTickMeanMultiplier = MekanismUtils.getGasPerTickMeanMultiplier(this);
             } else {
