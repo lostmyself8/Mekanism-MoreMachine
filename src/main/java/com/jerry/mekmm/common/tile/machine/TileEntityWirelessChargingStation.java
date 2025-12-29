@@ -98,7 +98,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         boolean sendUpdatePacket = super.onUpdateServer();
         chargeSlot.drainContainer();
         dischargeSlot.fillContainerOrConvert();
-        if (!energyContainer.isEmpty() && isRedstoneActivated()) {
+        if (!energyContainer.isEmpty() && canFunction()) {
             Level level = getLevel();
             UUID uuid = getSecurity().getOwnerUUID();
             if (level != null && uuid != null) {
