@@ -100,9 +100,9 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     private double lastTransferLoss;
     private double lastEnvironmentLoss;
 
-    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class, methodNames = {"getFluid", "getFluidCapacity", "getFluidNeeded", "getFluidFilledPercentage"}, docPlaceholder = "fluid tank")
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class, methodNames = { "getFluid", "getFluidCapacity", "getFluidNeeded", "getFluidFilledPercentage" }, docPlaceholder = "fluid tank")
     public BasicFluidTank fluidTank;
-    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = {"getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage"}, docPlaceholder = "chemical tank")
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" }, docPlaceholder = "chemical tank")
     public IChemicalTank chemicalTank;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getItemSlot", docPlaceholder = "item slot")
     public BasicInventorySlot inventorySlot;
@@ -451,8 +451,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         addConfigContainerTrackers(container);
         container.track(SyncableDouble.create(this::getLastTransferLoss, value -> lastTransferLoss = value));
         container.track(SyncableDouble.create(this::getLastEnvironmentLoss, value -> lastEnvironmentLoss = value));
-        container.track(SyncableInt.create(connectionManager::getConnectionCount, count -> {
-        }));
+        container.track(SyncableInt.create(connectionManager::getConnectionCount, count -> {}));
     }
 
     public void addConfigContainerTrackers(MekanismContainer container) {
