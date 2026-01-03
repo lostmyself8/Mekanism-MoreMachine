@@ -363,6 +363,7 @@
   "gui.mekmm.wts.fluids_rate": "fluids output Rate:%1$s mb/t",
   "gui.mekmm.wts.chemicals_rate": "chemicals output Rate:%1$s mb/t",
   "gui.mekmm.wts.items_rate": "items output Rate:%1$s",
+  "gui.mekmm.wts.heat_rate": "Heat transmission Rate:%1$s/t",
 
   "button.mekmm.disconnect": "Disconnect",
   "button.mekmm.highlight": "Highlight",
@@ -400,6 +401,8 @@
   "configuration.mekmm.general.chemicals.max_transmission_rate.tooltip": "Set the maximum chemicals output rate during wireless transmission",
   "configuration.mekmm.general.items.max_transmission_rate": "Items Max Transmission Rate",
   "configuration.mekmm.general.items.max_transmission_rate.tooltip": "Set the maximum items output rate during wireless transmission",
+  "configuration.mekmm.general.heat.max_transmission_rate": "Heat Max Transmission Rate",
+  "configuration.mekmm.general.heat.max_transmission_rate.tooltip": "Set the maximum heat output rate during wireless transmission",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate": "Maximum Transmission Rate",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate.tooltip": "Wireless Transmission Station Max Output Rate",
   "configuration.mekmm.general.chemical_replicator.recipes": "Add Chemical Replicator Recipes",

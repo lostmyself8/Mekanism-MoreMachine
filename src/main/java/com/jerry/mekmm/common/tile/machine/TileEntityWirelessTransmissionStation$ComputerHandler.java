@@ -16,6 +16,8 @@ public class TileEntityWirelessTransmissionStation$ComputerHandler extends Compu
 
     private final Class[] TYPES_int = new Class[] { int.class };
 
+    private final Class[] TYPES_double = new Class[] { double.class };
+
     public TileEntityWirelessTransmissionStation$ComputerHandler() {
         register(MethodData.builder("getFluidDrainItem", TileEntityWirelessTransmissionStation$ComputerHandler::drainFluidSlot$getDrainItem).returnType(ItemStack.class).methodDescription("Get the contents of the fluid drain slot."));
         register(MethodData.builder("getFluidFillItem", TileEntityWirelessTransmissionStation$ComputerHandler::fillFluidSlot$getFillItem).returnType(ItemStack.class).methodDescription("Get the contents of the fluid fill slot."));
@@ -32,10 +34,11 @@ public class TileEntityWirelessTransmissionStation$ComputerHandler extends Compu
         register(MethodData.builder("getChemicalPercentage", TileEntityWirelessTransmissionStation$ComputerHandler::getChemicalTank$getFilledPercentage).returnType(double.class).methodDescription("Get the filled percentage of the chemical tank."));
         register(MethodData.builder("getItemSlot", TileEntityWirelessTransmissionStation$ComputerHandler::itemSlot$getItemSolt).returnType(ItemStack.class).methodDescription("Get the contents of the item slot."));
         register(MethodData.builder("getTemperature", TileEntityWirelessTransmissionStation$ComputerHandler::heatCapacitor$getTemperature).returnType(double.class).methodDescription("Get the temperature of the transmission in Kelvin."));
-        register(MethodData.builder("setEnergyRate", TileEntityWirelessTransmissionStation$ComputerHandler::setEnergyRate).requiresPublicSecurity().methodDescription("Set energy output rate.").arguments(NAMES_rate, TYPES_long));
-        register(MethodData.builder("setFluidsRate", TileEntityWirelessTransmissionStation$ComputerHandler::setFluidsRate).requiresPublicSecurity().methodDescription("Set fluids output rate").arguments(NAMES_rate, TYPES_int));
-        register(MethodData.builder("setChemicalsRate", TileEntityWirelessTransmissionStation$ComputerHandler::setChemicalsRate).requiresPublicSecurity().methodDescription("Set chemicals output rate").arguments(NAMES_rate, TYPES_long));
-        register(MethodData.builder("setItemsRate", TileEntityWirelessTransmissionStation$ComputerHandler::setItemsRate).requiresPublicSecurity().methodDescription("Set items output rate").arguments(NAMES_rate, TYPES_int));
+        register(MethodData.builder("setEnergyRate", TileEntityWirelessTransmissionStation$ComputerHandler::setEnergyRate).requiresPublicSecurity().methodDescription("Set energy transmission rate.").arguments(NAMES_rate, TYPES_long));
+        register(MethodData.builder("setFluidsRate", TileEntityWirelessTransmissionStation$ComputerHandler::setFluidsRate).requiresPublicSecurity().methodDescription("Set fluids transmission rate").arguments(NAMES_rate, TYPES_int));
+        register(MethodData.builder("setChemicalsRate", TileEntityWirelessTransmissionStation$ComputerHandler::setChemicalsRate).requiresPublicSecurity().methodDescription("Set chemicals transmission rate").arguments(NAMES_rate, TYPES_long));
+        register(MethodData.builder("setItemsRate", TileEntityWirelessTransmissionStation$ComputerHandler::setItemsRate).requiresPublicSecurity().methodDescription("Set items transmission rate").arguments(NAMES_rate, TYPES_int));
+        register(MethodData.builder("setHeatRate", TileEntityWirelessTransmissionStation$ComputerHandler::setHeatRate).requiresPublicSecurity().methodDescription("Set heat transmission rate").arguments(NAMES_rate, TYPES_double));
     }
 
     public static Object drainFluidSlot$getDrainItem(TileEntityWirelessTransmissionStation subject, BaseComputerHelper helper) throws ComputerException {
@@ -115,6 +118,11 @@ public class TileEntityWirelessTransmissionStation$ComputerHandler extends Compu
 
     public static Object setItemsRate(TileEntityWirelessTransmissionStation subject, BaseComputerHelper helper) throws ComputerException {
         subject.computerSetItemsRate(helper.getInt(0));
+        return helper.voidResult();
+    }
+
+    public static Object setHeatRate(TileEntityWirelessTransmissionStation subject, BaseComputerHelper helper) throws ComputerException {
+        subject.computerSetHeatRate(helper.getDouble(0));
         return helper.voidResult();
     }
 }

@@ -37,6 +37,6 @@ public class AdvancedFactoryGuiSortingTab extends GuiInsetElement<TileEntityAdva
 
     @Override
     public void onClick(double mouseX, double mouseY, int button) {
-        PacketUtils.sendToServer(new MoreMachinePacketGuiInteract(MoreMachinePacketGuiInteract.MMGuiInteraction.AUTO_SORT_BUTTON, dataSource));
+        PacketUtils.sendToServer(new MoreMachinePacketGuiInteract(MoreMachinePacketGuiInteract.MoreMachineGuiInteraction.AUTO_SORT_BUTTON, dataSource));
     }
 }

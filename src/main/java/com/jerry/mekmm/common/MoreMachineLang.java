@@ -68,6 +68,7 @@ public enum MoreMachineLang implements ILangEntry {
     WTS_FLUIDS_RATE("gui", "wts.fluids_rate"),
     WTS_CHEMICALS_RATE("gui", "wts.chemicals_rate"),
     WTS_ITEMS_RATE("gui", "wts.items_rate"),
+    WTS_HEAT_RATE("gui", "wts.heat_rate"),
     // Button
     BUTTON_DISCONNECT("button", "disconnect"),
     BUTTON_HIGHLIGHT("button", "highlight"),
