@@ -1,6 +1,6 @@
 package com.jerry.mekmm.mixin.client.render;
 
-import com.jerry.meklm.common.tile.INeedConfig;
+import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import mekanism.client.render.RenderTickHandler;
 import mekanism.common.item.ItemConfigurator;
@@ -40,8 +40,8 @@ public class MixinRenderTickHandler {
 
     @Inject(method = "onBlockHover", at = @At(value = "INVOKE", target = "Lmekanism/common/tile/interfaces/ISideConfiguration;getConfig()Lmekanism/common/tile/component/TileComponentConfig;"), cancellable = true)
     private void mixinOnBlockHover(RenderHighlightEvent.Block event, CallbackInfo ci) {
-        if (mekmm$tile instanceof INeedConfig need) {
-            if (!need.needConfig()) {
+        if (mekmm$tile instanceof INotNeedConfig need) {
+            if (need.notNeedConfig()) {
                 ci.cancel();
             }
         }

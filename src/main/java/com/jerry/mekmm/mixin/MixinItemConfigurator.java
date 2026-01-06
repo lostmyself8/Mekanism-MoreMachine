@@ -1,6 +1,6 @@
 package com.jerry.mekmm.mixin;
 
-import com.jerry.meklm.common.tile.INeedConfig;
+import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import mekanism.common.item.ItemConfigurator;
 import mekanism.common.util.WorldUtils;
@@ -34,8 +34,8 @@ public class MixinItemConfigurator {
 
     @Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lmekanism/common/tile/interfaces/ISideConfiguration;getConfig()Lmekanism/common/tile/component/TileComponentConfig;", shift = At.Shift.BY, ordinal = 1), cancellable = true)
     private void mixinUseOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        if (mekmm$tile instanceof INeedConfig need) {
-            if (!need.needConfig()) {
+        if (mekmm$tile instanceof INotNeedConfig need) {
+            if (need.notNeedConfig()) {
                 cir.setReturnValue(InteractionResult.FAIL);
             }
         }
