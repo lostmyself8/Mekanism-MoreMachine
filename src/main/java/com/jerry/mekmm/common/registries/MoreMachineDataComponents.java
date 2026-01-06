@@ -9,6 +9,9 @@ import mekanism.common.registration.impl.DataComponentDeferredRegister;
 
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.codec.ByteBufCodecs;
+
+import com.mojang.serialization.Codec;
 
 @NothingNullByDefault
 public class MoreMachineDataComponents {
@@ -33,4 +36,7 @@ public class MoreMachineDataComponents {
     public static final MekanismDeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FLUIDS_RATE = MM_DATA_COMPONENTS.registerInt("fluids_rate");
     public static final MekanismDeferredHolder<DataComponentType<?>, DataComponentType<Long>> CHEMICALS_RATE = MM_DATA_COMPONENTS.registerNonNegativeLong("chemicals_rate");
     public static final MekanismDeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ITEMS_RATE = MM_DATA_COMPONENTS.registerInt("items_rate");
+    public static final MekanismDeferredHolder<DataComponentType<?>, DataComponentType<Double>> HEAT_RATE = MM_DATA_COMPONENTS.simple("heat_rate",
+            builder -> builder.persistent(Codec.DOUBLE)
+                    .networkSynchronized(ByteBufCodecs.DOUBLE));
 }

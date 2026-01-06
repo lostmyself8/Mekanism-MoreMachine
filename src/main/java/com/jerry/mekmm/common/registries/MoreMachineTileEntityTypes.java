@@ -144,7 +144,7 @@ public class MoreMachineTileEntityTypes {
     }
 
     @SuppressWarnings("unchecked")
-    public static TileEntityTypeRegistryObject<? extends TileEntityMoreMachineFactory<?>>[] getFactoryTiles() {
+    public static TileEntityTypeRegistryObject<? extends TileEntityMoreMachineFactory<?>>[] getMoreMachineFactoryTiles() {
         return MM_FACTORIES.values().toArray(new TileEntityTypeRegistryObject[0]);
     }
 

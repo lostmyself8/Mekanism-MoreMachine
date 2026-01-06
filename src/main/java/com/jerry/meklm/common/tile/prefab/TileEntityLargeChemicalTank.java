@@ -3,15 +3,17 @@ package com.jerry.meklm.common.tile.prefab;
 import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.chemical.LargeChemicalTankChemicalTank;
-import com.jerry.meklm.common.tile.INeedConfig;
+import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.SerializationConstants;
+import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.math.MathUtils;
 import mekanism.common.attachments.containers.ContainerType;
+import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
@@ -36,27 +38,39 @@ import mekanism.common.tile.interfaces.IHasGasMode;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import mekanism.common.upgrade.ChemicalTankUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.NBTUtils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> extends TileEntityConfigurableMachine implements IHasGasMode, IBoundingBlock, INeedConfig {
+import java.util.ArrayList;
+import java.util.List;
+
+public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> extends TileEntityConfigurableMachine implements IHasGasMode, IBoundingBlock, INotNeedConfig {
+
+    private static final RelativeSide[] CHEMICAL_SIDES = { RelativeSide.TOP };
 
     @SyntheticComputerMethod(getter = "getDumpingMode", getterDescription = "Get the current Dumping configuration")
     public GasMode dumping = GasMode.IDLE;
     protected int numPowering;
+
+    @Nullable
+    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> outputCaches;
 
     @Getter
     private IChemicalTank chemicalTank;
@@ -78,16 +92,15 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     }
 
     @Override
-    public boolean needConfig() {
-        return false;
-    }
-
-    @Override
     public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
         // 化学品下进上出
         CanAdjustChemicalTankHelper builder = CanAdjustChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
         builder.addTank(chemicalTank = LargeChemicalTankChemicalTank.create(tier, listener), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
+    }
+
+    protected RelativeSide[] getChemicalSides() {
+        return CHEMICAL_SIDES;
     }
 
     @NotNull
@@ -122,7 +135,29 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
                 }
             }
         }
+        if (canFunction()) {
+            if (outputCaches == null) {
+                Direction direction = getDirection();
+                RelativeSide[] chemicalSides = getChemicalSides();
+                outputCaches = new ArrayList<>(chemicalSides.length);
+                for (RelativeSide chemicalSide : chemicalSides) {
+                    Direction side = chemicalSide.getDirection(direction);
+                    outputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, offSetOutput(worldPosition, side), side.getOpposite()));
+                }
+            }
+            ChemicalUtil.emit(outputCaches, chemicalTank, tier.getOutput());
+        }
         return sendUpdatePacket;
+    }
+
+    protected BlockPos offSetOutput(BlockPos from, Direction side) {
+        return from.relative(side);
+    }
+
+    @Override
+    protected void invalidateDirectionCaches(Direction newDirection) {
+        super.invalidateDirectionCaches(newDirection);
+        outputCaches = null;
     }
 
     @Override

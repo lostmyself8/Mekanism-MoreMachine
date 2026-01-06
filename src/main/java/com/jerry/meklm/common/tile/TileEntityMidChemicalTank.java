@@ -33,6 +33,11 @@ public class TileEntityMidChemicalTank extends TileEntityLargeChemicalTank<MidCh
     }
 
     @Override
+    protected BlockPos offSetOutput(BlockPos from, Direction side) {
+        return from.offset(new Vec3i(0, 1, 0)).relative(side);
+    }
+
+    @Override
     public int getBoundingComparatorSignal(Vec3i offset) {
         if (offset.equals(Vec3i.ZERO)) {
             return getCurrentRedstoneLevel();

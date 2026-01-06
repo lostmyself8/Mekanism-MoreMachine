@@ -3,10 +3,11 @@ package com.jerry.meklm.common.tile.machine;
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.fluid.CanAdjustFluidTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.INeedConfig;
+import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import mekanism.api.*;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.functions.LongObjectToLongFunction;
 import mekanism.api.math.MathUtils;
@@ -62,6 +63,7 @@ import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasGasMode;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.NBTUtils;
 import mekanism.common.util.WorldUtils;
@@ -72,9 +74,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
@@ -82,10 +86,11 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachine<ElectrolysisRecipe> implements IBoundingBlock, IHasGasMode, FluidRecipeLookupHandler<ElectrolysisRecipe>, INeedConfig {
+public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachine<ElectrolysisRecipe> implements IBoundingBlock, IHasGasMode, FluidRecipeLookupHandler<ElectrolysisRecipe>, INotNeedConfig {
 
     public static final RecipeError NOT_ENOUGH_SPACE_LEFT_OUTPUT_ERROR = RecipeError.create();
     public static final RecipeError NOT_ENOUGH_SPACE_RIGHT_OUTPUT_ERROR = RecipeError.create();
@@ -104,6 +109,11 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
 
     private static final int BASE_DUMP_RATE = 8;
+
+    @Nullable
+    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> leftOutputCaches;
+    @Nullable
+    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> rightOutputCaches;
 
     private static final LongObjectToLongFunction<TileEntityLargeElectrolyticSeparator> BASE_ENERGY_CALCULATOR = (base, tile) -> base * tile.getRecipeEnergyMultiplier();
     private final IOutputHandler<@NotNull ElectrolysisRecipeOutput> outputHandler;
@@ -203,9 +213,9 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @NotNull
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        CanAdjustChemicalTankHelper builder = CanAdjustChemicalTankHelper.forSide(facingSupplier, null, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT);
-        builder.addTank(leftTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.LEFT);
-        builder.addTank(rightTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.RIGHT);
+        CanAdjustChemicalTankHelper builder = CanAdjustChemicalTankHelper.forSide(facingSupplier, null, side -> side == RelativeSide.FRONT);
+        builder.addTank(leftTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
+        builder.addTank(rightTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
         return builder.build();
     }
 
@@ -250,7 +260,30 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
 
         handleTank(leftTank, dumpLeft);
         handleTank(rightTank, dumpRight);
+        handleEject();
         return sendUpdatePacket;
+    }
+
+    private void handleEject() {
+        if (leftOutputCaches == null) {
+            leftOutputCaches = new ArrayList<>(1);
+            Direction side = RelativeSide.FRONT.getDirection(getDirection());
+            leftOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal()).relative(side), side.getOpposite()));
+        }
+        ChemicalUtil.emit(leftOutputCaches, leftTank, leftTank.getCapacity());
+        if (rightOutputCaches == null) {
+            rightOutputCaches = new ArrayList<>(1);
+            Direction side = RelativeSide.FRONT.getDirection(getDirection());
+            rightOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()).relative(side), side.getOpposite()));
+        }
+        ChemicalUtil.emit(rightOutputCaches, rightTank, rightTank.getCapacity());
+    }
+
+    @Override
+    protected void invalidateDirectionCaches(Direction newDirection) {
+        super.invalidateDirectionCaches(newDirection);
+        leftOutputCaches = null;
+        rightOutputCaches = null;
     }
 
     private void handleTank(IChemicalTank tank, GasMode mode) {
@@ -291,11 +324,6 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @ComputerMethod(nameOverride = "getEnergyUsage", methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
     public long getEnergyUsed() {
         return clientEnergyUsed;
-    }
-
-    @Override
-    public boolean needConfig() {
-        return false;
     }
 
     @NotNull
@@ -471,19 +499,13 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
         Direction right = left.getOpposite();
         switch (front) {
             case NORTH, SOUTH -> {
-                if (offset.equals(new Vec3i(left.getStepX(), 0, front.getStepZ()))) {
-                    return side != left;
-                }
-                if (offset.equals(new Vec3i(right.getStepX(), 0, front.getStepZ()))) {
-                    return side != right;
+                if (offset.equals(new Vec3i(left.getStepX(), 0, front.getStepZ())) || offset.equals(new Vec3i(right.getStepX(), 0, front.getStepZ()))) {
+                    return side != front;
                 }
             }
             case WEST, EAST -> {
-                if (offset.equals(new Vec3i(front.getStepX(), 0, left.getStepZ()))) {
-                    return side != left;
-                }
-                if (offset.equals(new Vec3i(front.getStepX(), 0, right.getStepZ()))) {
-                    return side != right;
+                if (offset.equals(new Vec3i(front.getStepX(), 0, left.getStepZ())) || offset.equals(new Vec3i(front.getStepX(), 0, right.getStepZ()))) {
+                    return side != front;
                 }
             }
         }

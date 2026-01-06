@@ -1,7 +1,6 @@
 package com.jerry.mekmm.common.network;
 
-import com.jerry.mekmm.common.network.to_server.MoreMachinePacketGuiInteract;
-import com.jerry.mekmm.common.network.to_server.PacketViewConnection;
+import com.jerry.mekmm.common.network.to_server.*;
 import com.jerry.mekmm.common.network.to_server.button.MoreMachinePacketTileButtonPress;
 
 import mekanism.common.lib.Version;
@@ -26,6 +25,9 @@ public class MoreMachinePacketHandler extends BasePacketHandler {
     protected void registerClientToServer(PacketRegistrar registrar) {
         registrar.play(PacketViewConnection.TYPE, PacketViewConnection.STREAM_CODEC);
         registrar.play(MoreMachinePacketGuiInteract.TYPE, MoreMachinePacketGuiInteract.STREAM_CODEC);
+        registrar.play(PacketGuiSetDoubleValue.TYPE, PacketGuiSetDoubleValue.STREAM_CODEC);
+        registrar.play(PacketGuiSetIntValue.TYPE, PacketGuiSetIntValue.STREAM_CODEC);
+        registrar.play(PacketGuiSetLongValue.TYPE, PacketGuiSetLongValue.STREAM_CODEC);
 
         // Button Press
         registrar.play(MoreMachinePacketTileButtonPress.TYPE, MoreMachinePacketTileButtonPress.STREAM_CODEC);

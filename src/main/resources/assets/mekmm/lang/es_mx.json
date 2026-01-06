@@ -363,6 +363,7 @@
   "gui.mekmm.wts.fluids_rate": "Tasa de salida de fluidos:%1$s mb/t",
   "gui.mekmm.wts.chemicals_rate": "Tasa de salida de productos químicos:%1$s mb/t",
   "gui.mekmm.wts.items_rate": "Tasa de salida de objetos:%1$s",
+  "gui.mekmm.wts.heat_rate": "Heat transmission Rate:%1$s/t",
 
   "button.mekmm.disconnect": "Desconectar",
   "button.mekmm.highlight": "Resaltar",
@@ -400,6 +401,8 @@
   "configuration.mekmm.general.chemicals.max_transmission_rate.tooltip": "Establece la tasa máxima de salida de productos químicos durante la transmisión inalámbrica",
   "configuration.mekmm.general.items.max_transmission_rate": "Tasa máxima de transmisión de objetos",
   "configuration.mekmm.general.items.max_transmission_rate.tooltip": "Establece la tasa máxima de salida de objetos durante la transmisión inalámbrica",
+  "configuration.mekmm.general.heat.max_transmission_rate": "Heat Max Transmission Rate",
+  "configuration.mekmm.general.heat.max_transmission_rate.tooltip": "Set the maximum heat output rate during wireless transmission",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate": "Tasa máxima de transmisión",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate.tooltip": "Tasa máxima de salida de la estación de transmisión inalámbrica",
   "configuration.mekmm.general.chemical_replicator.recipes": "Agregar recetas del replicador químico",

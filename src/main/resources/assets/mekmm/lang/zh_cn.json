@@ -363,6 +363,7 @@
   "gui.mekmm.wts.fluids_rate": "流体传输速率：%1$smb/t",
   "gui.mekmm.wts.chemicals_rate": "化学品传输速率：%1$smb/t",
   "gui.mekmm.wts.items_rate": "物品传输数量：%1$s",
+  "gui.mekmm.wts.heat_rate": "热量传输速率:%1$s/t",
 
   "button.mekmm.disconnect": "断开连接",
   "button.mekmm.highlight": "高亮位置",
@@ -400,6 +401,8 @@
   "configuration.mekmm.general.chemicals.max_transmission_rate.tooltip": "设置在无线传输时化学品的最大输出速率（单位：mb）",
   "configuration.mekmm.general.items.max_transmission_rate": "最大物品传输速率",
   "configuration.mekmm.general.items.max_transmission_rate.tooltip": "设置在无线传输时物品的最大传输速率（单位：个）",
+  "configuration.mekmm.general.heat.max_transmission_rate": "最大热量传输速率",
+  "configuration.mekmm.general.heat.max_transmission_rate.tooltip": "设置在无线传输时热量的最大传输速率（单位：K）",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate": "最大传输速率",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate.tooltip": "无线传输站的最大传输速率",
   "configuration.mekmm.general.chemical_replicator.recipes": "添加化学品复制机配方",
