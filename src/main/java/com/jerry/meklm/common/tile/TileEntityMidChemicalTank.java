@@ -3,8 +3,6 @@ package com.jerry.meklm.common.tile;
 import mekanism.api.providers.IBlockProvider;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.Capabilities;
-import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager;
-import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
@@ -20,8 +18,6 @@ import com.jerry.meklm.common.capabilities.chemical.LargeChemicalTankChemicalTan
 import com.jerry.meklm.common.tier.MidChemicalTankTier;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Field;
 
 public class TileEntityMidChemicalTank extends TileEntityLargeChemicalTank<MidChemicalTankTier> {
 
@@ -45,7 +41,7 @@ public class TileEntityMidChemicalTank extends TileEntityLargeChemicalTank<MidCh
 
     @Override
     public @NotNull <T> LazyOptional<T> getOffsetCapabilityIfEnabled(@NotNull Capability<T> capability, Direction side, @NotNull Vec3i offset) {
-        Field gasField, infusionField, pigmentField, slurryField;
+    /*        Field gasField, infusionField, pigmentField, slurryField;
         try {
             gasField = TileEntityMekanism.class.getDeclaredField("gasHandlerManager");
             gasField.setAccessible(true);
@@ -69,8 +65,16 @@ public class TileEntityMidChemicalTank extends TileEntityLargeChemicalTank<MidCh
         }
         if (capability == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandlerManager.resolve(capability, side);
-        }
+        }*/
         return getCapability(capability, side);
+        /*
+
+        if (capability == Capabilities.GAS_HANDLER) {
+            return Objects.requireNonNull(ChemicalHandlerManager, "Expected to have chemical handler").resolve(capability, side);
+        } else if (capability == Capabilities.ITEM.block()) {
+            return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
+        }
+        return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);*/
     }
 
     @Override
