@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Version [v1.1.1](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.1.0-1.20.1...v1.1.1-1.20.1)
+### Fixed
+
+- 将反射改为Accessor，修复种植工厂会导致服务端崩溃的bug by @lostmyself8 in [#89](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/89)
+
+ 
 ## Version [v1.1.0](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.0.5-1.20.1...v1.1.0-1.20.1)
 ### Added
 
