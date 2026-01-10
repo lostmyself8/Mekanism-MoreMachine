@@ -1,5 +1,7 @@
 package com.jerry.meklm.common.tile;
 
+import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+
 import mekanism.api.providers.IBlockProvider;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.Capabilities;
@@ -41,40 +43,44 @@ public class TileEntityMidChemicalTank extends TileEntityLargeChemicalTank<MidCh
 
     @Override
     public @NotNull <T> LazyOptional<T> getOffsetCapabilityIfEnabled(@NotNull Capability<T> capability, Direction side, @NotNull Vec3i offset) {
-    /*        Field gasField, infusionField, pigmentField, slurryField;
-        try {
-            gasField = TileEntityMekanism.class.getDeclaredField("gasHandlerManager");
-            gasField.setAccessible(true);
-            infusionField = TileEntityMekanism.class.getDeclaredField("infusionHandlerManager");
-            infusionField.setAccessible(true);
-            pigmentField = TileEntityMekanism.class.getDeclaredField("pigmentHandlerManager");
-            pigmentField.setAccessible(true);
-            slurryField = TileEntityMekanism.class.getDeclaredField("slurryHandlerManager");
-            slurryField.setAccessible(true);
-            if (capability == Capabilities.GAS_HANDLER) {
-                return ((ChemicalHandlerManager.GasHandlerManager) (gasField.get(this))).resolve(capability, side);
-            } else if (capability == Capabilities.INFUSION_HANDLER) {
-                return ((ChemicalHandlerManager.InfusionHandlerManager) (infusionField.get(this))).resolve(capability, side);
-            } else if (capability == Capabilities.PIGMENT_HANDLER) {
-                return ((ChemicalHandlerManager.PigmentHandlerManager) (pigmentField.get(this))).resolve(capability, side);
-            } else if (capability == Capabilities.SLURRY_HANDLER) {
-                return ((ChemicalHandlerManager.SlurryHandlerManager) (slurryField.get(this))).resolve(capability, side);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        if (capability == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandlerManager.resolve(capability, side);
-        }*/
+        /*
+         * Field gasField, infusionField, pigmentField, slurryField;
+         * try {
+         * gasField = TileEntityMekanism.class.getDeclaredField("gasHandlerManager");
+         * gasField.setAccessible(true);
+         * infusionField = TileEntityMekanism.class.getDeclaredField("infusionHandlerManager");
+         * infusionField.setAccessible(true);
+         * pigmentField = TileEntityMekanism.class.getDeclaredField("pigmentHandlerManager");
+         * pigmentField.setAccessible(true);
+         * slurryField = TileEntityMekanism.class.getDeclaredField("slurryHandlerManager");
+         * slurryField.setAccessible(true);
+         * if (capability == Capabilities.GAS_HANDLER) {
+         * return ((ChemicalHandlerManager.GasHandlerManager) (gasField.get(this))).resolve(capability, side);
+         * } else if (capability == Capabilities.INFUSION_HANDLER) {
+         * return ((ChemicalHandlerManager.InfusionHandlerManager) (infusionField.get(this))).resolve(capability, side);
+         * } else if (capability == Capabilities.PIGMENT_HANDLER) {
+         * return ((ChemicalHandlerManager.PigmentHandlerManager) (pigmentField.get(this))).resolve(capability, side);
+         * } else if (capability == Capabilities.SLURRY_HANDLER) {
+         * return ((ChemicalHandlerManager.SlurryHandlerManager) (slurryField.get(this))).resolve(capability, side);
+         * }
+         * } catch (NoSuchFieldException | IllegalAccessException e) {
+         * throw new RuntimeException(e);
+         * }
+         * if (capability == ForgeCapabilities.ITEM_HANDLER) {
+         * return itemHandlerManager.resolve(capability, side);
+         * }
+         */
         return getCapability(capability, side);
         /*
-
-        if (capability == Capabilities.GAS_HANDLER) {
-            return Objects.requireNonNull(ChemicalHandlerManager, "Expected to have chemical handler").resolve(capability, side);
-        } else if (capability == Capabilities.ITEM.block()) {
-            return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
-        }
-        return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);*/
+         *
+         * if (capability == Capabilities.GAS_HANDLER) {
+         * return Objects.requireNonNull(ChemicalHandlerManager,
+         * "Expected to have chemical handler").resolve(capability, side);
+         * } else if (capability == Capabilities.ITEM.block()) {
+         * return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
+         * }
+         * return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);
+         */
     }
 
     @Override
