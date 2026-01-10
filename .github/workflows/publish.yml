@@ -105,7 +105,7 @@ jobs:
           files: |
             ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
             ./!(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
-          name: 'Mekanism MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
+          name: 'MekanismMoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
           changelog: ${{ inputs.release-body }}
