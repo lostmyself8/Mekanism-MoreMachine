@@ -1,5 +1,6 @@
 package com.jerry.mekmm.common.tile.machine;
 
+import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.PlantingRecipe.PlantingStationRecipeOutput;
 import com.jerry.mekmm.api.recipes.cache.PlantingCacheRecipe;
@@ -32,8 +33,6 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.GasHandlerManager;
-import mekanism.common.capabilities.resolver.manager.EnergyHandlerManager;
 import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
@@ -45,7 +44,6 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
-import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
@@ -67,7 +65,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
@@ -230,19 +227,12 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
 
     @Override
     public @NotNull <T> LazyOptional<T> getOffsetCapabilityIfEnabled(@NotNull Capability<T> capability, Direction side, @NotNull Vec3i offset) {
-        Field energyField, gasField;
-        try {
-            gasField = TileEntityMekanism.class.getDeclaredField("gasHandlerManager");
-            gasField.setAccessible(true);
-            energyField = TileEntityMekanism.class.getDeclaredField("energyHandlerManager");
-            energyField.setAccessible(true);
+        if (this instanceof ITileEntityMekanismAccessor accessor) {
             if (capability == Capabilities.GAS_HANDLER) {
-                return ((GasHandlerManager) (gasField.get(this))).resolve(capability, side);
+                return accessor.getGasHandlerManager().resolve(capability, side);
             } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
-                return ((EnergyHandlerManager) (energyField.get(this))).resolve(capability, side);
+                return accessor.getEnergyHandlerManager().resolve(capability, side);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
         }
         if (capability == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandlerManager.resolve(capability, side);
