@@ -1,5 +1,7 @@
 package com.jerry.meklm.common.tile.prefab;
 
+import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+
 import mekanism.api.*;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.gas.Gas;
@@ -18,6 +20,7 @@ import mekanism.api.chemical.slurry.Slurry;
 import mekanism.api.chemical.slurry.SlurryStack;
 import mekanism.api.math.MathUtils;
 import mekanism.api.providers.IBlockProvider;
+import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
@@ -53,9 +56,13 @@ import mekanism.common.util.*;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 
 import com.jerry.meklm.api.INeedConfig;
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
@@ -208,15 +215,20 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
             emitDirections.add(RelativeSide.TOP.getDirection(getDirection()));
             // 一个储罐只能同时存在一种化学品，因此不需要每次都检查四种类型，根据存储的类型弹出相应的化学品即可
             switch (getChemicalTank().getCurrent()) {
-                case GAS -> ChemicalUtil.emit(emitDirections, getChemicalTank().getGasTank(), fromTile(), tier.getOutput());
-                case INFUSION -> ChemicalUtil.emit(emitDirections, getChemicalTank().getInfusionTank(), fromTile(), tier.getOutput());
-                case PIGMENT -> ChemicalUtil.emit(emitDirections, getChemicalTank().getPigmentTank(), fromTile(), tier.getOutput());
-                case SLURRY -> ChemicalUtil.emit(emitDirections, getChemicalTank().getSlurryTank(), fromTile(), tier.getOutput());
+                case GAS -> ChemicalUtil.emit(emitDirections, getChemicalTank().getGasTank(), ejectTile(), tier.getOutput());
+                case INFUSION -> ChemicalUtil.emit(emitDirections, getChemicalTank().getInfusionTank(), ejectTile(), tier.getOutput());
+                case PIGMENT -> ChemicalUtil.emit(emitDirections, getChemicalTank().getPigmentTank(), ejectTile(), tier.getOutput());
+                case SLURRY -> ChemicalUtil.emit(emitDirections, getChemicalTank().getSlurryTank(), ejectTile(), tier.getOutput());
             }
         }
     }
 
-    protected BlockEntity fromTile() {
+    /**
+     * 偏移自动弹出的方块实体
+     *
+     * @return 需要自动弹出的方块实体
+     */
+    protected BlockEntity ejectTile() {
         return WorldUtils.getTileEntity(getLevel(), getBlockPos());
     }
 
@@ -314,6 +326,51 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
         container.track(SyncableEnum.create(GasMode::byIndexStatic, GasMode.IDLE, () -> dumping, value -> dumping = value));
+    }
+
+    @Override
+    public int getBoundingComparatorSignal(Vec3i offset) {
+        if (offset.equals(Vec3i.ZERO)) {
+            return getCurrentRedstoneLevel();
+        }
+        return 0;
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getOffsetCapabilityIfEnabled(@NotNull Capability<T> capability, Direction side, @NotNull Vec3i offset) {
+        if (this instanceof ITileEntityMekanismAccessor accessor) {
+            if (capability == Capabilities.GAS_HANDLER) {
+                return accessor.getGasHandlerManager().resolve(capability, side);
+            } else if (capability == Capabilities.INFUSION_HANDLER) {
+                return accessor.getInfusionHandlerManager().resolve(capability, side);
+            } else if (capability == Capabilities.PIGMENT_HANDLER) {
+                return accessor.getPigmentHandlerManager().resolve(capability, side);
+            } else if (capability == Capabilities.SLURRY_HANDLER) {
+                return accessor.getSlurryHandlerManager().resolve(capability, side);
+            }
+        }
+        if (capability == ForgeCapabilities.ITEM_HANDLER) {
+            return itemHandlerManager.resolve(capability, side);
+        }
+        return getCapability(capability, side);
+    }
+
+    @Override
+    public boolean isOffsetCapabilityDisabled(@NotNull Capability<?> capability, Direction side, @NotNull Vec3i offset) {
+        if (capability == Capabilities.GAS_HANDLER) {
+            return notChemicalPort(side, offset);
+        } else if (capability == ForgeCapabilities.ITEM_HANDLER) {
+            return notItemPort(side, offset);
+        }
+        return notChemicalPort(side, offset) && notItemPort(side, offset);
+    }
+
+    protected boolean notChemicalPort(Direction side, Vec3i offset) {
+        return true;
+    }
+
+    protected boolean notItemPort(Direction side, Vec3i offset) {
+        return true;
     }
 
     // Methods relating to IComputerTile

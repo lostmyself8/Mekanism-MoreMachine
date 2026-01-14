@@ -4,7 +4,6 @@ import com.jerry.mekmm.api.recipes.StamperRecipe;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.api.recipes.cache.CachedRecipeHelper;
 import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
@@ -89,8 +88,31 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
     @Override
     protected void calculateOperationsThisTick(OperationTracker tracker) {
         super.calculateOperationsThisTick(tracker);
-        CachedRecipeHelper.twoInputCalculateOperationsThisTick(tracker, inputHandler, inputSupplier, moldHandler, moldInputSupplier, inputsSetter,
-                outputHandler, outputGetter, outputSetter, inputEmptyCheck, moldInputEmptyCheck);
+        if (tracker.shouldContinueChecking()) {
+            ItemStack inputA = inputHandler.getRecipeInput(inputSupplier.get());
+            if (inputEmptyCheck.test(inputA)) {
+                // No input, we don't know if the recipe matches or not so treat it as not matching
+                tracker.mismatchedRecipe();
+            } else {
+                ItemStack inputB = moldHandler.getRecipeInput(moldInputSupplier.get());
+                if (moldInputEmptyCheck.test(inputB)) {
+                    // No input, we don't know if the recipe matches or not so treat it as not matching
+                    tracker.mismatchedRecipe();
+                } else {
+                    inputsSetter.accept(inputA, inputB);
+                    // Calculate the current max based on the primary input
+                    inputHandler.calculateOperationsCanSupport(tracker, inputA);
+                    if (tracker.shouldContinueChecking()) {
+                        // 正常流程应该运行moldHandler.calculateOperationsCanSupport(tracker,
+                        // inputB)，但这里不需要，因为模具类的输入可能始终为1，我们并不需要通过模具数量来决定并行数量
+                        ItemStack output = outputGetter.apply(inputA, inputB);
+                        outputSetter.accept(output);
+                        // Calculate the max based on the space in the output
+                        outputHandler.calculateOperationsCanSupport(tracker, output);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -108,6 +130,7 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
         if (input != null && moldInput != null && output != null && !inputEmptyCheck.test(input) && !moldInputEmptyCheck.test(moldInput) &&
                 !outputEmptyCheck.test(output)) {
             inputHandler.use(input, operations);
+            // 这里依旧不执行消耗，虽然可以把消耗改为0，但很显然不执行消耗是最方便的
             outputHandler.handleOutput(output, operations);
         }
     }
