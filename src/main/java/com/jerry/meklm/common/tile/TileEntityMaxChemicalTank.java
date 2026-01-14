@@ -1,5 +1,7 @@
 package com.jerry.meklm.common.tile;
 
+import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+
 import mekanism.api.providers.IBlockProvider;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.util.WorldUtils;
