@@ -1,0 +1,22 @@
+{
+  "forge:conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "vinery"
+    }
+  ],
+  "type": "mekmm:planting",
+  "gasInput": {
+    "amount": 1,
+    "gas": "mekmm:nutrient_solution"
+  },
+  "itemInput": {
+    "ingredient": {
+      "item": "vinery:taiga_grapes_seeds_red"
+    }
+  },
+  "mainOutput": {
+    "count": 4,
+    "item": "vinery:taiga_grapes_red"
+  }
+}

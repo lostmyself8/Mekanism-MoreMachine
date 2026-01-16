@@ -25,7 +25,7 @@ import mekanism.common.tile.base.SubstanceType;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.GasSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
@@ -56,10 +56,10 @@ public class TileEntityCentrifugingFactory extends TileEntityGasToGasFactory<Gas
 
         ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.GAS);
         if (gasConfig != null) {
-            gasConfig.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo.GasSlotInfo(true, false, inputGasTanks));
+            gasConfig.addSlotInfo(DataType.INPUT, new GasSlotInfo(true, false, inputGasTanks));
             List<IGasTank> ioTank = outputGasTanks;
             ioTank.addAll(inputGasTanks);
-            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo.GasSlotInfo(true, true, ioTank));
+            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new GasSlotInfo(true, true, ioTank));
             gasConfig.fill(DataType.INPUT);
             gasConfig.setDataType(DataType.OUTPUT, RelativeSide.FRONT);
             gasConfig.setEjecting(true);
