@@ -104,7 +104,7 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
             ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
-            ./(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar)
+            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar
           name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
@@ -137,7 +137,7 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           files: |
             ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
-            ./(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar)
+            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar
           name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
