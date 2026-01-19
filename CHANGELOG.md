@@ -1,5 +1,12 @@
 # ChangeLog
 
+## Version [v1.1.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.1.1-1.20.1...v1.1.2-1.20.1)
+### Added
+
+- Optimized some code for the stamper and large chemical tanks by @lostmyself8 in [#99](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/99)
+- Compatible with Vinery by @lostmyself8 in [#101](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/101)
+
+ 
 ## Version [v1.1.1](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.1.0-1.20.1...v1.1.1-1.20.1)
 ### Fixed
 
