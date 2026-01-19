@@ -102,9 +102,11 @@ jobs:
         with:
           modrinth-id: qDJXZJTz
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: |
-            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
-            ./!(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
+          #          files: |
+          #            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+          #            ./!(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
+          files-primary: ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+          files-secondary: ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-*.jar
           name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
@@ -135,9 +137,11 @@ jobs:
         with:
           curseforge-id: 1275257
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          files: |
-            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
-            ./!(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
+          #          files: |
+          #            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+          #            ./!(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
+          files-primary: ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+          files-secondary: ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-*.jar
           name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
