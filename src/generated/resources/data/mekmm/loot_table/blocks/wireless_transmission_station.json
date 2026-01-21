@@ -22,6 +22,7 @@
                 "mekmm:chemicals_rate",
                 "mekmm:energy_rate",
                 "mekmm:fluids_rate",
+                "mekmm:heat_rate",
                 "mekmm:items_rate",
                 "mekanism:energy",
                 "mekanism:fluids",
