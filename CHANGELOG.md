@@ -1,5 +1,15 @@
 # ChangeLog
 
+## Version [v1.2.3](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.2-1.21.1...v1.2.3-1.21.1)
+### Added
+
+- Enabling large machines to eject by @lostmyself8 in [#87](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/87)
+
+### Fixed
+
+- 优化部分逻辑 by @lostmyself8 in [#83](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/83)
+
+ 
 ## Version [v1.2.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.1-1.21.1...v1.2.2-1.21.1)
 ### Fixed
 
