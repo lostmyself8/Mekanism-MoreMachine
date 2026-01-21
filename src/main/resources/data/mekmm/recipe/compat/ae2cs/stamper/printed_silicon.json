@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2cs"
+    }
+  ],
+  "type": "mekmm:stamper",
+  "input": {
+    "count": 1,
+    "tag": "c:gems/resonating"
+  },
+  "mold": {
+    "count": 1,
+    "item": "ae2cs:resonating_print_press"
+  },
+  "output": {
+    "count": 1,
+    "id": "ae2cs:resonating_circuit_print"
+  }
+}
