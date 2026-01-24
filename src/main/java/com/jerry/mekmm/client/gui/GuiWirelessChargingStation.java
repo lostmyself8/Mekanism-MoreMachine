@@ -1,5 +1,6 @@
 package com.jerry.mekmm.client.gui;
 
+import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.client.gui.element.GuiWirelessChargingStationSwitch;
 import com.jerry.mekmm.client.gui.element.GuiWirelessChargingStationSwitch.SwitchType;
 import com.jerry.mekmm.common.MoreMachineLang;
@@ -57,11 +58,11 @@ public class GuiWirelessChargingStation extends GuiConfigurableTile<TileEntityWi
                 MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getOutput())))));
 
         addRenderableWidget(new GuiWirelessChargingStationSwitch(this, imageWidth + 4, 42, EQUIPS, tile::getChargeEquipment, MoreMachineLang.CHARGING_EQUIPS.translate(),
-                () -> Mekanism.packetHandler().sendToServer(new MoreMachinePacketGuiInteract(GuiInteraction.CHARGING_EQUIPS, tile)), SwitchType.LOWER_ICON));
+                () -> Mekmm.packetHandler().sendToServer(new MoreMachinePacketGuiInteract(GuiInteraction.CHARGING_EQUIPS, tile)), SwitchType.LOWER_ICON));
         addRenderableWidget(new GuiWirelessChargingStationSwitch(this, imageWidth + 4, 67, INVENTORY, tile::getChargeInventory, MoreMachineLang.CHARGING_INVENTORY.translate(),
-                () -> Mekanism.packetHandler().sendToServer(new MoreMachinePacketGuiInteract(GuiInteraction.CHARGING_INVENTORY, tile)), SwitchType.LOWER_ICON));
+                () -> Mekmm.packetHandler().sendToServer(new MoreMachinePacketGuiInteract(GuiInteraction.CHARGING_INVENTORY, tile)), SwitchType.LOWER_ICON));
         addRenderableWidget(new GuiWirelessChargingStationSwitch(this, imageWidth + 4, 92, CURIOS, tile::getChargeCurios, MoreMachineLang.CHARGING_CURIOS.translate(),
-                () -> Mekanism.packetHandler().sendToServer(new MoreMachinePacketGuiInteract(GuiInteraction.CHARGING_CURIOS, tile)), SwitchType.LOWER_ICON));
+                () -> Mekmm.packetHandler().sendToServer(new MoreMachinePacketGuiInteract(GuiInteraction.CHARGING_CURIOS, tile)), SwitchType.LOWER_ICON));
     }
 
     @Override
