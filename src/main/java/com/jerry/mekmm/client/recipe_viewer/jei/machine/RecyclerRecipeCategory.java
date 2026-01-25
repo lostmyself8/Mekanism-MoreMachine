@@ -44,7 +44,7 @@ public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe>
         super.createRecipeExtras(builder, recipeHolder, focuses);
         double secondaryChance = recipeHolder.value().getOutputChance();
         if (secondaryChance > 0) {
-            builder.addText(TextUtils.getPercent(secondaryChance), output.getWidth(), font().lineHeight)
+            builder.addText(TextUtils.getPercent(secondaryChance), output.getWidth() + 1, font().lineHeight)
                     .setPosition(getGuiLeft() + output.getRelativeX() + 1, getGuiTop() + output.getRelativeBottom() + 1)
                     .setTextAlignment(HorizontalAlignment.RIGHT)
                     .setColor(titleTextColor());
