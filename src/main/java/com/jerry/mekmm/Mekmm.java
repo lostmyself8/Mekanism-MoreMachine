@@ -84,6 +84,7 @@ public class Mekmm implements IModModule {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
+        packetHandler.initialize();
         hooks.hookCommonSetup();
     }
 
