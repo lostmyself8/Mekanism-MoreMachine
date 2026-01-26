@@ -114,6 +114,12 @@ public class PlantingRecipeProvider implements ISubRecipeProvider {
                 IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.NUTRIENT_SOLUTION.asStack(1)),
                 new ItemStack(Items.WHITE_TULIP, 3),
                 true).build(consumer, Mekmm.rl(basePath + "flower/white_tulip"));
+        // 白色郁金香
+        PlantingStationRecipeBuilder.planting(
+                IngredientCreatorAccess.item().from(Items.PINK_TULIP),
+                IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.NUTRIENT_SOLUTION.asStack(1)),
+                new ItemStack(Items.PINK_TULIP, 3),
+                true).build(consumer, Mekmm.rl(basePath + "flower/pink_tulip"));
         // 滨菊
         PlantingStationRecipeBuilder.planting(
                 IngredientCreatorAccess.item().from(Items.OXEYE_DAISY),
