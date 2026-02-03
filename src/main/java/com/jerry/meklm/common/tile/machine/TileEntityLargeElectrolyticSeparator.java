@@ -162,7 +162,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     private long recipeEnergyMultiplier = 1L;
     private int baselineMaxOperations = 1;
     private long dumpRate = BASE_DUMP_RATE;
-    private int baseOperations = 8;
+    private int baseOperations = 1;
     @Getter
     private FixedUsageEnergyContainer<TileEntityLargeElectrolyticSeparator> energyContainer;
 
@@ -363,7 +363,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
             double speed = Math.pow(2, upgradeCount);
             baseOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
             baselineMaxOperations = (int) speed;
-            dumpRate = (long) (BASE_DUMP_RATE * speed);
+            dumpRate = (long) (BASE_DUMP_RATE * baseOperations * speed);
         }
     }
 

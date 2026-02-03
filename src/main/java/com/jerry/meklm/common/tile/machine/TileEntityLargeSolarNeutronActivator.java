@@ -130,7 +130,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         // Allow extracting out of the input gas tank if it isn't external OR the output tank is empty AND the input is
         // radioactive
         builder.addTank(inputTank = BasicChemicalTank.createModern(MAX_GAS, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank),
-                ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT);
+                ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT, RelativeSide.BACK);
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.BACK);
         return builder.build();
     }
