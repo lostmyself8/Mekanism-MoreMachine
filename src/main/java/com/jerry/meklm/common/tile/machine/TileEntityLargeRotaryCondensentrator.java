@@ -127,7 +127,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     private boolean mode;
     private long clientEnergyUsed = 0;
     private int baselineMaxOperations = 1;
-    private int baseOperations = 8;
+    private int baseOperations = 1;
     private int numPowering;
     @Getter
     private MachineEnergyContainer<TileEntityLargeRotaryCondensentrator> energyContainer;
