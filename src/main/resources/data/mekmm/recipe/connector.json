@@ -3,16 +3,22 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "mekanism:alloys/atomic"
+      "tag": "c:ingots/osmium"
     },
-    "C": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "V": {
       "item": "mekanism:teleportation_core"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
     }
   },
   "pattern": [
-    " A ",
-    "ACA",
-    " A "
+    "IV",
+    " A",
+    " S"
   ],
   "result": {
     "count": 1,
