@@ -3,6 +3,7 @@ package com.jerry.mekmm.common.item;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.MoreMachineItemAbilities;
 import com.jerry.mekmm.common.MoreMachineLang;
+import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 import com.jerry.mekmm.common.tile.interfaces.ITileConnect;
 import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
@@ -49,7 +50,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.util.Lazy;
-import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
