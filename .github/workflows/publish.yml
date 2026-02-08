@@ -139,7 +139,7 @@ jobs:
             ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
             ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar
           name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
-          version: 'mc${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
+          version: '${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
           version-type: ${{ env.VERSION_TYPE }}
           changelog: ${{ inputs.release-body }}
           loaders: ${{ env.LOADER }}
