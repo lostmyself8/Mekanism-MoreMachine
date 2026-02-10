@@ -11,20 +11,20 @@ import mekanism.common.tile.base.TileEntityMekanism;
 
 import java.util.function.UnaryOperator;
 
-public class MMBlockFactoryMachine<TILE extends TileEntityMekanism, MACHINE extends MoreMachineFactoryMachine<TILE>> extends BlockTile<TILE, MACHINE> {
+public class BlockMoreFactoryMachine<TILE extends TileEntityMekanism, MACHINE extends MoreMachineFactoryMachine<TILE>> extends BlockTile<TILE, MACHINE> {
 
-    public MMBlockFactoryMachine(MACHINE machine, UnaryOperator<Properties> propertiesModifier) {
+    public BlockMoreFactoryMachine(MACHINE machine, UnaryOperator<Properties> propertiesModifier) {
         super(machine, propertiesModifier);
     }
 
-    public static class MMBlockFactoryMachineModel<TILE extends TileEntityMekanism, MACHINE extends MoreMachineFactoryMachine<TILE>> extends MMBlockFactoryMachine<TILE, MACHINE> implements IStateFluidLoggable {
+    public static class BlockMoreFactoryMachineModel<TILE extends TileEntityMekanism, MACHINE extends MoreMachineFactoryMachine<TILE>> extends BlockMoreFactoryMachine<TILE, MACHINE> implements IStateFluidLoggable {
 
-        public MMBlockFactoryMachineModel(MACHINE machineType, UnaryOperator<Properties> propertiesModifier) {
+        public BlockMoreFactoryMachineModel(MACHINE machineType, UnaryOperator<Properties> propertiesModifier) {
             super(machineType, propertiesModifier);
         }
     }
 
-    public static class BlockMoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> extends MMBlockFactoryMachineModel<TILE, MoreMachineFactory<TILE>> {
+    public static class BlockMoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> extends BlockMoreFactoryMachineModel<TILE, MoreMachineFactory<TILE>> {
 
         public BlockMoreMachineFactory(MoreMachineFactory<TILE> factoryType) {
             super(factoryType, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor()));

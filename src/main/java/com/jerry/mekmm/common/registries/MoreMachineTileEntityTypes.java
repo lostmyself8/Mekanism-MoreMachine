@@ -1,7 +1,7 @@
 package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
-import com.jerry.mekmm.common.block.prefab.MMBlockFactoryMachine;
+import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.tile.TileEntityAuthorDoll;
@@ -48,7 +48,7 @@ public class MoreMachineTileEntityTypes {
     }
 
     private static void registerFactory(FactoryTier tier, MoreMachineFactoryType type, MMBlockEntityFactory<? extends TileEntityMoreMachineFactory<?>> factoryConstructor) {
-        BlockRegistryObject<MMBlockFactoryMachine.BlockMoreMachineFactory<?>, ItemBlockMoreMachineFactory> block = MoreMachineBlocks.getMoreMachineFactory(tier, type);
+        BlockRegistryObject<BlockMoreFactoryMachine.BlockMoreMachineFactory<?>, ItemBlockMoreMachineFactory> block = MoreMachineBlocks.getMoreMachineFactory(tier, type);
         TileEntityTypeRegistryObject<? extends TileEntityMoreMachineFactory<?>> tileRO = MM_TILE_ENTITY_TYPES.mekBuilder(block, (pos, state) -> factoryConstructor.create(block, pos, state))
                 .clientTicker(TileEntityMekanism::tickClient)
                 .serverTicker(TileEntityMekanism::tickServer)

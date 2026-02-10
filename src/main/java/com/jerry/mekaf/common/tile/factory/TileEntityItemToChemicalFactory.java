@@ -6,6 +6,7 @@ import com.jerry.mekaf.common.upgrade.ItemToChemicalUpgradeData;
 import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.MekanismRecipe;
@@ -18,6 +19,8 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.common.CommonWorldTickHandler;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.ComputerException;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
@@ -170,6 +173,26 @@ public abstract class TileEntityItemToChemicalFactory<RECIPE extends MekanismRec
             super.parseUpgradeData(provider, upgradeData);
         }
     }
+
+    // Methods relating to IComputerTile
+    @ComputerMethod
+    ItemStack getInput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].inputSlot().getStack();
+    }
+
+    @ComputerMethod
+    ChemicalStack getOutput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].outputTank().getStack();
+    }
+
+    @ComputerMethod
+    IChemicalTank getOutputTank(int process) throws ComputerException {
+        validateValidProcess(process);
+        return outputTank[process];
+    }
+    // End methods IComputerTile
 
     protected void sortInventoryOrTank() {
         Map<ItemStack, ICRecipeProcessInfo<RECIPE>> processes = ItemStackMap.createTypeAndTagMap();

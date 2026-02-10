@@ -30,6 +30,11 @@ import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.ComputerException;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -95,8 +100,20 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
 
     private PRCProcessInfo[] processInfoSlots;
 
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class,
+                            methodNames = { "getInputFluid", "getInputFluidCapacity", "getInputFluidNeeded",
+                                    "getInputFluidFilledPercentage" },
+                            docPlaceholder = "fluid input")
     public BasicFluidTank inputFluidTank;
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getInputGas", "getInputGasCapacity", "getInputGasNeeded",
+                                    "getInputGasFilledPercentage" },
+                            docPlaceholder = "gas input")
     public IChemicalTank inputChemicalTank;
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getOutputGas", "getOutputGasCapacity", "getOutputGasNeeded",
+                                    "getOutputGasFilledPercentage" },
+                            docPlaceholder = "gas output")
     public IChemicalTank outputChemicalTank;
 
     private long recipeEnergyRequired = 0;
@@ -343,6 +360,20 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
         }
         inputChemicalTank.setEmpty();
     }
+
+    // Methods relating to IComputerTile
+    @ComputerMethod
+    ItemStack getInput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].inputSlot().getStack();
+    }
+
+    @ComputerMethod
+    ItemStack getOutput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].outputSlot().getStack();
+    }
+    // End methods IComputerTile
 
     @Override
     protected void sortInventoryOrTank() {
