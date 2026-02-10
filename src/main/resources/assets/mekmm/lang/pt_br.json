@@ -363,6 +363,7 @@
   "gui.mekmm.wts.fluids_rate": "Taxa de transmissão de fluidos: %1$s mb/t",
   "gui.mekmm.wts.chemicals_rate": "Taxa de transmissão de químicos: %1$s mb/t",
   "gui.mekmm.wts.items_rate": "Taxa de transmissão de itens: %1$s",
+  "gui.mekmm.wts.heat_rate": "Taxa de Transmissão de Calor: %1$s/t",
 
   "button.mekmm.disconnect": "Desconectar",
   "button.mekmm.highlight": "Destacar",
@@ -400,6 +401,8 @@
   "configuration.mekmm.general.chemicals.max_transmission_rate.tooltip": "Define a taxa máxima de saída de químicos durante a transmissão sem fio",
   "configuration.mekmm.general.items.max_transmission_rate": "Taxa Máx. de Transmissão de Itens",
   "configuration.mekmm.general.items.max_transmission_rate.tooltip": "Define a taxa máxima de saída de itens durante a transmissão sem fio",
+  "configuration.mekmm.general.heat.max_transmission_rate": "Taxa Máxima de Transmissão de Calor",
+  "configuration.mekmm.general.heat.max_transmission_rate.tooltip": "Defina a taxa máxima de saída de calor durante a transmissão sem fio",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate": "Taxa Máxima de Transmissão",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate.tooltip": "Taxa Máxima de Saída da Estação de Transmissão Sem Fio",
   "configuration.mekmm.general.chemical_replicator.recipes": "Adicionar Receitas ao Replicador Químico",

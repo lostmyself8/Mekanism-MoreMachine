@@ -363,6 +363,7 @@
   "gui.mekmm.wts.fluids_rate": "Скорость передачи жидкостей: %1$s мБ/т",
   "gui.mekmm.wts.chemicals_rate": "Скорость передачи химикатов: %1$s мБ/т",
   "gui.mekmm.wts.items_rate": "Скорость передачи предметов: %1$s",
+  "gui.mekmm.wts.heat_rate": "Heat transmission Rate:%1$s/t",
 
   "button.mekmm.disconnect": "Отключить",
   "button.mekmm.highlight": "Подсветка",
@@ -400,6 +401,8 @@
   "configuration.mekmm.general.chemicals.max_transmission_rate.tooltip": "Установите максимальную выходную скорость химикатов при беспроводной передаче",
   "configuration.mekmm.general.items.max_transmission_rate": "Макс. скорость передачи предметов",
   "configuration.mekmm.general.items.max_transmission_rate.tooltip": "Установите максимальную выходную скорость предметов при беспроводной передаче",
+  "configuration.mekmm.general.heat.max_transmission_rate": "Heat Max Transmission Rate",
+  "configuration.mekmm.general.heat.max_transmission_rate.tooltip": "Set the maximum heat output rate during wireless transmission",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate": "Максимальная скорость передачи",
   "configuration.mekmm.general.wireless_transmission_station.max_transmission_rate.tooltip": "Макс. выходная скорость беспроводной передающей станции",
   "configuration.mekmm.general.chemical_replicator.recipes": "Добавить рецепты хим. репликатора",

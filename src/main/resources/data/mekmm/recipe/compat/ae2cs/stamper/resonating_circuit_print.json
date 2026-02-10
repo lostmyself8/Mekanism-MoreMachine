@@ -2,20 +2,20 @@
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
-      "modid": "ae2"
+      "modid": "ae2cs"
     }
   ],
   "type": "mekmm:stamper",
   "input": {
     "count": 1,
-    "tag": "c:silicon"
+    "tag": "c:gems/resonating"
   },
   "mold": {
     "count": 1,
-    "item": "ae2:silicon_press"
+    "item": "ae2cs:resonating_print_press"
   },
   "output": {
     "count": 1,
-    "id": "ae2:printed_silicon"
+    "id": "ae2cs:resonating_circuit_print"
   }
 }

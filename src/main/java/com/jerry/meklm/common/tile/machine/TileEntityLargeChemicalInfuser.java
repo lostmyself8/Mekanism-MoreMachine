@@ -2,13 +2,14 @@ package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.INeedConfig;
+import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.recipes.ChemicalChemicalToChemicalRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
@@ -51,23 +52,27 @@ import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<ChemicalChemicalToChemicalRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<ChemicalChemicalToChemicalRecipe>, INeedConfig {
+public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<ChemicalChemicalToChemicalRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<ChemicalChemicalToChemicalRecipe>, INotNeedConfig {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
@@ -77,6 +82,9 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     public static final long MAX_GAS = 5L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
+
+    @Nullable
+    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalOutputCaches;
 
     @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
                             methodNames = { "getLeftInput", "getLeftInputCapacity", "getLeftInputNeeded",
@@ -96,7 +104,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
 
     private long clientEnergyUsed = 0L;
     private int baselineMaxOperations = 1;
-    private int baseOperations = 8;
+    private int baseOperations = 1;
     private int numPowering;
 
     private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
@@ -188,17 +196,29 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
         rightInputSlot.fillTank();
         outputSlot.drainTank();
         clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(energyContainer);
+        handleEject();
         return sendUpdatePacket;
+    }
+
+    private void handleEject() {
+        if (chemicalOutputCaches == null) {
+            chemicalOutputCaches = new ArrayList<>(2);
+            Direction side = RelativeSide.FRONT.getDirection(getDirection());
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal()).relative(side), side.getOpposite()));
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()).relative(side), side.getOpposite()));
+        }
+        ChemicalUtil.emit(chemicalOutputCaches, centerTank, centerTank.getCapacity());
+    }
+
+    @Override
+    protected void invalidateDirectionCaches(Direction newDirection) {
+        super.invalidateDirectionCaches(newDirection);
+        chemicalOutputCaches = null;
     }
 
     @ComputerMethod(nameOverride = "getEnergyUsage", methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
     public long getEnergyUsed() {
         return clientEnergyUsed;
-    }
-
-    @Override
-    public boolean needConfig() {
-        return false;
     }
 
     @NotNull

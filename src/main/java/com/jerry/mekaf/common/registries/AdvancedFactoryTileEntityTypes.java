@@ -60,7 +60,7 @@ public class AdvancedFactoryTileEntityTypes {
     }
 
     @SuppressWarnings("unchecked")
-    public static TileEntityTypeRegistryObject<? extends TileEntityAdvancedFactoryBase<?>>[] getFactoryTiles() {
+    public static TileEntityTypeRegistryObject<? extends TileEntityAdvancedFactoryBase<?>>[] getAdvancedFactoryTiles() {
         return AF_FACTORIES.values().toArray(new TileEntityTypeRegistryObject[0]);
     }
 

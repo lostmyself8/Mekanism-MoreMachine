@@ -2,7 +2,7 @@ package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.INeedConfig;
+import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import com.jerry.mekmm.common.util.WorldUtil;
 
@@ -11,6 +11,7 @@ import mekanism.api.RelativeSide;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.api.functions.ConstantPredicates;
@@ -47,6 +48,7 @@ import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
@@ -54,19 +56,22 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachine<ChemicalToChemicalRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<ChemicalToChemicalRecipe>, INeedConfig {
+public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachine<ChemicalToChemicalRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<ChemicalToChemicalRecipe>, INotNeedConfig {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_INPUT,
@@ -75,6 +80,9 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     public static final long MAX_GAS = 10L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
     protected LargeSNA solarCheck;
     private final LargeSNA[] solarChecks = new LargeSNA[8];
+
+    @Nullable
+    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalOutputCaches;
 
     @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
                             methodNames = { "getInput", "getInputCapacity", "getInputNeeded",
@@ -122,7 +130,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         // Allow extracting out of the input gas tank if it isn't external OR the output tank is empty AND the input is
         // radioactive
         builder.addTank(inputTank = BasicChemicalTank.createModern(MAX_GAS, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank),
-                ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT);
+                ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT, RelativeSide.BACK);
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.BACK);
         return builder.build();
     }
@@ -170,7 +178,24 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         outputSlot.drainTank();
         productionRate = recalculateProductionRate();
         recipeCacheLookupMonitor.updateAndProcess();
+        handleEject();
         return sendUpdatePacket;
+    }
+
+    private void handleEject() {
+        if (chemicalOutputCaches == null) {
+            chemicalOutputCaches = new ArrayList<>(2);
+            Direction side = RelativeSide.BACK.getDirection(getDirection());
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal()).relative(side), side.getOpposite()));
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()).relative(side), side.getOpposite()));
+        }
+        ChemicalUtil.emit(chemicalOutputCaches, outputTank, outputTank.getCapacity());
+    }
+
+    @Override
+    protected void invalidateDirectionCaches(Direction newDirection) {
+        super.invalidateDirectionCaches(newDirection);
+        chemicalOutputCaches = null;
     }
 
     /**
@@ -186,11 +211,6 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             }
         }
         seeSunCount = count;
-    }
-
-    @Override
-    public boolean needConfig() {
-        return false;
     }
 
     @NotNull
@@ -227,26 +247,21 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
      * @return 效率减小倍数
      */
     private float reduceMultiplier() {
-        // TODO:这里的倍率有点问题，会导致在遮住第六个板子时将为0
         int panelCount = solarChecks.length + 1;
         byte notSeeSunCount = (byte) (panelCount - seeSunCount);
+        float reduction = 0f;
         // 无遮挡或意外情况
         if (notSeeSunCount <= 0) {
-            return 0f;
+            return reduction;
+        }
+        // 阻挡一块降低40%，阻挡二至五块每块降低10%，阻挡六至九块每块降低5%
+        if (notSeeSunCount <= 5) {
+            reduction += (notSeeSunCount - 1) * 0.1f + 0.4f;
+        } else {
+            reduction += (notSeeSunCount - 5) * 0.05f + 0.8f;
         }
         // 全遮挡或意外情况
-        if (notSeeSunCount >= panelCount) {
-            return 1f;
-        }
-        float reduction;
-        if (notSeeSunCount <= 3) {
-            reduction = 0.05f * notSeeSunCount + 0.8f;
-        } else if (notSeeSunCount <= 7) {
-            reduction = 0.1f * notSeeSunCount + 0.4f;
-        } else {
-            reduction = 0.4f;
-        }
-        return reduction;
+        return Math.min(reduction, 1f);
     }
 
     @Override

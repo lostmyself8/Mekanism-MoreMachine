@@ -1,5 +1,27 @@
 # ChangeLog
 
+## Version [v1.3.0](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.3-1.21.1...v1.3.0-1.21.1)
+### Added
+
+- Compatible with AE2CS by @lostmyself8 in [#108](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/108)
+
+### Fixed
+
+- Compatible with AE2CS and Repair the JEI display of the recycler by @lostmyself8 in [#112](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/112)
+- 添加粉红色郁金香的配方 by @lostmyself8 in [#117](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/117)
+- Fix the incorrect bug in the rate decline of large neutron activators by @lostmyself8 in [#118](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/118)
+
+ 
+## Version [v1.2.3](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.2-1.21.1...v1.2.3-1.21.1)
+### Added
+
+- Enabling large machines to eject by @lostmyself8 in [#87](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/87)
+
+### Fixed
+
+- 优化部分逻辑 by @lostmyself8 in [#83](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/83)
+
+ 
 ## Version [v1.2.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.1-1.21.1...v1.2.2-1.21.1)
 ### Fixed
 

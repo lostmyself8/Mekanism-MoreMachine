@@ -117,15 +117,14 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
                 if (fuel != null) {
                     // Ensure valid data
                     maxBurnTicks = Math.max(1, fuel.burnTicks());
-                    // 不能在此处倍增，会在gui计算中倍增两次
                     generationRate = fuel.energyPerTick();
                 }
             }
 
-            // 准备使用多少燃料， 燃料消耗减半
+            // 准备使用多少燃料，燃料消耗受效率乘数影响
             long toUse = (long) (getToUse() * efficiencyMultiplier);
-            // 应当在这里倍增
-            long toUseGeneration = MathUtils.multiplyClamped((long) (generationRate * efficiencyMultiplier), toUse);
+            // 发电量受效率乘数影响，只应用一次效率乘数
+            long toUseGeneration = MathUtils.multiplyClamped(generationRate, toUse);
             updateMaxOutputRaw(Math.max(ChemicalUtil.hydrogenEnergyPerTick(), toUseGeneration));
 
             long total = burnTicks + fuelTank.getStored() * maxBurnTicks;
@@ -179,7 +178,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     @ComputerMethod(nameOverride = "getBurnRate")
     public double getUsed() {
-        return Math.round(gasUsedLastTick * efficiencyMultiplier * 100) / 100D;
+        return Math.round(gasUsedLastTick * 100) / 100D;
     }
 
     private void updateEfficiency() {
@@ -188,8 +187,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
             return;
         }
         double fillPercentage = fuelTank.getStored() / (double) fuelTank.getCapacity();
-        // 三次方曲线: 前期增长慢,后期加速
-        efficiencyMultiplier = 1.0 + 21.0 * Math.pow(fillPercentage, 3);
+        // 三次方曲线: 前期增长慢,后期加速，最大效率乘数为64
+        efficiencyMultiplier = 1.0 + 63.0 * Math.pow(fillPercentage, 3);
     }
 
     @Override
@@ -209,6 +208,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         container.track(syncableMaxOutput());
         container.track(SyncableDouble.create(this::getUsed, value -> gasUsedLastTick = value));
         container.track(SyncableInt.create(this::getMaxBurnTicks, value -> maxBurnTicks = value));
+        container.track(SyncableDouble.create(this::getEfficiencyMultiplier, value -> efficiencyMultiplier = value));
     }
 
     @Override

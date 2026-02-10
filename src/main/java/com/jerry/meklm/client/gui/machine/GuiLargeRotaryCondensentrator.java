@@ -51,7 +51,7 @@ public class GuiLargeRotaryCondensentrator extends GuiMekanismTile<TileEntityLar
         addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, () -> tile.getFluidTanks(null), GaugeType.STANDARD, this, 133, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_FLUID_INPUT_ERROR))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_SPACE_FLUID_OUTPUT_ERROR));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.gasTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 25, 13))
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 25, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_GAS_INPUT_ERROR))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR));
         addRenderableWidget(new GuiProgress(new IBooleanProgressInfoHandler() {

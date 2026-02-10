@@ -80,6 +80,72 @@ jobs:
           files: ./*.jar
           fail_on_unmatched_files: true
 
+  publish-modrinth:
+    name: Publish to Modrinth
+    needs: build
+    if: ${{ !inputs.simulate }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ inputs.branch }}
+      - name: Publish Mod
+        env:
+          MC_VERSION: ${{ inputs.branch }}
+          LOADER: ${{ inputs.branch == '1.21.1' && 'neoforge' || 'forge' }}
+          JAVA: ${{ inputs.branch == '1.21.1' && '21' || '17' }}
+          VERSION_TYPE: 'release'
+        uses: Kir-Antipov/mc-publish@v3.3.0
+        with:
+          modrinth-id: qDJXZJTz
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: |
+            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar
+          name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
+          version: '${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
+          version-type: ${{ env.VERSION_TYPE }}
+          changelog: ${{ inputs.release-body }}
+          loaders: ${{ env.LOADER }}
+          java: ${{ env.JAVA }}
+          fail-mode: fail
+
+  publish-cf:
+    name: Publish to CF
+    needs: build
+    if: ${{ !inputs.simulate }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ inputs.branch }}
+      - name: Publish Mod
+        env:
+          MC_VERSION: ${{ inputs.branch }}
+          LOADER: ${{ inputs.branch == '1.21.1' && 'neoforge' || 'forge' }}
+          JAVA: ${{ inputs.branch == '1.21.1' && '21' || '17' }}
+          VERSION_TYPE: 'release'
+        uses: Kir-Antipov/mc-publish@v3.3.0
+        with:
+          curseforge-id: 1275257
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: |
+            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
+            ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}-@(dev|dev-slim|slim|sources).jar
+          name: 'Mekanism:MoreMachine ${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
+          version: '${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}'
+          version-type: ${{ env.VERSION_TYPE }}
+          changelog: ${{ inputs.release-body }}
+          loaders: ${{ env.LOADER }}
+          java: ${{ env.JAVA }}
+          fail-mode: fail
+
   # After successful release, PR version bump and changelog
   bump-version-and-changelog:
     name: Bump Version and Build Changelog

@@ -11,6 +11,7 @@ public class MoreMachineSerializationConstants {
     public static final String FLUIDS_RATE = "fluids_rate";
     public static final String CHEMICALS_RATE = "chemicals_rate";
     public static final String ITEM_RATE = "item_rate";
+    public static final String HEAT_RATE = "heat_rate";
 
     // Recipe
     public static final String MOLD = "mold";
