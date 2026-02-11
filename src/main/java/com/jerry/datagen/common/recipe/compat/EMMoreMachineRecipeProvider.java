@@ -6,7 +6,7 @@ import com.jerry.datagen.common.recipe.pattern.Pattern;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.block.attribute.MoreMachineAttributeFactoryType;
-import com.jerry.mekmm.common.block.prefab.MMBlockFactoryMachine.BlockMoreMachineFactory;
+import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine.BlockMoreMachineFactory;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;

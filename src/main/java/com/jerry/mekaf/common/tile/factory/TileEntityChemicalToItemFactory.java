@@ -20,6 +20,8 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.common.CommonWorldTickHandler;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.ComputerException;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -34,6 +36,7 @@ import mekanism.common.util.MekanismUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -170,6 +173,26 @@ public abstract class TileEntityChemicalToItemFactory<RECIPE extends MekanismRec
             super.parseUpgradeData(provider, upgradeData);
         }
     }
+
+    // Methods relating to IComputerTile
+    @ComputerMethod
+    ChemicalStack getInput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].inputTank().getStack();
+    }
+
+    @ComputerMethod
+    IChemicalTank getInputTank(int process) throws ComputerException {
+        validateValidProcess(process);
+        return inputTank[process];
+    }
+
+    @ComputerMethod
+    ItemStack getOutput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].outputSlot().getStack();
+    }
+    // End methods IComputerTile
 
     protected void sortInventoryOrTank() {
         Map<ChemicalStack, CIRecipeProcessInfo<RECIPE>> processes = ChemicalStackMap.createTypeAndComponentsMap();

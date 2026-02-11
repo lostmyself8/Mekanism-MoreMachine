@@ -19,6 +19,8 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.common.CommonWorldTickHandler;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
+import mekanism.common.integration.computer.ComputerException;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
 import mekanism.common.tile.component.ITileComponent;
@@ -170,6 +172,32 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
             super.parseUpgradeData(provider, upgradeData);
         }
     }
+
+    // Methods relating to IComputerTile
+    @ComputerMethod
+    ChemicalStack getInput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].inputTank().getStack();
+    }
+
+    @ComputerMethod
+    IChemicalTank getInputTank(int process) throws ComputerException {
+        validateValidProcess(process);
+        return inputTank[process];
+    }
+
+    @ComputerMethod
+    ChemicalStack getOutput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].outputTank().getStack();
+    }
+
+    @ComputerMethod
+    IChemicalTank getOutputTank(int process) throws ComputerException {
+        validateValidProcess(process);
+        return outputTank[process];
+    }
+    // End methods IComputerTile
 
     @Override
     protected void sortInventoryOrTank() {

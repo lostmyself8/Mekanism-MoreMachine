@@ -3,7 +3,8 @@
   "input": {
     "count": 1,
     "type": "neoforge:compound",
-    "children": [{
+    "children": [
+      {
         "item": "minecraft:dirt"
       },
       {

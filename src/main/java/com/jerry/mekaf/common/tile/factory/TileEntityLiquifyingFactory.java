@@ -25,6 +25,10 @@ import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.ComputerException;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -75,6 +79,10 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
 
     private NLProcessInfo[] processInfoSlots;
 
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class,
+                            methodNames = { "getOutput", "getOutputCapacity", "getOutputNeeded",
+                                    "getOutputFilledPercentage" },
+                            docPlaceholder = "output tank")
     public IExtendedFluidTank fluidTank;
 
     protected IOutputHandler<ItemStackToFluidOptionalItemRecipe.@NotNull FluidOptionalItemOutput>[] liquifiesOutputHandler;
@@ -260,6 +268,20 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress,
                 energySlot, inputItemSlots, outputItemSlots, fluidTank, isSorting(), getComponents());
     }
+
+    // Methods relating to IComputerTile
+    @ComputerMethod
+    ItemStack getInput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].inputSlot().getStack();
+    }
+
+    @ComputerMethod
+    ItemStack getOutput(int process) throws ComputerException {
+        validateValidProcess(process);
+        return processInfoSlots[process].inputSlot().getStack();
+    }
+    // End methods IComputerTile
 
     @Override
     protected void sortInventoryOrTank() {

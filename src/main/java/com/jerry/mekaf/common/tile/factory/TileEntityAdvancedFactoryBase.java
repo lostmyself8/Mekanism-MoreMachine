@@ -453,6 +453,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         validateValidProcess(process);
         return getProgress(process);
     }
+    // End methods IComputerTile
 
     protected abstract void sortInventoryOrTank();
 

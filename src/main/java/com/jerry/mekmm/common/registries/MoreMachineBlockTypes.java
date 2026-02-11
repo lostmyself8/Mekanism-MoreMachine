@@ -145,7 +145,6 @@ public class MoreMachineBlockTypes {
             .createMachine(() -> MoreMachineTileEntityTypes.WIRELESS_CHARGING_STATION, MoreMachineLang.DESCRIPTION_WIRELESS_CHARGING_STATION)
             .withGui(() -> MoreMachineContainerTypes.WIRELESS_CHARGING_STATION)
             .withEnergyConfig(MoreMachineConfig.storage.wirelessChargingStation)
-            // .with(AttributeUpgradeSupport.ANCHOR_ONLY)
             .withSideConfig(TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(MoreMachineBlockShapes.WIRELESS_CHARGING_STATION)
             .with(AttributeCustomSelectionBox.JSON)
@@ -181,7 +180,6 @@ public class MoreMachineBlockTypes {
     public static final BlockTypeTile<TileEntityModelerDoll> MODELER_DOLL = BlockTypeTile.BlockTileBuilder
             .createBlock(() -> MoreMachineTileEntityTypes.MODELER_DOLL, MoreMachineLang.MODELER_DOLL)
             .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
-            // 玩偶的模型都是一样的
             .withCustomShape(MoreMachineBlockShapes.AUTHOR_DOLL)
             .with(AttributeCustomSelectionBox.JSON)
             .build();
