@@ -92,28 +92,28 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
         super.calculateOperationsThisTick(tracker);
         if (tracker.shouldContinueChecking()) {
             ItemStack inputA = inputHandler.getRecipeInput(inputSupplier.get());
-            //Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputA)
+            // Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputA)
             if (inputEmptyCheck.test(inputA)) {
-                //No input, we don't know if the recipe matches or not so treat it as not matching
+                // No input, we don't know if the recipe matches or not so treat it as not matching
                 tracker.mismatchedRecipe();
             } else {
                 ItemStack inputB = secondaryInputHandler.getRecipeInput(secondaryInputSupplier.get());
-                //Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputB)
+                // Test to make sure we can even perform a single operation. This is akin to !recipe.test(inputB)
                 if (secondaryInputEmptyCheck.test(inputB)) {
-                    //No input, we don't know if the recipe matches or not so treat it as not matching
+                    // No input, we don't know if the recipe matches or not so treat it as not matching
                     tracker.mismatchedRecipe();
                 } else {
                     inputsSetter.accept(inputA, inputB);
-                    //Calculate the current max based on the primary input
+                    // Calculate the current max based on the primary input
                     inputHandler.calculateOperationsCanSupport(tracker, inputA);
                     if (tracker.shouldContinueChecking()) {
-                        //Calculate the current max based on the secondary input
-                        //正常流程应该运行moldHandler.calculateOperationsCanSupport(tracker, inputB)
-                        //但这里不需要，因为模具类的输入可能始终为1，我们并不需要通过模具数量来决定并行数量
+                        // Calculate the current max based on the secondary input
+                        // 正常流程应该运行moldHandler.calculateOperationsCanSupport(tracker, inputB)
+                        // 但这里不需要，因为模具类的输入可能始终为1，我们并不需要通过模具数量来决定并行数量
                         if (tracker.shouldContinueChecking()) {
                             ItemStack output = outputGetter.apply(inputA, inputB);
                             outputSetter.accept(output);
-                            //Calculate the max based on the space in the output
+                            // Calculate the max based on the space in the output
                             outputHandler.calculateOperationsCanSupport(tracker, output);
                         }
                     }
