@@ -40,19 +40,19 @@ public class TileEntityLargeRotaryCondensentrator$ComputerHandler extends Comput
     }
 
     public static Object gasTank$getGas(TileEntityLargeRotaryCondensentrator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(ComputerChemicalTankWrapper.getStack(subject.gasTank));
+        return helper.convert(ComputerChemicalTankWrapper.getStack(subject.chemicalTank));
     }
 
     public static Object gasTank$getGasCapacity(TileEntityLargeRotaryCondensentrator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(ComputerChemicalTankWrapper.getCapacity(subject.gasTank));
+        return helper.convert(ComputerChemicalTankWrapper.getCapacity(subject.chemicalTank));
     }
 
     public static Object gasTank$getGasNeeded(TileEntityLargeRotaryCondensentrator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(ComputerChemicalTankWrapper.getNeeded(subject.gasTank));
+        return helper.convert(ComputerChemicalTankWrapper.getNeeded(subject.chemicalTank));
     }
 
     public static Object gasTank$getGasFilledPercentage(TileEntityLargeRotaryCondensentrator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(ComputerChemicalTankWrapper.getFilledPercentage(subject.gasTank));
+        return helper.convert(ComputerChemicalTankWrapper.getFilledPercentage(subject.chemicalTank));
     }
 
     public static Object fluidTank$getFluid(TileEntityLargeRotaryCondensentrator subject, BaseComputerHelper helper) throws ComputerException {
