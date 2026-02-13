@@ -1,5 +1,20 @@
 # ChangeLog
 
+## Version [v1.3.1](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.0-1.21.1...v1.3.1-1.21.1)
+### Added
+
+- Balanced gas generator by @lostmyself8 in [#122](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/122)
+- Fully compatible with CC by @lostmyself8 in [#127](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/127)
+
+### Fixed
+
+- Modify the connector's recipe by @lostmyself8 in [#121](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/121)
+
+### Changed
+
+- Updated PT_BR localization by @PrincessStelllar in [#124](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/124)
+
+ 
 ## Version [v1.3.0](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.3-1.21.1...v1.3.0-1.21.1)
 ### Added
 
