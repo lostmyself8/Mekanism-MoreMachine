@@ -100,7 +100,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         dischargeSlot.fillContainerOrConvert();
         if (!energyContainer.isEmpty() && canFunction()) {
             Level level = getLevel();
-            UUID uuid = getSecurity().getOwnerUUID();
+            UUID uuid = getOwnerUUID();
             if (level != null && uuid != null) {
                 Player player = level.getPlayerByUUID(uuid);
                 if (player == null) {
