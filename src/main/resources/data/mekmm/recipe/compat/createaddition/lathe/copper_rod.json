@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createaddition"
+    }
+  ],
+  "type": "mekmm:lathe",
+  "input": {
+    "count": 1,
+    "tag": "c:ingots/copper"
+  },
+  "output": {
+    "count": 2,
+    "id": "createaddition:copper_rod"
+  }
+}

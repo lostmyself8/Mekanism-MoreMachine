@@ -1,7 +1,7 @@
 package com.jerry.mekmm.common.item.block.machine;
 
 import com.jerry.mekmm.common.block.attribute.MoreMachineAttributeFactoryType;
-import com.jerry.mekmm.common.block.prefab.MMBlockFactoryMachine;
+import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 
 import mekanism.api.text.EnumColor;
 import mekanism.common.MekanismLang;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?>> {
 
-    private static AttachedSideConfig getSideConfig(MMBlockFactoryMachine.BlockMoreMachineFactory<?> block) {
+    private static AttachedSideConfig getSideConfig(BlockMoreFactoryMachine.BlockMoreMachineFactory<?> block) {
         return switch (Attribute.getOrThrow(block.builtInRegistryHolder(), MoreMachineAttributeFactoryType.class).getMoreMachineFactoryType()) {
             // case COMPRESSING, INFUSING -> AttachedSideConfig.ADVANCED_MACHINE;
             // case COMBINING -> AttachedSideConfig.EXTRA_MACHINE;
@@ -35,7 +35,7 @@ public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?
         };
     }
 
-    public ItemBlockMoreMachineFactory(MMBlockFactoryMachine.BlockMoreMachineFactory<?> block, Properties properties) {
+    public ItemBlockMoreMachineFactory(BlockMoreFactoryMachine.BlockMoreMachineFactory<?> block, Properties properties) {
         super(block, true, properties
                 .component(MekanismDataComponents.SORTING, false)
                 .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)

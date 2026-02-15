@@ -13,6 +13,7 @@ import mekanism.api.recipes.ChemicalDissolutionRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe;
+import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
 import mekanism.api.recipes.cache.TwoInputCachedRecipe;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
@@ -74,7 +75,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
 
     private final ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
 
-    private final ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier injectUsageMultiplier;
+    private final ChemicalUsageMultiplier injectUsageMultiplier;
     private double injectUsage = 1;
     private final long[] usedSoFar;
 

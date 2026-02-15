@@ -130,7 +130,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         // Allow extracting out of the input gas tank if it isn't external OR the output tank is empty AND the input is
         // radioactive
         builder.addTank(inputTank = BasicChemicalTank.createModern(MAX_GAS, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank),
-                ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT);
+                ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT, RelativeSide.BACK);
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.BACK);
         return builder.build();
     }
@@ -247,26 +247,21 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
      * @return 效率减小倍数
      */
     private float reduceMultiplier() {
-        // TODO:这里的倍率有点问题，会导致在遮住第六个板子时将为0
         int panelCount = solarChecks.length + 1;
         byte notSeeSunCount = (byte) (panelCount - seeSunCount);
+        float reduction = 0f;
         // 无遮挡或意外情况
         if (notSeeSunCount <= 0) {
-            return 0f;
+            return reduction;
+        }
+        // 阻挡一块降低40%，阻挡二至五块每块降低10%，阻挡六至九块每块降低5%
+        if (notSeeSunCount <= 5) {
+            reduction += (notSeeSunCount - 1) * 0.1f + 0.4f;
+        } else {
+            reduction += (notSeeSunCount - 5) * 0.05f + 0.8f;
         }
         // 全遮挡或意外情况
-        if (notSeeSunCount >= panelCount) {
-            return 1f;
-        }
-        float reduction;
-        if (notSeeSunCount <= 3) {
-            reduction = 0.05f * notSeeSunCount + 0.8f;
-        } else if (notSeeSunCount <= 7) {
-            reduction = 0.1f * notSeeSunCount + 0.4f;
-        } else {
-            reduction = 0.4f;
-        }
-        return reduction;
+        return Math.min(reduction, 1f);
     }
 
     @Override

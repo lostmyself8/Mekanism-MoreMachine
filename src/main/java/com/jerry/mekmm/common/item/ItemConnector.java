@@ -3,6 +3,7 @@ package com.jerry.mekmm.common.item;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.MoreMachineItemAbilities;
 import com.jerry.mekmm.common.MoreMachineLang;
+import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 import com.jerry.mekmm.common.tile.interfaces.ITileConnect;
 import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
@@ -14,10 +15,11 @@ import mekanism.api.radial.IRadialDataHelper;
 import mekanism.api.radial.RadialData;
 import mekanism.api.radial.mode.IRadialMode;
 import mekanism.api.text.EnumColor;
-import mekanism.api.text.IHasTextComponent;
+import mekanism.api.text.IHasTextComponent.IHasEnumNameTextComponent;
 import mekanism.api.text.ILangEntry;
 import mekanism.api.text.TextComponentUtil;
 import mekanism.common.MekanismLang;
+import mekanism.common.item.interfaces.IItemHUDProvider;
 import mekanism.common.lib.radial.IRadialModeItem;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.util.MekanismUtils;
@@ -36,6 +38,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -58,9 +61,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-public class ItemConnector extends Item implements IRadialModeItem<ItemConnector.ConnectorMode> {
+public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode>, IItemHUDProvider {
 
-    private static final Lazy<RadialData<ItemConnector.ConnectorMode>> LAZY_RADIAL_DATA = Lazy.of(() -> IRadialDataHelper.INSTANCE.dataForEnum(Mekmm.rl("connector_mode"), ItemConnector.ConnectorMode.class));
+    private static final Lazy<RadialData<ConnectorMode>> LAZY_RADIAL_DATA = Lazy.of(() -> IRadialDataHelper.INSTANCE.dataForEnum(Mekmm.rl("connector_mode"), ConnectorMode.class));
 
     public ItemConnector(Properties properties) {
         super(properties.rarity(Rarity.UNCOMMON).stacksTo(1)
@@ -201,6 +204,11 @@ public class ItemConnector extends Item implements IRadialModeItem<ItemConnector
     }
 
     @Override
+    public void addHUDStrings(List<Component> list, Player player, ItemStack stack, EquipmentSlot slotType) {
+        list.add(MekanismLang.MODE.translateColored(EnumColor.PINK, getMode(stack)));
+    }
+
+    @Override
     public void changeMode(@NotNull Player player, @NotNull ItemStack stack, int shift, DisplayChange displayChange) {
         ConnectorMode mode = getMode(stack);
         ConnectorMode newMode = mode.adjust(shift);
@@ -211,12 +219,12 @@ public class ItemConnector extends Item implements IRadialModeItem<ItemConnector
     }
 
     @NothingNullByDefault
-    public enum ConnectorMode implements IIncrementalEnum<ConnectorMode>, IHasTextComponent.IHasEnumNameTextComponent, IRadialMode, StringRepresentable {
+    public enum ConnectorMode implements IIncrementalEnum<ConnectorMode>, IHasEnumNameTextComponent, IRadialMode, StringRepresentable {
 
         ITEMS(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.ITEM, EnumColor.GRAY, null),
         FLUIDS(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.FLUID, EnumColor.DARK_AQUA, null),
         CHEMICALS(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.CHEMICAL, EnumColor.YELLOW, null),
-        ENERGY(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.ENERGY, EnumColor.DARK_RED, null),
+        ENERGY(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.ENERGY, EnumColor.BRIGHT_GREEN, null),
         HEAT(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.HEAT, EnumColor.ORANGE, null);
 
         public static final Codec<ConnectorMode> CODEC = StringRepresentable.fromEnum(ConnectorMode::values);

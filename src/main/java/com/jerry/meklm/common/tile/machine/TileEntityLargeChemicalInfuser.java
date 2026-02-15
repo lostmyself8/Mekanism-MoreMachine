@@ -104,7 +104,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
 
     private long clientEnergyUsed = 0L;
     private int baselineMaxOperations = 1;
-    private int baseOperations = 8;
+    private int baseOperations = 1;
     private int numPowering;
 
     private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
