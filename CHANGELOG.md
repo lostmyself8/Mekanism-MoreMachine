@@ -9,6 +9,23 @@
 ### Fixed
 
 - Modify the connector's recipe by @lostmyself8 in [#121](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/121)
+- Adapt mek-10.7.18.84 by @lostmyself8 in [#131](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/131)
+- FIx by @QiuYe-123 in [#134](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/134)
+
+### Changed
+
+- Updated PT_BR localization by @PrincessStelllar in [#124](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/124)
+
+ 
+## Version [v1.3.1](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.0-1.21.1...v1.3.1-1.21.1)
+### Added
+
+- Balanced gas generator by @lostmyself8 in [#122](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/122)
+- Fully compatible with CC by @lostmyself8 in [#127](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/127)
+
+### Fixed
+
+- Modify the connector's recipe by @lostmyself8 in [#121](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/121)
 
 ### Changed
 
