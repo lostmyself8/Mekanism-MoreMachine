@@ -92,6 +92,13 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     private final ChemicalUsageMultiplier chemicalUsageMultiplier;
 
     public static final int BASE_TICKS_REQUIRED = 10 * SharedConstants.TICKS_PER_SECOND;
+    /**
+     * Total Nutrient Solution consumed (in mB) per completed recipe operation.
+     * This is intentionally separate from BASE_TICKS_REQUIRED so the chemical
+     * cost can be tuned independently of processing speed.
+     * Lower this value to reduce nutrient solution usage per recipe.
+     */
+    public static final long BASE_CHEMICAL_USAGE = 100;
     public static final long MAX_GAS = 210;
 
     // 化学品存储槽
@@ -142,7 +149,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
         chemicalInputHandler = InputHelper.getConstantInputHandler(chemicalTank);
         outputHandler = OutputHelper.getOutputHandler(mainOutputSlot, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, secondaryOutputSlot, NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR);
 
-        baseTotalUsage = baseTicksRequired;
+        baseTotalUsage = BASE_CHEMICAL_USAGE;
         if (useStatisticalMechanics()) {
             chemicalUsageMultiplier = (usedSoFar, operatingTicks) -> StatUtils.inversePoisson(chemicalPerTickMeanMultiplier);
         } else {
@@ -239,7 +246,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             if (useStatisticalMechanics()) {
                 chemicalPerTickMeanMultiplier = MekanismUtils.getGasPerTickMeanMultiplier(this);
             } else {
-                baseTotalUsage = MekanismUtils.getBaseUsage(this, baseTicksRequired);
+                baseTotalUsage = MekanismUtils.getBaseUsage(this, BASE_CHEMICAL_USAGE);
             }
         }
     }
