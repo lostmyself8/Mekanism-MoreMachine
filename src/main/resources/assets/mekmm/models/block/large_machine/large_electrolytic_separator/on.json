@@ -1,0 +1,9 @@
+{
+  "parent": "mekmm:block/large_machine/large_electrolytic_separator/base",
+  "textures": {
+    "2": "mekmm:block/large_machine/large_electrolytic_separator/light_on",
+    "3": "mekanism:block/models/digital_miner_screen_hello",
+    "4": "mekmm:block/large_machine/screen_logo",
+    "5": "mekmm:block/large_machine/large_electrolytic_separator/screen_cmd"
+  }
+}

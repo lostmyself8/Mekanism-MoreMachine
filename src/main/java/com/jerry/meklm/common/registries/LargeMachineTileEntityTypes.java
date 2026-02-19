@@ -8,6 +8,10 @@ import mekanism.common.tile.base.TileEntityMekanism;
 
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
+import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
+import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
+import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
+import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
 
 public class LargeMachineTileEntityTypes {
 
@@ -25,4 +29,9 @@ public class LargeMachineTileEntityTypes {
     public static final TileEntityTypeRegistryObject<TileEntityMaxChemicalTank> ADVANCED_MAX_CHEMICAL_TANK = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, (pos, state) -> new TileEntityMaxChemicalTank(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, pos, state), TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
     public static final TileEntityTypeRegistryObject<TileEntityMaxChemicalTank> ELITE_MAX_CHEMICAL_TANK = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, (pos, state) -> new TileEntityMaxChemicalTank(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, pos, state), TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
     public static final TileEntityTypeRegistryObject<TileEntityMaxChemicalTank> ULTIMATE_MAX_CHEMICAL_TANK = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, (pos, state) -> new TileEntityMaxChemicalTank(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, pos, state), TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
+
+    public static final TileEntityTypeRegistryObject<TileEntityLargeRotaryCondensentrator> LARGE_ROTARY_CONDENSENTRATOR = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, TileEntityLargeRotaryCondensentrator::new, TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
+    public static final TileEntityTypeRegistryObject<TileEntityLargeChemicalInfuser> LARGE_CHEMICAL_INFUSER = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER, TileEntityLargeChemicalInfuser::new, TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
+    public static final TileEntityTypeRegistryObject<TileEntityLargeElectrolyticSeparator> LARGE_ELECTROLYTIC_SEPARATOR = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, TileEntityLargeElectrolyticSeparator::new, TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
+    public static final TileEntityTypeRegistryObject<TileEntityLargeSolarNeutronActivator> LARGE_SOLAR_NEUTRON_ACTIVATOR = LM_TILE_ENTITY_TYPES.register(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, TileEntityLargeSolarNeutronActivator::new, TileEntityMekanism::tickServer, TileEntityMekanism::tickClient);
 }

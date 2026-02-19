@@ -21,9 +21,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
-import com.jerry.meklm.client.gui.GuiLargeChemicalTank;
+import com.jerry.meklm.client.gui.*;
+import com.jerry.meklm.client.model.bake.LargeChemicalInfuserBakedModel;
+import com.jerry.meklm.client.model.bake.LargeElectrolyticSeparatorBakedModel;
+import com.jerry.meklm.client.model.bake.LargeRotaryCondensentratorBakedModel;
+import com.jerry.meklm.client.model.bake.LargeSNABakedModel;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
+
+import static mekanism.client.ClientRegistration.addCustomModel;
 
 @Mod.EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientRegistration {
@@ -32,17 +38,21 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        mekanism.client.ClientRegistration.addCustomModel(MoreMachineBlocks.WIRELESS_CHARGING_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+        addCustomModel(MoreMachineBlocks.WIRELESS_CHARGING_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
 
-        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+        addCustomModel(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
-        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+        addCustomModel(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
-        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+        addCustomModel(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
-        mekanism.client.ClientRegistration.addCustomModel(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
+        addCustomModel(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
+        addCustomModel(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, (orig, evt) -> new LargeRotaryCondensentratorBakedModel(orig));
+        addCustomModel(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER, (orig, evt) -> new LargeChemicalInfuserBakedModel(orig));
+        addCustomModel(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, (orig, evt) -> new LargeElectrolyticSeparatorBakedModel(orig));
+        addCustomModel(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, (orig, evt) -> new LargeSNABakedModel(orig));
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -65,6 +75,10 @@ public class ClientRegistration {
             ClientRegistrationUtil.registerScreen(AdvancedFactoryContainerTypes.ADVANCED_FACTORY, GuiAdvancedFactory::new);
             // Large Machine
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_CHEMICAL_TANK, GuiLargeChemicalTank::new);
+            ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ROTARY_CONDENSENTRATOR, GuiLargeRotaryCondensentrator::new);
+            ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_CHEMICAL_INFUSER, GuiLargeChemicalInfuser::new);
+            ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR, GuiLargeElectrolyticSeparator::new);
+            ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, GuiLargeSolarNeutronActivator::new);
         });
     }
 }

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mekmm.refmap.json",
   "mixins": [
+    "MixinItemConfigurator",
     "MixinRecipeCacheLookupMonitor",
     "MixinTileEntityMekanism",
     "recipe.MixinMekanismRecipeType"
