@@ -1,0 +1,9 @@
+{
+  "parent": "mekmm:block/large_machine/large_chemical_infuser/base",
+  "textures": {
+    "1": "mekmm:block/large_machine/large_chemical_infuser/light_on",
+    "2": "mekanism:block/models/digital_miner_screen_hello",
+    "3": "mekmm:block/large_machine/screen_logo",
+    "4": "mekmm:block/large_machine/large_chemical_infuser/screen_cmd"
+  }
+}

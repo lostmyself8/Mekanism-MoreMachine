@@ -64,7 +64,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 
-import com.jerry.meklm.api.INeedConfig;
+import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.tier.ILargeTankTier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -76,7 +76,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> extends TileEntityConfigurableMachine implements ISustainedData, IHasGasMode, IBoundingBlock, INeedConfig {
+public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> extends TileEntityConfigurableMachine implements ISustainedData, IHasGasMode, IBoundingBlock, INotNeedConfig {
 
     @SyntheticComputerMethod(getter = "getDumpingMode", getterDescription = "Get the current Dumping configuration")
     public GasMode dumping = GasMode.IDLE;
@@ -230,11 +230,6 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
      */
     protected BlockEntity ejectTile() {
         return WorldUtils.getTileEntity(getLevel(), getBlockPos());
-    }
-
-    @Override
-    public boolean needConfig() {
-        return false;
     }
 
     @Override

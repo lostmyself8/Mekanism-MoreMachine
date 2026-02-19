@@ -1,0 +1,9 @@
+{
+  "parent": "mekmm:block/large_machine/large_electrolytic_separator/base",
+  "textures": {
+    "2": "mekmm:block/large_machine/large_electrolytic_separator/light_off",
+    "3": "mekmm:block/large_machine/screen_off",
+    "4": "mekmm:block/large_machine/screen_off",
+    "5": "mekmm:block/large_machine/screen_off"
+  }
+}

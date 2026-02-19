@@ -7,6 +7,7 @@ import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.Infu
 import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.PigmentHandlerManager;
 import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.SlurryHandlerManager;
 import mekanism.common.capabilities.resolver.manager.EnergyHandlerManager;
+import mekanism.common.capabilities.resolver.manager.FluidHandlerManager;
 import mekanism.common.tile.base.TileEntityMekanism;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,6 +27,9 @@ public abstract class MixinTileEntityMekanism implements ITileEntityMekanismAcce
 
     @Accessor("slurryHandlerManager")
     public abstract SlurryHandlerManager getSlurryHandlerManager();
+
+    @Accessor("fluidHandlerManager")
+    public abstract FluidHandlerManager getFluidHandlerManager();
 
     @Accessor("energyHandlerManager")
     public abstract EnergyHandlerManager getEnergyHandlerManager();

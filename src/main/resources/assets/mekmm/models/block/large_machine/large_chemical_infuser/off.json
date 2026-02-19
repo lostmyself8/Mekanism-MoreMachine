@@ -1,0 +1,9 @@
+{
+  "parent": "mekmm:block/large_machine/large_chemical_infuser/base",
+  "textures": {
+    "1": "mekmm:block/large_machine/large_chemical_infuser/light_off",
+    "2": "mekmm:block/large_machine/screen_off",
+    "3": "mekmm:block/large_machine/screen_off",
+    "4": "mekmm:block/large_machine/screen_off"
+  }
+}

@@ -12,7 +12,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import com.jerry.meklm.api.INeedConfig;
+import com.jerry.meklm.api.INotNeedConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,8 +36,8 @@ public class MixinItemConfigurator {
 
     @Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lmekanism/common/tile/interfaces/ISideConfiguration;getConfig()Lmekanism/common/tile/component/TileComponentConfig;", shift = At.Shift.BY, ordinal = 1), cancellable = true)
     private void mixinUseOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        if (mekmm$tile instanceof INeedConfig need) {
-            if (!need.needConfig()) {
+        if (mekmm$tile instanceof INotNeedConfig need) {
+            if (need.notNeedConfig()) {
                 cir.setReturnValue(InteractionResult.FAIL);
             }
         }
