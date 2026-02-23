@@ -2,6 +2,7 @@ package com.jerry.meklm.common.registries;
 
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 
+import mekanism.api.Upgrade;
 import mekanism.api.functions.TriConsumer;
 import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.*;
@@ -21,12 +22,10 @@ import com.jerry.meklm.common.tier.MaxChemicalTankTier;
 import com.jerry.meklm.common.tier.MidChemicalTankTier;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
+import com.jerry.meklm.common.tile.machine.*;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
+import java.util.EnumSet;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -57,6 +56,7 @@ public class LargeMachineBlockTypes {
             .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeRotaryCondensentrator")
             .build();
+
     // Chemical Infuser
     public static final Machine<TileEntityLargeChemicalInfuser> LARGE_CHEMICAL_INFUSER = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_CHEMICAL_INFUSER, MekanismLang.DESCRIPTION_CHEMICAL_INFUSER)
@@ -68,6 +68,7 @@ public class LargeMachineBlockTypes {
             .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY_BUT_TOP_BACK_2X3)
             .withComputerSupport("largeChemicalInfuser")
             .build();
+
     // Electrolytic Separator
     public static final Machine<TileEntityLargeElectrolyticSeparator> LARGE_ELECTROLYTIC_SEPARATOR = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ELECTROLYTIC_SEPARATOR, MekanismLang.DESCRIPTION_ELECTROLYTIC_SEPARATOR)
@@ -79,6 +80,7 @@ public class LargeMachineBlockTypes {
             .withBounding(MoreMachineBounding.FULL_3X3X2)
             .withComputerSupport("largeElectrolyticSeparator")
             .build();
+
     // Solar Neutron Activator
     public static final Machine<TileEntityLargeSolarNeutronActivator> LARGE_SOLAR_NEUTRON_ACTIVATOR = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, MekanismLang.DESCRIPTION_SOLAR_NEUTRON_ACTIVATOR)
@@ -89,6 +91,19 @@ public class LargeMachineBlockTypes {
             .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeSolarNeutronActivator")
             .replace(Attributes.ACTIVE)
+            .build();
+
+    // Antiprotonic Nucleosynthesizer
+    public static final Machine<TileEntityLargeAntiprotonicNucleosynthesizer> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = MachineBuilder
+            .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, MekanismLang.DESCRIPTION_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .withGui(() -> LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .withEnergyConfig(MekanismConfig.usage.antiprotonicNucleosynthesizer, MekanismConfig.storage.antiprotonicNucleosynthesizer)
+            .withSound(MekanismSounds.ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .withSupportedUpgrades(EnumSet.of(Upgrade.MUFFLING))
+            .withCustomShape(LargeMachineBlockShapes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .with(AttributeCustomSelectionBox.JSON)
+            .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY)
+            .withComputerSupport("largeAntiprotonicNucleosynthesizer")
             .build();
 
     private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createLargeChemicalTank(ILargeTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {

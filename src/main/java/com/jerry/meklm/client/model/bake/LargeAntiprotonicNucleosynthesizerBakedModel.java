@@ -10,9 +10,9 @@ import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
-public class LargeSNABakedModel extends TransformedBakedModel<Void> {
+public class LargeAntiprotonicNucleosynthesizerBakedModel extends TransformedBakedModel<Void> {
 
-    public LargeSNABakedModel(BakedModel original) {
+    public LargeAntiprotonicNucleosynthesizerBakedModel(BakedModel original) {
         super(original, QuadTransformation.translate(0, 1, 0));
     }
 
@@ -22,7 +22,7 @@ public class LargeSNABakedModel extends TransformedBakedModel<Void> {
     }
 
     @Override
-    protected LargeSNABakedModel wrapModel(BakedModel model) {
-        return new LargeSNABakedModel(model);
+    protected LargeAntiprotonicNucleosynthesizerBakedModel wrapModel(BakedModel model) {
+        return new LargeAntiprotonicNucleosynthesizerBakedModel(model);
     }
 }

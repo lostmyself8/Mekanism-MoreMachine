@@ -1,0 +1,42 @@
+{
+  "loader": "forge:composite",
+  "gui_light": "side",
+  "textures": {
+    "particle": "mekanism:block/models/antiprotonic_nucleosynthesizer_back"
+  },
+  "children": {
+    "base": {
+      "parent": "mekmm:block/large_machine/large_antiprotonic_nucleosynthesizer/base/off",
+      "render_type": "cutout"
+    },
+    "translucent": {
+      "render_type": "translucent",
+      "textures": {
+        "0": "mekmm:block/large_machine/large_antiprotonic_nucleosynthesizer/base"
+      },
+      "elements": [
+        {
+          "name": "glass",
+          "from": [-12, -4, -14],
+          "to": [11, 20, -12],
+          "rotation": {"angle": 0, "axis": "y", "origin": [9, -4, -14]},
+          "faces": {
+            "north": {"uv": [0.25, 8.75, 1.6875, 10.25], "texture": "#0"},
+            "south": {"uv": [1.6875, 8.75, 0.25, 10.25], "texture": "#0"}
+          }
+        },
+        {
+          "name": "glass",
+          "from": [-14, -4, -14],
+          "to": [-12, 20, 11],
+          "rotation": {"angle": 0, "axis": "y", "origin": [7, -4, -14]},
+          "faces": {
+            "north": {"uv": [3.25, 8.75, 3.375, 10.25], "texture": "#0"},
+            "east": {"uv": [0.25, 8.75, 1.8125, 10.25], "texture": "#0"},
+            "west": {"uv": [3.375, 8.75, 1.8125, 10.25], "texture": "#0"}
+          }
+        }
+      ]
+    }
+  }
+}

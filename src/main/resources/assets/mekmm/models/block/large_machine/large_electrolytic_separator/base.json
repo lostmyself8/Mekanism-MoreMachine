@@ -2,6 +2,7 @@
   "format_version": "1.9.0",
   "credit": "Made with Blockbench, made by TedXenon",
   "parent": "block/cube_all",
+  "render_type": "cutout",
   "texture_size": [256, 256],
   "textures": {
     "1": "mekmm:block/large_machine/large_electrolytic_separator/base",
