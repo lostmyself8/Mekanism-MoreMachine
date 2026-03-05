@@ -40,6 +40,8 @@ import com.jerry.meklm.common.registries.LargeMachineTileEntityTypes;
 
 import static mekanism.client.ClientRegistration.addCustomModel;
 
+import static mekanism.client.ClientRegistration.addCustomModel;
+
 @Mod.EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientRegistration {
 
