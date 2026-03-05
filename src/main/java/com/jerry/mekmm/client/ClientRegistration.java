@@ -20,10 +20,17 @@ import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
+import com.jerry.meklg.client.gui.GuiLargeWindGenerator;
+import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.render.RenderLargeWindGenerator;
+import com.jerry.meklg.client.render.item.RenderLargeWindGeneratorItem;
+import com.jerry.meklg.common.registries.LargeGeneratorsContainerTypes;
+import com.jerry.meklg.common.registries.LargeGeneratorsTileEntityTypes;
 import com.jerry.meklm.client.gui.*;
 import com.jerry.meklm.client.model.bake.*;
 import com.jerry.meklm.client.render.tileentity.RenderLargeAntiprotonicNucleosynthesizer;
@@ -60,14 +67,19 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void registerRenderers(RegisterRenderers event) {
+        event.registerBlockEntityRenderer(LargeGeneratorsTileEntityTypes.LARGE_WIND_GENERATOR.get(), RenderLargeWindGenerator::new);
         ClientRegistrationUtil.bindTileEntityRenderer(event, RenderLargeAntiprotonicNucleosynthesizer::new, LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
     }
 
     @SubscribeEvent
-    public static void registerLayer(RegisterLayerDefinitions event) {}
+    public static void registerLayer(RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+    }
 
     @SubscribeEvent
-    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {}
+    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+        event.registerReloadListener(RenderLargeWindGeneratorItem.RENDERER);
+    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void registerContainers(RegisterEvent event) {
@@ -94,6 +106,9 @@ public class ClientRegistration {
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR, GuiLargeElectrolyticSeparator::new);
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, GuiLargeSolarNeutronActivator::new);
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, GuiLargeAntiprotonicNucleosynthesizer::new);
+            if (ModList.get().isLoaded("mekanismgenerators")) {
+                ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_WIND_GENERATOR, GuiLargeWindGenerator::new);
+            }
         });
     }
 }

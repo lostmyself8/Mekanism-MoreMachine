@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import com.jerry.meklg.common.registries.LargeGeneratorsBlocks;
+import com.jerry.meklg.common.registries.LargeGeneratorsContainerTypes;
+import com.jerry.meklg.common.registries.LargeGeneratorsTileEntityTypes;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
 import com.jerry.meklm.common.registries.LargeMachineTileEntityTypes;
@@ -71,6 +74,7 @@ public class Mekmm implements IModModule {
 
         registerAdvancedFactory(modEventBus);
         registerLargeMachine(modEventBus);
+        registerLargeGenerator(modEventBus);
 
         packetHandler = new MoreMachinePacketHandler();
     }
@@ -84,8 +88,8 @@ public class Mekmm implements IModModule {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        packetHandler.initialize();
         hooks.hookCommonSetup();
+        packetHandler.initialize();
     }
 
     // 注册高级工厂
@@ -100,6 +104,13 @@ public class Mekmm implements IModModule {
         LargeMachineBlocks.LM_BLOCKS.register(modEventBus);
         LargeMachineTileEntityTypes.LM_TILE_ENTITY_TYPES.register(modEventBus);
         LargeMachineContainerTypes.LM_CONTAINER_TYPES.register(modEventBus);
+    }
+
+    // 注册大型发电机
+    private void registerLargeGenerator(IEventBus modEventBus) {
+        LargeGeneratorsBlocks.LG_BLOCKS.register(modEventBus);
+        LargeGeneratorsTileEntityTypes.LG_TILE_ENTITY_TYPES.register(modEventBus);
+        LargeGeneratorsContainerTypes.LG_CONTAINER_TYPES.register(modEventBus);
     }
 
     @Override
