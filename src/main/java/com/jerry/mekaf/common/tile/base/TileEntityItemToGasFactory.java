@@ -170,6 +170,11 @@ public abstract class TileEntityItemToGasFactory<RECIPE extends MekanismRecipe> 
     }
 
     @Override
+    public int TankCount() {
+        return 1;
+    }
+
+    @Override
     protected void sortInventoryOrTank() {
         Map<HashedItem, I2GRecipeProcessInfo> processes = new HashMap<>();
         List<I2GProcessInfo> emptyProcesses = new ArrayList<>();

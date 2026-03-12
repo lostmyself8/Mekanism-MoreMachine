@@ -167,6 +167,11 @@ public abstract class TileEntityItemToFluidFactory<RECIPE extends MekanismRecipe
     }
 
     @Override
+    public int TankCount() {
+        return 1;
+    }
+
+    @Override
     protected void sortInventoryOrTank() {
         Map<HashedItem, I2FRecipeProcessInfo> processes = new HashMap<>();
         List<I2FProcessInfo> emptyProcesses = new ArrayList<>();

@@ -102,6 +102,24 @@ public class AdvancedFactoryBlockTypes {
             .withSound(MekanismSounds.NUTRITIONAL_LIQUIFIER)
             .withComputerSupport("nutritionalLiquifier")
             .build();
+    // Pigment Extractor
+    public static final MoreMachineFactoryMachine<TileEntityPigmentExtractor> PIGMENT_EXTRACTOR = MoreMachineMachineBuilder
+            .createAdvancedFactoryMachine(() -> MekanismTileEntityTypes.PIGMENT_EXTRACTOR, MekanismLang.DESCRIPTION_PIGMENT_EXTRACTOR, AdvancedFactoryType.PIGMENT_EXTRACTING)
+            .withGui(() -> MekanismContainerTypes.PIGMENT_EXTRACTOR)
+            .withSound(MekanismSounds.PIGMENT_EXTRACTOR)
+            .withEnergyConfig(MekanismConfig.usage.pigmentExtractor, MekanismConfig.storage.pigmentExtractor)
+            .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.MUFFLING))
+            .withComputerSupport("pigmentExtractor")
+            .build();
+    // Painting Machine
+    public static final MoreMachineFactoryMachine<TileEntityPaintingMachine> PAINTING_MACHINE = MoreMachineMachineBuilder
+            .createAdvancedFactoryMachine(() -> MekanismTileEntityTypes.PAINTING_MACHINE, MekanismLang.DESCRIPTION_PAINTING_MACHINE, AdvancedFactoryType.PAINTING)
+            .withGui(() -> MekanismContainerTypes.PAINTING_MACHINE)
+            .withSound(MekanismSounds.PAINTING_MACHINE)
+            .withEnergyConfig(MekanismConfig.usage.paintingMachine, MekanismConfig.storage.paintingMachine)
+            .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.MUFFLING))
+            .withComputerSupport("paintingMachine")
+            .build();
 
     static {
         for (FactoryTier tier : EnumUtils.FACTORY_TIERS) {

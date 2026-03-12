@@ -4,6 +4,7 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 import com.jerry.mekaf.common.tile.TileEntityPressurizedReactingFactory;
 import com.jerry.mekaf.common.tile.base.TileEntityAdvancedFactoryBase;
 import com.jerry.mekaf.common.tile.base.TileEntityGasToGasFactory;
+import com.jerry.mekaf.common.tile.base.TileEntityItemToItemAdvancedFactory;
 import com.jerry.mekaf.common.tile.base.TileEntitySlurryToSlurryFactory;
 
 import com.jerry.mekmm.Mekmm;
@@ -28,7 +29,11 @@ public class AdvancedFactoryContainer extends MekanismTileContainer<TileEntityAd
             if (tile instanceof TileEntityGasToGasFactory<?> || tile instanceof TileEntitySlurryToSlurryFactory<?>) {
                 return 121;
             }
-            return tile instanceof TileEntityPressurizedReactingFactory ? 103 : 108;
+            if (tile instanceof TileEntityItemToItemAdvancedFactory<?>) {
+                return 95;
+            } else {
+                return tile instanceof TileEntityPressurizedReactingFactory ? 103 : 108;
+            }
         }
         if (tile instanceof TileEntityGasToGasFactory<?> || tile instanceof TileEntitySlurryToSlurryFactory<?>) {
             return 112;

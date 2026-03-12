@@ -27,7 +27,6 @@ import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.GasSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UpgradeUtils;
 
@@ -143,7 +142,7 @@ public class TileEntityCentrifugingFactory extends TileEntityGasToGasFactory<Gas
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData() {
+    public @Nullable GasToGasUpgradeData getUpgradeData() {
         return new GasToGasUpgradeData(redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputGasTanks, outputGasTanks, isSorting(), getComponents());
     }

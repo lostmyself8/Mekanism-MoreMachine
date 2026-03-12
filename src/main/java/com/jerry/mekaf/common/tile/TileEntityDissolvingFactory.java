@@ -199,7 +199,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToMergedFactory<C
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData() {
+    public @Nullable ItemGasToMergedUpgradeData getUpgradeData() {
         return new ItemGasToMergedUpgradeData(redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, gasInputSlot, inputItemSlots, injectTank, outputChemicalTanks, isSorting(), getComponents());
     }

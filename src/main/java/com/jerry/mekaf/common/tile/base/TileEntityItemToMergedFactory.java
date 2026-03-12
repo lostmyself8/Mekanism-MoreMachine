@@ -249,6 +249,11 @@ public abstract class TileEntityItemToMergedFactory<RECIPE extends MekanismRecip
     }
 
     @Override
+    public int TankCount() {
+        return 1;
+    }
+
+    @Override
     protected void sortInventoryOrTank() {
         Map<HashedItem, ItemToFourMergedRecipeProcessInfo> processes = new HashMap<>();
         List<ItemToMergedProcessInfo> emptyProcesses = new ArrayList<>();
