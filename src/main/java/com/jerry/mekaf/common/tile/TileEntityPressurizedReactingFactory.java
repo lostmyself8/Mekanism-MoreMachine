@@ -254,7 +254,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
         }
         // If there is no cached item input, or it doesn't match our fallback then it is an out of date cache, so we
         // ignore the fact that we have a cache
-        PressurizedReactionRecipe foundRecipe = findRecipe(process, fallbackInput, outputTank);
+        PressurizedReactionRecipe foundRecipe = findRecipe(process, fallbackInput);
         if (foundRecipe == null) {
             // We could not find any valid recipe for the given item that matches the items in the current output slots
             return null;
@@ -267,7 +267,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Nullable
-    protected PressurizedReactionRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IGasTank outputTanks) {
+    protected PressurizedReactionRecipe findRecipe(int process, @NotNull ItemStack fallbackInput) {
         return getRecipeType().getInputCache().findFirstRecipe(level, fallbackInput, inputFluidTank.getFluid(), inputGasTank.getStack());
     }
 
@@ -311,7 +311,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData() {
+    public @Nullable PRCUpgradeData getUpgradeData() {
         return new PRCUpgradeData(redstone, getControlType(), getEnergyContainer(), progress, energySlot,
                 inputGasTank, inputFluidTank, inputItemSlots, outputItemSlots, outputGasTank, isSorting(), getComponents());
     }

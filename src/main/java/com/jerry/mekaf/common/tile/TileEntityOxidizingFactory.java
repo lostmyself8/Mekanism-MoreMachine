@@ -17,7 +17,6 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.tile.component.TileComponentEjector;
-import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
@@ -93,7 +92,7 @@ public class TileEntityOxidizingFactory extends TileEntityItemToGasFactory<ItemS
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData() {
+    public @Nullable ItemToGasUpgradeData getUpgradeData() {
         return new ItemToGasUpgradeData(redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputItemSlots, outputGasTanks, isSorting(), getComponents());
     }

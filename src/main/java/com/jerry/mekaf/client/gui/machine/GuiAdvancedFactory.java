@@ -1,6 +1,7 @@
 package com.jerry.mekaf.client.gui.machine;
 
 import com.jerry.mekaf.client.gui.element.tab.AFGuiSortingTab;
+import com.jerry.mekaf.common.tile.TileEntityPaintingFactory;
 import com.jerry.mekaf.common.tile.TileEntityPressurizedReactingFactory;
 import com.jerry.mekaf.common.tile.TileEntityWashingFactory;
 import com.jerry.mekaf.common.tile.base.*;
@@ -45,7 +46,12 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             if (tile instanceof TileEntityGasToGasFactory<?> || tile instanceof TileEntitySlurryToSlurryFactory<?>) {
                 inventoryLabelY = 111;
             } else {
-                inventoryLabelY = tile instanceof TileEntityPressurizedReactingFactory ? 93 : 98;
+                if (tile instanceof TileEntityItemToItemAdvancedFactory<?>) {
+                    imageHeight -= 13;
+                    inventoryLabelY = 85;
+                } else {
+                    inventoryLabelY = tile instanceof TileEntityPressurizedReactingFactory ? 93 : 98;
+                }
             }
         } else {
             if (tile instanceof TileEntityGasToGasFactory<?> || tile instanceof TileEntitySlurryToSlurryFactory<?>) {
@@ -94,11 +100,11 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getLastUsage));
 
         if (tile.hasExtrasResourceBar()) {
+            addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 76 + 13 * tile.TankCount()));
             if (tile instanceof TileEntityWashingFactory factory) {
                 addRenderableWidget(new GuiFluidBar(this, GuiFluidBar.getProvider(factory.getFluidTankBar(), factory.getFluidTanks(null)), 7, 102,
                         getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
-                addRenderableWidget(new GuiDumpButton<>(this, factory, getButtonX(), 102));
             } else if (tile instanceof TileEntityPressurizedReactingFactory factory) {
                 // 出输出化学储罐
                 addRenderableWidget(new GuiGasGauge(() -> factory.outputGasTank, () -> factory.getGasTanks(null), GaugeType.SMALL, this, 6, 44))
@@ -111,15 +117,17 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
                 addRenderableWidget(new GuiFluidBar(this, GuiFluidBar.getProvider(factory.getFluidTankBar(), factory.getFluidTanks(null)), 7, 84,
                         getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
-                // dump按钮
-                addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) factory, getButtonX(), 76));
+            } else if (tile instanceof TileEntityPaintingFactory factory) {
+                // 化学储罐条
+                addRenderableWidget(new GuiChemicalBar<>(this, GuiChemicalBar.getProvider(factory.pigmentTank, factory.getPigmentTanks(null)), 7, 76,
+                        getBarWidth(), 4, true))
+                        .warning(WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
             } else {
+                // TODO:计划删除getGasTankBar()
                 addRenderableWidget(new GuiChemicalBar<>(this, GuiChemicalBar.getProvider(tile.getGasTankBar(), tile.getGasTanks(null)),
                         7, tile instanceof TileEntityGasToGasFactory<?> ? 102 : 89,
                         getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
-                addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(),
-                        tile instanceof TileEntityGasToGasFactory<?> ? 102 : 89));
             }
         }
 
@@ -128,6 +136,15 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             for (int i = 0; i < tile.tier.processes; i++) {
                 int index = i;
                 addRenderableWidget(new GuiGasGauge(() -> factory.outputGasTanks.get(index), () -> factory.getGasTanks(null), GaugeType.SMALL, this, factory.getXPos(index) - 1, 57))
+                        .warning(WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index));
+            }
+        }
+
+        // 物品到染料的工厂只需要一排储罐，物品槽位在TileEntity中被添加
+        if (tile instanceof TileEntityItemToPigmentFactory<?> factory) {
+            for (int i = 0; i < tile.tier.processes; i++) {
+                int index = i;
+                addRenderableWidget(new GuiPigmentGauge(() -> factory.outputPigmentTanks.get(index), () -> factory.getPigmentTanks(null), GaugeType.SMALL, this, factory.getXPos(index) - 1, 57))
                         .warning(WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index));
             }
         }
@@ -218,6 +235,8 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             case PRESSURISED_REACTING -> MekanismJEIRecipeType.REACTION;
             case CENTRIFUGING -> MekanismJEIRecipeType.CENTRIFUGING;
             case LIQUIFYING -> MekanismJEIRecipeType.NUTRITIONAL_LIQUIFICATION;
+            case PIGMENT_EXTRACTING -> MekanismJEIRecipeType.PIGMENT_EXTRACTING;
+            case PAINTING -> MekanismJEIRecipeType.PAINTING;
         };
         return addRenderableWidget(progressBar.jeiCategories(jeiType));
     }

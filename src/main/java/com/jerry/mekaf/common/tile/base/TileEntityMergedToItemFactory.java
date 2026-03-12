@@ -183,6 +183,11 @@ public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecip
     }
 
     @Override
+    public int TankCount() {
+        return 1;
+    }
+
+    @Override
     protected void sortInventoryOrTank() {}
 
     public record MergedToItemProcessInfo(int process, MergedChemicalTank inputTank, @NotNull IInventorySlot outputSlot) {}

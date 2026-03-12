@@ -6,7 +6,7 @@ import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.tile.component.ITileComponent;
-import mekanism.common.tile.interfaces.IRedstoneControl;
+import mekanism.common.tile.interfaces.IRedstoneControl.RedstoneControl;
 import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ItemToGasUpgradeData implements IUpgradeData {
 
     public final boolean redstone;
-    public final IRedstoneControl.RedstoneControl controlType;
+    public final RedstoneControl controlType;
     public final IEnergyContainer energyContainer;
     public final int[] progress;
     public final boolean sorting;
@@ -26,14 +26,14 @@ public class ItemToGasUpgradeData implements IUpgradeData {
     public final List<IGasTank> outputTanks;
     public final CompoundTag components;
 
-    public ItemToGasUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,
+    public ItemToGasUpgradeData(boolean redstone, RedstoneControl controlType,
                                 IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot,
                                 InputInventorySlot inputSlot, IGasTank outputTank, List<ITileComponent> components) {
         this(redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, Collections.singletonList(inputSlot),
                 Collections.singletonList(outputTank), false, components);
     }
 
-    public ItemToGasUpgradeData(boolean redstone, IRedstoneControl.RedstoneControl controlType,
+    public ItemToGasUpgradeData(boolean redstone, RedstoneControl controlType,
                                 IEnergyContainer energyContainer, int[] progress, EnergyInventorySlot energySlot,
                                 List<IInventorySlot> inputSlots, List<IGasTank> outputTanks, boolean sorting, List<ITileComponent> components) {
         this.redstone = redstone;

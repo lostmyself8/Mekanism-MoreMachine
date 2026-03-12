@@ -3,7 +3,6 @@ package com.jerry.mekaf.common.tile;
 import com.jerry.mekaf.common.tile.base.TileEntityMergedToItemFactory;
 import com.jerry.mekaf.common.upgrade.MergedToItemUpgradeData;
 
-import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.merged.MergedChemicalTank;
 import mekanism.api.providers.IBlockProvider;
@@ -17,7 +16,6 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.cache.ChemicalCrystallizerInputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
-import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
@@ -39,16 +37,11 @@ public class TileEntityCrystallizingFactory extends TileEntityMergedToItemFactor
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
     private static final long MAX_CHEMICAL = 10_000;
 
-    @Nullable
-    private IContentsListener recipeCacheSaveOnlyListener;
-
     public TileEntityCrystallizingFactory(IBlockProvider blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
-
-        recipeCacheSaveOnlyListener = null;
     }
 
     @Override
@@ -90,7 +83,7 @@ public class TileEntityCrystallizingFactory extends TileEntityMergedToItemFactor
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData() {
+    public @Nullable MergedToItemUpgradeData getUpgradeData() {
         return new MergedToItemUpgradeData(redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputChemicalTanks, outputItemSlots, isSorting(), getComponents());
     }

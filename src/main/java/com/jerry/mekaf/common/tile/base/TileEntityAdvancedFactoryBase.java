@@ -4,6 +4,7 @@ import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
 import com.jerry.mekaf.common.capabilities.energy.AdvancedFactoryEnergyContainer;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.registries.AdvancedFactoryTileEntityTypes;
+import com.jerry.mekaf.common.tile.interfaces.ITankCount;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.NBTConstants;
@@ -82,7 +83,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecipe> extends TileEntityConfigurableMachine implements IRecipeLookupHandler<RECIPE>, ISustainedData {
+public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecipe> extends TileEntityConfigurableMachine implements IRecipeLookupHandler<RECIPE>, ISustainedData, ITankCount {
 
     /**
      * How many ticks it takes, by default, to run an operation.

@@ -164,6 +164,11 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
     }
 
     @Override
+    public int TankCount() {
+        return 2;
+    }
+
+    @Override
     protected void sortInventoryOrTank() {}
 
     public record GasToGasProcessInfo(int process, @NotNull IGasTank inputTank, @NotNull IGasTank outputTank) {}

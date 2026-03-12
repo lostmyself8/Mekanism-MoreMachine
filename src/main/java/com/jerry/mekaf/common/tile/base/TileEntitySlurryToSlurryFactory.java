@@ -160,5 +160,10 @@ public abstract class TileEntitySlurryToSlurryFactory<RECIPE extends MekanismRec
         }
     }
 
+    @Override
+    public int TankCount() {
+        return 2;
+    }
+
     public record SlurryToSlurryProcessInfo(int process, @NotNull ISlurryTank inputTank, @NotNull ISlurryTank outputTank) {}
 }

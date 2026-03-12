@@ -203,7 +203,7 @@ public class TileEntityChemicalInfusingFactory extends TileEntityGasToGasFactory
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData() {
+    public @Nullable GasGasToGasUpgradeData getUpgradeData() {
         return new GasGasToGasUpgradeData(redstone, getControlType(), energyContainer, progress, null,
                 energySlot, rightInputSlot, inputGasTanks, rightTank, outputGasTanks, isSorting(), getComponents());
     }
