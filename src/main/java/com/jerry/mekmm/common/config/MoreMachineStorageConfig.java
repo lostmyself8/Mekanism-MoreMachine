@@ -20,7 +20,13 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
     public final CachedFloatingLongValue fluidReplicator;
     public final CachedFloatingLongValue ambientGasCollector;
     public final CachedFloatingLongValue wirelessChargingStation;
-    // public final CachedFloatingLongValue largeRotaryCondensentrator;
+    public final CachedFloatingLongValue largeRotaryCondensentrator;
+    public final CachedFloatingLongValue largeChemicalInfuser;
+    public final CachedFloatingLongValue largeElectrolyticSeparator;
+    public final CachedFloatingLongValue largeAntiprotonicNucleosynthesizer;
+
+    public final CachedFloatingLongValue largeHeatGenerator;
+    public final CachedFloatingLongValue largeWindGenerator;
 
     MoreMachineStorageConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -39,8 +45,19 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
         fluidReplicator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).", "fluidReplicator", FloatingLong.createConst(102_400_000L));
         builder.pop();
 
-        // largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
-        // "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+        largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
+                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+        largeChemicalInfuser = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
+                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+        largeElectrolyticSeparator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
+                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+        largeAntiprotonicNucleosynthesizer = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
+                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+
+        largeHeatGenerator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).", "largeHeatGenerator",
+                FloatingLong.createConst(160_000));
+        largeWindGenerator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).", "largeWindGenerator",
+                FloatingLong.createConst(200_000));
 
         builder.pop();
         configSpec = builder.build();

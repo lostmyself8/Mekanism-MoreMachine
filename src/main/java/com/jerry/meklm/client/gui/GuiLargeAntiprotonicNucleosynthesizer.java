@@ -9,6 +9,7 @@ import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiEnergyGauge;
 import mekanism.client.gui.element.gauge.GuiGasGauge;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
+import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.client.render.MekanismRenderType;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.lib.effect.BoltRenderer;
@@ -55,7 +56,7 @@ public class GuiLargeAntiprotonicNucleosynthesizer extends GuiConfigurableTile<T
     @Override
     protected void addGuiElements() {
         super.addGuiElements();
-        addRenderableWidget(new GuiInnerScreen(this, 45, 18, 104, 68));
+        addRenderableWidget(new GuiInnerScreen(this, 45, 18, 104, 68).jeiCategories(MekanismJEIRecipeType.NUCLEOSYNTHESIZING));
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getEnergyUsed));
         addRenderableWidget(new GuiGasGauge(() -> tile.gasTank, () -> tile.getGasTanks(null), GaugeType.SMALL_MED, this, 5, 18))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT));

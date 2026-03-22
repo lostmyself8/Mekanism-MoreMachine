@@ -1,6 +1,7 @@
 package com.jerry.meklm.common.registries;
 
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.Upgrade;
 import mekanism.api.functions.TriConsumer;
@@ -50,7 +51,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ROTARY_CONDENSENTRATOR, MekanismLang.DESCRIPTION_ROTARY_CONDENSENTRATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ROTARY_CONDENSENTRATOR)
             .withSound(MekanismSounds.ROTARY_CONDENSENTRATOR)
-            .withEnergyConfig(MekanismConfig.usage.rotaryCondensentrator, MekanismConfig.storage.rotaryCondensentrator)
+            .withEnergyConfig(MoreMachineConfig.usage.largeRotaryCondensentrator, MoreMachineConfig.storage.largeRotaryCondensentrator)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ROTARY_CONDENSENTRATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY)
@@ -62,7 +63,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_CHEMICAL_INFUSER, MekanismLang.DESCRIPTION_CHEMICAL_INFUSER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_CHEMICAL_INFUSER)
             .withSound(MekanismSounds.CHEMICAL_INFUSER)
-            .withEnergyConfig(MekanismConfig.usage.chemicalInfuser, MekanismConfig.storage.chemicalInfuser)
+            .withEnergyConfig(MoreMachineConfig.usage.largeChemicalInfuser, MoreMachineConfig.storage.largeChemicalInfuser)
             .withCustomShape(LargeMachineBlockShapes.LARGE_CHEMICAL_INFUSER)
             .with(AttributeCustomSelectionBox.JSON)
             .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY_BUT_TOP_BACK_2X3)
@@ -74,7 +75,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ELECTROLYTIC_SEPARATOR, MekanismLang.DESCRIPTION_ELECTROLYTIC_SEPARATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR)
             .withSound(MekanismSounds.ELECTROLYTIC_SEPARATOR)
-            .withEnergyConfig(() -> MekanismConfig.general.FROM_H2.get().multiply(2), MekanismConfig.storage.electrolyticSeparator)
+            .withEnergyConfig(() -> MekanismConfig.general.FROM_H2.get().multiply(2), MoreMachineConfig.storage.largeElectrolyticSeparator)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ELECTROLYTIC_SEPARATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withBounding(MoreMachineBounding.FULL_3X3X2)
@@ -97,7 +98,7 @@ public class LargeMachineBlockTypes {
     public static final Machine<TileEntityLargeAntiprotonicNucleosynthesizer> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, MekanismLang.DESCRIPTION_ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
-            .withEnergyConfig(MekanismConfig.usage.antiprotonicNucleosynthesizer, MekanismConfig.storage.antiprotonicNucleosynthesizer)
+            .withEnergyConfig(MoreMachineConfig.usage.largeAntiprotonicNucleosynthesizer, MoreMachineConfig.storage.largeAntiprotonicNucleosynthesizer)
             .withSound(MekanismSounds.ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .withSupportedUpgrades(EnumSet.of(Upgrade.MUFFLING))
             .withCustomShape(LargeMachineBlockShapes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)

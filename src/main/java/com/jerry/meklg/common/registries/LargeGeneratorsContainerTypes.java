@@ -6,6 +6,8 @@ import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.registration.impl.ContainerTypeDeferredRegister;
 import mekanism.common.registration.impl.ContainerTypeRegistryObject;
 
+import com.jerry.meklg.common.tile.TileEntityLargeGasBurningGenerator;
+import com.jerry.meklg.common.tile.TileEntityLargeHeatGenerator;
 import com.jerry.meklg.common.tile.TileEntityLargeWindGenerator;
 
 public class LargeGeneratorsContainerTypes {
@@ -14,5 +16,7 @@ public class LargeGeneratorsContainerTypes {
 
     public static final ContainerTypeDeferredRegister LG_CONTAINER_TYPES = new ContainerTypeDeferredRegister(Mekmm.MOD_ID);
 
+    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeHeatGenerator>> LARGE_HEAT_GENERATOR = LG_CONTAINER_TYPES.register(LargeGeneratorsBlocks.LARGE_HEAT_GENERATOR, TileEntityLargeHeatGenerator.class);
+    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeGasBurningGenerator>> LARGE_GAS_BURNING_GENERATOR = LG_CONTAINER_TYPES.register(LargeGeneratorsBlocks.LARGE_GAS_BURNING_GENERATOR, TileEntityLargeGasBurningGenerator.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeWindGenerator>> LARGE_WIND_GENERATOR = LG_CONTAINER_TYPES.register(LargeGeneratorsBlocks.LARGE_WIND_GENERATOR, TileEntityLargeWindGenerator.class);
 }

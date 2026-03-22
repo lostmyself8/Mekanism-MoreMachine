@@ -25,10 +25,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
+import com.jerry.meklg.client.gui.GuiLargeGasGenerator;
+import com.jerry.meklg.client.gui.GuiLargeHeatGenerator;
 import com.jerry.meklg.client.gui.GuiLargeWindGenerator;
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.model.bake.LargeGasBurningGeneratorBakedModel;
+import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
 import com.jerry.meklg.client.render.RenderLargeWindGenerator;
 import com.jerry.meklg.client.render.item.RenderLargeWindGeneratorItem;
+import com.jerry.meklg.common.registries.LargeGeneratorsBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorsContainerTypes;
 import com.jerry.meklg.common.registries.LargeGeneratorsTileEntityTypes;
 import com.jerry.meklm.client.gui.*;
@@ -63,6 +68,10 @@ public class ClientRegistration {
         addCustomModel(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, (orig, evt) -> new LargeElectrolyticSeparatorBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, (orig, evt) -> new LargeSolarNeutronActivatorBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, (orig, evt) -> new LargeAntiprotonicNucleosynthesizerBakedModel(orig));
+        if (Mekmm.hooks.MGLoaded) {
+            addCustomModel(LargeGeneratorsBlocks.LARGE_HEAT_GENERATOR, ((original, evt) -> new LargeHeatGeneratorBakedModel(original)));
+            addCustomModel(LargeGeneratorsBlocks.LARGE_GAS_BURNING_GENERATOR, ((original, evt) -> new LargeGasBurningGeneratorBakedModel(original)));
+        }
     }
 
     @SubscribeEvent
@@ -107,6 +116,8 @@ public class ClientRegistration {
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, GuiLargeSolarNeutronActivator::new);
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, GuiLargeAntiprotonicNucleosynthesizer::new);
             if (ModList.get().isLoaded("mekanismgenerators")) {
+                ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
+                ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
                 ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_WIND_GENERATOR, GuiLargeWindGenerator::new);
             }
         });

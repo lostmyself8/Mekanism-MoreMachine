@@ -6,6 +6,7 @@ import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.Pigm
 import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.SlurryHandlerManager;
 import mekanism.common.capabilities.resolver.manager.EnergyHandlerManager;
 import mekanism.common.capabilities.resolver.manager.FluidHandlerManager;
+import mekanism.common.capabilities.resolver.manager.HeatHandlerManager;
 
 public interface ITileEntityMekanismAccessor {
 
@@ -20,4 +21,6 @@ public interface ITileEntityMekanismAccessor {
     FluidHandlerManager getFluidHandlerManager();
 
     EnergyHandlerManager getEnergyHandlerManager();
+
+    HeatHandlerManager getHeatHandlerManager();
 }

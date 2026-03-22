@@ -10,23 +10,33 @@ import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.container.sync.SyncableFloatingLong;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.util.MekanismUtils;
+import mekanism.common.util.WorldUtils;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 
 import com.jerry.meklg.common.registries.LargeGeneratorsBlocks;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implements IBoundingBlock {
 
@@ -49,13 +59,13 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
     @Override
     protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
         InventorySlotHelper builder = InventorySlotHelper.forSide(this::getDirection);
-        builder.addSlot(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35));
+        builder.addSlot(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35), RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.RIGHT, RelativeSide.BACK);
         return builder.build();
     }
 
     @Override
     protected RelativeSide[] getEnergySides() {
-        return new RelativeSide[] { RelativeSide.FRONT, RelativeSide.BOTTOM };
+        return new RelativeSide[] { RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.RIGHT, RelativeSide.BACK };
     }
 
     @Override
@@ -82,6 +92,15 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
         if (getActive()) {
             angle = (angle + (getBlockPos().getY() + 4F) / SPEED_SCALED) % 360;
         }
+    }
+
+    protected List<BlockEntity> getEjectEntity(RelativeSide side, Direction direction) {
+        ArrayList<BlockEntity> ejectEntity = new ArrayList<>();
+        ejectEntity.add(WorldUtils.getTileEntity(getLevel(), worldPosition.relative(direction, 3).offset(side.getDirection(getLeftSide()).getNormal())));
+        ejectEntity.add(WorldUtils.getTileEntity(getLevel(), worldPosition.relative(direction, 3).offset(side.getDirection(getRightSide()).getNormal())));
+        if (side != RelativeSide.BACK)
+            ejectEntity.add(WorldUtils.getTileEntity(getLevel(), worldPosition.relative(direction, 3)));
+        return ejectEntity;
     }
 
     /**
@@ -131,7 +150,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
 
     @Override
     public BlockPos getSoundPos() {
-        return super.getSoundPos().above(4);
+        return super.getSoundPos().above(34);
     }
 
     @Override
@@ -144,8 +163,87 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
     @NotNull
     @Override
     public AABB getRenderBoundingBox() {
-        // Note: we just extend it to the max size it could be ignoring what direction it is actually facing
-        return new AABB(worldPosition.offset(-2, 0, -2), worldPosition.offset(3, 7, 3));
+        // Mek采用不区分朝向的方法，但大风电叶片较大，因此还是需要区分一下朝向的
+        BlockPos pos = getBlockPos();
+        Direction facing = getDirection();
+        // 如果是东西朝向就是Y轴
+        if (facing == Direction.EAST || facing == Direction.WEST) {
+            return new AABB(pos.offset(-5, 0, -16), pos.offset(5, 50, 16));
+        }
+        // 如果是南北朝向就是X轴，虽然这会包括上下，但是发电机没有上下的朝向
+        return new AABB(pos.offset(-16, 0, -5), pos.offset(16, 50, 5));
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getOffsetCapabilityIfEnabled(@NotNull Capability<T> capability, Direction side, @NotNull Vec3i offset) {
+        if (capability == ForgeCapabilities.ITEM_HANDLER) {
+            return itemHandlerManager.resolve(capability, side);
+        }
+        return getCapability(capability, side);
+    }
+
+    @Override
+    public boolean isOffsetCapabilityDisabled(@NotNull Capability<?> capability, Direction side, @NotNull Vec3i offset) {
+        if (EnergyCompatUtils.isEnergyCapability(capability)) {
+            return notEnergyPort(side, offset);
+        } else if (capability == ForgeCapabilities.ITEM_HANDLER) {
+            return notItemPort(side, offset);
+        } else if (canEverResolve(capability) && IBoundingBlock.super.isOffsetCapabilityDisabled(capability, side, offset)) {
+            // If we are not an item handler or energy capability, and it is a capability that we can support,
+            // but it is one that normally should be disabled for offset capabilities, then expose it but only do so
+            // via our ports for things like computer integration capabilities, then we treat the capability as
+            // disabled if it is not against one of our ports
+            return notEnergyPort(side, offset);
+        }
+        return false;
+    }
+
+    private boolean notItemPort(Direction side, Vec3i offset) {
+        return notEnergyPort(side, offset);
+    }
+
+    private boolean notEnergyPort(Direction side, Vec3i offset) {
+        Direction front = getDirection();
+        Direction back = getOppositeDirection();
+        Direction left = getLeftSide();
+        Direction right = getRightSide();
+        switch (front) {
+            case NORTH, SOUTH -> {
+                if (offset.equals(new Vec3i(left.getStepX(), 0, back.getStepZ() * 3))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(right.getStepX(), 0, back.getStepZ() * 3))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(left.getStepX() * 3, 0, 0)) || offset.equals(new Vec3i(left.getStepX() * 3, 0, back.getStepZ())) || offset.equals(new Vec3i(left.getStepX() * 3, 0, front.getStepZ()))) {
+                    return side != left;
+                }
+                if (offset.equals(new Vec3i(right.getStepX() * 3, 0, 0)) || offset.equals(new Vec3i(right.getStepX() * 3, 0, back.getStepZ())) || offset.equals(new Vec3i(right.getStepX() * 3, 0, front.getStepZ()))) {
+                    return side != right;
+                }
+                if (offset.equals(new Vec3i(0, 0, front.getStepZ() * 3)) || offset.equals(new Vec3i(left.getStepX(), 0, front.getStepZ() * 3)) || offset.equals(new Vec3i(right.getStepX(), 0, front.getStepZ() * 3))) {
+                    return side != front;
+                }
+            }
+            case WEST, EAST -> {
+                if (offset.equals(new Vec3i(back.getStepX() * 3, 0, left.getStepZ()))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(back.getStepX() * 3, 0, right.getStepZ()))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(0, 0, left.getStepZ() * 3)) || offset.equals(new Vec3i(back.getStepX(), 0, left.getStepZ() * 3)) || offset.equals(new Vec3i(front.getStepX(), 0, left.getStepZ() * 3))) {
+                    return side != left;
+                }
+                if (offset.equals(new Vec3i(0, 0, right.getStepZ() * 3)) || offset.equals(new Vec3i(back.getStepX(), 0, right.getStepZ() * 3)) || offset.equals(new Vec3i(front.getStepX(), 0, right.getStepZ() * 3))) {
+                    return side != right;
+                }
+                if (offset.equals(new Vec3i(front.getStepX() * 3, 0, 0)) || offset.equals(new Vec3i(front.getStepX() * 3, 0, left.getStepZ())) || offset.equals(new Vec3i(front.getStepX() * 3, 0, right.getStepZ()))) {
+                    return side != front;
+                }
+            }
+        }
+        return true;
     }
 
     // Methods relating to IComputerTile

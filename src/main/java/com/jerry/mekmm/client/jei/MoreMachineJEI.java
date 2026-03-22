@@ -7,13 +7,14 @@ import com.jerry.mekmm.client.jei.machine.*;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
+import mekanism.client.jei.CatalystRegistryHelper;
 import mekanism.client.jei.MekanismJEIRecipeType;
 import mekanism.client.jei.RecipeRegistryHelper;
 import mekanism.client.jei.machine.ItemStackToItemStackRecipeCategory;
-import mekanism.common.registries.MekanismBlocks;
 
 import net.minecraft.resources.ResourceLocation;
 
+import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -75,13 +76,13 @@ public class MoreMachineJEI implements IModPlugin {
         MoreMachineCatalystRegistryHelper.register(registry, MoreMachineBlocks.REPLICATOR, MekanismJEIRecipeType.GAS_CONVERSION);
         MoreMachineCatalystRegistryHelper.register(registry, MoreMachineBlocks.FLUID_REPLICATOR, MekanismJEIRecipeType.GAS_CONVERSION);
 
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.CHEMICAL_OXIDIZER);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.CHEMICAL_INFUSER);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.CHEMICAL_DISSOLUTION_CHAMBER);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.CHEMICAL_WASHER);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.CHEMICAL_CRYSTALLIZER);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.PRESSURIZED_REACTION_CHAMBER);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.ISOTOPIC_CENTRIFUGE);
-        AdvancedFactoryCatalystRegistryHelper.register(registry, MekanismBlocks.NUTRITIONAL_LIQUIFIER);
+        AdvancedFactoryCatalystRegistryHelper.register(registry);
+
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.CONDENSENTRATING, LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR);
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.DECONDENSENTRATING, LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR);
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.CHEMICAL_INFUSING, LargeMachineBlocks.LARGE_CHEMICAL_INFUSER);
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.SEPARATING, LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR);
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.ACTIVATING, LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR);
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.NUCLEOSYNTHESIZING, LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
     }
 }

@@ -177,8 +177,10 @@
   "block.mekmm.large_chemical_infuser": "Великий хімічний наповнювач",
   "block.mekmm.large_electrolytic_separator": "Великий електролітичний сепаратор",
   "block.mekmm.large_solar_neutron_activator": "Великий сонячний нейтронний активатор",
+  "block.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
   "block.mekmm.large_heat_generator": "Великий теплогенератор",
   "block.mekmm.large_gas_burning_generator": "Великий газовий генератор",
+  "block.mekmm.large_wind_generator": "Large Wind Generator",
 
   "gas.mekmm.nutritional_paste": "Поживна паста",
   "gas.mekmm.nutrient_solution": "Поживний розчин",
@@ -352,8 +354,10 @@
   "container.mekmm.large_chemical_infuser": "Великий хімічний наповнювач",
   "container.mekmm.large_electrolytic_separator": "Великий електролітичний сепаратор",
   "container.mekmm.large_solar_neutron_activator": "Великий сонячний нейтронний активатор",
+  "container.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
   "container.mekmm.large_heat_generator": "Великий теплогенератор",
   "container.mekmm.large_gas_burning_generator": "Великий газовий генератор",
+  "container.mekmm.large_wind_generator": "Large Wind Generator",
 
   "charging.mekmm.equips": "Заряджає спорядження",
   "charging.mekmm.inventory": "Заряджає інвентар",

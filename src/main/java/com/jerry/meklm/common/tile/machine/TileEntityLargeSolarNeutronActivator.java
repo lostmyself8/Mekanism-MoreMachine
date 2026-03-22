@@ -1,10 +1,13 @@
 package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+import com.jerry.mekmm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
+import com.jerry.mekmm.common.util.WorldUtil.SolarCheck;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.NBTConstants;
 import mekanism.api.RelativeSide;
+import mekanism.api.Upgrade;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.api.chemical.gas.Gas;
@@ -36,31 +39,36 @@ import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ChemicalRecipeLookupHandler;
-import mekanism.common.recipe.lookup.cache.InputRecipeCache;
+import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleChemical;
 import mekanism.common.tile.base.SubstanceType;
 import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidType;
 
 import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachine<GasToGasRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<Gas, GasStack, GasToGasRecipe>, INotNeedConfig {
@@ -69,20 +77,20 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             RecipeError.NOT_ENOUGH_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
-    public static final long MAX_GAS = 10_000;
+    public static final long MAX_GAS = 10L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
+    protected LargeSNA solarCheck;
+    private final LargeSNA[] solarChecks = new LargeSNA[8];
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = { "getInput", "getInputCapacity", "getInputNeeded", "getInputFilledPercentage" }, docPlaceholder = "input tank")
     public IGasTank inputTank;
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = { "getOutput", "getOutputCapacity", "getOutputNeeded", "getOutputFilledPercentage" }, docPlaceholder = "output tank")
     public IGasTank outputTank;
 
-    @SyntheticComputerMethod(getter = "getPeakProductionRate")
-    private float peakProductionRate;
     @SyntheticComputerMethod(getter = "getProductionRate")
     private float productionRate;
+    private int baselineMaxOperations = 1;
     private int numPowering;
-    private boolean settingsChecked;
-    private boolean needsRainCheck;
+    private byte seeSunCount = 0;
 
     private final IOutputHandler<@NotNull GasStack> outputHandler;
     private final IInputHandler<@NotNull GasStack> inputHandler;
@@ -95,9 +103,8 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     public TileEntityLargeSolarNeutronActivator(BlockPos pos, BlockState state) {
         super(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, pos, state, TRACKED_ERROR_TYPES);
         configComponent = new TileComponentConfig(this, TransmissionType.ITEM, TransmissionType.GAS);
-        configComponent.setupIOConfig(TransmissionType.ITEM, inputSlot, outputSlot, RelativeSide.FRONT);
-        configComponent.setupIOConfig(TransmissionType.GAS, inputTank, outputTank, RelativeSide.FRONT, false, true).setEjecting(true);
-        configComponent.addDisabledSides(RelativeSide.TOP);
+        configComponent.setupIOConfig(TransmissionType.ITEM, inputSlot, outputSlot, RelativeSide.BACK);
+        configComponent.setupIOConfig(TransmissionType.GAS, inputTank, outputTank, RelativeSide.BACK, false, true).setEjecting(true);
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.GAS)
@@ -109,21 +116,21 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     @NotNull
     @Override
     public IChemicalTankHolder<Gas, GasStack, IGasTank> getInitialGasTanks(IContentsListener listener, IContentsListener recipeCacheListener) {
-        ChemicalTankHelper<Gas, GasStack, IGasTank> builder = ChemicalTankHelper.forSideGasWithConfig(this::getDirection, this::getConfig);
+        AdjustableChemicalTankHelper<Gas, GasStack, IGasTank> builder = AdjustableChemicalTankHelper.forSideGas(this::getDirection, side -> side == RelativeSide.RIGHT || side == RelativeSide.LEFT, side -> side == RelativeSide.BACK);
         // Allow extracting out of the input gas tank if it isn't external OR the output tank is empty AND the input is
         // radioactive
         builder.addTank(inputTank = ChemicalTankBuilder.GAS.create(MAX_GAS, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank),
-                ChemicalTankBuilder.GAS.alwaysTrueBi, this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener));
-        builder.addTank(outputTank = ChemicalTankBuilder.GAS.output(MAX_GAS, listener));
+                ChemicalTankBuilder.GAS.alwaysTrueBi, this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT, RelativeSide.BACK);
+        builder.addTank(outputTank = ChemicalTankBuilder.GAS.output(MAX_GAS, listener), RelativeSide.BACK);
         return builder.build();
     }
 
     @NotNull
     @Override
     protected IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this::getDirection, this::getConfig);
-        builder.addSlot(inputSlot = GasInventorySlot.fill(inputTank, listener, 5, 56));
-        builder.addSlot(outputSlot = GasInventorySlot.drain(outputTank, listener, 155, 56));
+        InventorySlotHelper builder = InventorySlotHelper.forSide(this::getDirection, side -> side == RelativeSide.RIGHT || side == RelativeSide.LEFT, side -> side == RelativeSide.BACK);
+        builder.addSlot(inputSlot = GasInventorySlot.fill(inputTank, listener, 5, 56), RelativeSide.RIGHT, RelativeSide.LEFT);
+        builder.addSlot(outputSlot = GasInventorySlot.drain(outputTank, listener, 155, 56), RelativeSide.BACK);
         inputSlot.setSlotType(ContainerSlotType.INPUT);
         inputSlot.setSlotOverlay(SlotOverlay.MINUS);
         outputSlot.setSlotType(ContainerSlotType.OUTPUT);
@@ -132,42 +139,74 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     }
 
     private void recheckSettings() {
-        Level world = getLevel();
-        if (world == null) {
+        if (level == null) {
             return;
         }
-        BlockPos pos = getBlockPos();
-        Biome b = world.getBiomeManager().getBiome(pos).value();
-        needsRainCheck = b.getPrecipitationAt(pos) != Biome.Precipitation.NONE;
-        // Consider the best temperature to be 0.8; biomes that are higher than that
-        // will suffer an efficiency loss (semiconductors don't like heat); biomes that are cooler
-        // get a boost. We scale the efficiency to around 30% so that it doesn't totally dominate
-        float tempEff = 0.3F * (0.8F - b.getTemperature(pos));
-
-        // Treat rainfall as a proxy for humidity; any humidity works as a drag on overall efficiency.
-        // As with temperature, we scale it so that it doesn't overwhelm production. Note the signedness
-        // on the scaling factor. Also note that we only use rainfall as a proxy if it CAN rain; some dimensions
-        // (like the End) have rainfall set, but can't actually support rain.
-        float humidityEff = needsRainCheck ? -0.3F * b.getModifiedClimateSettings().downfall() : 0.0F;
-        peakProductionRate = MekanismConfig.general.maxSolarNeutronActivatorRate.get() * (1.0F + tempEff + humidityEff);
-        settingsChecked = true;
+        BlockPos topPos = worldPosition.above(2);
+        solarCheck = new LargeSNA(level, topPos);
+        for (int i = 0; i < solarChecks.length; i++) {
+            if (i < 3) {
+                solarChecks[i] = new LargeSNA(level, topPos.offset(-1, 0, i - 1));
+            } else if (i == 3) {
+                solarChecks[i] = new LargeSNA(level, topPos.offset(0, 0, -1));
+            } else if (i == 4) {
+                solarChecks[i] = new LargeSNA(level, topPos.offset(0, 0, 1));
+            } else {
+                solarChecks[i] = new LargeSNA(level, topPos.offset(1, 0, i - 6));
+            }
+        }
     }
 
     @Override
     protected void onUpdateServer() {
         super.onUpdateServer();
-        if (!settingsChecked) {
+        if (solarCheck == null) {
             recheckSettings();
         }
+        updateSeeSunCount();
         inputSlot.fillTank();
         outputSlot.drainTank();
         productionRate = recalculateProductionRate();
         recipeCacheLookupMonitor.updateAndProcess();
+        handleEject();
+    }
+
+    private void handleEject() {
+        if (MekanismUtils.canFunction(this)) {
+            Direction side = getOppositeDirection();
+            for (BlockEntity ejectTile : getEjectEntity(side)) {
+                if (ejectTile != null) {
+                    ChemicalUtil.emit(Collections.singleton(side), outputTank, ejectTile, outputTank.getCapacity());
+                }
+            }
+        }
+    }
+
+    private BlockEntity[] getEjectEntity(Direction side) {
+        return new BlockEntity[] {
+                WorldUtils.getTileEntity(getLevel(), worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal())),
+                WorldUtils.getTileEntity(getLevel(), worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()))
+        };
+    }
+
+    /**
+     * 更新能看到太阳的太阳能板数量(每tick调用一次)
+     */
+    private void updateSeeSunCount() {
+        solarCheck.recheckCanSeeSun();
+        byte count = solarCheck.canSeeSun() ? (byte) 1 : 0;
+        for (LargeSNA check : solarChecks) {
+            check.recheckCanSeeSun();
+            if (check.canSeeSun()) {
+                count++;
+            }
+        }
+        seeSunCount = count;
     }
 
     @NotNull
     @Override
-    public IMekanismRecipeTypeProvider<GasToGasRecipe, InputRecipeCache.SingleChemical<Gas, GasStack, GasToGasRecipe>> getRecipeType() {
+    public IMekanismRecipeTypeProvider<GasToGasRecipe, SingleChemical<Gas, GasStack, GasToGasRecipe>> getRecipeType() {
         return MekanismRecipeType.ACTIVATING;
     }
 
@@ -182,6 +221,29 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         return WorldUtils.canSeeSun(level, worldPosition.above());
     }
 
+    /**
+     * 根据可以看见太阳的太阳能板数获取减少效率的乘数
+     *
+     * @return 效率减小倍数
+     */
+    private float reduceMultiplier() {
+        int panelCount = solarChecks.length + 1;
+        byte notSeeSunCount = (byte) (panelCount - seeSunCount);
+        float reduction = 0f;
+        // 无遮挡或意外情况
+        if (notSeeSunCount <= 0) {
+            return reduction;
+        }
+        // 阻挡一块降低40%，阻挡二至五块每块降低10%，阻挡六至九块每块降低5%
+        if (notSeeSunCount <= 5) {
+            reduction += (notSeeSunCount - 1) * 0.1f + 0.4f;
+        } else {
+            reduction += (notSeeSunCount - 5) * 0.05f + 0.8f;
+        }
+        // 全遮挡或意外情况
+        return Math.min(reduction, 1f);
+    }
+
     private boolean canFunction() {
         // Sort out if the solar neutron activator can see the sun; we no longer check if it's raining here,
         // since under the new rules, we can still function when it's raining, albeit at a significant penalty.
@@ -189,20 +251,19 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     }
 
     private float recalculateProductionRate() {
-        Level world = getLevel();
-        if (world == null || !canFunction()) {
+        if (level == null || !canFunction() || solarCheck == null) {
             return 0;
         }
         // Get the brightness of the sun; note that there are some implementations that depend on the base
         // brightness function which doesn't take into account the fact that rain can't occur in some biomes.
-        float brightness = WorldUtils.getSunBrightness(world, 1.0F);
-        // Production is a function of the peak possible output in this biome and sun's current brightness
-        float production = peakProductionRate * brightness;
-        // If the solar neutron activator is in a biome where it can rain, and it's raining penalize production by 80%
-        if (needsRainCheck && (world.isRaining() || world.isThundering())) {
-            production *= 0.2F;
+        // 这里会计算对应的峰值，因此不需要在之前计算
+        float brightness = WorldUtils.getSunBrightness(level, 1.0F);
+        float generationMultiplier = solarCheck.getProductionMultiplier();
+        for (LargeSNA check : solarChecks) {
+            generationMultiplier += check.getProductionMultiplier();
         }
-        return production;
+        generationMultiplier /= solarChecks.length + 1;
+        return MekanismConfig.general.maxSolarNeutronActivatorRate.get() * generationMultiplier * brightness * (1 - reduceMultiplier());
     }
 
     @NotNull
@@ -215,7 +276,15 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
                 .setOnFinish(this::markForSave)
                 // Edge case handling, this should almost always end up being 1
                 .setRequiredTicks(() -> productionRate > 0 && productionRate < 1 ? (int) Math.ceil(1 / productionRate) : 1)
-                .setBaselineMaxOperations(() -> productionRate > 0 && productionRate < 1 ? 1 : (int) productionRate);
+                .setBaselineMaxOperations(() -> baselineMaxOperations * (productionRate > 0 && productionRate < 1 ? 1 : (int) productionRate));
+    }
+
+    @Override
+    public void recalculateUpgrades(Upgrade upgrade) {
+        super.recalculateUpgrades(upgrade);
+        if (upgrade == Upgrade.SPEED) {
+            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
+        }
     }
 
     @Override
@@ -307,11 +376,10 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     }
 
     private boolean notGasPort(Direction side, Vec3i offset) {
-        Direction direction = getDirection();
         Direction back = getOppositeDirection();
         Direction left = getLeftSide();
         Direction right = left.getOpposite();
-        switch (direction) {
+        switch (getDirection()) {
             case NORTH, SOUTH -> {
                 if (offset.equals(new Vec3i(left.getStepX(), 0, back.getStepZ()))) {
                     return side != back && side != left;
@@ -335,5 +403,51 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     private boolean notItemPort(Direction side, Vec3i offset) {
         // 所有端口都可以与物品管道交互
         return notGasPort(side, offset);
+    }
+
+    protected static class LargeSNA extends SolarCheck {
+
+        private final int recheckFrequency;
+        private long lastCheckedSun;
+
+        public LargeSNA(Level world, BlockPos pos) {
+            super(world, pos);
+            // Recheck between every 10-30 ticks, to not end up checking each position each tick
+            recheckFrequency = Mth.nextInt(world.random, 10, 10 + SharedConstants.TICKS_PER_SECOND);
+        }
+
+        @Override
+        public void recheckCanSeeSun() {
+            if (!world.dimensionType().hasSkyLight() || world.getSkyDarken() >= 4) {
+                // Inline of most of WorldUtils#canSeeSun so that we can exit early if it is not day or there is no
+                // skylight
+                // We start with the basic dimension checks and always run those, as they are simple and quick checks,
+                // and
+                // we want to be able to stop quickly when it gets too dark
+                canSeeSun = false;
+                return;
+            }
+            long time = world.getGameTime();
+            if (time < lastCheckedSun + recheckFrequency) {
+                // If we have checked for blocks above the solar panel in the past recheckFrequency
+                // number of ticks, skip checking for now for performance reasons
+                return;
+            }
+            // otherwise, mark that we checked and actually check
+            lastCheckedSun = time;
+            if (world.getFluidState(pos).isEmpty()) {
+                // If the top isn't fluid logged we can just quickly check if the top can see the sun
+                canSeeSun = world.canSeeSky(pos);
+            } else {
+                BlockPos above = pos.above();
+                if (world.canSeeSky(above)) {
+                    // If the spot above can see the sun, check to make sure we can see through the block there
+                    BlockState state = world.getBlockState(above);
+                    canSeeSun = !state.liquid() && state.getLightBlock(world, above) <= 0;
+                } else {
+                    canSeeSun = false;
+                }
+            }
+        }
     }
 }

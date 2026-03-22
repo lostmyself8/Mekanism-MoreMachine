@@ -20,13 +20,13 @@ import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 public abstract class TileEntityMoreGenerator extends TileEntityMekanism {
 
@@ -62,17 +62,22 @@ public abstract class TileEntityMoreGenerator extends TileEntityMekanism {
     @Override
     protected void onUpdateServer() {
         super.onUpdateServer();
+        handleEject();
+    }
+
+    protected void handleEject() {
         if (MekanismUtils.canFunction(this)) {
-            // TODO: Cache the directions or maybe even make some generators have a side config/ejector component and
-            // move this to the ejector component?
-            Set<Direction> emitDirections = EnumSet.noneOf(Direction.class);
-            Direction direction = getDirection();
-            for (RelativeSide energySide : getEnergySides()) {
-                emitDirections.add(energySide.getDirection(direction));
+            for (RelativeSide side : getEnergySides()) {
+                Direction direction = side.getDirection(getDirection());
+                for (BlockEntity ejectEntity : getEjectEntity(side, direction)) {
+                    if (ejectEntity != null)
+                        CableUtils.emit(Collections.singleton(direction), energyContainer, ejectEntity, getMaxOutput());
+                }
             }
-            CableUtils.emit(emitDirections, energyContainer, this, getMaxOutput());
         }
     }
+
+    protected abstract List<BlockEntity> getEjectEntity(RelativeSide side, Direction direction);
 
     @ComputerMethod
     public FloatingLong getMaxOutput() {

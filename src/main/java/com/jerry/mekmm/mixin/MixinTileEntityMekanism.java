@@ -8,6 +8,7 @@ import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.Pigm
 import mekanism.common.capabilities.resolver.manager.ChemicalHandlerManager.SlurryHandlerManager;
 import mekanism.common.capabilities.resolver.manager.EnergyHandlerManager;
 import mekanism.common.capabilities.resolver.manager.FluidHandlerManager;
+import mekanism.common.capabilities.resolver.manager.HeatHandlerManager;
 import mekanism.common.tile.base.TileEntityMekanism;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,4 +34,7 @@ public abstract class MixinTileEntityMekanism implements ITileEntityMekanismAcce
 
     @Accessor("energyHandlerManager")
     public abstract EnergyHandlerManager getEnergyHandlerManager();
+
+    @Accessor("heatHandlerManager")
+    public abstract HeatHandlerManager getHeatHandlerManager();
 }

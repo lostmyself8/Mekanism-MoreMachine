@@ -5,8 +5,8 @@
 	"render_type": "cutout",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "mekmm:block/large_machine/chemical_tank_max",
-		"particle": "mekmm:block/large_machine/chemical_tank_max"
+		"0": "mekmm:block/models/chemical_tank_max",
+		"particle": "mekmm:block/models/chemical_tank_max"
 	},
 	"elements": [
 		{
