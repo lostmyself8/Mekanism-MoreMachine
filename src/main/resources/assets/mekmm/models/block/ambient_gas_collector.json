@@ -7,8 +7,8 @@
 		"0": "mekanism:block/bottom",
 		"1": "mekanism:block/models/ports",
 		"2": "mekanism:block/models/ports_led",
-		"3": "mekmm:block/ambient_gas_collector_side",
-		"4": "mekmm:block/ambient_gas_collector_top",
+		"3": "mekmm:block/models/ambient_gas_collector_side",
+		"4": "mekmm:block/models/ambient_gas_collector_top",
 		"particle": "mekanism:block/bottom"
 	},
 	"elements": [

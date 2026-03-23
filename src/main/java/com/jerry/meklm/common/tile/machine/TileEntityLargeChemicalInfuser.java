@@ -1,6 +1,7 @@
 package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+import com.jerry.mekmm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.NBTConstants;
@@ -21,7 +22,6 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
@@ -52,23 +52,29 @@ import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
+import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
+import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidType;
 
 import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<ChemicalInfuserRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<Gas, GasStack, ChemicalInfuserRecipe>, INotNeedConfig {
 
@@ -79,7 +85,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             RecipeError.NOT_ENOUGH_RIGHT_INPUT,
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
-    public static final long MAX_GAS = 10_000;
+    public static final long MAX_GAS = 5L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getLeftInput", "getLeftInputCapacity", "getLeftInputNeeded",
@@ -95,8 +101,9 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     public IGasTank centerTank;
 
     private FloatingLong clientEnergyUsed = FloatingLong.ZERO;
-    private int numPowering;
+    private int baseOperations = 1;
     private int baselineMaxOperations = 1;
+    private int numPowering;
 
     private final IOutputHandler<@NotNull GasStack> outputHandler;
     private final IInputHandler<@NotNull GasStack> leftInputHandler;
@@ -156,9 +163,9 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     @NotNull
     @Override
     public IChemicalTankHolder<Gas, GasStack, IGasTank> getInitialGasTanks(IContentsListener listener, IContentsListener recipeCacheListener) {
-        ChemicalTankHelper<Gas, GasStack, IGasTank> builder = ChemicalTankHelper.forSideGasWithConfig(this::getDirection, this::getConfig);
-        builder.addTank(leftTank = ChemicalTankBuilder.GAS.input(MAX_GAS, gas -> containsRecipe(gas, rightTank.getStack()), this::containsRecipe, recipeCacheListener));
-        builder.addTank(rightTank = ChemicalTankBuilder.GAS.input(MAX_GAS, gas -> containsRecipe(gas, leftTank.getStack()), this::containsRecipe, recipeCacheListener));
+        AdjustableChemicalTankHelper<Gas, GasStack, IGasTank> builder = AdjustableChemicalTankHelper.forSideGas(this::getDirection, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT || side == RelativeSide.BACK, side -> side == RelativeSide.FRONT);
+        builder.addTank(leftTank = ChemicalTankBuilder.GAS.input(MAX_GAS, gas -> containsRecipe(gas, rightTank.getStack()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
+        builder.addTank(rightTank = ChemicalTankBuilder.GAS.input(MAX_GAS, gas -> containsRecipe(gas, leftTank.getStack()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         builder.addTank(centerTank = ChemicalTankBuilder.GAS.output(MAX_GAS, listener));
         return builder.build();
     }
@@ -166,19 +173,19 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     @NotNull
     @Override
     protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener, IContentsListener recipeCacheListener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this::getDirection, this::getConfig);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, listener));
+        EnergyContainerHelper builder = EnergyContainerHelper.forSide(this::getDirection);
+        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, listener), RelativeSide.BACK);
         return builder.build();
     }
 
     @NotNull
     @Override
     protected IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this::getDirection, this::getConfig);
-        builder.addSlot(leftInputSlot = GasInventorySlot.fill(leftTank, listener, 6, 56));
-        builder.addSlot(rightInputSlot = GasInventorySlot.fill(rightTank, listener, 154, 56));
-        builder.addSlot(outputSlot = GasInventorySlot.drain(centerTank, listener, 80, 65));
-        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 154, 14));
+        InventorySlotHelper builder = InventorySlotHelper.forSide(this::getDirection, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> side == RelativeSide.FRONT || side == RelativeSide.BACK);
+        builder.addSlot(leftInputSlot = GasInventorySlot.fill(leftTank, listener, 6, 56), RelativeSide.LEFT);
+        builder.addSlot(rightInputSlot = GasInventorySlot.fill(rightTank, listener, 154, 56), RelativeSide.RIGHT);
+        builder.addSlot(outputSlot = GasInventorySlot.drain(centerTank, listener, 80, 65), RelativeSide.BACK, RelativeSide.FRONT);
+        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 154, 14), RelativeSide.LEFT, RelativeSide.RIGHT);
         leftInputSlot.setSlotType(ContainerSlotType.INPUT);
         leftInputSlot.setSlotOverlay(SlotOverlay.MINUS);
         rightInputSlot.setSlotType(ContainerSlotType.INPUT);
@@ -196,6 +203,27 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
         rightInputSlot.fillTank();
         outputSlot.drainTank();
         clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(energyContainer);
+        handleEject();
+    }
+
+    private void handleEject() {
+        if (MekanismUtils.canFunction(this)) {
+            Set<Direction> emitDirections = EnumSet.noneOf(Direction.class);
+            Direction side = RelativeSide.FRONT.getDirection(getDirection());
+            emitDirections.add(side);
+            for (BlockEntity blockEntity : getEjectEntity(side)) {
+                if (blockEntity != null) {
+                    ChemicalUtil.emit(emitDirections, centerTank, blockEntity, centerTank.getCapacity());
+                }
+            }
+        }
+    }
+
+    private BlockEntity[] getEjectEntity(Direction side) {
+        return new BlockEntity[] {
+                WorldUtils.getTileEntity(getLevel(), worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal())),
+                WorldUtils.getTileEntity(getLevel(), worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()))
+        };
     }
 
     @NotNull
@@ -224,7 +252,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
                 .setCanHolderFunction(() -> MekanismUtils.canFunction(this))
                 .setActive(this::setActive)
                 .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
-                .setBaselineMaxOperations(() -> baselineMaxOperations)
+                .setBaselineMaxOperations(() -> baseOperations * baselineMaxOperations)
                 .setOnFinish(this::markForSave);
     }
 
@@ -232,7 +260,9 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     public void recalculateUpgrades(Upgrade upgrade) {
         super.recalculateUpgrades(upgrade);
         if (upgrade == Upgrade.SPEED) {
-            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
+            int upgradeCount = upgradeComponent.getUpgrades(Upgrade.SPEED);
+            baseOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
+            baselineMaxOperations = (int) Math.pow(2, upgradeCount);
         }
     }
 

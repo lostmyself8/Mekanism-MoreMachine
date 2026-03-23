@@ -177,8 +177,10 @@
   "block.mekmm.large_chemical_infuser": "大型化学灌注机",
   "block.mekmm.large_electrolytic_separator": "大型电解分离机",
   "block.mekmm.large_solar_neutron_activator": "大型太阳能中子活化器",
+  "block.mekmm.large_antiprotonic_nucleosynthesizer": "大型反质子核合成器",
   "block.mekmm.large_heat_generator": "大型热力发电机",
   "block.mekmm.large_gas_burning_generator": "大型燃气发电机",
+  "block.mekmm.large_wind_generator": "大型风力发电机",
 
   "gas.mekmm.nutritional_paste": "营养糊剂",
   "gas.mekmm.nutrient_solution": "营养液",
@@ -352,8 +354,10 @@
   "container.mekmm.large_chemical_infuser": "大型化学灌注机",
   "container.mekmm.large_electrolytic_separator": "大型电解分离机",
   "container.mekmm.large_solar_neutron_activator": "大型太阳能中子活化器",
+  "container.mekmm.large_antiprotonic_nucleosynthesizer": "大型反质子核合成器",
   "container.mekmm.large_heat_generator": "大型热力发电机",
   "container.mekmm.large_gas_burning_generator": "大型燃气发电机",
+  "container.mekmm.large_wind_generator": "大型风力发电机",
 
   "charging.mekmm.equips": "装备栏充能",
   "charging.mekmm.inventory": "物品栏充能",

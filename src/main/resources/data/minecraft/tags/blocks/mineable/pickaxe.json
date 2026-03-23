@@ -145,6 +145,13 @@
     "mekmm:basic_max_chemical_tank",
     "mekmm:advanced_max_chemical_tank",
     "mekmm:elite_max_chemical_tank",
-    "mekmm:ultimate_max_chemical_tank"
+    "mekmm:ultimate_max_chemical_tank",
+    "mekmm:large_rotary_condensentrator",
+    "mekmm:large_chemical_infuser",
+    "mekmm:large_electrolytic_separator",
+    "mekmm:large_solar_neutron_activator",
+    {"id": "mekmm:large_heat_generator", "required": false},
+    {"id": "mekmm:large_gas_burning_generator", "required": false},
+    {"id": "mekmm:large_wind_generator", "required": false}
   ]
 }

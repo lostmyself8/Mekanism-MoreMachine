@@ -6,13 +6,11 @@ import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.tileentity.IWireFrameRenderer;
 import mekanism.client.render.tileentity.ModelTileEntityRenderer;
-import mekanism.generators.common.tile.TileEntityWindGenerator;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
 
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
 import com.jerry.meklg.common.tile.TileEntityLargeWindGenerator;
@@ -40,7 +38,7 @@ public class RenderLargeWindGenerator extends ModelTileEntityRenderer<TileEntity
     }
 
     @Override
-    public boolean shouldRender(TileEntityLargeWindGenerator blockEntity, Vec3 cameraPos) {
+    public boolean shouldRenderOffScreen(TileEntityLargeWindGenerator blockEntity) {
         return true;
     }
 
@@ -56,7 +54,7 @@ public class RenderLargeWindGenerator extends ModelTileEntityRenderer<TileEntity
         matrix.mulPose(Axis.ZP.rotationDegrees(180));
         double angle = tile.getAngle();
         if (tile.getActive()) {
-            angle = (tile.getAngle() + ((tile.getBlockPos().getY() + 4F) / TileEntityWindGenerator.SPEED_SCALED) * partialTick) % 360;
+            angle = (tile.getAngle() + ((tile.getBlockPos().getY() + 4F) / TileEntityLargeWindGenerator.SPEED_SCALED) * partialTick) % 360;
         }
         renderer.render(matrix, angle);
         matrix.popPose();
