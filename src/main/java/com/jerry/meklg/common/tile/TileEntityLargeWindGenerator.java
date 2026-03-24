@@ -1,5 +1,7 @@
 package com.jerry.meklg.common.tile;
 
+import com.jerry.mekmm.common.config.MoreMachineConfig;
+
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
@@ -42,17 +44,26 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
 
     public static final float SPEED = 32F;
     public static final float SPEED_SCALED = 256F / SPEED;
+    public static final int TOP_Y = 36;
+    public static final int CHUNK_RADIUS = 2;
+    // 检测冷却，从1s逐渐提升到10s
+    private static final int DETECTION_COOLDOWN_MIN = 20;
+    private static final int DETECTION_COOLDOWN_MAX = 200;
+    private static final int DETECTION_COOLDOWN_STEP = 20;
 
     @Getter
     private double angle;
     @Getter
     private FloatingLong currentMultiplier = FloatingLong.ZERO;
     private boolean isBlacklistDimension;
+    private boolean hasSameBlockNearby;
+    private int detectionCooldown = DETECTION_COOLDOWN_MIN;
+    private int detectionTicker = 0;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
-        super(LargeGeneratorsBlocks.LARGE_WIND_GENERATOR, pos, state, () -> FloatingLong.MAX_VALUE);
+        super(LargeGeneratorsBlocks.LARGE_WIND_GENERATOR, pos, state, MoreMachineConfig.generator.largeWindGenerationMax);
     }
 
     @NotNull
@@ -79,10 +90,16 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
         if (ticker % 20 == 0) {
             // Recalculate the current multiplier once a second
             currentMultiplier = getMultiplier();
-            setActive(MekanismUtils.canFunction(this) && !currentMultiplier.isZero());
         }
-        if (!currentMultiplier.isZero() && MekanismUtils.canFunction(this) && !getEnergyContainer().getNeeded().isZero()) {
-            getEnergyContainer().insert(MekanismGeneratorsConfig.generators.windGenerationMin.get().multiply(currentMultiplier), Action.EXECUTE, AutomationType.INTERNAL);
+        detectionTicker = Math.min(detectionTicker + 1, detectionCooldown);
+        if (detectionTicker >= detectionCooldown && MekanismUtils.canFunction(this)) {
+            detectionTicker = 0;
+            hasSameBlockNearby = checkSameBlockNearby();
+            detectionCooldown = hasSameBlockNearby ? DETECTION_COOLDOWN_MIN : Math.min(detectionCooldown + DETECTION_COOLDOWN_STEP, DETECTION_COOLDOWN_MAX);
+        }
+        setActive(MekanismUtils.canFunction(this) && !currentMultiplier.isZero() && !hasSameBlockNearby);
+        if (!hasSameBlockNearby && !currentMultiplier.isZero() && MekanismUtils.canFunction(this) && !getEnergyContainer().getNeeded().isZero()) {
+            getEnergyContainer().insert(MoreMachineConfig.generator.largeWindGenerationMin.get().multiply(currentMultiplier), Action.EXECUTE, AutomationType.INTERNAL);
         }
     }
 
@@ -90,7 +107,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
     protected void onUpdateClient() {
         super.onUpdateClient();
         if (getActive()) {
-            angle = (angle + (getBlockPos().getY() + 4F) / SPEED_SCALED) % 360;
+            angle = (angle + (getBlockPos().getY() + TOP_Y) / SPEED_SCALED) % 360;
         }
     }
 
@@ -108,7 +125,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
      **/
     private FloatingLong getMultiplier() {
         if (level != null) {
-            BlockPos top = getBlockPos().above(4);
+            BlockPos top = getBlockPos().above(TOP_Y);
             if (level.getFluidState(top).isEmpty() && level.canSeeSky(top)) {
                 // Validate it isn't fluid logged to help try and prevent
                 // https://github.com/mekanism/Mekanism/issues/7344
@@ -116,14 +133,62 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
                 int minY = Math.max(MekanismGeneratorsConfig.generators.windGenerationMinY.get(), level.getMinBuildHeight());
                 int maxY = Math.min(MekanismGeneratorsConfig.generators.windGenerationMaxY.get(), level.dimensionType().logicalHeight());
                 float clampedY = Math.min(maxY, Math.max(minY, top.getY()));
-                FloatingLong minG = MekanismGeneratorsConfig.generators.windGenerationMin.get();
-                FloatingLong maxG = MekanismGeneratorsConfig.generators.windGenerationMax.get();
+                FloatingLong minG = MoreMachineConfig.generator.largeWindGenerationMin.get();
+                FloatingLong maxG = MoreMachineConfig.generator.largeWindGenerationMax.get();
+                // 根据所在高度的得出发电量
+                // f(minY) = minG; f(maxY) = maxG
+                // f(maxY) - f(minY) / maxY - minY
+                // 斜率=（最大发电-最小发电）/最大y-最小y
                 FloatingLong slope = maxG.subtract(minG).divide(maxY - minY);
+                // 发电=最小发电+（斜率*（钳制Y-最小y））
                 FloatingLong toGen = minG.add(slope.multiply(clampedY - minY));
                 return toGen.divide(minG);
             }
         }
         return FloatingLong.ZERO;
+    }
+
+    /**
+     * Checks if there is another Large Wind Generator of the same block type
+     * within a 5x5 chunk area (CHUNK_RADIUS chunks in each horizontal direction).
+     */
+    private boolean checkSameBlockNearby() {
+        if (level == null) {
+            return false;
+        }
+        // 5x5 chunks: center chunk +-2 chunks in X and Z
+        // 使用移位运算更快
+        int selfChunkX = getBlockPos().getX() >> 4;
+        int selfChunkZ = getBlockPos().getZ() >> 4;
+        int minY = level.getMinBuildHeight();
+        int maxY = level.getMaxBuildHeight();
+
+        BlockPos.MutableBlockPos candidate = new BlockPos.MutableBlockPos();
+        for (int cx = selfChunkX - CHUNK_RADIUS; cx <= selfChunkX + CHUNK_RADIUS; cx++) {
+            for (int cz = selfChunkZ - CHUNK_RADIUS; cz <= selfChunkZ + CHUNK_RADIUS; cz++) {
+                // 跳过没加载的区块
+                if (!level.isLoaded(candidate.set(cx << 4, getBlockPos().getY(), cz << 4))) {
+                    continue;
+                }
+                int startX = cx << 4;
+                int startZ = cz << 4;
+                for (int x = startX; x < startX + 16; x++) {
+                    for (int z = startZ; z < startZ + 16; z++) {
+                        for (int y = minY; y < maxY; y++) {
+                            candidate.set(x, y, z);
+                            // Skip self
+                            if (candidate.equals(getBlockPos())) {
+                                continue;
+                            }
+                            if (level.getBlockState(candidate).getBlock() == getBlockState().getBlock()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -143,6 +208,11 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
         return isBlacklistDimension;
     }
 
+    @ComputerMethod(nameOverride = "hasSameGeneratorNearby")
+    public boolean hasSameGeneratorNearby() {
+        return hasSameBlockNearby;
+    }
+
     @Override
     public SoundSource getSoundCategory() {
         return SoundSource.WEATHER;
@@ -150,7 +220,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
 
     @Override
     public BlockPos getSoundPos() {
-        return super.getSoundPos().above(34);
+        return super.getSoundPos().above(TOP_Y - 2);
     }
 
     @Override
@@ -158,6 +228,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreGenerator implem
         super.addContainerTrackers(container);
         container.track(SyncableFloatingLong.create(this::getCurrentMultiplier, value -> currentMultiplier = value));
         container.track(SyncableBoolean.create(this::isBlacklistDimension, value -> isBlacklistDimension = value));
+        container.track(SyncableBoolean.create(this::hasSameGeneratorNearby, value -> hasSameBlockNearby = value));
     }
 
     @NotNull

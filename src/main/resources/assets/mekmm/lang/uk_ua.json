@@ -178,6 +178,7 @@
   "block.mekmm.large_electrolytic_separator": "Великий електролітичний сепаратор",
   "block.mekmm.large_solar_neutron_activator": "Великий сонячний нейтронний активатор",
   "block.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
+  "block.mekmm.large_pigment_mixer": "Large Pigment Mixer",
   "block.mekmm.large_heat_generator": "Великий теплогенератор",
   "block.mekmm.large_gas_burning_generator": "Великий газовий генератор",
   "block.mekmm.large_wind_generator": "Large Wind Generator",
@@ -355,6 +356,7 @@
   "container.mekmm.large_electrolytic_separator": "Великий електролітичний сепаратор",
   "container.mekmm.large_solar_neutron_activator": "Великий сонячний нейтронний активатор",
   "container.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
+  "container.mekmm.large_pigment_mixer": "Large Pigment Mixer",
   "container.mekmm.large_heat_generator": "Великий теплогенератор",
   "container.mekmm.large_gas_burning_generator": "Великий газовий генератор",
   "container.mekmm.large_wind_generator": "Large Wind Generator",
@@ -379,6 +381,8 @@
   "factory.mekmm.liquifying": "Зрідження",
   "factory.mekmm.pigment_extracting": "Pigment Extracting",
   "factory.mekmm.painting": "Painting",
+
+  "large_wind_generator.mekmm.same_block_nearby": "Surrounded by same machines",
 
   "description.mekmm.recycler": "Машина, яка знищує непотрібні вам речі, якщо існують відповідні рецепти.",
   "description.mekmm.planting_station": "Високотехнологічна машина, здатна вирощувати рослини.",

@@ -178,6 +178,7 @@
   "block.mekmm.large_electrolytic_separator": "大型電解分離機",
   "block.mekmm.large_solar_neutron_activator": "Large Solar Neutron Activator",
   "block.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
+  "block.mekmm.large_pigment_mixer": "Large Pigment Mixer",
   "block.mekmm.large_heat_generator": "Large Heat Generator",
   "block.mekmm.large_gas_burning_generator": "大型ガス燃焼発電機",
   "block.mekmm.large_wind_generator": "Large Wind Generator",
@@ -355,6 +356,7 @@
   "container.mekmm.large_electrolytic_separator": "大型電解分離機",
   "container.mekmm.large_solar_neutron_activator": "Large Solar Neutron Activator",
   "container.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
+  "container.mekmm.large_pigment_mixer": "Large Pigment Mixer",
   "container.mekmm.large_heat_generator": "Large Heat Generator",
   "container.mekmm.large_gas_burning_generator": "大型ガス燃焼発電機",
   "container.mekmm.large_wind_generator": "Large Wind Generator",
@@ -379,6 +381,8 @@
   "factory.mekmm.liquifying": "Liquifying",
   "factory.mekmm.pigment_extracting": "Pigment Extracting",
   "factory.mekmm.painting": "Painting",
+
+  "large_wind_generator.mekmm.same_block_nearby": "Surrounded by same machines",
 
   "description.mekmm.recycler": "レシピがある、不要なものを再生可能なものにリサイクルする機械です。",
   "description.mekmm.planting_station": "作物を自動で栽培、収穫できる発展的な機械です。",

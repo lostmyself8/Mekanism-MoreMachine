@@ -6,5 +6,6 @@ public class MoreMachineProfilerConstants {
 
     // Tile
     public static final String LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = "largeAntiprotonicNucleosynthesizer";
+    public static final String LARGE_PIGMENT_MIXER = "largePigmentMixer";
     public static final String LARGE_WIND_GENERATOR = "largeWindGenerator";
 }

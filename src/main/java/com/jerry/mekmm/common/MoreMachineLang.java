@@ -35,6 +35,8 @@ public enum MoreMachineLang implements ILangEntry {
     LIQUIFYING("factory", "liquifying"),
     PIGMENT_EXTRACTING("factory", "pigment_extracting"),
     PAINTING("factory", "painting"),
+    // Generator
+    SAME_BLOCK_NEARBY("large_wind_generator", "same_block_nearby"),
     // Descriptions
     DESCRIPTION_RECYCLER("description", "recycler"),
     DESCRIPTION_PLANTING_STATION("description", "planting_station"),

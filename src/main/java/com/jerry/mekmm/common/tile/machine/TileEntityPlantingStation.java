@@ -13,6 +13,7 @@ import com.jerry.mekmm.common.util.MoreMachineUtils;
 import mekanism.api.IContentsListener;
 import mekanism.api.NBTConstants;
 import mekanism.api.RelativeSide;
+import mekanism.api.Upgrade;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasStack;
@@ -162,10 +163,6 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
         return builder.build();
     }
 
-    protected boolean useStatisticalMechanics() {
-        return false;
-    }
-
     @Override
     protected void onUpdateServer() {
         super.onUpdateServer();
@@ -195,6 +192,14 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
                 .setRequiredTicks(this::getTicksRequired)
                 .setOnFinish(this::markForSave)
                 .setOperatingTicksChanged(this::setOperatingTicks);
+    }
+
+    @Override
+    public void recalculateUpgrades(Upgrade upgrade) {
+        super.recalculateUpgrades(upgrade);
+        if (upgrade == Upgrade.SPEED || (upgrade == Upgrade.GAS && supportsUpgrade(Upgrade.GAS))) {
+            baseTotalUsage = MekanismUtils.getBaseUsage(this, baseTicksRequired);
+        }
     }
 
     @Override

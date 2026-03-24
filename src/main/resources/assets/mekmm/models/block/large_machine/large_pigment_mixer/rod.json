@@ -1,0 +1,21 @@
+{
+  "format_version": "1.9.0",
+  "credit": "Made with Blockbench",
+  "textures": {
+    "0": "mekmm:block/large_machine/large_pigment_mixer/rod",
+    "particle": "mekmm:block/large_machine/large_pigment_mixer/rod"
+  },
+  "elements": [
+    {
+      "from": [6, 17, 6],
+      "to": [10, 21, 10],
+      "rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+      "faces": {
+        "north": {"uv": [0, 4, 4, 8], "texture": "#0"},
+        "east": {"uv": [0, 4, 4, 8], "texture": "#0"},
+        "south": {"uv": [0, 4, 4, 8], "texture": "#0"},
+        "west": {"uv": [0, 4, 4, 8], "texture": "#0"}
+      }
+    }
+  ]
+}

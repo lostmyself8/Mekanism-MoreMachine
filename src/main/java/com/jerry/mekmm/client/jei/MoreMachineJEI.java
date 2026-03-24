@@ -84,5 +84,6 @@ public class MoreMachineJEI implements IModPlugin {
         CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.SEPARATING, LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR);
         CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.ACTIVATING, LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR);
         CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.NUCLEOSYNTHESIZING, LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
+        CatalystRegistryHelper.register(registry, MekanismJEIRecipeType.PIGMENT_MIXING, LargeMachineBlocks.LARGE_PIGMENT_MIXER);
     }
 }

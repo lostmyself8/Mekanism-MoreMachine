@@ -107,6 +107,19 @@ public class LargeMachineBlockTypes {
             .withComputerSupport("largeAntiprotonicNucleosynthesizer")
             .build();
 
+    // Pigment Mixer
+    public static final Machine<TileEntityLargePigmentMixer> LARGE_PIGMENT_MIXER = MachineBuilder
+            .createMachine(() -> LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER, MekanismLang.DESCRIPTION_PIGMENT_MIXER)
+            .withGui(() -> LargeMachineContainerTypes.LARGE_PIGMENT_MIXER)
+            .withSound(MekanismSounds.PIGMENT_MIXER)
+            .withEnergyConfig(MekanismConfig.usage.pigmentMixer, MekanismConfig.storage.pigmentMixer)
+            .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.MUFFLING))
+            .withCustomShape(LargeMachineBlockShapes.LARGE_PIGMENT_MIXER)
+            .with(AttributeCustomSelectionBox.JAVA)
+            .withBounding(MoreMachineBounding.LARGE_PIGMENT_MIXER)
+            .withComputerSupport("largePigmentMixer")
+            .build();
+
     private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createLargeChemicalTank(ILargeTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {
         return MachineBuilder.createMachine(tile, MekanismLang.DESCRIPTION_CHEMICAL_TANK)
                 .withGui(() -> LargeMachineContainerTypes.LARGE_CHEMICAL_TANK)

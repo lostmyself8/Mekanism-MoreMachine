@@ -80,6 +80,7 @@ import net.minecraftforge.fluids.FluidType;
 import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,6 +137,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @SyntheticComputerMethod(getter = "getRightOutputDumpingMode")
     public GasMode dumpRight = GasMode.IDLE;
     private FloatingLong clientEnergyUsed = FloatingLong.ZERO;
+    @Getter
     private FloatingLong recipeEnergyMultiplier = FloatingLong.ONE;
     private int baselineMaxOperations = 1;
     private long dumpRate = BASE_DUMP_RATE;
@@ -145,6 +147,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     private final IOutputHandler<@NotNull ElectrolysisRecipeOutput> outputHandler;
     private final IInputHandler<@NotNull FluidStack> inputHandler;
 
+    @Getter
     private FixedUsageEnergyContainer<TileEntityLargeElectrolyticSeparator> energyContainer;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input item slot")
     FluidInventorySlot fluidSlot;
@@ -258,27 +261,24 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
 
         handleTank(leftTank, dumpLeft);
         handleTank(rightTank, dumpRight);
-        handleEject();
+        handleLeftEject();
     }
 
-    private void handleEject() {
+    private void handleLeftEject() {
         if (MekanismUtils.canFunction(this)) {
-            Set<Direction> leftDirection = EnumSet.noneOf(Direction.class);
-            Set<Direction> rightDirection = EnumSet.noneOf(Direction.class);
-            Direction up = RelativeSide.TOP.getDirection(getDirection());
-            Direction left = RelativeSide.LEFT.getDirection(getDirection());
-            Direction right = RelativeSide.RIGHT.getDirection(getDirection());
-            leftDirection.add(left);
-            rightDirection.add(right);
-            BlockEntity leftEjectEntity = WorldUtils.getTileEntity(getLevel(), worldPosition.offset(up.getNormal()).offset(left.getNormal()));
+            Set<Direction> ejectDirection = EnumSet.noneOf(Direction.class);
+            Direction front = getDirection();
+            Direction left = getLeftSide();
+            Direction right = getRightSide();
+            ejectDirection.add(front);
+            BlockEntity leftEjectEntity = WorldUtils.getTileEntity(getLevel(), worldPosition.offset(front.getNormal()).offset(left.getNormal()));
             if (leftEjectEntity != null) {
-                ChemicalUtil.emit(leftDirection, leftTank, leftEjectEntity, leftTank.getCapacity());
+                ChemicalUtil.emit(ejectDirection, leftTank, leftEjectEntity, leftTank.getCapacity());
             }
-            BlockEntity rightEjectEntity = WorldUtils.getTileEntity(getLevel(), worldPosition.offset(up.getNormal()).offset(right.getNormal()));
+            BlockEntity rightEjectEntity = WorldUtils.getTileEntity(getLevel(), worldPosition.offset(front.getNormal()).offset(right.getNormal()));
             if (rightEjectEntity != null) {
-                ChemicalUtil.emit(rightDirection, leftTank, rightEjectEntity, leftTank.getCapacity());
+                ChemicalUtil.emit(ejectDirection, rightTank, rightEjectEntity, rightTank.getCapacity());
             }
-
         }
     }
 
@@ -315,10 +315,6 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
         // - at least one side is not at the dumping excess target
         return MekanismUtils.canFunction(this) && (dumpLeft != GasMode.DUMPING_EXCESS || dumpRight != GasMode.DUMPING_EXCESS ||
                 !atDumpingExcessTarget(leftTank) || !atDumpingExcessTarget(rightTank));
-    }
-
-    public FloatingLong getRecipeEnergyMultiplier() {
-        return recipeEnergyMultiplier;
     }
 
     @NotNull
@@ -361,10 +357,6 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
             baselineMaxOperations = (int) speed;
             dumpRate = (long) (BASE_DUMP_RATE * baseOperations * speed);
         }
-    }
-
-    public FixedUsageEnergyContainer<TileEntityLargeElectrolyticSeparator> getEnergyContainer() {
-        return energyContainer;
     }
 
     @Override

@@ -16,6 +16,7 @@ import mekanism.common.lib.Version;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -108,9 +109,11 @@ public class Mekmm implements IModModule {
 
     // 注册大型发电机
     private void registerLargeGenerator(IEventBus modEventBus) {
-        LargeGeneratorsBlocks.LG_BLOCKS.register(modEventBus);
-        LargeGeneratorsTileEntityTypes.LG_TILE_ENTITY_TYPES.register(modEventBus);
-        LargeGeneratorsContainerTypes.LG_CONTAINER_TYPES.register(modEventBus);
+        if (ModList.get().isLoaded("mekanismgenerators")) {
+            LargeGeneratorsBlocks.LG_BLOCKS.register(modEventBus);
+            LargeGeneratorsTileEntityTypes.LG_TILE_ENTITY_TYPES.register(modEventBus);
+            LargeGeneratorsContainerTypes.LG_CONTAINER_TYPES.register(modEventBus);
+        }
     }
 
     @Override

@@ -40,15 +40,6 @@ public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntity
             case WEST -> matrix.translate(2.5 / 16, 1.5, 13.5 / 16f);
             case EAST -> matrix.translate(13.5 / 16f, 1.5, 2.5 / 16);
         }
-        // if (tile.getDirection() == Direction.NORTH) {
-        // matrix.translate(2.5/16, 1.5, 2.5/16);
-        // } else if (tile.getDirection() == Direction.SOUTH) {
-        // matrix.translate(13.5/16, 1.5, 13.5/16);
-        // } else if (tile.getDirection() == Direction.EAST) {
-        // matrix.translate(13.5/16f, 1.5, 2.5/16);
-        // } else if (tile.getDirection() == Direction.WEST) {
-        // matrix.translate(2.5/16, 1.5, 13.5/16f);
-        // }
         matrix.scale(0.5F, 0.5F, 0.5F);
         renderCore(matrix, renderer, overlayLight, scaledTicks);
         matrix.popPose();

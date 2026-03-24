@@ -1,5 +1,8 @@
 package com.jerry.meklg.client.gui;
 
+import com.jerry.mekmm.common.MoreMachineLang;
+import com.jerry.mekmm.common.config.MoreMachineConfig;
+
 import mekanism.api.text.EnumColor;
 import mekanism.api.text.ILangEntry;
 import mekanism.client.gui.GuiMekanismTile;
@@ -13,7 +16,6 @@ import mekanism.common.util.text.EnergyDisplay;
 import mekanism.generators.client.gui.element.GuiStateTexture;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.MekanismGenerators;
-import mekanism.generators.common.config.MekanismGeneratorsConfig;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -38,17 +40,17 @@ public class GuiLargeWindGenerator extends GuiMekanismTile<TileEntityLargeWindGe
         addRenderableWidget(new GuiInnerScreen(this, 48, 21, 80, 44, () -> {
             List<Component> list = new ArrayList<>();
             list.add(EnergyDisplay.of(tile.getEnergyContainer()).getTextComponent());
-            list.add(GeneratorsLang.POWER.translate(MekanismUtils.convertToDisplay(MekanismGeneratorsConfig.generators.windGenerationMin.get()
+            list.add(GeneratorsLang.POWER.translate(MekanismUtils.convertToDisplay(MoreMachineConfig.generator.largeWindGenerationMin.get()
                     .multiply(tile.getCurrentMultiplier())).toString(2)));
             list.add(GeneratorsLang.OUTPUT_RATE_SHORT.translate(EnergyDisplay.of(tile.getMaxOutput())));
             if (!tile.getActive()) {
-                ILangEntry reason = tile.isBlacklistDimension() ? GeneratorsLang.NO_WIND : GeneratorsLang.SKY_BLOCKED;
+                ILangEntry reason = tile.isBlacklistDimension() ? GeneratorsLang.NO_WIND : tile.hasSameGeneratorNearby() ? MoreMachineLang.SAME_BLOCK_NEARBY : GeneratorsLang.SKY_BLOCKED;
                 list.add(reason.translateColored(EnumColor.DARK_RED));
             }
             return list;
         }));
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(GeneratorsLang.PRODUCING_AMOUNT.translate(
-                tile.getActive() ? EnergyDisplay.of(MekanismGeneratorsConfig.generators.windGenerationMin.get().multiply(tile.getCurrentMultiplier())) : EnergyDisplay.ZERO),
+                tile.getActive() ? EnergyDisplay.of(MoreMachineConfig.generator.largeWindGenerationMin.get().multiply(tile.getCurrentMultiplier())) : EnergyDisplay.ZERO),
                 MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())))));
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15));
         addRenderableWidget(new GuiStateTexture(this, 18, 35, tile::getActive, MekanismGenerators.rl(MekanismUtils.ResourceType.GUI.getPrefix() + "wind_on.png"),

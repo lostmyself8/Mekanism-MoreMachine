@@ -46,18 +46,18 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
         builder.pop();
 
         largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
-                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+                "largeRotaryCondensentrator", FloatingLong.createConst(4_096_000L));
         largeChemicalInfuser = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
-                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+                "largeChemicalInfuser", FloatingLong.createConst(16_384_000L));
         largeElectrolyticSeparator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
-                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+                "largeElectrolyticSeparator", FloatingLong.createConst(32_768_000L));
         largeAntiprotonicNucleosynthesizer = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
-                "largeRotaryCondensentrator", FloatingLong.createConst(20_000L));
+                "largeAntiprotonicNucleosynthesizer", FloatingLong.createConst(64_000_000_000L));
 
         largeHeatGenerator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).", "largeHeatGenerator",
-                FloatingLong.createConst(160_000));
+                FloatingLong.createConst(256_600_000L));
         largeWindGenerator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).", "largeWindGenerator",
-                FloatingLong.createConst(200_000));
+                FloatingLong.createConst(256_600_000L));
 
         builder.pop();
         configSpec = builder.build();
