@@ -1,6 +1,7 @@
 package com.jerry.meklg.common.tile;
 
 import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -37,7 +38,6 @@ import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
-import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.slot.FluidFuelInventorySlot;
 
 import net.minecraft.core.BlockPos;
@@ -55,6 +55,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.jerry.meklg.common.registries.LargeGeneratorsBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,10 +71,10 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
 
     // Default configs this is 510 compared to the previous 500
     private static final ConfigBasedCachedFLSupplier MAX_PRODUCTION = new ConfigBasedCachedFLSupplier(() -> {
-        FloatingLong passiveMax = MekanismGeneratorsConfig.generators.heatGenerationLava.get().multiply(81);
-        passiveMax = passiveMax.plusEqual(MekanismGeneratorsConfig.generators.heatGenerationNether.get());
-        return passiveMax.plusEqual(MekanismGeneratorsConfig.generators.heatGeneration.get());
-    }, MekanismGeneratorsConfig.generators.heatGeneration, MekanismGeneratorsConfig.generators.heatGenerationLava, MekanismGeneratorsConfig.generators.heatGenerationNether);
+        FloatingLong passiveMax = MoreMachineConfig.generator.largeHeatGenerationLava.get().multiply(81);
+        passiveMax = passiveMax.plusEqual(MoreMachineConfig.generator.largeHeatGenerationNether.get());
+        return passiveMax.plusEqual(MoreMachineConfig.generator.largeHeatGeneration.get());
+    }, MoreMachineConfig.generator.largeHeatGeneration, MoreMachineConfig.generator.largeHeatGenerationLava, MoreMachineConfig.generator.largeHeatGenerationNether);
 
     /**
      * The FluidTank for this generator.
@@ -81,6 +82,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
     @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class, methodNames = { "getLava", "getLavaCapacity", "getLavaNeeded", "getLavaFilledPercentage" }, docPlaceholder = "lava tank")
     public BasicFluidTank lavaTank;
     private FloatingLong producingEnergy = FloatingLong.ZERO;
+    @Getter
     private double efficiencyMultiplier = 1.0;
     private double lastTransferLoss;
     private double lastEnvironmentLoss;
@@ -101,7 +103,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
     @Override
     protected IFluidTankHolder getInitialFluidTanks(IContentsListener listener) {
         FluidTankHelper builder = FluidTankHelper.forSide(this::getDirection);
-        builder.addTank(lavaTank = VariableCapacityFluidTank.input(MekanismGeneratorsConfig.generators.heatTankCapacity,
+        builder.addTank(lavaTank = VariableCapacityFluidTank.input(MoreMachineConfig.generator.largeHeatTankCapacity,
                 fluidStack -> MekanismTags.Fluids.LAVA_LOOKUP.contains(fluidStack.getFluid()), listener), RelativeSide.BACK);
         return builder.build();
     }
@@ -144,11 +146,11 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
             // 使用指数函数实现非线性增长
             // 流体速率：从 1 增长到约 100
             efficiencyMultiplier = (int) Math.max(1, Math.pow(10, fluidRatio * 2));
-            int fluidRate = (int) (efficiencyMultiplier * MekanismGeneratorsConfig.generators.heatGenerationFluidRate.get());
+            int fluidRate = (int) (efficiencyMultiplier * MoreMachineConfig.generator.largeHeatGenerationFluidRate.get());
             if (lavaTank.extract(fluidRate, Action.SIMULATE, AutomationType.INTERNAL).getAmount() == fluidRate) {
                 setActive(true);
                 lavaTank.extract(fluidRate, Action.EXECUTE, AutomationType.INTERNAL);
-                heatCapacitor.handleHeat(MekanismGeneratorsConfig.generators.heatGeneration.get().doubleValue() * efficiencyMultiplier);
+                heatCapacitor.handleHeat(MoreMachineConfig.generator.largeHeatGeneration.get().doubleValue() * efficiencyMultiplier);
             } else {
                 setActive(false);
             }
@@ -172,7 +174,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
             return FloatingLong.ZERO;
         }
         FloatingLong boost;
-        FloatingLong passiveLavaAmount = MekanismGeneratorsConfig.generators.heatGenerationLava.get();
+        FloatingLong passiveLavaAmount = MoreMachineConfig.generator.largeHeatGenerationLava.get();
         if (passiveLavaAmount.isZero()) {
             // If neighboring lava blocks produce no energy, don't bother checking the sides for them
             boost = FloatingLong.ZERO;
@@ -210,7 +212,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
             boost = passiveLavaAmount.multiply(lavaSides);
         }
         if (level.dimensionType().ultraWarm()) {
-            boost = boost.plusEqual(MekanismGeneratorsConfig.generators.heatGenerationNether.get());
+            boost = boost.plusEqual(MoreMachineConfig.generator.largeHeatGenerationNether.get());
         }
         return boost;
     }
@@ -275,6 +277,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
         container.track(SyncableFloatingLong.create(this::getProductionRate, value -> producingEnergy = value));
         container.track(SyncableDouble.create(this::getLastTransferLoss, value -> lastTransferLoss = value));
         container.track(SyncableDouble.create(this::getLastEnvironmentLoss, value -> lastEnvironmentLoss = value));
+        container.track(SyncableDouble.create(this::getEfficiencyMultiplier, value -> efficiencyMultiplier = value));
     }
 
     @Override

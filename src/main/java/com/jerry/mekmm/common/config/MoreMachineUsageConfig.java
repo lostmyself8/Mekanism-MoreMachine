@@ -41,8 +41,8 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
         builder.pop();
 
         // Large Machine
-        largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeRotaryCondensentrator ", FloatingLong.createConst(500_000L));
-        largeChemicalInfuser = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeChemicalInfuser ", FloatingLong.createConst(500_000L));
+        largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeRotaryCondensentrator ", FloatingLong.createConst(50L));
+        largeChemicalInfuser = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeChemicalInfuser ", FloatingLong.createConst(100L));
         largeAntiprotonicNucleosynthesizer = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeAntiprotonicNucleosynthesizer ", FloatingLong.createConst(500_000L));
 
         builder.pop();

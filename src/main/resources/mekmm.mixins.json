@@ -12,6 +12,7 @@
   ],
   "client": [
     "client.jei.MixinMekanismJEI",
+    "client.render.MixinMekanismRenderer",
     "client.render.MixinRenderTickHandler"
   ],
   "injectors": {

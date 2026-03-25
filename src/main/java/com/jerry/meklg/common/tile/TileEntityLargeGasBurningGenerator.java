@@ -1,6 +1,7 @@
 package com.jerry.meklg.common.tile;
 
 import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -35,7 +36,6 @@ import mekanism.common.tile.base.SubstanceType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
-import mekanism.generators.common.config.MekanismGeneratorsConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -107,6 +107,8 @@ public class TileEntityLargeGasBurningGenerator extends TileEntityMoreGenerator 
         super.onUpdateServer();
         energySlot.drainContainer();
         fuelSlot.fillTank();
+
+        updateEfficiency();
 
         if (!fuelTank.isEmpty() && MekanismUtils.canFunction(this) && getEnergyContainer().insert(generationRate, Action.SIMULATE, AutomationType.INTERNAL).isZero()) {
             setActive(true);
@@ -300,7 +302,7 @@ public class TileEntityLargeGasBurningGenerator extends TileEntityMoreGenerator 
     private class FuelTank extends VariableCapacityGasTank {
 
         protected FuelTank(@Nullable IContentsListener listener) {
-            super(MekanismGeneratorsConfig.generators.gbgTankCapacity, ChemicalTankBuilder.GAS.notExternal, ChemicalTankBuilder.GAS.alwaysTrueBi,
+            super(MoreMachineConfig.generator.lGBGTankCapacity, ChemicalTankBuilder.GAS.notExternal, ChemicalTankBuilder.GAS.alwaysTrueBi,
                     gas -> gas.has(GasAttributes.Fuel.class), null, listener);
         }
 

@@ -35,11 +35,11 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
 
         builder.comment("Large Heat Generator Settings").push(LARGE_HEAT_CATEGORY);
         largeHeatGeneration = CachedFloatingLongValue.define(this, builder, "Amount of energy in Joules the Large Heat Generator produces per tick. largeHeatGeneration + largeHeatGenerationLava * lavaSides + largeHeatGenerationNether. Note: lavaSides is how many sides are adjacent to lava, this includes the block itself if it is lava logged allowing for a max of 81 \"sides\".",
-                "largeHeatGeneration", FloatingLong.createConst(1_000));
+                "largeHeatGeneration", FloatingLong.createConst(1_000L));
         largeHeatGenerationLava = CachedFloatingLongValue.define(this, builder, "Multiplier of effectiveness of Lava that is adjacent to the Large Heat Generator.",
-                "largeHeatGenerationLava", FloatingLong.createConst(350));
+                "largeHeatGenerationLava", FloatingLong.createConst(350L));
         largeHeatGenerationNether = CachedFloatingLongValue.define(this, builder, "Add this amount of Joules to the energy produced by a large heat generator if it is in an 'ultrawarm' dimension, in vanilla this is just the Nether.",
-                "largeHeatGenerationNether", FloatingLong.createConst(750));
+                "largeHeatGenerationNether", FloatingLong.createConst(750L));
         largeHeatTankCapacity = CachedIntValue.wrap(this, builder.comment("The capacity in mB of the fluid tank in the Large Heat Generator.")
                 .defineInRange("tankCapacity", 240 * FluidType.BUCKET_VOLUME, 1, Integer.MAX_VALUE));
         largeHeatGenerationFluidRate = CachedIntValue.wrap(this, builder.comment("The amount of lava in mB that gets consumed to transfer largeHeatGeneration Joules to the Large Heat Generator.")
@@ -53,9 +53,9 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
 
         builder.comment("Wind Generator Settings").push(LARGE_WIND_CATEGORY);
         largeWindGenerationMin = CachedFloatingLongValue.define(this, builder, "Minimum base generation value of the Large Wind Generator.",
-                "largeWindGenerationMin", FloatingLong.createConst(60));
+                "largeWindGenerationMin", FloatingLong.createConst(2_250_000L));
         largeWindGenerationMax = CachedFloatingLongValue.define(this, builder, "Maximum base generation value of the Large Wind Generator.",
-                "largeWindGenerationMax", FloatingLong.createConst(480));
+                "largeWindGenerationMax", FloatingLong.createConst(3_750_000L));
         builder.pop();
 
         builder.pop();

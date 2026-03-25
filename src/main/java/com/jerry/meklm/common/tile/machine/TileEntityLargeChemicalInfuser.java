@@ -69,6 +69,7 @@ import net.minecraftforge.fluids.FluidType;
 
 import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -109,6 +110,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     private final IInputHandler<@NotNull GasStack> leftInputHandler;
     private final IInputHandler<@NotNull GasStack> rightInputHandler;
 
+    @Getter
     private MachineEnergyContainer<TileEntityLargeChemicalInfuser> energyContainer;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getLeftInputItem", docPlaceholder = "left input item slot")
     GasInventorySlot leftInputSlot;
@@ -166,7 +168,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
         AdjustableChemicalTankHelper<Gas, GasStack, IGasTank> builder = AdjustableChemicalTankHelper.forSideGas(this::getDirection, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT || side == RelativeSide.BACK, side -> side == RelativeSide.FRONT);
         builder.addTank(leftTank = ChemicalTankBuilder.GAS.input(MAX_GAS, gas -> containsRecipe(gas, rightTank.getStack()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
         builder.addTank(rightTank = ChemicalTankBuilder.GAS.input(MAX_GAS, gas -> containsRecipe(gas, leftTank.getStack()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
-        builder.addTank(centerTank = ChemicalTankBuilder.GAS.output(MAX_GAS, listener));
+        builder.addTank(centerTank = ChemicalTankBuilder.GAS.output(2 * MAX_GAS, listener), RelativeSide.FRONT);
         return builder.build();
     }
 
@@ -209,7 +211,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     private void handleEject() {
         if (MekanismUtils.canFunction(this)) {
             Set<Direction> emitDirections = EnumSet.noneOf(Direction.class);
-            Direction side = RelativeSide.FRONT.getDirection(getDirection());
+            Direction side = getDirection();
             emitDirections.add(side);
             for (BlockEntity blockEntity : getEjectEntity(side)) {
                 if (blockEntity != null) {
@@ -264,10 +266,6 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             baseOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
             baselineMaxOperations = (int) Math.pow(2, upgradeCount);
         }
-    }
-
-    public MachineEnergyContainer<TileEntityLargeChemicalInfuser> getEnergyContainer() {
-        return energyContainer;
     }
 
     @Override
@@ -356,7 +354,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             // but it is one that normally should be disabled for offset capabilities, then expose it but only do so
             // via our ports for things like computer integration capabilities, then we treat the capability as
             // disabled if it is not against one of our ports
-            return notGasPort(side, offset) && notEnergyPort(side, offset);
+            return notItemPort(side, offset);
         }
         return false;
     }

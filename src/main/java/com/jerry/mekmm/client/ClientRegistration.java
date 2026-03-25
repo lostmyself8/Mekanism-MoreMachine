@@ -17,6 +17,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions;
 import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
+import net.minecraftforge.client.event.ModelEvent.BakingCompleted;
+import net.minecraftforge.client.event.ModelEvent.RegisterAdditional;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,8 +39,10 @@ import com.jerry.meklg.common.registries.LargeGeneratorsBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorsContainerTypes;
 import com.jerry.meklg.common.registries.LargeGeneratorsTileEntityTypes;
 import com.jerry.meklm.client.gui.*;
+import com.jerry.meklm.client.model.LargeMachineModelCache;
 import com.jerry.meklm.client.model.bake.*;
 import com.jerry.meklm.client.render.tileentity.RenderLargeAntiprotonicNucleosynthesizer;
+import com.jerry.meklm.client.render.tileentity.RenderLargePigmentMixer;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
 import com.jerry.meklm.common.registries.LargeMachineTileEntityTypes;
@@ -68,7 +72,8 @@ public class ClientRegistration {
         addCustomModel(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, (orig, evt) -> new LargeElectrolyticSeparatorBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, (orig, evt) -> new LargeSolarNeutronActivatorBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, (orig, evt) -> new LargeAntiprotonicNucleosynthesizerBakedModel(orig));
-        if (Mekmm.hooks.MGLoaded) {
+        addCustomModel(LargeMachineBlocks.LARGE_PIGMENT_MIXER, (orig, evt) -> new LargePigmentMixerBakedModel(orig));
+        if (ModList.get().isLoaded("mekanismgenerators")) {
             addCustomModel(LargeGeneratorsBlocks.LARGE_HEAT_GENERATOR, ((original, evt) -> new LargeHeatGeneratorBakedModel(original)));
             addCustomModel(LargeGeneratorsBlocks.LARGE_GAS_BURNING_GENERATOR, ((original, evt) -> new LargeGasBurningGeneratorBakedModel(original)));
         }
@@ -76,18 +81,25 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void registerRenderers(RegisterRenderers event) {
-        event.registerBlockEntityRenderer(LargeGeneratorsTileEntityTypes.LARGE_WIND_GENERATOR.get(), RenderLargeWindGenerator::new);
         ClientRegistrationUtil.bindTileEntityRenderer(event, RenderLargeAntiprotonicNucleosynthesizer::new, LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
+        event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER.get(), RenderLargePigmentMixer::new);
+        if (ModList.get().isLoaded("mekanismgenerators")) {
+            event.registerBlockEntityRenderer(LargeGeneratorsTileEntityTypes.LARGE_WIND_GENERATOR.get(), RenderLargeWindGenerator::new);
+        }
     }
 
     @SubscribeEvent
     public static void registerLayer(RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+        if (ModList.get().isLoaded("mekanismgenerators")) {
+            event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+        }
     }
 
     @SubscribeEvent
     public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-        event.registerReloadListener(RenderLargeWindGeneratorItem.RENDERER);
+        if (ModList.get().isLoaded("mekanismgenerators")) {
+            event.registerReloadListener(RenderLargeWindGeneratorItem.RENDERER);
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -115,11 +127,22 @@ public class ClientRegistration {
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR, GuiLargeElectrolyticSeparator::new);
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, GuiLargeSolarNeutronActivator::new);
             ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, GuiLargeAntiprotonicNucleosynthesizer::new);
+            ClientRegistrationUtil.registerScreen(LargeMachineContainerTypes.LARGE_PIGMENT_MIXER, GuiLargePigmentMixer::new);
             if (ModList.get().isLoaded("mekanismgenerators")) {
                 ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
                 ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
                 ClientRegistrationUtil.registerScreen(LargeGeneratorsContainerTypes.LARGE_WIND_GENERATOR, GuiLargeWindGenerator::new);
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void registerAdditionalModels(RegisterAdditional event) {
+        LargeMachineModelCache.INSTANCE.setup(event);
+    }
+
+    @SubscribeEvent
+    public static void onModelBake(BakingCompleted event) {
+        LargeMachineModelCache.INSTANCE.onBake(event);
     }
 }

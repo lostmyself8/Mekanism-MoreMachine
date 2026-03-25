@@ -178,6 +178,7 @@
   "block.mekmm.large_electrolytic_separator": "Separador electrolítico grande",
   "block.mekmm.large_solar_neutron_activator": "Activador de neutrones solar grande",
   "block.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
+  "block.mekmm.large_pigment_mixer": "Large Pigment Mixer",
   "block.mekmm.large_heat_generator": "Generador de calor grande",
   "block.mekmm.large_gas_burning_generator": "Generador de gas grande",
   "block.mekmm.large_wind_generator": "Large Wind Generator",
@@ -355,6 +356,7 @@
   "container.mekmm.large_electrolytic_separator": "Separador electrolítico grande",
   "container.mekmm.large_solar_neutron_activator": "Activador de neutrones solar grande",
   "container.mekmm.large_antiprotonic_nucleosynthesizer": "Large Antiprotonic Nucleosynthesizer",
+  "container.mekmm.large_pigment_mixer": "Large Pigment Mixer",
   "container.mekmm.large_heat_generator": "Generador de calor grande",
   "container.mekmm.large_gas_burning_generator": "Generador de gas grande",
   "container.mekmm.large_wind_generator": "Large Wind Generator",
@@ -379,6 +381,8 @@
   "factory.mekmm.liquifying": "Licuando",
   "factory.mekmm.pigment_extracting": "Pigment Extracting",
   "factory.mekmm.painting": "Painting",
+
+  "large_wind_generator.mekmm.same_block_nearby": "Surrounded by same machines",
 
   "description.mekmm.recycler": "Una máquina que destruye cosas que no necesitas, si hay recetas.",
   "description.mekmm.planting_station": "Una máquina avanzada capaz de cultivar cultivos.",

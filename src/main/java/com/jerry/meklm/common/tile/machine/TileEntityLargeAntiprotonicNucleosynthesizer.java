@@ -69,13 +69,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 
+import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProgressMachine<NucleosynthesizingRecipe> implements IBoundingBlock,
+public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProgressMachine<NucleosynthesizingRecipe> implements IBoundingBlock, INotNeedConfig,
                                                           ItemChemicalRecipeLookupHandler<Gas, GasStack, NucleosynthesizingRecipe> {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
@@ -97,6 +99,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     protected final IInputHandler<@NotNull ItemStack> itemInputHandler;
     protected final ILongInputHandler<@NotNull GasStack> gasInputHandler;
 
+    @Getter
     private MachineEnergyContainer<TileEntityLargeAntiprotonicNucleosynthesizer> energyContainer;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputChemicalItem", docPlaceholder = "input gas item slot")
     GasInventorySlot gasInputSlot;
@@ -243,10 +246,6 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
             int upgradeCount = upgradeComponent.getUpgrades(Upgrade.SPEED);
             baselineMaxOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
         }
-    }
-
-    public MachineEnergyContainer<TileEntityLargeAntiprotonicNucleosynthesizer> getEnergyContainer() {
-        return energyContainer;
     }
 
     @NotNull

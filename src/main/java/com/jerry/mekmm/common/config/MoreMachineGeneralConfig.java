@@ -40,7 +40,7 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
         gasCollectAmount = CachedIntValue.wrap(this, builder.comment("mB of Unstable Dimensional Gas collected by the Ambient Gas Collector.")
                 .defineInRange("gasCollectAmount", 1, 1, FluidType.BUCKET_VOLUME));
 
-        wirelessChargingStationChargingRate = CachedFloatingLongValue.define(this, builder, "mB of Unstable Dimensional Gas collected by the Ambient Gas Collector.",
+        wirelessChargingStationChargingRate = CachedFloatingLongValue.define(this, builder, "Amount of Energy(joules) an item can receive per tick from a Wireless Charging Station.",
                 "wirelessChargingStationChargingRate", FloatingLong.createConst(100_000L));
 
         builder.pop();
