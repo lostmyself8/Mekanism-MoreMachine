@@ -112,10 +112,10 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER, MekanismLang.DESCRIPTION_PIGMENT_MIXER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_PIGMENT_MIXER)
             .withSound(MekanismSounds.PIGMENT_MIXER)
-            .withEnergyConfig(MekanismConfig.usage.pigmentMixer, MekanismConfig.storage.pigmentMixer)
+            .withEnergyConfig(MoreMachineConfig.usage.largePigmentMixer, MoreMachineConfig.storage.largePigmentMixer)
             .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.MUFFLING))
             .withCustomShape(LargeMachineBlockShapes.LARGE_PIGMENT_MIXER)
-            .with(AttributeCustomSelectionBox.JAVA)
+            .with(AttributeCustomSelectionBox.JSON)
             .withBounding(MoreMachineBounding.LARGE_PIGMENT_MIXER)
             .withComputerSupport("largePigmentMixer")
             .build();

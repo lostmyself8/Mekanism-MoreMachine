@@ -22,6 +22,7 @@ import com.jerry.meklm.client.model.LargeMachineModelCache;
 import com.jerry.meklm.common.tile.machine.TileEntityLargePigmentMixer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,19 +86,10 @@ public class RenderLargePigmentMixer extends MekanismTileEntityRenderer<TileEnti
 
     private void renderTranslated(TileEntityLargePigmentMixer tile, float partialTick, PoseStack matrix, Consumer<PoseStack> renderer) {
         matrix.pushPose();
-        // switch (tile.getDirection()) {
-        // case NORTH -> matrix.translate(7 / 16F, 1, 6 / 16F);
-        // case SOUTH -> matrix.translate(7 / 16F, 1, 0.5F);
-        // case WEST -> matrix.translate(6 / 16F, 1, 7 / 16F);
-        // case EAST -> matrix.translate(0.5F, 1, 7 / 16F);
-        // }
-        matrix.translate(0, 1, 0);
-        float shift = 1 / 16F;
-        matrix.translate(shift, 0, shift);
-        // if (tile.getLevel() != null) {
-        // matrix.mulPose(Axis.YN.rotationDegrees((tile.getLevel().getGameTime() + partialTick) * SHAFT_SPEED % 360));
-        // }
-        matrix.translate(-shift, 0, -shift);
+        matrix.translate(0.5F, 1, 0.5F);
+        if (tile.getLevel() != null) {
+            matrix.mulPose(Axis.YN.rotationDegrees((tile.getLevel().getGameTime() + partialTick) * SHAFT_SPEED % 360));
+        }
         renderer.accept(matrix);
         matrix.popPose();
     }

@@ -52,6 +52,12 @@ import mekanism.common.recipe.lookup.cache.RotaryInputRecipeCache;
 import mekanism.common.tile.base.SubstanceType;
 import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.GasSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
+import mekanism.common.tile.component.config.slot.FluidSlotInfo;
+import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasMode;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
@@ -72,6 +78,7 @@ import net.minecraftforge.fluids.FluidType;
 
 import com.jerry.meklm.api.INotNeedConfig;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,6 +124,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     private int baselineMaxOperations = 1;
     private int numPowering;
 
+    @Getter
     private MachineEnergyContainer<TileEntityLargeRotaryCondensentrator> energyContainer;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getGasItemInput", docPlaceholder = "gas item input slot")
     GasInventorySlot gasInputSlot;
@@ -132,10 +140,30 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     public TileEntityLargeRotaryCondensentrator(BlockPos pos, BlockState state) {
         super(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, pos, state, TRACKED_ERROR_TYPES);
         configComponent = new TileComponentConfig(this, TransmissionType.ITEM, TransmissionType.GAS, TransmissionType.FLUID, TransmissionType.ENERGY);
-        configComponent.setupItemIOConfig(List.of(gasInputSlot, fluidInputSlot), List.of(gasOutputSlot, fluidOutputSlot), energySlot, true);
-        configComponent.setupIOConfig(TransmissionType.GAS, gasTank, RelativeSide.LEFT, true).setEjecting(true);
-        configComponent.setupIOConfig(TransmissionType.FLUID, fluidTank, RelativeSide.RIGHT, true).setEjecting(true);
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+
+        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
+        if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.INPUT, new InventorySlotInfo(true, true, List.of(gasInputSlot, fluidInputSlot)));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(true, true, List.of(gasOutputSlot, fluidOutputSlot)));
+            itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, List.of(gasInputSlot, fluidInputSlot, gasOutputSlot, fluidOutputSlot)));
+            itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
+        }
+        ConfigInfo fluidConfig = configComponent.getConfig(TransmissionType.FLUID);
+        if (fluidConfig != null) {
+            fluidConfig.addSlotInfo(DataType.INPUT, new FluidSlotInfo(true, true, fluidTank));
+            fluidConfig.addSlotInfo(DataType.OUTPUT, new FluidSlotInfo(true, true, fluidTank));
+            fluidConfig.addSlotInfo(DataType.INPUT_OUTPUT, new FluidSlotInfo(true, true, fluidTank));
+        }
+        ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.GAS);
+        if (gasConfig != null) {
+            gasConfig.addSlotInfo(DataType.INPUT, new GasSlotInfo(true, true, gasTank));
+            gasConfig.addSlotInfo(DataType.OUTPUT, new GasSlotInfo(true, true, gasTank));
+            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new GasSlotInfo(true, true, gasTank));
+        }
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.GAS, TransmissionType.FLUID)
@@ -233,11 +261,11 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             fluidDirection.add(right);
             BlockEntity gasEjectEntity = WorldUtils.getTileEntity(getLevel(), worldPosition.offset(up.getNormal()).offset(left.getNormal()));
             if (gasEjectEntity != null) {
-                ChemicalUtil.emit(gasDirection, gasTank, gasEjectEntity, gasTank.getCapacity());
+                if (mode) ChemicalUtil.emit(gasDirection, gasTank, gasEjectEntity, gasTank.getCapacity());
             }
             BlockEntity fluidEjectEntity = WorldUtils.getTileEntity(getLevel(), worldPosition.offset(up.getNormal()).offset(right.getNormal()));
             if (fluidEjectEntity != null) {
-                FluidUtils.emit(fluidDirection, fluidTank, fluidEjectEntity, fluidTank.getCapacity());
+                if (!mode) FluidUtils.emit(fluidDirection, fluidTank, fluidEjectEntity, fluidTank.getCapacity());
             }
 
         }
@@ -297,10 +325,6 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     public RotaryRecipe getRecipe(int cacheIndex) {
         RotaryInputRecipeCache inputCache = getRecipeType().getInputCache();
         return mode ? inputCache.findFirstRecipe(level, fluidInputHandler.getInput()) : inputCache.findFirstRecipe(level, gasInputHandler.getInput());
-    }
-
-    public MachineEnergyContainer<TileEntityLargeRotaryCondensentrator> getEnergyContainer() {
-        return energyContainer;
     }
 
     @NotNull
@@ -391,6 +415,8 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
                 return accessor.getFluidHandlerManager().resolve(capability, side);
             } else if (capability == Capabilities.GAS_HANDLER) {
                 return accessor.getGasHandlerManager().resolve(capability, side);
+            } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+                return accessor.getEnergyHandlerManager().resolve(capability, side);
             }
         }
         if (capability == ForgeCapabilities.ITEM_HANDLER) {

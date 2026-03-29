@@ -1,0 +1,34 @@
+{
+  "forge:conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanismgenerators"
+    }
+  ],
+  "type": "mekanism:mek_data",
+  "key": {
+    "B": {
+      "tag": "forge:storage_blocks/steel"
+    },
+    "L": {
+      "item": "mekanism:laser"
+    },
+    "R": {
+      "item": "mekanism:robit"
+    },
+    "S": {
+      "item": "mekanismgenerators:advanced_solar_generator"
+    },
+    "T": {
+      "item": "mekmm:ultimate_max_chemical_tank"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "BRB",
+    "TLT"
+  ],
+  "result": {
+    "item": "mekmm:large_solar_neutron_activator"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "mekanism:mek_data",
+  "key": {
+    "A": {
+      "tag": "mekanism:alloys/atomic"
+    },
+    "C": {
+      "tag": "forge:circuits/ultimate"
+    },
+    "I": {
+      "tag": "forge:gems/diamond"
+    },
+    "P": {
+      "item": "mekmm:elite_pigment_extracting_factory"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "result": {
+    "item": "mekmm:ultimate_pigment_extracting_factory"
+  }
+}

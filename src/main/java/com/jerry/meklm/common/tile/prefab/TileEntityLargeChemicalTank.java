@@ -1,6 +1,7 @@
 package com.jerry.meklm.common.tile.prefab;
 
 import com.jerry.mekmm.api.ITileEntityMekanismAccessor;
+import com.jerry.mekmm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
 
 import mekanism.api.*;
 import mekanism.api.chemical.IChemicalTank;
@@ -65,7 +66,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 
 import com.jerry.meklm.api.INotNeedConfig;
-import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
 import com.jerry.meklm.common.tier.ILargeTankTier;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
@@ -140,7 +140,7 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
     @NotNull
     @Override
     public IChemicalTankHolder<Gas, GasStack, IGasTank> getInitialGasTanks(IContentsListener listener) {
-        CanAdjustChemicalTankHelper<Gas, GasStack, IGasTank> builder = CanAdjustChemicalTankHelper.forSide(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
+        AdjustableChemicalTankHelper<Gas, GasStack, IGasTank> builder = AdjustableChemicalTankHelper.forSideGas(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
         builder.addTank(getGasTank(), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
     }
@@ -148,7 +148,7 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
     @NotNull
     @Override
     public IChemicalTankHolder<InfuseType, InfusionStack, IInfusionTank> getInitialInfusionTanks(IContentsListener listener) {
-        CanAdjustChemicalTankHelper<InfuseType, InfusionStack, IInfusionTank> builder = CanAdjustChemicalTankHelper.forSide(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
+        AdjustableChemicalTankHelper<InfuseType, InfusionStack, IInfusionTank> builder = AdjustableChemicalTankHelper.forSideInfusion(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
         builder.addTank(getInfusionTank(), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
     }
@@ -156,7 +156,7 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
     @NotNull
     @Override
     public IChemicalTankHolder<Pigment, PigmentStack, IPigmentTank> getInitialPigmentTanks(IContentsListener listener) {
-        CanAdjustChemicalTankHelper<Pigment, PigmentStack, IPigmentTank> builder = CanAdjustChemicalTankHelper.forSide(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
+        AdjustableChemicalTankHelper<Pigment, PigmentStack, IPigmentTank> builder = AdjustableChemicalTankHelper.forSidePigment(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
         builder.addTank(getPigmentTank(), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
     }
@@ -164,7 +164,7 @@ public abstract class TileEntityLargeChemicalTank<TIER extends ILargeTankTier> e
     @NotNull
     @Override
     public IChemicalTankHolder<Slurry, SlurryStack, ISlurryTank> getInitialSlurryTanks(IContentsListener listener) {
-        CanAdjustChemicalTankHelper<Slurry, SlurryStack, ISlurryTank> builder = CanAdjustChemicalTankHelper.forSide(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
+        AdjustableChemicalTankHelper<Slurry, SlurryStack, ISlurryTank> builder = AdjustableChemicalTankHelper.forSideSlurry(this::getDirection, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
         builder.addTank(getSlurryTank(), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
     }

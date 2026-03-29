@@ -3,7 +3,7 @@ package com.jerry.meklm.client.gui;
 import mekanism.api.chemical.pigment.PigmentStack;
 import mekanism.api.recipes.PigmentMixingRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.bar.GuiHorizontalPowerBar;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiPigmentGauge;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 
-public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePigmentMixer, MekanismTileContainer<TileEntityLargePigmentMixer>> {
+public class GuiLargePigmentMixer extends GuiMekanismTile<TileEntityLargePigmentMixer, MekanismTileContainer<TileEntityLargePigmentMixer>> {
 
     public GuiLargePigmentMixer(MekanismTileContainer<TileEntityLargePigmentMixer> container, Inventory inv, Component title) {
         super(container, inv, title);

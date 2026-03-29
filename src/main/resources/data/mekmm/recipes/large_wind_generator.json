@@ -1,0 +1,31 @@
+{
+  "forge:conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanismgenerators"
+    }
+  ],
+  "type": "mekanism:mek_data",
+  "key": {
+    "B": {
+      "tag": "forge:storage_blocks/steel"
+    },
+    "C": {
+      "item": "mekanismgenerators:wind_generator"
+    },
+    "R": {
+      "item": "mekanism:robit"
+    },
+    "T": {
+      "item": "mekanism:ultimate_induction_cell"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "BRB",
+    "BTB"
+  ],
+  "result": {
+    "item": "mekmm:large_wind_generator"
+  }
+}

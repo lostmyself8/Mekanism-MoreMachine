@@ -1,0 +1,25 @@
+{
+  "type": "mekanism:mek_data",
+  "key": {
+    "B": {
+      "tag": "forge:storage_blocks/steel"
+    },
+    "C": {
+      "item": "mekanism:hdpe_rod"
+    },
+    "R": {
+      "item": "mekanism:robit"
+    },
+    "T": {
+      "item": "mekmm:ultimate_max_chemical_tank"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "TRT",
+    "BTB"
+  ],
+  "result": {
+    "item": "mekmm:large_pigment_mixer"
+  }
+}

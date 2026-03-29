@@ -22,6 +22,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
     public final CachedFloatingLongValue largeRotaryCondensentrator;
     public final CachedFloatingLongValue largeChemicalInfuser;
     public final CachedFloatingLongValue largeAntiprotonicNucleosynthesizer;
+    public final CachedFloatingLongValue largePigmentMixer;
 
     MoreMachineUsageConfig() {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -44,6 +45,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
         largeRotaryCondensentrator = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeRotaryCondensentrator ", FloatingLong.createConst(50L));
         largeChemicalInfuser = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeChemicalInfuser ", FloatingLong.createConst(100L));
         largeAntiprotonicNucleosynthesizer = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largeAntiprotonicNucleosynthesizer ", FloatingLong.createConst(500_000L));
+        largePigmentMixer = CachedFloatingLongValue.define(this, builder, "Energy per operation tick (Joules).", " largePigmentMixer ", FloatingLong.createConst(100L));
 
         builder.pop();
         configSpec = builder.build();

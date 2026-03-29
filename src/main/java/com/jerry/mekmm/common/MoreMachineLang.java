@@ -26,7 +26,6 @@ public enum MoreMachineLang implements ILangEntry {
     REPLICATING("factory", "replicating"),
     // Advanced Factory Type
     OXIDIZING("factory", "oxidizing"),
-    CHEMICAL_INFUSING("factory", "chemical_infusing"),
     DISSOLVING("factory", "dissolving"),
     WASHING("factory", "washing"),
     CRYSTALLIZING("factory", "crystallizing"),

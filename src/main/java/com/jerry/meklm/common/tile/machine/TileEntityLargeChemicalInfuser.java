@@ -48,7 +48,8 @@ import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.GasSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
@@ -132,26 +133,18 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(true, true, outputSlot));
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, leftInputSlot, rightInputSlot, outputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
-            // Set default config directions
-            itemConfig.setDataType(DataType.INPUT_1, RelativeSide.LEFT);
-            itemConfig.setDataType(DataType.INPUT_2, RelativeSide.RIGHT);
-            itemConfig.setDataType(DataType.OUTPUT, RelativeSide.FRONT);
-            itemConfig.setDataType(DataType.ENERGY, RelativeSide.BACK);
         }
-
         ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.GAS);
         if (gasConfig != null) {
-            gasConfig.addSlotInfo(DataType.INPUT_1, new ChemicalSlotInfo.GasSlotInfo(true, false, leftTank));
-            gasConfig.addSlotInfo(DataType.INPUT_2, new ChemicalSlotInfo.GasSlotInfo(true, false, rightTank));
-            gasConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo.GasSlotInfo(false, true, centerTank));
-            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo.GasSlotInfo(true, true, leftTank, rightTank, centerTank));
-            gasConfig.setDataType(DataType.INPUT_1, RelativeSide.LEFT);
-            gasConfig.setDataType(DataType.INPUT_2, RelativeSide.RIGHT);
-            gasConfig.setDataType(DataType.OUTPUT, RelativeSide.FRONT);
-            gasConfig.setEjecting(true);
+            gasConfig.addSlotInfo(DataType.INPUT_1, new GasSlotInfo(true, false, leftTank));
+            gasConfig.addSlotInfo(DataType.INPUT_2, new GasSlotInfo(true, false, rightTank));
+            gasConfig.addSlotInfo(DataType.OUTPUT, new GasSlotInfo(false, true, centerTank));
+            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new GasSlotInfo(true, true, leftTank, rightTank, centerTank));
         }
-
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.GAS)
@@ -333,6 +326,8 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
         if (this instanceof ITileEntityMekanismAccessor accessor) {
             if (capability == Capabilities.GAS_HANDLER) {
                 return accessor.getGasHandlerManager().resolve(capability, side);
+            } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+                return accessor.getEnergyHandlerManager().resolve(capability, side);
             }
         }
         if (capability == ForgeCapabilities.ITEM_HANDLER) {

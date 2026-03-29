@@ -1,0 +1,25 @@
+{
+  "type": "mekanism:mek_data",
+  "key": {
+    "B": {
+      "tag": "forge:storage_blocks/steel"
+    },
+    "C": {
+      "tag": "forge:circuits/ultimate"
+    },
+    "R": {
+      "item": "mekanism:robit"
+    },
+    "T": {
+      "item": "mekmm:ultimate_max_chemical_tank"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "TRT",
+    "BCB"
+  ],
+  "result": {
+    "item": "mekmm:large_chemical_infuser"
+  }
+}
