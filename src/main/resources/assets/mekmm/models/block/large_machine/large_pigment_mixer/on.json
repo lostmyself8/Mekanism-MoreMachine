@@ -489,7 +489,7 @@
 				"north": {"uv": [1.875, 5.0625, 2.25, 5.4375], "texture": "#0"},
 				"east": {"uv": [1.875, 5.4375, 2.1875, 5.8125], "rotation": 270, "texture": "#0"},
 				"west": {"uv": [1.875, 5.4375, 2.1875, 5.8125], "rotation": 90, "texture": "#0"},
-				"up": {"uv": [5.1875, 3.1875, 5.5625, 3.5625], "rotation": 180, "texture": "#missing"}
+				"up": {"uv": [7.5625, 3.25, 7.9375, 3.625], "rotation": 180, "texture": "#0"}
 			}
 		},
 		{
@@ -829,96 +829,111 @@
 		{
 			"name": "port_leds",
 			"origin": [8, 8, 8],
+			"scope": 0,
 			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5]
 		},
 		{
 			"name": "screen",
 			"origin": [16.5, 16, -7.5],
+			"scope": 0,
 			"color": 0,
 			"children": [6, 7, 8, 9, 10, 11]
 		},
 		{
 			"name": "body",
 			"origin": [8, 8, 8],
+			"scope": 0,
 			"color": 0,
 			"children": [
 				12,
 				{
 					"name": "main_tank",
 					"origin": [0, 0, 0],
+					"scope": 0,
 					"color": 0,
 					"children": [13, 14]
 				},
 				{
 					"name": "side_tank",
 					"origin": [8, 8, 8],
+					"scope": 0,
 					"color": 0,
 					"children": [15, 16, 17, 18]
 				},
 				{
 					"name": "blender",
 					"origin": [8, 8, 8],
+					"scope": 0,
 					"color": 0,
-					"children": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+					"children": [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 				},
 				{
 					"name": "pipes",
 					"origin": [8, 8, 8],
+					"scope": 0,
 					"color": 0,
-					"children": [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]
+					"children": [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42]
 				},
-				42
+				43
 			]
 		},
 		{
 			"name": "ports",
 			"origin": [8, 8, 8],
+			"scope": 0,
 			"color": 0,
 			"children": [
 				{
 					"name": "port_west1",
 					"origin": [8, 8, 30.51],
+					"scope": 0,
 					"color": 0,
-					"children": [43, 44]
+					"children": [44, 45]
 				},
 				{
 					"name": "port_east1",
 					"origin": [8, 8, 30.51],
+					"scope": 0,
 					"color": 0,
-					"children": [45, 46]
+					"children": [46, 47]
 				},
 				{
 					"name": "port_back1",
 					"origin": [8, 8, 30.51],
+					"scope": 0,
 					"color": 0,
-					"children": [47, 48]
+					"children": [48, 49]
 				},
 				{
 					"name": "port_back2",
 					"origin": [8, 8, 30.51],
+					"scope": 0,
 					"color": 0,
-					"children": [49, 50]
+					"children": [50, 51]
 				},
 				{
 					"name": "port_front1",
 					"origin": [0.5, 8, 21],
+					"scope": 0,
 					"color": 0,
-					"children": [51, 52]
+					"children": [52, 53]
 				},
 				{
 					"name": "port_front2",
 					"origin": [0.5, 8, 21],
+					"scope": 0,
 					"color": 0,
-					"children": [53, 54]
+					"children": [54, 55]
 				}
 			]
 		},
 		{
 			"name": "controller",
 			"origin": [0.5, 8, 20],
+			"scope": 0,
 			"color": 0,
-			"children": [55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68]
+			"children": [56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]
 		}
 	]
 }

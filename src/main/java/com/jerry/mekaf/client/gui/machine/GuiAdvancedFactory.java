@@ -228,7 +228,6 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
     private GuiProgress addProgress(GuiProgress progressBar) {
         MekanismJEIRecipeType<?> jeiType = switch (tile.getAdvancedFactoryType()) {
             case OXIDIZING -> MekanismJEIRecipeType.OXIDIZING;
-            case CHEMICAL_INFUSING -> MekanismJEIRecipeType.CHEMICAL_INFUSING;
             case DISSOLVING -> MekanismJEIRecipeType.DISSOLUTION;
             case WASHING -> MekanismJEIRecipeType.WASHING;
             case CRYSTALLIZING -> MekanismJEIRecipeType.CRYSTALLIZING;

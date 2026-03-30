@@ -24,6 +24,7 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
     public final CachedFloatingLongValue largeChemicalInfuser;
     public final CachedFloatingLongValue largeElectrolyticSeparator;
     public final CachedFloatingLongValue largeAntiprotonicNucleosynthesizer;
+    public final CachedFloatingLongValue largePigmentMixer;
 
     public final CachedFloatingLongValue largeHeatGenerator;
     public final CachedFloatingLongValue largeWindGenerator;
@@ -53,6 +54,8 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
                 "largeElectrolyticSeparator", FloatingLong.createConst(32_768_000L));
         largeAntiprotonicNucleosynthesizer = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
                 "largeAntiprotonicNucleosynthesizer", FloatingLong.createConst(64_000_000_000L));
+        largePigmentMixer = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).",
+                "largePigmentMixer", FloatingLong.createConst(16_384_000L));
 
         largeHeatGenerator = CachedFloatingLongValue.define(this, builder, "Base energy storage (Joules).", "largeHeatGenerator",
                 FloatingLong.createConst(256_600_000L));

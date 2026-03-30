@@ -11,6 +11,8 @@ import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismBlocks;
 
+import lombok.Getter;
+
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -18,7 +20,6 @@ import java.util.function.Supplier;
 public enum AdvancedFactoryType implements IHasTranslationKey {
 
     OXIDIZING("oxidizing", MoreMachineLang.OXIDIZING, () -> AdvancedFactoryBlockTypes.CHEMICAL_OXIDIZER, () -> MekanismBlocks.CHEMICAL_OXIDIZER),
-    CHEMICAL_INFUSING("chemical_infusing", MoreMachineLang.CHEMICAL_INFUSING, () -> AdvancedFactoryBlockTypes.CHEMICAL_INFUSER, () -> MekanismBlocks.CHEMICAL_INFUSER),
 
     DISSOLVING("dissolving", MoreMachineLang.DISSOLVING, () -> AdvancedFactoryBlockTypes.CHEMICAL_DISSOLUTION_CHAMBER, () -> MekanismBlocks.CHEMICAL_DISSOLUTION_CHAMBER),
     WASHING("washing", MoreMachineLang.WASHING, () -> AdvancedFactoryBlockTypes.CHEMICAL_WASHER, () -> MekanismBlocks.CHEMICAL_WASHER),
@@ -29,6 +30,7 @@ public enum AdvancedFactoryType implements IHasTranslationKey {
     PIGMENT_EXTRACTING("pigment_extracting", MoreMachineLang.PIGMENT_EXTRACTING, () -> AdvancedFactoryBlockTypes.PIGMENT_EXTRACTOR, () -> MekanismBlocks.PIGMENT_EXTRACTOR),
     PAINTING("painting", MoreMachineLang.PAINTING, () -> AdvancedFactoryBlockTypes.PAINTING_MACHINE, () -> MekanismBlocks.PAINTING_MACHINE);
 
+    @Getter
     private final String registryNameComponent;
     private final ILangEntry langEntry;
     private final Supplier<MoreMachineFactoryMachine<?>> baseMachine;
@@ -39,10 +41,6 @@ public enum AdvancedFactoryType implements IHasTranslationKey {
         this.langEntry = langEntry;
         this.baseMachine = baseMachine;
         this.baseBlock = baseBlock;
-    }
-
-    public String getRegistryNameComponent() {
-        return registryNameComponent;
     }
 
     public String getRegistryNameComponentCapitalized() {

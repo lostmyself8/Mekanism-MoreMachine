@@ -57,7 +57,9 @@ import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.GasSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
+import mekanism.common.tile.component.config.slot.FluidSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasGasMode;
@@ -169,24 +171,20 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
             itemConfig.addSlotInfo(DataType.OUTPUT_2, new InventorySlotInfo(true, true, rightOutputSlot));
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, fluidSlot, leftOutputSlot, rightOutputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
-            // Set default config directions
-            itemConfig.setDataType(DataType.INPUT, RelativeSide.FRONT);
-            itemConfig.setDataType(DataType.OUTPUT_1, RelativeSide.LEFT);
-            itemConfig.setDataType(DataType.OUTPUT_2, RelativeSide.RIGHT);
-            itemConfig.setDataType(DataType.ENERGY, RelativeSide.BACK);
         }
-
         ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.GAS);
         if (gasConfig != null) {
-            gasConfig.addSlotInfo(DataType.OUTPUT_1, new ChemicalSlotInfo.GasSlotInfo(false, true, leftTank));
-            gasConfig.addSlotInfo(DataType.OUTPUT_2, new ChemicalSlotInfo.GasSlotInfo(false, true, rightTank));
-            gasConfig.setDataType(DataType.OUTPUT_1, RelativeSide.LEFT);
-            gasConfig.setDataType(DataType.OUTPUT_2, RelativeSide.RIGHT);
-            gasConfig.setEjecting(true);
+            gasConfig.addSlotInfo(DataType.OUTPUT_1, new GasSlotInfo(false, true, leftTank));
+            gasConfig.addSlotInfo(DataType.OUTPUT_2, new GasSlotInfo(false, true, rightTank));
         }
-
-        configComponent.setupInputConfig(TransmissionType.FLUID, fluidTank);
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+        ConfigInfo fluidConfig = configComponent.getConfig(TransmissionType.FLUID);
+        if (fluidConfig != null) {
+            fluidConfig.addSlotInfo(DataType.INPUT, new FluidSlotInfo(true, false, fluidTank));
+        }
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.GAS)
@@ -467,6 +465,8 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
                 return accessor.getFluidHandlerManager().resolve(capability, side);
             } else if (capability == Capabilities.GAS_HANDLER) {
                 return accessor.getGasHandlerManager().resolve(capability, side);
+            } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+                return accessor.getEnergyHandlerManager().resolve(capability, side);
             }
         }
         if (capability == ForgeCapabilities.ITEM_HANDLER) {

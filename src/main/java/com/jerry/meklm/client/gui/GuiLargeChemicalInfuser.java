@@ -1,7 +1,7 @@
 package com.jerry.meklm.client.gui;
 
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.bar.GuiHorizontalPowerBar;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiGasGauge;
@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
 import org.jetbrains.annotations.NotNull;
 
-public class GuiLargeChemicalInfuser extends GuiConfigurableTile<TileEntityLargeChemicalInfuser, MekanismTileContainer<TileEntityLargeChemicalInfuser>> {
+public class GuiLargeChemicalInfuser extends GuiMekanismTile<TileEntityLargeChemicalInfuser, MekanismTileContainer<TileEntityLargeChemicalInfuser>> {
 
     public GuiLargeChemicalInfuser(MekanismTileContainer<TileEntityLargeChemicalInfuser> container, Inventory inv, Component title) {
         super(container, inv, title);

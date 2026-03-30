@@ -38,15 +38,6 @@ public class AdvancedFactoryBlockTypes {
             .withCustomShape(BlockShapes.CHEMICAL_OXIDIZER)
             .withComputerSupport("chemicalOxidizer")
             .build();
-    // Chemical Infuser
-    public static final MoreMachineFactoryMachine<TileEntityChemicalInfuser> CHEMICAL_INFUSER = MoreMachineMachineBuilder
-            .createAdvancedFactoryMachine(() -> MekanismTileEntityTypes.CHEMICAL_INFUSER, MekanismLang.DESCRIPTION_CHEMICAL_INFUSER, AdvancedFactoryType.CHEMICAL_INFUSING)
-            .withGui(() -> MekanismContainerTypes.CHEMICAL_INFUSER)
-            .withSound(MekanismSounds.CHEMICAL_INFUSER)
-            .withEnergyConfig(MekanismConfig.usage.chemicalInfuser, MekanismConfig.storage.chemicalInfuser)
-            .withCustomShape(BlockShapes.CHEMICAL_INFUSER)
-            .withComputerSupport("chemicalInfuser")
-            .build();
     // Chemical Dissolution Chamber
     public static final MoreMachineFactoryMachine<TileEntityChemicalDissolutionChamber> CHEMICAL_DISSOLUTION_CHAMBER = MoreMachineMachineBuilder
             .createAdvancedFactoryMachine(() -> MekanismTileEntityTypes.CHEMICAL_DISSOLUTION_CHAMBER, MekanismLang.DESCRIPTION_CHEMICAL_DISSOLUTION_CHAMBER, AdvancedFactoryType.DISSOLVING)

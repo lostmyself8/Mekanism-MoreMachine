@@ -1,7 +1,7 @@
 package com.jerry.meklm.client.gui;
 
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiDownArrow;
 import mekanism.client.gui.element.bar.GuiHorizontalPowerBar;
 import mekanism.client.gui.element.button.ToggleButton;
@@ -27,7 +27,7 @@ import net.minecraft.world.entity.player.Inventory;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
 import org.jetbrains.annotations.NotNull;
 
-public class GuiLargeRotaryCondensentrator extends GuiConfigurableTile<TileEntityLargeRotaryCondensentrator, MekanismTileContainer<TileEntityLargeRotaryCondensentrator>> {
+public class GuiLargeRotaryCondensentrator extends GuiMekanismTile<TileEntityLargeRotaryCondensentrator, MekanismTileContainer<TileEntityLargeRotaryCondensentrator>> {
 
     public GuiLargeRotaryCondensentrator(MekanismTileContainer<TileEntityLargeRotaryCondensentrator> container, Inventory inv, Component title) {
         super(container, inv, title);

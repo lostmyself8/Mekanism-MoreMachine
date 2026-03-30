@@ -15,7 +15,6 @@ public class AdvancedFactoryBlockShapes {
     }
 
     public static final VoxelShape[] OXIDIZING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
-    public static final VoxelShape[] CHEMICAL_INFUSING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] DISSOLVING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] WASHING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] CRYSTALLIZING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
@@ -38,26 +37,6 @@ public class AdvancedFactoryBlockShapes {
                 box(7, 14, 12, 9, 15, 14),
                 box(11, 14, 9, 12, 15, 10),
                 box(13, 14, 9, 14, 15, 10)), OXIDIZING_FACTORY);
-
-        VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
-                box(4, 4, 16, 12, 12, 16),
-                box(4, 4, 15, 12, 12, 16),
-                box(0, 0, 4, 16, 4, 16),
-                box(0, 0, 0, 16, 16, 4),
-                box(1, 4, 4, 15, 14, 15),
-                box(0, 4, 9, 7, 16, 16),
-                box(9, 4, 9, 16, 16, 16),
-                box(5, 14, 6, 11, 16, 9),
-                box(0, 12, 4, 16, 16, 6),
-                box(0, 4, 5, 1, 11, 9),
-                box(15, 4, 5, 16, 11, 9),
-                box(3, 14, 7, 4, 15, 9),
-                box(4, 14, 7, 5, 15, 8),
-                box(12, 14, 7, 13, 15, 9),
-                box(11, 14, 7, 12, 15, 8),
-                box(7, 14, 12, 9, 15, 13),
-                box(7, 14, 10, 9, 15, 11),
-                box(7, 14, 14, 9, 15, 15)), CHEMICAL_INFUSING_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 16, 12, 12, 16),
@@ -234,7 +213,6 @@ public class AdvancedFactoryBlockShapes {
     public static VoxelShape[] getShape(AdvancedFactoryType type) {
         return switch (type) {
             case OXIDIZING -> OXIDIZING_FACTORY;
-            case CHEMICAL_INFUSING -> CHEMICAL_INFUSING_FACTORY;
             case DISSOLVING -> DISSOLVING_FACTORY;
             case WASHING -> WASHING_FACTORY;
             case CRYSTALLIZING -> CRYSTALLIZING_FACTORY;

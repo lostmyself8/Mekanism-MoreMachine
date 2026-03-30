@@ -47,7 +47,8 @@ import mekanism.common.tile.component.TileComponentConfig;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo.PigmentSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
@@ -131,26 +132,18 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Pigment
             itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(true, true, outputSlot));
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, leftInputSlot, rightInputSlot, outputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
-            // Set default config directions
-            itemConfig.setDataType(DataType.INPUT_1, RelativeSide.LEFT);
-            itemConfig.setDataType(DataType.INPUT_2, RelativeSide.RIGHT);
-            itemConfig.setDataType(DataType.OUTPUT, RelativeSide.FRONT);
-            itemConfig.setDataType(DataType.ENERGY, RelativeSide.BACK);
         }
-
         ConfigInfo pigmentConfig = configComponent.getConfig(TransmissionType.PIGMENT);
         if (pigmentConfig != null) {
-            pigmentConfig.addSlotInfo(DataType.INPUT_1, new ChemicalSlotInfo.PigmentSlotInfo(true, false, leftInputTank));
-            pigmentConfig.addSlotInfo(DataType.INPUT_2, new ChemicalSlotInfo.PigmentSlotInfo(true, false, rightInputTank));
-            pigmentConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo.PigmentSlotInfo(false, true, outputTank));
-            pigmentConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo.PigmentSlotInfo(true, true, leftInputTank, rightInputTank, outputTank));
-            pigmentConfig.setDataType(DataType.INPUT_1, RelativeSide.LEFT);
-            pigmentConfig.setDataType(DataType.INPUT_2, RelativeSide.RIGHT);
-            pigmentConfig.setDataType(DataType.OUTPUT, RelativeSide.FRONT);
-            pigmentConfig.setEjecting(true);
+            pigmentConfig.addSlotInfo(DataType.INPUT_1, new PigmentSlotInfo(true, false, leftInputTank));
+            pigmentConfig.addSlotInfo(DataType.INPUT_2, new PigmentSlotInfo(true, false, rightInputTank));
+            pigmentConfig.addSlotInfo(DataType.OUTPUT, new PigmentSlotInfo(false, true, outputTank));
+            pigmentConfig.addSlotInfo(DataType.INPUT_OUTPUT, new PigmentSlotInfo(true, true, leftInputTank, rightInputTank, outputTank));
         }
-
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.PIGMENT)
@@ -176,8 +169,8 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Pigment
     @NotNull
     @Override
     protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener, IContentsListener recipeCacheListener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this::getDirection, this::getConfig);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, listener));
+        EnergyContainerHelper builder = EnergyContainerHelper.forSide(this::getDirection);
+        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, listener), RelativeSide.BACK);
         return builder.build();
     }
 
@@ -288,6 +281,8 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Pigment
         if (this instanceof ITileEntityMekanismAccessor accessor) {
             if (capability == Capabilities.PIGMENT_HANDLER) {
                 return accessor.getPigmentHandlerManager().resolve(capability, side);
+            } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+                return accessor.getEnergyHandlerManager().resolve(capability, side);
             }
         }
         if (capability == ForgeCapabilities.ITEM_HANDLER) {
