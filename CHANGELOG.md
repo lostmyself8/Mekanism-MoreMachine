@@ -1,5 +1,23 @@
 # ChangeLog
 
+## Version [v1.2.0](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.1.2-1.20.1...v1.2.0-1.20.1)
+### Added
+
+- Synchronize the updates of large machines(incomplete) by @lostmyself8 in [#140](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/140)
+- Add large wind generator by @lostmyself8 in [#144](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/144)
+- Add Painting factory and Pigment Extracting factory by @lostmyself8 in [#147](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/147)
+- Revise files and improve large machines by @lostmyself8 in [#150](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/150)
+- Add large pigment mixer and improve generator by @lostmyself8 in [#151](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/151)
+- 最终完善所有机器并添加合成表 by @lostmyself8 in [#152](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/152)
+
+### Fixed
+
+- Use own packet handler instead of Mekanism's by @Rurla in [#111](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/111)
+- Revise files and improve large machines by @lostmyself8 in [#150](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/150)
+- Add large pigment mixer and improve generator by @lostmyself8 in [#151](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/151)
+- 最终完善所有机器并添加合成表 by @lostmyself8 in [#152](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/152)
+
+ 
 ## Version [v1.1.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.1.1-1.20.1...v1.1.2-1.20.1)
 ### Added
 
