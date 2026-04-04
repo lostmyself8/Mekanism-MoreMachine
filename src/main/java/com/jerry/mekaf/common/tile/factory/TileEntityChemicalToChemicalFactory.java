@@ -6,6 +6,7 @@ import com.jerry.mekmm.common.util.ChemicalStackMap;
 
 import mekanism.api.Action;
 import mekanism.api.IContentsListener;
+import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
@@ -138,7 +139,7 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
     }
 
     @Nullable
-    protected abstract RECIPE findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputSlot);
+    protected abstract RECIPE findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputTank);
 
     public abstract boolean isChemicalValidForTank(@NotNull ChemicalStack stack);
 
@@ -148,6 +149,14 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
     public abstract boolean isValidInputChemical(@NotNull ChemicalStack stack);
 
     protected abstract int getNeededInput(RECIPE recipe, ChemicalStack inputStack);
+
+    @Override
+    public void recalculateUpgrades(Upgrade upgrade) {
+        super.recalculateUpgrades(upgrade);
+        if (upgrade == Upgrade.SPEED) {
+            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
+        }
+    }
 
     @Override
     public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {

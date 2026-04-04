@@ -5,7 +5,7 @@ import com.jerry.mekaf.common.tile.factory.*;
 
 import com.jerry.mekmm.Mekmm;
 
-import mekanism.api.recipes.cache.CachedRecipe;
+import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiConfigurableTile;
 import mekanism.client.gui.element.GuiDownArrow;
@@ -21,7 +21,7 @@ import mekanism.client.gui.element.progress.GuiProgress;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
-import mekanism.common.inventory.warning.WarningTracker;
+import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 
@@ -56,7 +56,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
             imageWidth += (36 * (index + 2)) + (2 * index);
             inventoryLabelX = (22 * (index + 2)) - (3 * index);
@@ -84,34 +84,34 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         addRenderableWidget(new AdvancedFactoryGuiSortingTab(this, tile));
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16,
                 tile instanceof TileEntityItemToChemicalFactory<?> || tile instanceof TileEntityChemicalToItemFactory<?> ? 65 : tile instanceof TileEntityChemicalToChemicalFactory<?> ? 78 : 52))
-                .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY, 0));
+                .warning(WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY, 0));
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getLastUsage));
 
         if (tile.hasExtraResourceBar()) {
             if (tile instanceof TileEntityWashingFactory factory) {
                 addRenderableWidget(new GuiFluidBar(this, GuiFluidBar.getProvider(factory.getFluidTankBar(), tile.getFluidTanks(null)), 7, 102,
                         getBarWidth(), 4, true))
-                        .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
+                        .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 102));
             } else if (tile instanceof TileEntityPressurizedReactingFactory factory) {
                 // 出输出化学储罐
                 addRenderableWidget(new GuiChemicalGauge(() -> factory.outputChemicalTank, () -> tile.getChemicalTanks(null), GaugeType.SMALL, this, 6, 44))
-                        .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(TileEntityPressurizedReactingFactory.NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR, 0));
+                        .warning(WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(TileEntityPressurizedReactingFactory.NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR, 0));
                 // 化学储罐条
                 addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(factory.getChemicalTankBar(), tile.getChemicalTanks(null)), 7, 76,
                         getBarWidth(), 4, true))
-                        .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
+                        .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 // 流体储罐条
                 addRenderableWidget(new GuiFluidBar(this, GuiFluidBar.getProvider(factory.getFluidTankBar(), tile.getFluidTanks(null)), 7, 84,
                         getBarWidth(), 4, true))
-                        .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
+                        .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 // dump按钮
                 dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 76));
             } else {
                 addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.getChemicalTankBar(), tile.getChemicalTanks(null)),
                         7, tile instanceof TileEntityChemicalToChemicalFactory<?> ? 102 : 89,
                         getBarWidth(), 4, true))
-                        .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
+                        .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(),
                         tile instanceof TileEntityChemicalToChemicalFactory<?> ? 102 : 89));
             }
@@ -119,7 +119,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
 
         if (tile instanceof TileEntityLiquifyingFactory factory) {
             addRenderableWidget(new GuiFluidGauge(() -> factory.fluidTank, () -> factory.getFluidTanks(null), GaugeType.SMALL, this, 6, 44))
-                    .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE, 0));
+                    .warning(WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, 0));
         }
 
         // 物品到气体的工厂只需要一排储罐，物品槽位在TileEntity中被添加
@@ -127,7 +127,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             for (int i = 0; i < tile.tier.processes; i++) {
                 int index = i;
                 addRenderableWidget(new GuiChemicalGauge(() -> factory.outputChemicalTanks.get(index), () -> tile.getChemicalTanks(null), GaugeType.SMALL, this, factory.getXPos(index) - 1, 57))
-                        .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index));
+                        .warning(WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index));
             }
         }
 
@@ -136,7 +136,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             for (int i = 0; i < tile.tier.processes; i++) {
                 int index = i;
                 addRenderableWidget(new GuiChemicalGauge(() -> factory.inputChemicalTanks.get(index), () -> tile.getChemicalTanks(null), GaugeType.SMALL, this, factory.getXPos(index) - 1, 13))
-                        .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_INPUT, index));
+                        .warning(WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index));
             }
         }
 
@@ -145,9 +145,9 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             for (int i = 0; i < tile.tier.processes; i++) {
                 int index = i;
                 addRenderableWidget(new GuiChemicalGauge(() -> factory.inputChemicalTanks.get(index), () -> tile.getChemicalTanks(null), GaugeType.SMALL, this, factory.getXPos(index) - 1, 13))
-                        .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_LEFT_INPUT, index));
+                        .warning(WarningType.NO_MATCHING_RECIPE, factory.getWarningCheck(RecipeError.NOT_ENOUGH_LEFT_INPUT, index));
                 addRenderableWidget(new GuiChemicalGauge(() -> factory.outputChemicalTanks.get(index), () -> tile.getChemicalTanks(null), GaugeType.SMALL, this, factory.getXPos(index) - 1, 70))
-                        .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index));
+                        .warning(WarningType.NO_SPACE_IN_OUTPUT, factory.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index));
             }
         }
 
@@ -157,15 +157,14 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             addRenderableWidget(new GuiProgress(() -> tile.getScaledProgress(1, cacheIndex), ProgressType.DOWN, this, 4 + tile.getXPos(i),
                     tile instanceof TileEntityChemicalToChemicalFactory<?> || tile instanceof TileEntityChemicalToItemFactory<?> ? 46 : 33))
                     .recipeViewerCategory(tile)
-                    // Only can happen if recipes change because inputs are sanitized in the factory based on the output
-                    .warning(WarningTracker.WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT, cacheIndex));
+                    .warning(WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT, cacheIndex));
         }
     }
 
     private int getBarWidth() {
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
             return 210 + 38 * index;
         }
@@ -175,7 +174,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
     private int getButtonX() {
         if (isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
-            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
             return 220 + 38 * index;
         }

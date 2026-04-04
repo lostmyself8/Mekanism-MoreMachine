@@ -64,6 +64,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,7 +97,9 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     /**
      * How many ticks it takes, with upgrades, to run an operation
      */
+    @Setter
     private int ticksRequired = BASE_TICKS_REQUIRED;
+    @Getter
     private int operationsPerTick = 1;// will increase for modified upgrade multipliers
     protected boolean sorting;
     private boolean sortingNeeded = true;
@@ -343,14 +346,6 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     @ComputerMethod(methodDescription = "Total number of ticks it takes currently for the recipe to complete")
     public int getTicksRequired() {
         return ticksRequired;
-    }
-
-    public int getOperationsPerTick() {
-        return operationsPerTick;
-    }
-
-    public void setTicksRequired(int value) {
-        ticksRequired = value;
     }
 
     @Override
