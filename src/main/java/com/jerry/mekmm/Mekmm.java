@@ -77,7 +77,6 @@ public class Mekmm implements IModModule {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(MoreMachineConfig::onConfigLoad);
         // LargeMachine相关的注册
-        // LMConfig.registerConfigs(modContainer);
         registerAdvancedFactory(modEventBus);
         registerLargeMachine(modEventBus);
         registerLargeGenerator(modEventBus);
@@ -106,7 +105,7 @@ public class Mekmm implements IModModule {
     }
 
     private void registerLargeGenerator(IEventBus modEventBus) {
-        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+        if (hooks.mekanismgenerators.isLoaded()) {
             LargeGeneratorBlocks.LG_BLOCKS.register(modEventBus);
             LargeGeneratorTileEntityTypes.LG_TILE_ENTITY_TYPES.register(modEventBus);
             LargeGeneratorContainerTypes.LG_CONTAINER_TYPES.register(modEventBus);
