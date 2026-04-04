@@ -5,13 +5,15 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MixinItemConfigurator",
+    "MixinMekanismBlocks",
+    "tile.MixinTileEntityChemicalOxidizer",
     "recipe.MixinMekanismRecipeType",
     "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor"
   ],
   "client": [
+    "client.MixinRecipeViewerRecipeType",
     "client.recipe_viewer.type.MixinRotaryRVRecipeType",
-    "client.render.MixinRenderTickHandler",
-    "client.MixinRecipeViewerRecipeType"
+    "client.render.MixinRenderTickHandler"
   ],
   "injectors": {
     "defaultRequire": 1
