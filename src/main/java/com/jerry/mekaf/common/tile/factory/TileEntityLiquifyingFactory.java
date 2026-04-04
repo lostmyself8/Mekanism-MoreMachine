@@ -19,6 +19,8 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
+import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
+import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
@@ -155,6 +157,11 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     @Override
     public @NotNull IMekanismRecipeTypeProvider<?, BasicItemStackToFluidOptionalItemRecipe, SingleItem<BasicItemStackToFluidOptionalItemRecipe>> getRecipeType() {
         return null;
+    }
+
+    @Override
+    public IRecipeViewerRecipeType<BasicItemStackToFluidOptionalItemRecipe> recipeViewerType() {
+        return RecipeViewerRecipeType.NUTRITIONAL_LIQUIFICATION;
     }
 
     @Override
