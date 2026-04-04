@@ -49,6 +49,7 @@ import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
@@ -133,7 +134,6 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, leftInputSlot, rightInputSlot, outputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
         }
-
         ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (gasConfig != null) {
             gasConfig.addSlotInfo(DataType.INPUT_1, new ChemicalSlotInfo(true, false, leftTank));
@@ -141,8 +141,10 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             gasConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo(false, true, centerTank));
             gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, leftTank, rightTank, centerTank));
         }
-
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)

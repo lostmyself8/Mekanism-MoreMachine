@@ -46,6 +46,10 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.ChemicalUtil;
@@ -95,7 +99,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
                             docPlaceholder = "output tank")
     public IChemicalTank outputTank;
 
-    @SyntheticComputerMethod(getter = "getProductionRate")
+    @SyntheticComputerMethod(getter = "productionRate")
     private float productionRate;
     private int baselineMaxOperations = 1;
     private int numPowering;
@@ -111,9 +115,19 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
 
     public TileEntityLargeSolarNeutronActivator(BlockPos pos, BlockState state) {
         super(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, pos, state, TRACKED_ERROR_TYPES);
-        configComponent.setupIOConfig(TransmissionType.ITEM, inputSlot, outputSlot, RelativeSide.FRONT);
-        configComponent.setupIOConfig(TransmissionType.CHEMICAL, inputTank, outputTank, RelativeSide.FRONT, false, true);
-        configComponent.addDisabledSides(RelativeSide.TOP);
+
+        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
+        if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.INPUT, new InventorySlotInfo(true, false, inputSlot));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, outputSlot));
+            itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, inputSlot, outputSlot));
+        }
+        ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
+        if (gasConfig != null) {
+            gasConfig.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, true, inputTank));
+            gasConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo(false, true, outputTank));
+            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, inputTank, outputTank));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)
@@ -237,6 +251,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             // then it won't be as they get initialized at the same time
             return false;
         }
+        updateSeeSunCount();
         // 只要有太阳能板能看到太阳那就工作
         return seeSunCount > 0;
     }

@@ -53,6 +53,12 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.cache.RotaryInputRecipeCache;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
+import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
+import mekanism.common.tile.component.config.slot.FluidSlotInfo;
+import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasMode;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
@@ -143,10 +149,30 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
 
     public TileEntityLargeRotaryCondensentrator(BlockPos pos, BlockState state) {
         super(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, pos, state, TRACKED_ERROR_TYPES);
-        configComponent.setupItemIOConfig(List.of(gasInputSlot, fluidInputSlot), List.of(gasOutputSlot, fluidOutputSlot), energySlot, true);
-        configComponent.setupIOConfig(TransmissionType.CHEMICAL, chemicalTank, RelativeSide.LEFT, true);
-        configComponent.setupIOConfig(TransmissionType.FLUID, fluidTank, RelativeSide.RIGHT, true);
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+
+        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
+        if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.INPUT, new InventorySlotInfo(true, true, List.of(gasInputSlot, fluidInputSlot)));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(true, true, List.of(gasOutputSlot, fluidOutputSlot)));
+            itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, List.of(gasInputSlot, fluidInputSlot, gasOutputSlot, fluidOutputSlot)));
+            itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
+        }
+        ConfigInfo fluidConfig = configComponent.getConfig(TransmissionType.FLUID);
+        if (fluidConfig != null) {
+            fluidConfig.addSlotInfo(DataType.INPUT, new FluidSlotInfo(true, true, fluidTank));
+            fluidConfig.addSlotInfo(DataType.OUTPUT, new FluidSlotInfo(true, true, fluidTank));
+            fluidConfig.addSlotInfo(DataType.INPUT_OUTPUT, new FluidSlotInfo(true, true, fluidTank));
+        }
+        ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
+        if (gasConfig != null) {
+            gasConfig.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, true, chemicalTank));
+            gasConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo(true, true, chemicalTank));
+            gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, chemicalTank));
+        }
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL, TransmissionType.FLUID)

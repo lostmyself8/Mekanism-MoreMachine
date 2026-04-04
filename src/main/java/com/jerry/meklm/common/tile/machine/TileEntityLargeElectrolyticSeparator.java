@@ -59,6 +59,8 @@ import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
+import mekanism.common.tile.component.config.slot.EnergySlotInfo;
+import mekanism.common.tile.component.config.slot.FluidSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasGasMode;
@@ -177,15 +179,19 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, fluidSlot, leftOutputSlot, rightOutputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
         }
-
         ConfigInfo gasConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (gasConfig != null) {
             gasConfig.addSlotInfo(DataType.OUTPUT_1, new ChemicalSlotInfo(false, true, leftTank));
             gasConfig.addSlotInfo(DataType.OUTPUT_2, new ChemicalSlotInfo(false, true, rightTank));
         }
-
-        configComponent.setupInputConfig(TransmissionType.FLUID, fluidTank);
-        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
+        ConfigInfo fluidConfig = configComponent.getConfig(TransmissionType.FLUID);
+        if (fluidConfig != null) {
+            fluidConfig.addSlotInfo(DataType.INPUT, new FluidSlotInfo(true, false, fluidTank));
+        }
+        ConfigInfo energyConfig = configComponent.getConfig(TransmissionType.ENERGY);
+        if (energyConfig != null) {
+            energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
+        }
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)
