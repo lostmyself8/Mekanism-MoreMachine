@@ -153,7 +153,7 @@
     "mekmm:large_chemical_infuser",
     "mekmm:large_electrolytic_separator",
     "mekmm:large_solar_neutron_activator",
-    "mekmm:large_heat_generator",
-    "mekmm:large_gas_burning_generator"
+    {"id": "mekmm:large_heat_generator","required": false},
+    {"id": "mekmm:large_gas_burning_generator","required": false}
   ]
 }
