@@ -22,6 +22,9 @@ import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.FluidInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
@@ -70,11 +73,17 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class,
+                            methodNames = { "getFluid", "getFluidCapacity", "getFluidNeeded",
+                                    "getFluidFilledPercentage" },
+                            docPlaceholder = "fluid tank")
     public BasicFluidTank fluidTank;
 
     private final IInputHandler<@NotNull FluidStack> fluidInputHandler;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidItemInput", docPlaceholder = "fluid item input slot")
     FluidInventorySlot fluidSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidItemOutput", docPlaceholder = "fluid item output slot")
     OutputInventorySlot fluidOutputSlot;
 
     public TileEntityWashingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
@@ -148,8 +157,8 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
     }
 
     @Override
-    protected @Nullable FluidChemicalToChemicalRecipe findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputSlot) {
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fluidTank.getFluid(), fallbackInput, outputSlot.getStack(), OUTPUT_CHECK);
+    protected @Nullable FluidChemicalToChemicalRecipe findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputTank) {
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fluidTank.getFluid(), fallbackInput, outputTank.getStack(), OUTPUT_CHECK);
     }
 
     @Override
@@ -191,14 +200,6 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
                 .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
                 .setBaselineMaxOperations(() -> baselineMaxOperations)
                 .setOnFinish(this::markForSave);
-    }
-
-    @Override
-    public void recalculateUpgrades(Upgrade upgrade) {
-        super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED) {
-            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
-        }
     }
 
     // 更改加速升级的显示的，默认是10x，气体工厂是256x，当然只有速度升级需要更改
