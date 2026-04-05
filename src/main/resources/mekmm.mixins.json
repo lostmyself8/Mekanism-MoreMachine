@@ -6,9 +6,19 @@
   "refmap": "mekmm.refmap.json",
   "mixins": [
     "MixinItemConfigurator",
+    "MixinMekanismBlocks",
     "MixinRecipeCacheLookupMonitor",
     "MixinTileEntityMekanism",
-    "recipe.MixinMekanismRecipeType"
+    "recipe.MixinMekanismRecipeType",
+    "tile.MixinTileEntityChemicalCrystallizer",
+    "tile.MixinTileEntityChemicalDissolutionChamber",
+    "tile.MixinTileEntityChemicalOxidizer",
+    "tile.MixinTileEntityChemicalWasher",
+    "tile.MixinTileEntityIsotopicCentrifuge",
+    "tile.MixinTileEntityNutritionalLiquifier",
+    "tile.MixinTileEntityPaintingMachine",
+    "tile.MixinTileEntityPigmentExtractor",
+    "tile.MixinTileEntityPressurizedReactionChamber"
   ],
   "client": [
     "client.jei.MixinMekanismJEI",
