@@ -223,7 +223,7 @@ public class TileEntityWashingFactory extends TileEntitySlurryToSlurryFactory<Fl
 
     @Override
     public @Nullable FluidSlurryToSlurryUpgradeData getUpgradeData() {
-        return new FluidSlurryToSlurryUpgradeData(redstone, getControlType(), getEnergyContainer(), progress, null,
+        return new FluidSlurryToSlurryUpgradeData(redstone, getControlType(), getEnergyContainer(), progress,
                 energySlot, fluidInputSlot, fluidOutputSlot, inputSlurryTanks, fluidTank, outputSlurryTanks, isSorting(), getComponents());
     }
 

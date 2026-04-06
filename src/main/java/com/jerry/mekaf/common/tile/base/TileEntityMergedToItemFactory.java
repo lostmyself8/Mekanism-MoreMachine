@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile.base;
 
 import com.jerry.mekaf.common.upgrade.MergedToItemUpgradeData;
 
+import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.gas.Gas;
@@ -38,13 +39,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.LongSupplier;
 
 public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecipe> extends TileEntityAdvancedFactoryBase<RECIPE> {
+
+    protected static final long MAX_CHEMICAL = 10_000;
 
     protected MergedToItemProcessInfo[] processInfoSlots;
     protected OutputInventorySlot[] outputSlot;
@@ -188,7 +190,414 @@ public abstract class TileEntityMergedToItemFactory<RECIPE extends MekanismRecip
     }
 
     @Override
-    protected void sortInventoryOrTank() {}
+    protected void sortInventoryOrTank() {
+        sortGas();
+        sortInfusion();
+        sortPigment();
+        sortSlurry();
+    }
+
+    protected void sortGas() {
+        Map<GasStack, GasToItemRecipeProcessInfo> processes = new HashMap<>();
+        List<MergedToItemProcessInfo> emptyProcesses = new ArrayList<>();
+        for (MergedToItemProcessInfo processInfo : processInfoSlots) {
+            IGasTank inputTank = processInfo.inputTank().getGasTank();
+            if (inputTank.isEmpty()) {
+                emptyProcesses.add(processInfo);
+            } else {
+                GasStack inputStack = inputTank.getStack();
+                GasToItemRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new GasToItemRecipeProcessInfo());
+                recipeProcessInfo.processes.add(processInfo);
+                recipeProcessInfo.totalAmount += inputStack.getAmount();
+            }
+        }
+        if (processes.isEmpty()) {
+            return;
+        }
+        if (!emptyProcesses.isEmpty()) {
+            addEmptyGasTanksAsTargets(processes, emptyProcesses);
+        }
+        distributeGas(processes);
+    }
+
+    protected void addEmptyGasTanksAsTargets(Map<GasStack, GasToItemRecipeProcessInfo> processes, List<MergedToItemProcessInfo> emptyProcesses) {
+        for (Map.Entry<GasStack, GasToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            GasToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long minPerTank = 1;
+            long maxTanks = recipeProcessInfo.totalAmount / minPerTank;
+            if (maxTanks <= 1) {
+                continue;
+            }
+            int processAmount = recipeProcessInfo.processes.size();
+            if (maxTanks <= processAmount) {
+                continue;
+            }
+            long emptyToAdd = maxTanks - processAmount;
+            int added = 0;
+            List<MergedToItemProcessInfo> toRemove = new ArrayList<>();
+            for (MergedToItemProcessInfo emptyProcess : emptyProcesses) {
+                recipeProcessInfo.processes.add(emptyProcess);
+                toRemove.add(emptyProcess);
+                added++;
+                if (added >= emptyToAdd) {
+                    break;
+                }
+            }
+            emptyProcesses.removeAll(toRemove);
+            if (emptyProcesses.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    protected void distributeGas(Map<GasStack, GasToItemRecipeProcessInfo> processes) {
+        for (Map.Entry<GasStack, GasToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            GasToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long processAmount = recipeProcessInfo.processes.size();
+            if (processAmount == 1) {
+                continue;
+            }
+            GasStack item = entry.getKey();
+            long maxAmount = MAX_CHEMICAL * tier.processes;
+            long numberPerTank = recipeProcessInfo.totalAmount / processAmount;
+            if (numberPerTank == maxAmount) {
+                continue;
+            }
+            long remainder = recipeProcessInfo.totalAmount % processAmount;
+            for (int i = 0; i < processAmount; i++) {
+                MergedToItemProcessInfo processInfo = recipeProcessInfo.processes.get(i);
+                IGasTank inputTank = processInfo.inputTank().getGasTank();
+                long sizeForTank = numberPerTank;
+                if (remainder > 0) {
+                    sizeForTank++;
+                    remainder--;
+                }
+                if (inputTank.isEmpty()) {
+                    if (sizeForTank > 0) {
+                        inputTank.setStack(new GasStack(item, sizeForTank));
+                    }
+                } else {
+                    if (sizeForTank == 0) {
+                        inputTank.setEmpty();
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackSize(sizeForTank, Action.EXECUTE);
+                    }
+                }
+            }
+        }
+    }
+
+    protected void sortInfusion() {
+        Map<InfusionStack, InfusionToItemRecipeProcessInfo> processes = new HashMap<>();
+        List<MergedToItemProcessInfo> emptyProcesses = new ArrayList<>();
+        for (MergedToItemProcessInfo processInfo : processInfoSlots) {
+            IInfusionTank inputTank = processInfo.inputTank().getInfusionTank();
+            if (inputTank.isEmpty()) {
+                emptyProcesses.add(processInfo);
+            } else {
+                InfusionStack inputStack = inputTank.getStack();
+                InfusionToItemRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new InfusionToItemRecipeProcessInfo());
+                recipeProcessInfo.processes.add(processInfo);
+                recipeProcessInfo.totalAmount += inputStack.getAmount();
+            }
+        }
+        if (processes.isEmpty()) {
+            return;
+        }
+        if (!emptyProcesses.isEmpty()) {
+            addEmptyInfusionTanksAsTargets(processes, emptyProcesses);
+        }
+        distributeInfusion(processes);
+    }
+
+    protected void addEmptyInfusionTanksAsTargets(Map<InfusionStack, InfusionToItemRecipeProcessInfo> processes, List<MergedToItemProcessInfo> emptyProcesses) {
+        for (Map.Entry<InfusionStack, InfusionToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            InfusionToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long minPerTank = 1;
+            long maxTanks = recipeProcessInfo.totalAmount / minPerTank;
+            if (maxTanks <= 1) {
+                continue;
+            }
+            int processAmount = recipeProcessInfo.processes.size();
+            if (maxTanks <= processAmount) {
+                continue;
+            }
+            long emptyToAdd = maxTanks - processAmount;
+            int added = 0;
+            List<MergedToItemProcessInfo> toRemove = new ArrayList<>();
+            for (MergedToItemProcessInfo emptyProcess : emptyProcesses) {
+                recipeProcessInfo.processes.add(emptyProcess);
+                toRemove.add(emptyProcess);
+                added++;
+                if (added >= emptyToAdd) {
+                    break;
+                }
+            }
+            emptyProcesses.removeAll(toRemove);
+            if (emptyProcesses.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    protected void distributeInfusion(Map<InfusionStack, InfusionToItemRecipeProcessInfo> processes) {
+        for (Map.Entry<InfusionStack, InfusionToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            InfusionToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long processAmount = recipeProcessInfo.processes.size();
+            if (processAmount == 1) {
+                continue;
+            }
+            InfusionStack item = entry.getKey();
+            long maxAmount = MAX_CHEMICAL * tier.processes;
+            long numberPerTank = recipeProcessInfo.totalAmount / processAmount;
+            if (numberPerTank == maxAmount) {
+                continue;
+            }
+            long remainder = recipeProcessInfo.totalAmount % processAmount;
+            for (int i = 0; i < processAmount; i++) {
+                MergedToItemProcessInfo processInfo = recipeProcessInfo.processes.get(i);
+                IInfusionTank inputTank = processInfo.inputTank().getInfusionTank();
+                long sizeForTank = numberPerTank;
+                if (remainder > 0) {
+                    sizeForTank++;
+                    remainder--;
+                }
+                if (inputTank.isEmpty()) {
+                    if (sizeForTank > 0) {
+                        inputTank.setStack(new InfusionStack(item, sizeForTank));
+                    }
+                } else {
+                    if (sizeForTank == 0) {
+                        inputTank.setEmpty();
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackSize(sizeForTank, Action.EXECUTE);
+                    }
+                }
+            }
+        }
+    }
+
+    protected void sortPigment() {
+        Map<PigmentStack, PigmentToItemRecipeProcessInfo> processes = new HashMap<>();
+        List<MergedToItemProcessInfo> emptyProcesses = new ArrayList<>();
+        for (MergedToItemProcessInfo processInfo : processInfoSlots) {
+            IPigmentTank inputTank = processInfo.inputTank().getPigmentTank();
+            if (inputTank.isEmpty()) {
+                emptyProcesses.add(processInfo);
+            } else {
+                PigmentStack inputStack = inputTank.getStack();
+                PigmentToItemRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new PigmentToItemRecipeProcessInfo());
+                recipeProcessInfo.processes.add(processInfo);
+                recipeProcessInfo.totalAmount += inputStack.getAmount();
+            }
+        }
+        if (processes.isEmpty()) {
+            return;
+        }
+        if (!emptyProcesses.isEmpty()) {
+            addEmptyPigmentTanksAsTargets(processes, emptyProcesses);
+        }
+        distributePigment(processes);
+    }
+
+    protected void addEmptyPigmentTanksAsTargets(Map<PigmentStack, PigmentToItemRecipeProcessInfo> processes, List<MergedToItemProcessInfo> emptyProcesses) {
+        for (Map.Entry<PigmentStack, PigmentToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            PigmentToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long minPerTank = 1;
+            long maxTanks = recipeProcessInfo.totalAmount / minPerTank;
+            if (maxTanks <= 1) {
+                continue;
+            }
+            int processAmount = recipeProcessInfo.processes.size();
+            if (maxTanks <= processAmount) {
+                continue;
+            }
+            long emptyToAdd = maxTanks - processAmount;
+            int added = 0;
+            List<MergedToItemProcessInfo> toRemove = new ArrayList<>();
+            for (MergedToItemProcessInfo emptyProcess : emptyProcesses) {
+                recipeProcessInfo.processes.add(emptyProcess);
+                toRemove.add(emptyProcess);
+                added++;
+                if (added >= emptyToAdd) {
+                    break;
+                }
+            }
+            emptyProcesses.removeAll(toRemove);
+            if (emptyProcesses.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    protected void distributePigment(Map<PigmentStack, PigmentToItemRecipeProcessInfo> processes) {
+        for (Map.Entry<PigmentStack, PigmentToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            PigmentToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long processAmount = recipeProcessInfo.processes.size();
+            if (processAmount == 1) {
+                continue;
+            }
+            PigmentStack item = entry.getKey();
+            long maxAmount = MAX_CHEMICAL * tier.processes;
+            long numberPerTank = recipeProcessInfo.totalAmount / processAmount;
+            if (numberPerTank == maxAmount) {
+                continue;
+            }
+            long remainder = recipeProcessInfo.totalAmount % processAmount;
+            for (int i = 0; i < processAmount; i++) {
+                MergedToItemProcessInfo processInfo = recipeProcessInfo.processes.get(i);
+                IPigmentTank inputTank = processInfo.inputTank().getPigmentTank();
+                long sizeForTank = numberPerTank;
+                if (remainder > 0) {
+                    sizeForTank++;
+                    remainder--;
+                }
+                if (inputTank.isEmpty()) {
+                    if (sizeForTank > 0) {
+                        inputTank.setStack(new PigmentStack(item, sizeForTank));
+                    }
+                } else {
+                    if (sizeForTank == 0) {
+                        inputTank.setEmpty();
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackSize(sizeForTank, Action.EXECUTE);
+                    }
+                }
+            }
+        }
+    }
+
+    protected void sortSlurry() {
+        Map<SlurryStack, SlurryToItemRecipeProcessInfo> processes = new HashMap<>();
+        List<MergedToItemProcessInfo> emptyProcesses = new ArrayList<>();
+        for (MergedToItemProcessInfo processInfo : processInfoSlots) {
+            ISlurryTank inputTank = processInfo.inputTank().getSlurryTank();
+            if (inputTank.isEmpty()) {
+                emptyProcesses.add(processInfo);
+            } else {
+                SlurryStack inputStack = inputTank.getStack();
+                SlurryToItemRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new SlurryToItemRecipeProcessInfo());
+                recipeProcessInfo.processes.add(processInfo);
+                recipeProcessInfo.totalAmount += inputStack.getAmount();
+            }
+        }
+        if (processes.isEmpty()) {
+            return;
+        }
+        if (!emptyProcesses.isEmpty()) {
+            addEmptySlurryTanksAsTargets(processes, emptyProcesses);
+        }
+        distributeSlurry(processes);
+    }
+
+    protected void addEmptySlurryTanksAsTargets(Map<SlurryStack, SlurryToItemRecipeProcessInfo> processes, List<MergedToItemProcessInfo> emptyProcesses) {
+        for (Map.Entry<SlurryStack, SlurryToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            SlurryToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long minPerTank = 1;
+            long maxTanks = recipeProcessInfo.totalAmount / minPerTank;
+            if (maxTanks <= 1) {
+                continue;
+            }
+            int processAmount = recipeProcessInfo.processes.size();
+            if (maxTanks <= processAmount) {
+                continue;
+            }
+            long emptyToAdd = maxTanks - processAmount;
+            int added = 0;
+            List<MergedToItemProcessInfo> toRemove = new ArrayList<>();
+            for (MergedToItemProcessInfo emptyProcess : emptyProcesses) {
+                recipeProcessInfo.processes.add(emptyProcess);
+                toRemove.add(emptyProcess);
+                added++;
+                if (added >= emptyToAdd) {
+                    break;
+                }
+            }
+            emptyProcesses.removeAll(toRemove);
+            if (emptyProcesses.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    protected void distributeSlurry(Map<SlurryStack, SlurryToItemRecipeProcessInfo> processes) {
+        for (Map.Entry<SlurryStack, SlurryToItemRecipeProcessInfo> entry : processes.entrySet()) {
+            SlurryToItemRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long processAmount = recipeProcessInfo.processes.size();
+            if (processAmount == 1) {
+                continue;
+            }
+            SlurryStack item = entry.getKey();
+            long maxAmount = MAX_CHEMICAL * tier.processes;
+            long numberPerTank = recipeProcessInfo.totalAmount / processAmount;
+            if (numberPerTank == maxAmount) {
+                continue;
+            }
+            long remainder = recipeProcessInfo.totalAmount % processAmount;
+            for (int i = 0; i < processAmount; i++) {
+                MergedToItemProcessInfo processInfo = recipeProcessInfo.processes.get(i);
+                ISlurryTank inputTank = processInfo.inputTank().getSlurryTank();
+                long sizeForTank = numberPerTank;
+                if (remainder > 0) {
+                    sizeForTank++;
+                    remainder--;
+                }
+                if (inputTank.isEmpty()) {
+                    if (sizeForTank > 0) {
+                        inputTank.setStack(new SlurryStack(item, sizeForTank));
+                    }
+                } else {
+                    if (sizeForTank == 0) {
+                        inputTank.setEmpty();
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackSize(sizeForTank, Action.EXECUTE);
+                    }
+                }
+            }
+        }
+    }
 
     public record MergedToItemProcessInfo(int process, MergedChemicalTank inputTank, @NotNull IInventorySlot outputSlot) {}
+
+    public static class MergedToItemRecipeProcessInfo {
+
+        private final List<MergedToItemProcessInfo> processes = new ArrayList<>();
+        @Nullable
+        private LongSupplier lazyMinPerTank;
+        private long minPerTank = 1;
+        private long totalAmount;
+
+        public long getMinPerTank() {
+            if (lazyMinPerTank != null) {
+                // Get the value lazily
+                minPerTank = lazyMinPerTank.getAsLong();
+                lazyMinPerTank = null;
+            }
+            return minPerTank;
+        }
+    }
+
+    protected static class GasToItemRecipeProcessInfo {
+
+        private final List<MergedToItemProcessInfo> processes = new ArrayList<>();
+        private long totalAmount;
+    }
+
+    protected static class InfusionToItemRecipeProcessInfo {
+
+        private final List<MergedToItemProcessInfo> processes = new ArrayList<>();
+        private long totalAmount;
+    }
+
+    protected static class PigmentToItemRecipeProcessInfo {
+
+        private final List<MergedToItemProcessInfo> processes = new ArrayList<>();
+        private long totalAmount;
+    }
+
+    protected static class SlurryToItemRecipeProcessInfo {
+
+        private final List<MergedToItemProcessInfo> processes = new ArrayList<>();
+        private long totalAmount;
+    }
 }
