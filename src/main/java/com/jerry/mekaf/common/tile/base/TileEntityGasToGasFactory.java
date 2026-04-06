@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile.base;
 
 import com.jerry.mekaf.common.upgrade.GasToGasUpgradeData;
 
+import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
@@ -32,10 +33,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.IntSupplier;
+import java.util.*;
+import java.util.function.LongSupplier;
 
 public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> extends TileEntityAdvancedFactoryBase<RECIPE> {
 
@@ -169,7 +168,135 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
     }
 
     @Override
-    protected void sortInventoryOrTank() {}
+    protected void sortInventoryOrTank() {
+        Map<GasStack, GasToGasRecipeProcessInfo> processes = new HashMap<>();
+        List<GasToGasProcessInfo> emptyProcesses = new ArrayList<>();
+        for (GasToGasProcessInfo processInfo : processInfoSlots) {
+            IGasTank inputTank = processInfo.inputTank();
+            if (inputTank.isEmpty()) {
+                emptyProcesses.add(processInfo);
+            } else {
+                GasStack inputStack = inputTank.getStack();
+                GasToGasRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new GasToGasRecipeProcessInfo());
+                recipeProcessInfo.processes.add(processInfo);
+                recipeProcessInfo.totalAmount += inputStack.getAmount();
+                if (recipeProcessInfo.lazyMinPerTank == null && !CommonWorldTickHandler.flushTagAndRecipeCaches) {
+                    CachedRecipe<RECIPE> cachedRecipe = getCachedRecipe(processInfo.process());
+                    if (isCachedRecipeValid(cachedRecipe, inputStack)) {
+                        recipeProcessInfo.lazyMinPerTank = () -> Math.max(1, getNeededInput(cachedRecipe.getRecipe(), inputStack));
+                    }
+                }
+            }
+        }
+        if (processes.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<GasStack, GasToGasRecipeProcessInfo> entry : processes.entrySet()) {
+            GasToGasRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            if (recipeProcessInfo.lazyMinPerTank == null) {
+                recipeProcessInfo.lazyMinPerTank = () -> {
+                    GasStack item = entry.getKey();
+                    GasStack largerInput = new GasStack(item, Math.min(MAX_CHEMICAL * tier.processes, recipeProcessInfo.totalAmount));
+                    GasToGasProcessInfo processInfo = recipeProcessInfo.processes.get(0);
+                    RECIPE recipe = getRecipeForInput(processInfo.process(), largerInput, processInfo.outputTank(), true);
+                    if (recipe != null) {
+                        return Math.max(1, getNeededInput(recipe, largerInput));
+                    }
+                    return 1;
+                };
+            }
+        }
+        if (!emptyProcesses.isEmpty()) {
+            addEmptyTanksAsTargets(processes, emptyProcesses);
+        }
+        distributeItems(processes);
+    }
+
+    protected void addEmptyTanksAsTargets(Map<GasStack, GasToGasRecipeProcessInfo> processes, List<GasToGasProcessInfo> emptyProcesses) {
+        for (Map.Entry<GasStack, GasToGasRecipeProcessInfo> entry : processes.entrySet()) {
+            GasToGasRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long minPerTank = recipeProcessInfo.getMinPerTank();
+            long maxTanks = recipeProcessInfo.totalAmount / minPerTank;
+            if (maxTanks <= 1) {
+                continue;
+            }
+            int processAmount = recipeProcessInfo.processes.size();
+            if (maxTanks <= processAmount) {
+                continue;
+            }
+            GasStack sourceStack = entry.getKey();
+            long emptyToAdd = maxTanks - processAmount;
+            int added = 0;
+            List<GasToGasProcessInfo> toRemove = new ArrayList<>();
+            for (GasToGasProcessInfo emptyProcess : emptyProcesses) {
+                if (inputProducesOutput(emptyProcess.process(), sourceStack, emptyProcess.outputTank(), true)) {
+                    recipeProcessInfo.processes.add(emptyProcess);
+                    toRemove.add(emptyProcess);
+                    added++;
+                    if (added >= emptyToAdd) {
+                        break;
+                    }
+                }
+            }
+            emptyProcesses.removeAll(toRemove);
+            if (emptyProcesses.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    protected void distributeItems(Map<GasStack, GasToGasRecipeProcessInfo> processes) {
+        for (Map.Entry<GasStack, GasToGasRecipeProcessInfo> entry : processes.entrySet()) {
+            GasToGasRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long processAmount = recipeProcessInfo.processes.size();
+            if (processAmount == 1) {
+                continue;
+            }
+            GasStack item = entry.getKey();
+            long maxAmount = MAX_CHEMICAL * tier.processes;
+            long numberPerTank = recipeProcessInfo.totalAmount / processAmount;
+            if (numberPerTank == maxAmount) {
+                continue;
+            }
+            long remainder = recipeProcessInfo.totalAmount % processAmount;
+            long minPerTank = recipeProcessInfo.getMinPerTank();
+            if (minPerTank > 1) {
+                long perSlotRemainder = numberPerTank % minPerTank;
+                if (perSlotRemainder > 0) {
+                    numberPerTank -= perSlotRemainder;
+                    remainder += perSlotRemainder * processAmount;
+                }
+                if (numberPerTank + minPerTank > maxAmount) {
+                    minPerTank = maxAmount - numberPerTank;
+                }
+            }
+            for (int i = 0; i < processAmount; i++) {
+                GasToGasProcessInfo processInfo = recipeProcessInfo.processes.get(i);
+                IGasTank inputTank = processInfo.inputTank();
+                long sizeForTank = numberPerTank;
+                if (remainder > 0) {
+                    if (remainder > minPerTank) {
+                        sizeForTank += minPerTank;
+                        remainder -= minPerTank;
+                    } else {
+                        sizeForTank += remainder;
+                        remainder = 0;
+                    }
+                }
+                if (inputTank.isEmpty()) {
+                    if (sizeForTank > 0) {
+                        inputTank.setStack(new GasStack(item, sizeForTank));
+                    }
+                } else {
+                    if (sizeForTank == 0) {
+                        inputTank.setEmpty();
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackSize(sizeForTank, Action.EXECUTE);
+                    }
+                }
+            }
+        }
+    }
 
     public record GasToGasProcessInfo(int process, @NotNull IGasTank inputTank, @NotNull IGasTank outputTank) {}
 
@@ -177,17 +304,17 @@ public abstract class TileEntityGasToGasFactory<RECIPE extends MekanismRecipe> e
 
         private final List<GasToGasProcessInfo> processes = new ArrayList<>();
         @Nullable
-        private IntSupplier lazyMinPerSlot;
-        private int minPerSlot = 1;
-        private int totalCount;
+        private LongSupplier lazyMinPerTank;
+        private long minPerTank = 1;
+        private long totalAmount;
 
-        public int getMinPerSlot() {
-            if (lazyMinPerSlot != null) {
+        public long getMinPerTank() {
+            if (lazyMinPerTank != null) {
                 // Get the value lazily
-                minPerSlot = lazyMinPerSlot.getAsInt();
-                lazyMinPerSlot = null;
+                minPerTank = lazyMinPerTank.getAsLong();
+                lazyMinPerTank = null;
             }
-            return minPerSlot;
+            return minPerTank;
         }
     }
 }

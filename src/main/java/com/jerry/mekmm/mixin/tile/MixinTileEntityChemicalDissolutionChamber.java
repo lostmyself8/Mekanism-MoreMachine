@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
-@Mixin(value = TileEntityChemicalDissolutionChamber.class)
+@Mixin(value = TileEntityChemicalDissolutionChamber.class, remap = false)
 public abstract class MixinTileEntityChemicalDissolutionChamber extends TileEntityProgressMachine<ChemicalDissolutionRecipe> implements
                                                                 ItemChemicalRecipeLookupHandler<Gas, GasStack, ChemicalDissolutionRecipe> {
 

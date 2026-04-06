@@ -90,8 +90,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             addRenderableWidget(GuiSideHolder.create(this, imageWidth, 66, 57, false, true, SpecialColors.TAB_CHEMICAL_WASHER));
         }
         super.addGuiElements();
-        // 由于没有合适的API因此化学品输入的工厂不能自动整理
-        if (tile instanceof TileEntityItemToGasFactory<?> || tile instanceof TileEntityItemToMergedFactory<?> || tile instanceof TileEntityItemToFluidFactory<?> || tile instanceof TileEntityPressurizedReactingFactory) {
+        if (!(tile instanceof TileEntityMergedToItemFactory<?>)) {
             addRenderableWidget(new AFGuiSortingTab(this, tile));
         }
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16, getEnergyHeight()))

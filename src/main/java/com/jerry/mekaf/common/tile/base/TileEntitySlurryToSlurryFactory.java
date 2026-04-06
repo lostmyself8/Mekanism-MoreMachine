@@ -2,6 +2,7 @@ package com.jerry.mekaf.common.tile.base;
 
 import com.jerry.mekaf.common.upgrade.SlurryToSlurryUpgradeData;
 
+import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.ChemicalTankBuilder;
@@ -32,9 +33,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.LongSupplier;
 
 public abstract class TileEntitySlurryToSlurryFactory<RECIPE extends MekanismRecipe> extends TileEntityAdvancedFactoryBase<RECIPE> {
 
@@ -165,5 +165,155 @@ public abstract class TileEntitySlurryToSlurryFactory<RECIPE extends MekanismRec
         return 2;
     }
 
-    public record SlurryToSlurryProcessInfo(int process, @NotNull ISlurryTank inputTank, @NotNull ISlurryTank outputTank) {}
+    @Override
+    protected void sortInventoryOrTank() {
+        Map<SlurryStack, SlurryToSlurryRecipeProcessInfo> processes = new HashMap<>();
+        List<SlurryToSlurryProcessInfo> emptyProcesses = new ArrayList<>();
+        for (SlurryToSlurryProcessInfo processInfo : processInfoSlots) {
+            ISlurryTank inputTank = processInfo.inputTank();
+            if (inputTank.isEmpty()) {
+                emptyProcesses.add(processInfo);
+            } else {
+                SlurryStack inputStack = inputTank.getStack();
+                SlurryToSlurryRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new SlurryToSlurryRecipeProcessInfo());
+                recipeProcessInfo.processes.add(processInfo);
+                recipeProcessInfo.totalAmount += inputStack.getAmount();
+                if (recipeProcessInfo.lazyMinPerTank == null && !CommonWorldTickHandler.flushTagAndRecipeCaches) {
+                    CachedRecipe<RECIPE> cachedRecipe = getCachedRecipe(processInfo.process());
+                    if (isCachedRecipeValid(cachedRecipe, inputStack)) {
+                        recipeProcessInfo.lazyMinPerTank = () -> Math.max(1, getNeededInput(cachedRecipe.getRecipe(), inputStack));
+                    }
+                }
+            }
+        }
+        if (processes.isEmpty()) {
+            return;
+        }
+        for (Map.Entry<SlurryStack, SlurryToSlurryRecipeProcessInfo> entry : processes.entrySet()) {
+            SlurryToSlurryRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            if (recipeProcessInfo.lazyMinPerTank == null) {
+                recipeProcessInfo.lazyMinPerTank = () -> {
+                    SlurryStack item = entry.getKey();
+                    SlurryStack largerInput = new SlurryStack(item, Math.min(MAX_CHEMICAL * tier.processes, recipeProcessInfo.totalAmount));
+                    SlurryToSlurryProcessInfo processInfo = recipeProcessInfo.processes.get(0);
+                    RECIPE recipe = getRecipeForInput(processInfo.process(), largerInput, processInfo.outputTank(), true);
+                    if (recipe != null) {
+                        return Math.max(1, getNeededInput(recipe, largerInput));
+                    }
+                    return 1;
+                };
+            }
+        }
+        if (!emptyProcesses.isEmpty()) {
+            addEmptyTanksAsTargets(processes, emptyProcesses);
+        }
+        distributeSlurry(processes);
+    }
+
+    protected void addEmptyTanksAsTargets(Map<SlurryStack, SlurryToSlurryRecipeProcessInfo> processes, List<SlurryToSlurryProcessInfo> emptyProcesses) {
+        for (Map.Entry<SlurryStack, SlurryToSlurryRecipeProcessInfo> entry : processes.entrySet()) {
+            SlurryToSlurryRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long minPerTank = recipeProcessInfo.getMinPerTank();
+            long maxTanks = recipeProcessInfo.totalAmount / minPerTank;
+            if (maxTanks <= 1) {
+                continue;
+            }
+            int processAmount = recipeProcessInfo.processes.size();
+            if (maxTanks <= processAmount) {
+                continue;
+            }
+            SlurryStack sourceStack = entry.getKey();
+            long emptyToAdd = maxTanks - processAmount;
+            int added = 0;
+            List<SlurryToSlurryProcessInfo> toRemove = new ArrayList<>();
+            for (SlurryToSlurryProcessInfo emptyProcess : emptyProcesses) {
+                if (inputProducesOutput(emptyProcess.process(), sourceStack, emptyProcess.outputTank(), true)) {
+                    recipeProcessInfo.processes.add(emptyProcess);
+                    toRemove.add(emptyProcess);
+                    added++;
+                    if (added >= emptyToAdd) {
+                        break;
+                    }
+                }
+            }
+            emptyProcesses.removeAll(toRemove);
+            if (emptyProcesses.isEmpty()) {
+                break;
+            }
+        }
+    }
+
+    protected void distributeSlurry(Map<SlurryStack, SlurryToSlurryRecipeProcessInfo> processes) {
+        for (Map.Entry<SlurryStack, SlurryToSlurryRecipeProcessInfo> entry : processes.entrySet()) {
+            SlurryToSlurryRecipeProcessInfo recipeProcessInfo = entry.getValue();
+            long processAmount = recipeProcessInfo.processes.size();
+            if (processAmount == 1) {
+                continue;
+            }
+            SlurryStack item = entry.getKey();
+            long maxAmount = MAX_CHEMICAL * tier.processes;
+            long numberPerTank = recipeProcessInfo.totalAmount / processAmount;
+            if (numberPerTank == maxAmount) {
+                continue;
+            }
+            long remainder = recipeProcessInfo.totalAmount % processAmount;
+            long minPerTank = recipeProcessInfo.getMinPerTank();
+            if (minPerTank > 1) {
+                long perSlotRemainder = numberPerTank % minPerTank;
+                if (perSlotRemainder > 0) {
+                    numberPerTank -= perSlotRemainder;
+                    remainder += perSlotRemainder * processAmount;
+                }
+                if (numberPerTank + minPerTank > maxAmount) {
+                    minPerTank = maxAmount - numberPerTank;
+                }
+            }
+            for (int i = 0; i < processAmount; i++) {
+                SlurryToSlurryProcessInfo processInfo = recipeProcessInfo.processes.get(i);
+                ISlurryTank inputTank = processInfo.inputTank();
+                long sizeForTank = numberPerTank;
+                if (remainder > 0) {
+                    if (remainder > minPerTank) {
+                        sizeForTank += minPerTank;
+                        remainder -= minPerTank;
+                    } else {
+                        sizeForTank += remainder;
+                        remainder = 0;
+                    }
+                }
+                if (inputTank.isEmpty()) {
+                    if (sizeForTank > 0) {
+                        inputTank.setStack(new SlurryStack(item, sizeForTank));
+                    }
+                } else {
+                    if (sizeForTank == 0) {
+                        inputTank.setEmpty();
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackSize(sizeForTank, Action.EXECUTE);
+                    }
+                }
+            }
+        }
+    }
+
+    public record SlurryToSlurryProcessInfo(int process, @NotNull ISlurryTank inputTank,
+                                            @NotNull ISlurryTank outputTank) {}
+
+    public static class SlurryToSlurryRecipeProcessInfo {
+
+        private final List<SlurryToSlurryProcessInfo> processes = new ArrayList<>();
+        @Nullable
+        private LongSupplier lazyMinPerTank;
+        private long minPerTank = 1;
+        private long totalAmount;
+
+        public long getMinPerTank() {
+            if (lazyMinPerTank != null) {
+                // Get the value lazily
+                minPerTank = lazyMinPerTank.getAsLong();
+                lazyMinPerTank = null;
+            }
+            return minPerTank;
+        }
+    }
 }
