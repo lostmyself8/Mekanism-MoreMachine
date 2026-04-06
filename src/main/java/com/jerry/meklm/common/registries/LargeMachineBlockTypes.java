@@ -86,7 +86,8 @@ public class LargeMachineBlockTypes {
     public static final Machine<TileEntityLargeSolarNeutronActivator> LARGE_SOLAR_NEUTRON_ACTIVATOR = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, MekanismLang.DESCRIPTION_SOLAR_NEUTRON_ACTIVATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
-            .without(AttributeParticleFX.class, AttributeUpgradeSupport.class)
+            .without(AttributeParticleFX.class)
+            .withSupportedUpgrades(EnumSet.of(Upgrade.SPEED))
             .withCustomShape(LargeMachineBlockShapes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withBounding(MoreMachineBounding.FULL_JAVA_ENTITY)
