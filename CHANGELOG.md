@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Version [v1.2.1](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.2.0-1.20.1...v1.2.1-1.20.1)
+### Fixed
+
+- 修复一些已知问题 by @lostmyself8 in [#157](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/157)
+
+ 
 ## Version [v1.2.0](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.1.2-1.20.1...v1.2.0-1.20.1)
 ### Added
 
