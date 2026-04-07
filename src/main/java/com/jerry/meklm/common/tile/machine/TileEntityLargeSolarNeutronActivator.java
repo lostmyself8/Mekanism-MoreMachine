@@ -33,7 +33,8 @@ import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.config.MekanismConfig;
-import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.SyntheticComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
@@ -88,12 +89,12 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     @Nullable
     private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalOutputCaches;
 
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getInput", "getInputCapacity", "getInputNeeded",
                                     "getInputFilledPercentage" },
                             docPlaceholder = "input tank")
     public IChemicalTank inputTank;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getOutput", "getOutputCapacity", "getOutputNeeded",
                                     "getOutputFilledPercentage" },
                             docPlaceholder = "output tank")
@@ -108,9 +109,9 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
     private final IInputHandler<@NotNull ChemicalStack> inputHandler;
 
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input slot")
     ChemicalInventorySlot inputSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getOutputItem", docPlaceholder = "output slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutputItem", docPlaceholder = "output slot")
     ChemicalInventorySlot outputSlot;
 
     public TileEntityLargeSolarNeutronActivator(BlockPos pos, BlockState state) {
