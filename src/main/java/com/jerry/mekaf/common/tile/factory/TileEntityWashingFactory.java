@@ -222,7 +222,7 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @Nullable FluidChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new FluidChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, null,
                 energySlot, fluidSlot, fluidOutputSlot, inputChemicalTanks, fluidTank, outputChemicalTanks, isSorting(), getComponents());
     }

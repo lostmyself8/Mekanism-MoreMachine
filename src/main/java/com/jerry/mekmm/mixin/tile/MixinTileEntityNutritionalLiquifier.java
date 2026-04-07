@@ -1,17 +1,17 @@
 package com.jerry.mekmm.mixin.tile;
 
-import com.jerry.mekaf.common.upgrade.ItemToChemicalUpgradeData;
+import com.jerry.mekaf.common.upgrade.NutritionLiquifyingUpgradeData;
 
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
-import mekanism.api.chemical.IChemicalTank;
-import mekanism.api.recipes.ItemStackToChemicalRecipe;
+import mekanism.api.fluid.IExtendedFluidTank;
+import mekanism.api.recipes.basic.BasicItemStackToFluidOptionalItemRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
-import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler;
-import mekanism.common.tile.machine.TileEntityChemicalOxidizer;
+import mekanism.common.inventory.slot.OutputInventorySlot;
+import mekanism.common.tile.machine.TileEntityNutritionalLiquifier;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 import net.minecraft.core.BlockPos;
@@ -27,22 +27,24 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
-@Mixin(value = TileEntityChemicalOxidizer.class, remap = false)
-public abstract class MixinTileEntityChemicalOxidizer extends TileEntityProgressMachine<ItemStackToChemicalRecipe> implements ISingleRecipeLookupHandler.ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
+@Mixin(value = TileEntityNutritionalLiquifier.class, remap = false)
+public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProgressMachine<BasicItemStackToFluidOptionalItemRecipe> {
 
     @Shadow
-    public IChemicalTank gasTank;
+    public IExtendedFluidTank fluidTank;
     @Shadow
     InputInventorySlot inputSlot;
     @Shadow
+    OutputInventorySlot outputSlot;
+    @Shadow
     EnergyInventorySlot energySlot;
 
-    protected MixinTileEntityChemicalOxidizer(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<CachedRecipe.OperationTracker.RecipeError> errorTypes, int baseTicksRequired) {
+    protected MixinTileEntityNutritionalLiquifier(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<CachedRecipe.OperationTracker.RecipeError> errorTypes, int baseTicksRequired) {
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
     @Shadow
-    public abstract MachineEnergyContainer<TileEntityChemicalOxidizer> getEnergyContainer();
+    public abstract MachineEnergyContainer<TileEntityNutritionalLiquifier> getEnergyContainer();
 
     @Unique
     @Override
@@ -51,8 +53,8 @@ public abstract class MixinTileEntityChemicalOxidizer extends TileEntityProgress
     }
 
     @Override
-    public @Nullable ItemToChemicalUpgradeData getUpgradeData(Provider provider) {
-        return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                getOperatingTicks(), energySlot, inputSlot, gasTank, getComponents());
+    public @Nullable NutritionLiquifyingUpgradeData getUpgradeData(Provider provider) {
+        return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
+                energySlot, inputSlot, outputSlot, fluidTank, getComponents());
     }
 }

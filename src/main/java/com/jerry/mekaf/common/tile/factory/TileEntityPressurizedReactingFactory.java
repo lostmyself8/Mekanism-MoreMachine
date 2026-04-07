@@ -343,7 +343,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @Nullable PRCUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new PRCUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, energySlot,
                 inputChemicalTank, inputFluidTank, inputItemSlots, outputItemSlots, outputChemicalTank, isSorting(), getComponents());
     }

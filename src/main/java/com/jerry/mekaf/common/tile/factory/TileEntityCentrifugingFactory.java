@@ -25,7 +25,6 @@ import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.core.BlockPos;
@@ -132,7 +131,7 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @Nullable ChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputChemicalTanks, outputChemicalTanks, isSorting(), getComponents());
     }

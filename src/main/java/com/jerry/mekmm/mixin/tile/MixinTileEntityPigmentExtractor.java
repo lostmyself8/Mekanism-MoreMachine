@@ -10,8 +10,8 @@ import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
-import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler;
-import mekanism.common.tile.machine.TileEntityChemicalOxidizer;
+import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookupHandler;
+import mekanism.common.tile.machine.TileEntityPigmentExtractor;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 import net.minecraft.core.BlockPos;
@@ -27,22 +27,22 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 
-@Mixin(value = TileEntityChemicalOxidizer.class, remap = false)
-public abstract class MixinTileEntityChemicalOxidizer extends TileEntityProgressMachine<ItemStackToChemicalRecipe> implements ISingleRecipeLookupHandler.ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
+@Mixin(value = TileEntityPigmentExtractor.class, remap = false)
+public abstract class MixinTileEntityPigmentExtractor extends TileEntityProgressMachine<ItemStackToChemicalRecipe> implements ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
 
     @Shadow
-    public IChemicalTank gasTank;
+    public IChemicalTank pigmentTank;
     @Shadow
     InputInventorySlot inputSlot;
     @Shadow
     EnergyInventorySlot energySlot;
 
-    protected MixinTileEntityChemicalOxidizer(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<CachedRecipe.OperationTracker.RecipeError> errorTypes, int baseTicksRequired) {
+    protected MixinTileEntityPigmentExtractor(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<CachedRecipe.OperationTracker.RecipeError> errorTypes, int baseTicksRequired) {
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
     @Shadow
-    public abstract MachineEnergyContainer<TileEntityChemicalOxidizer> getEnergyContainer();
+    public abstract MachineEnergyContainer<TileEntityPigmentExtractor> getEnergyContainer();
 
     @Unique
     @Override
@@ -53,6 +53,6 @@ public abstract class MixinTileEntityChemicalOxidizer extends TileEntityProgress
     @Override
     public @Nullable ItemToChemicalUpgradeData getUpgradeData(Provider provider) {
         return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                getOperatingTicks(), energySlot, inputSlot, gasTank, getComponents());
+                getOperatingTicks(), energySlot, inputSlot, pigmentTank, getComponents());
     }
 }
