@@ -17,7 +17,6 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.tile.component.TileComponentEjector;
-import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -52,34 +51,6 @@ public class TileEntityOxidizingFactory extends TileEntityItemToChemicalFactory<
     }
 
     @Override
-    public @NotNull IMekanismRecipeTypeProvider<?, ItemStackToChemicalRecipe, SingleItem<ItemStackToChemicalRecipe>> getRecipeType() {
-        return MekanismRecipeType.OXIDIZING;
-    }
-
-    @Override
-    public IRecipeViewerRecipeType<ItemStackToChemicalRecipe> recipeViewerType() {
-        return RecipeViewerRecipeType.OXIDIZING;
-    }
-
-    @Override
-    public @Nullable ItemStackToChemicalRecipe getRecipe(int cacheIndex) {
-        return findFirstRecipe(itemInputHandlers[cacheIndex]);
-    }
-
-    @Override
-    public @NotNull CachedRecipe<ItemStackToChemicalRecipe> createNewCachedRecipe(@NotNull ItemStackToChemicalRecipe recipe, int cacheIndex) {
-        return OneInputCachedRecipe.itemToChemical(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalOutputHandlers[cacheIndex])
-                .setErrorsChanged(errors -> errorTracker.onErrorsChanged(errors, cacheIndex))
-                .setCanHolderFunction(this::canFunction)
-                .setActive(active -> setActiveState(active, cacheIndex))
-                .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
-                .setRequiredTicks(this::getTicksRequired)
-                .setOnFinish(this::markForSave)
-                .setOperatingTicksChanged(operatingTicks -> progress[cacheIndex] = operatingTicks)
-                .setBaselineMaxOperations(this::getOperationsPerTick);
-    }
-
-    @Override
     @Contract("null, _ -> false")
     protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ItemStackToChemicalRecipe> cached, @NotNull ItemStack stack) {
         return cached != null && cached.getRecipe().getInput().testType(stack);
@@ -108,7 +79,35 @@ public class TileEntityOxidizingFactory extends TileEntityItemToChemicalFactory<
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @NotNull IMekanismRecipeTypeProvider<?, ItemStackToChemicalRecipe, SingleItem<ItemStackToChemicalRecipe>> getRecipeType() {
+        return MekanismRecipeType.OXIDIZING;
+    }
+
+    @Override
+    public IRecipeViewerRecipeType<ItemStackToChemicalRecipe> recipeViewerType() {
+        return RecipeViewerRecipeType.OXIDIZING;
+    }
+
+    @Override
+    public @Nullable ItemStackToChemicalRecipe getRecipe(int cacheIndex) {
+        return findFirstRecipe(itemInputHandlers[cacheIndex]);
+    }
+
+    @Override
+    public @NotNull CachedRecipe<ItemStackToChemicalRecipe> createNewCachedRecipe(@NotNull ItemStackToChemicalRecipe recipe, int cacheIndex) {
+        return OneInputCachedRecipe.itemToChemical(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalOutputHandlers[cacheIndex])
+                .setErrorsChanged(errors -> errorTracker.onErrorsChanged(errors, cacheIndex))
+                .setCanHolderFunction(this::canFunction)
+                .setActive(active -> setActiveState(active, cacheIndex))
+                .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
+                .setRequiredTicks(this::getTicksRequired)
+                .setOnFinish(this::markForSave)
+                .setOperatingTicksChanged(operatingTicks -> progress[cacheIndex] = operatingTicks)
+                .setBaselineMaxOperations(this::getOperationsPerTick);
+    }
+
+    @Override
+    public @Nullable ItemToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputItemSlots, outputChemicalTanks, isSorting(), getComponents());
     }

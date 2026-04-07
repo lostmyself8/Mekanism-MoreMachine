@@ -17,8 +17,6 @@ import java.lang.invoke.WrongMethodTypeException;
 @MethodFactory(target = TileEntityLargeSolarNeutronActivator.class)
 public class TileEntityLargeSolarNeutronActivator$ComputerHandler extends ComputerMethodFactory<TileEntityLargeSolarNeutronActivator> {
 
-    private static MethodHandle fieldGetter$peakProductionRate = getGetterHandle(TileEntityLargeSolarNeutronActivator.class, "peakProductionRate");
-
     private static MethodHandle fieldGetter$productionRate = getGetterHandle(TileEntityLargeSolarNeutronActivator.class, "productionRate");
 
     public TileEntityLargeSolarNeutronActivator$ComputerHandler() {
@@ -69,18 +67,8 @@ public class TileEntityLargeSolarNeutronActivator$ComputerHandler extends Comput
         return helper.convert(ComputerChemicalTankWrapper.getFilledPercentage(subject.outputTank));
     }
 
-    private static float getter$peakProductionRate(TileEntityLargeSolarNeutronActivator subject) {
-        try {
-            return (float) fieldGetter$peakProductionRate.invokeExact(subject);
-        } catch (WrongMethodTypeException wmte) {
-            throw new RuntimeException("Getter not bound correctly", wmte);
-        } catch (Throwable t) {
-            throw new RuntimeException(t.getMessage(), t);
-        }
-    }
-
     public static Object getPeakProductionRate_0(TileEntityLargeSolarNeutronActivator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(getter$peakProductionRate(subject));
+        return helper.convert(subject.solarCheck.getPeakMultiplier());
     }
 
     private static float getter$productionRate(TileEntityLargeSolarNeutronActivator subject) {

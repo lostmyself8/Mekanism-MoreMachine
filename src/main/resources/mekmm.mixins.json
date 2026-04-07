@@ -5,13 +5,23 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MixinItemConfigurator",
+    "MixinMekanismBlocks",
     "recipe.MixinMekanismRecipeType",
-    "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor"
+    "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
+    "tile.MixinTileEntityChemicalCrystallizer",
+    "tile.MixinTileEntityChemicalDissolutionChamber",
+    "tile.MixinTileEntityChemicalOxidizer",
+    "tile.MixinTileEntityChemicalWasher",
+    "tile.MixinTileEntityIsotopicCentrifuge",
+    "tile.MixinTileEntityNutritionalLiquifier",
+    "tile.MixinTileEntityPaintingMachine",
+    "tile.MixinTileEntityPigmentExtractor",
+    "tile.MixinTileEntityPressurizedReactionChamber"
   ],
   "client": [
+    "client.MixinRecipeViewerRecipeType",
     "client.recipe_viewer.type.MixinRotaryRVRecipeType",
-    "client.render.MixinRenderTickHandler",
-    "client.MixinRecipeViewerRecipeType"
+    "client.render.MixinRenderTickHandler"
   ],
   "injectors": {
     "defaultRequire": 1

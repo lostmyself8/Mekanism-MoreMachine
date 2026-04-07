@@ -25,7 +25,6 @@ import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.core.BlockPos;
@@ -78,8 +77,8 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
     }
 
     @Override
-    protected @Nullable ChemicalToChemicalRecipe findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputSlot) {
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, outputSlot.getStack(), OUTPUT_CHECK);
+    protected @Nullable ChemicalToChemicalRecipe findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputTank) {
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, outputTank.getStack(), OUTPUT_CHECK);
     }
 
     @Override
@@ -124,14 +123,6 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
                 .setBaselineMaxOperations(() -> baselineMaxOperations);
     }
 
-    @Override
-    public void recalculateUpgrades(Upgrade upgrade) {
-        super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED) {
-            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
-        }
-    }
-
     // 更改加速升级的显示的，默认是10x，气体工厂是256x，当然只有速度升级需要更改
     @NotNull
     @Override
@@ -140,7 +131,7 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @Nullable ChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputChemicalTanks, outputChemicalTanks, isSorting(), getComponents());
     }

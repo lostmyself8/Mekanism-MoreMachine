@@ -1,6 +1,7 @@
 package com.jerry.mekaf.common.inventory.slot;
 
 import com.jerry.mekaf.common.tile.factory.TileEntityItemToChemicalFactory;
+import com.jerry.mekaf.common.tile.factory.TileEntityItemToItemAdvancedFactory;
 import com.jerry.mekaf.common.tile.factory.TileEntityLiquifyingFactory;
 import com.jerry.mekaf.common.tile.factory.TileEntityPressurizedReactingFactory;
 
@@ -15,6 +16,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class AdvancedFactoryInputInventorySlot extends InputInventorySlot {
+
+    public static AdvancedFactoryInputInventorySlot create(TileEntityItemToItemAdvancedFactory<?> factory, int process, IInventorySlot outputSlot, @Nullable IContentsListener listener, int x, int y) {
+        Objects.requireNonNull(factory, "Factory cannot be null");
+        Objects.requireNonNull(outputSlot, "Item output tank cannot be null");
+        return new AdvancedFactoryInputInventorySlot(factory, process, outputSlot, listener, x, y);
+    }
+
+    private AdvancedFactoryInputInventorySlot(TileEntityItemToItemAdvancedFactory<?> factory, int process, IInventorySlot outputSlot, @Nullable IContentsListener listener, int x, int y) {
+        super(stack -> factory.isItemValidForSlot(stack) && factory.inputProducesOutput(process, stack, outputSlot, false),
+                factory::isValidInputItem, listener, x, y);
+    }
 
     public static AdvancedFactoryInputInventorySlot create(TileEntityItemToChemicalFactory<?> factory, int process, IChemicalTank outputTank, @Nullable IContentsListener listener, int x, int y) {
         Objects.requireNonNull(factory, "Factory cannot be null");

@@ -131,8 +131,8 @@ public class TileEntityChemicalInfusingFactory extends TileEntityChemicalToChemi
     }
 
     @Override
-    protected @Nullable ChemicalChemicalToChemicalRecipe findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputSlot) {
-        return getRecipeType().getInputCache().findFirstRecipe(level, fallbackInput, outputSlot.getStack());
+    protected @Nullable ChemicalChemicalToChemicalRecipe findRecipe(int process, @NotNull ChemicalStack fallbackInput, @NotNull IChemicalTank outputTank) {
+        return getRecipeType().getInputCache().findFirstRecipe(level, fallbackInput, outputTank.getStack());
     }
 
     @Override
@@ -174,14 +174,6 @@ public class TileEntityChemicalInfusingFactory extends TileEntityChemicalToChemi
                 .setEnergyRequirements(energyContainer::getEnergyPerTick, energyContainer)
                 .setBaselineMaxOperations(() -> baselineMaxOperations)
                 .setOnFinish(this::markForSave);
-    }
-
-    @Override
-    public void recalculateUpgrades(Upgrade upgrade) {
-        super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED) {
-            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
-        }
     }
 
     // 更改加速升级的显示的，默认是10x，气体工厂是256x，当然只有速度升级需要更改

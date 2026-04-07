@@ -22,6 +22,8 @@ import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.Mekanism;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -79,8 +81,14 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     private double injectUsage = 1;
     private final long[] usedSoFar;
 
-    public IChemicalTank injectTank;
+    // Gas Tank
+    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemicalInput", "getChemicalInputCapacity", "getChemicalInputNeeded",
+                                    "getChemicalInputFilledPercentage" },
+                            docPlaceholder = "chemical input tank")
+    public IChemicalTank chemicalTank;
 
+    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getInputChemicalItem", docPlaceholder = "chemical input item slot")
     ChemicalInventorySlot chemicalInputSlot;
 
     public TileEntityDissolvingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
@@ -92,8 +100,8 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
         }
         ConfigInfo chemicalConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (chemicalConfig != null) {
-            chemicalConfig.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, false, injectTank));
-            List<IChemicalTank> ioTank = new ArrayList<>(List.of(injectTank));
+            chemicalConfig.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, false, chemicalTank));
+            List<IChemicalTank> ioTank = new ArrayList<>(List.of(chemicalTank));
             ioTank.addAll(outputChemicalTanks);
             // 这个只能设定一个
             chemicalConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, ioTank));
@@ -102,10 +110,10 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)
                 // 有多个储罐时可以使用该方法指定某个罐是否可以弹出
-                .setCanTankEject(tank -> tank != injectTank);
+                .setCanTankEject(tank -> tank != chemicalTank);
         usedSoFar = new long[tier.processes];
 
-        chemicalInputHandler = InputHelper.getConstantInputHandler(injectTank);
+        chemicalInputHandler = InputHelper.getConstantInputHandler(chemicalTank);
 
         injectUsageMultiplier = (usedSoFar, operatingTicks) -> StatUtils.inversePoisson(injectUsage);
     }
@@ -113,17 +121,17 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     @Override
     protected void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addTanks(builder, listener, updateSortingListener);
-        builder.addTank(injectTank = BasicChemicalTank.inputModern(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
+        builder.addTank(chemicalTank = BasicChemicalTank.inputModern(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
     }
 
     @Override
     protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addSlots(builder, listener, updateSortingListener);
-        builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(injectTank, this::getLevel, listener, 7, 70));
+        builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 7, 70));
     }
 
     public IChemicalTank getChemicalTankBar() {
-        return injectTank;
+        return chemicalTank;
     }
 
     @Override
@@ -141,14 +149,14 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ChemicalDissolutionRecipe> cached, @NotNull ItemStack stack) {
         if (cached != null) {
             ChemicalDissolutionRecipe cachedRecipe = cached.getRecipe();
-            return cachedRecipe.getItemInput().testType(stack) && (injectTank.isEmpty() || cachedRecipe.getChemicalInput().testType(injectTank.getTypeHolder()));
+            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.getTypeHolder()));
         }
         return false;
     }
 
     @Override
     protected @Nullable ChemicalDissolutionRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IChemicalTank outputSlot) {
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, injectTank.getStack(), outputSlot.getStack(), OUTPUT_CHECK);
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chemicalTank.getStack(), outputSlot.getStack(), OUTPUT_CHECK);
     }
 
     @Override
@@ -158,7 +166,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
 
     @Override
     public boolean isItemValidForSlot(@NotNull ItemStack stack) {
-        return containsRecipeBA(stack, injectTank.getStack());
+        return containsRecipeBA(stack, chemicalTank.getStack());
     }
 
     @Override
@@ -240,7 +248,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
         if (upgradeData instanceof ItemChemicalToChemicalUpgradeData data) {
             super.parseUpgradeData(provider, upgradeData);
-            injectTank.deserializeNBT(provider, data.inputTank.serializeNBT(provider));
+            chemicalTank.deserializeNBT(provider, data.inputTank.serializeNBT(provider));
             chemicalInputSlot.deserializeNBT(provider, data.chemicalSlot.serializeNBT(provider));
             System.arraycopy(data.usedSoFar, 0, usedSoFar, 0, data.usedSoFar.length);
         } else {
@@ -249,13 +257,13 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @Nullable ItemChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ItemChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                progress, usedSoFar, energySlot, chemicalInputSlot, inputItemSlots, injectTank, outputChemicalTanks, isSorting(), getComponents());
+                progress, usedSoFar, energySlot, chemicalInputSlot, inputItemSlots, chemicalTank, outputChemicalTanks, isSorting(), getComponents());
     }
 
     @Override
     public void dump() {
-        injectTank.setEmpty();
+        chemicalTank.setEmpty();
     }
 }

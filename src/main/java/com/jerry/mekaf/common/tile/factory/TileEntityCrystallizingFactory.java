@@ -17,7 +17,6 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
-import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.InventoryUtils;
 
 import net.minecraft.core.BlockPos;
@@ -104,7 +103,7 @@ public class TileEntityCrystallizingFactory extends TileEntityChemicalToItemFact
     }
 
     @Override
-    public @Nullable IUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public @Nullable ChemicalToItemUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ChemicalToItemUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
                 progress, energySlot, inputChemicalTanks, outputItemSlots, isSorting(), getComponents());
     }
