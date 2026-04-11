@@ -50,19 +50,13 @@ public class MixinMekanismBlocks {
         return () -> new BlockTileModel<>(AdvancedFactoryBlockTypes.NUTRITIONAL_LIQUIFIER, properties -> properties.noOcclusion().mapColor(BlockResourceInfo.STEEL.getMapColor()));
     }
 
-    // @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target =
-    // "Lmekanism/common/registration/impl/BlockDeferredRegister;register(Ljava/lang/String;Ljava/util/function/Supplier;Ljava/util/function/BiFunction;)Lmekanism/common/registration/impl/BlockRegistryObject;",
-    // ordinal = 34), index = 1)
-    // private static Supplier<?> modifyExtractor(Supplier<?> blockSupplier) {
-    // return () -> new BlockTileModel<>(AdvancedFactoryBlockTypes.PIGMENT_EXTRACTOR, properties ->
-    // properties.mapColor(BlockResourceInfo.STEEL.getMapColor()));
-    // }
-    //
-    // @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target =
-    // "Lmekanism/common/registration/impl/BlockDeferredRegister;register(Ljava/lang/String;Ljava/util/function/Supplier;Ljava/util/function/BiFunction;)Lmekanism/common/registration/impl/BlockRegistryObject;",
-    // ordinal = 36), index = 1)
-    // private static Supplier<?> modifyPainting(Supplier<?> blockSupplier) {
-    // return () -> new BlockTileModel<>(AdvancedFactoryBlockTypes.PAINTING_MACHINE, properties ->
-    // properties.mapColor(BlockResourceInfo.STEEL.getMapColor()));
-    // }
+    @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "Lmekanism/common/registration/impl/BlockDeferredRegister;register(Ljava/lang/String;Ljava/util/function/Supplier;Ljava/util/function/BiFunction;)Lmekanism/common/registration/impl/BlockRegistryObject;", ordinal = 34), index = 1)
+    private static Supplier<?> modifyExtractor(Supplier<?> blockSupplier) {
+        return () -> new BlockTileModel<>(AdvancedFactoryBlockTypes.PIGMENT_EXTRACTOR, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor()));
+    }
+
+    @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "Lmekanism/common/registration/impl/BlockDeferredRegister;register(Ljava/lang/String;Ljava/util/function/Supplier;Ljava/util/function/BiFunction;)Lmekanism/common/registration/impl/BlockRegistryObject;", ordinal = 36), index = 1)
+    private static Supplier<?> modifyPainting(Supplier<?> blockSupplier) {
+        return () -> new BlockTileModel<>(AdvancedFactoryBlockTypes.PAINTING_MACHINE, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor()));
+    }
 }

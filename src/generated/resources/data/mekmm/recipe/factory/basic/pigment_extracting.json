@@ -1,0 +1,27 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "mekanism:alloys/basic"
+    },
+    "C": {
+      "tag": "c:circuits/basic"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "P": {
+      "item": "mekanism:pigment_extractor"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekmm:basic_pigment_extracting_factory"
+  }
+}
