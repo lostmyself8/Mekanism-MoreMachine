@@ -4,10 +4,7 @@ import com.jerry.meklm.common.registries.LargeMachineBlocks;
 
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
-import mekanism.api.recipes.ChemicalChemicalToChemicalRecipe;
-import mekanism.api.recipes.ChemicalToChemicalRecipe;
-import mekanism.api.recipes.ElectrolysisRecipe;
-import mekanism.api.recipes.ItemStackToChemicalRecipe;
+import mekanism.api.recipes.*;
 import mekanism.client.recipe_viewer.type.RVRecipeTypeWrapper;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.SimpleRVRecipeType;
@@ -45,7 +42,17 @@ public abstract class MixinRecipeViewerRecipeType {
     @Final
     @Shadow
     @Mutable
+    public static RVRecipeTypeWrapper<?, NucleosynthesizingRecipe, ?> NUCLEOSYNTHESIZING;
+
+    @Final
+    @Shadow
+    @Mutable
     public static SimpleRVRecipeType<?, ItemStackToChemicalRecipe, ?> CHEMICAL_CONVERSION;
+
+    @Final
+    @Shadow
+    @Mutable
+    public static RVRecipeTypeWrapper<?, ChemicalChemicalToChemicalRecipe, ?> PIGMENT_MIXING;
 
     /**
      * 使JEI侧栏显示种植机和复制机等机器（给化学品的物品）
@@ -59,9 +66,13 @@ public abstract class MixinRecipeViewerRecipeType {
 
         ACTIVATING = new RVRecipeTypeWrapper<>(MekanismRecipeType.ACTIVATING, ChemicalToChemicalRecipe.class, -4, -13, 168, 60, MekanismBlocks.SOLAR_NEUTRON_ACTIVATOR, LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR);
 
+        NUCLEOSYNTHESIZING = new RVRecipeTypeWrapper<>(MekanismRecipeType.NUCLEOSYNTHESIZING, NucleosynthesizingRecipe.class, -6, -18, 182, 80, MekanismBlocks.ANTIPROTONIC_NUCLEOSYNTHESIZER, LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
+
         CHEMICAL_CONVERSION = new SimpleRVRecipeType<>(MekanismRecipeType.CHEMICAL_CONVERSION, ItemStackToChemicalRecipe.class, MekanismLang.CONVERSION_CHEMICAL, MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "chemicals.png"), -20, -12, 132, 62,
                 MekanismBlocks.PURIFICATION_CHAMBER, MekanismBlocks.METALLURGIC_INFUSER, MekanismBlocks.OSMIUM_COMPRESSOR, MekanismBlocks.CHEMICAL_INJECTION_CHAMBER, MekanismBlocks.CHEMICAL_DISSOLUTION_CHAMBER, MekanismBlocks.ANTIPROTONIC_NUCLEOSYNTHESIZER,
-                // TODO:这里的顺序会影响显示效果，这很奇怪
+                // 这里的顺序会影响显示效果，这很奇怪
                 MoreMachineBlocks.REPLICATOR, MoreMachineBlocks.PLANTING_STATION);
+
+        PIGMENT_MIXING = new RVRecipeTypeWrapper<>(MekanismRecipeType.PIGMENT_MIXING, ChemicalChemicalToChemicalRecipe.class, -3, -3, 170, 80, MekanismBlocks.PIGMENT_MIXER, LargeMachineBlocks.LARGE_PIGMENT_MIXER);
     }
 }

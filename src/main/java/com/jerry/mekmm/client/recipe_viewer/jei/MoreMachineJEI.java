@@ -94,8 +94,7 @@ public class MoreMachineJEI implements IModPlugin {
         }
         MMCatalystRegistryHelper.register(registry, true, MMRecipeViewerRecipeType.RECYCLER, MMRecipeViewerRecipeType.PLANTING_STATION, MMRecipeViewerRecipeType.REPLICATOR,
                 MMRecipeViewerRecipeType.FLUID_REPLICATOR, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MMRecipeViewerRecipeType.STAMPING, MMRecipeViewerRecipeType.LATHE, MMRecipeViewerRecipeType.ROLLING_MILL);
-        AFCatalystRegistryHelper.register(registry, false, RecipeViewerRecipeType.OXIDIZING, RecipeViewerRecipeType.CHEMICAL_INFUSING, RecipeViewerRecipeType.DISSOLUTION,
-                RecipeViewerRecipeType.WASHING, RecipeViewerRecipeType.CRYSTALLIZING, RecipeViewerRecipeType.REACTION, RecipeViewerRecipeType.CENTRIFUGING, RecipeViewerRecipeType.NUTRITIONAL_LIQUIFICATION);
+        AFCatalystRegistryHelper.register(registry);
 
         /*
          * 这里只是注册工厂图标，所以不需要注册最普通的机器。
