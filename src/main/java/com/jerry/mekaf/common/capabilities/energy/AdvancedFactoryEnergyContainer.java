@@ -1,6 +1,6 @@
 package com.jerry.mekaf.common.capabilities.energy;
 
-import com.jerry.mekaf.common.tile.factory.TileEntityAdvancedFactoryBase;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;

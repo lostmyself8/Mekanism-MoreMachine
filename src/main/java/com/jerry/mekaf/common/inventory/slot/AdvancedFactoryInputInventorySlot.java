@@ -1,9 +1,9 @@
 package com.jerry.mekaf.common.inventory.slot;
 
-import com.jerry.mekaf.common.tile.factory.TileEntityItemToChemicalFactory;
-import com.jerry.mekaf.common.tile.factory.TileEntityItemToItemAdvancedFactory;
 import com.jerry.mekaf.common.tile.factory.TileEntityLiquifyingFactory;
 import com.jerry.mekaf.common.tile.factory.TileEntityPressurizedReactingFactory;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToItemAdvancedFactory;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.IChemicalTank;

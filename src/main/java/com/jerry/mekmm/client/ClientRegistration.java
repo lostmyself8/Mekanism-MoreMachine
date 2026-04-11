@@ -4,14 +4,15 @@ import com.jerry.mekaf.client.gui.machine.GuiAdvancedFactory;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 
-import com.jerry.meklm.client.gui.machine.GuiLargeChemicalInfuser;
-import com.jerry.meklm.client.gui.machine.GuiLargeElectrolyticSeparator;
-import com.jerry.meklm.client.gui.machine.GuiLargeRotaryCondensentrator;
-import com.jerry.meklm.client.gui.machine.GuiLargeSolarNeutronActivator;
+import com.jerry.meklm.client.gui.machine.*;
 import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
+import com.jerry.meklm.client.model.LargeMachineModelCache;
 import com.jerry.meklm.client.model.bake.*;
+import com.jerry.meklm.client.render.tileentity.RenderLargeAntiprotonicNucleosynthesizer;
+import com.jerry.meklm.client.render.tileentity.RenderLargePigmentMixer;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.registries.LargeMachineContainerTypes;
+import com.jerry.meklm.common.registries.LargeMachineTileEntityTypes;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.client.gui.GuiWirelessChargingStation;
@@ -36,6 +37,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
+import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -75,6 +78,8 @@ public class ClientRegistration {
         addCustomModel(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER, (orig, evt) -> new LargeChemicalInfuserBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, (orig, evt) -> new LargeElectrolyticSeparatorBakedModel(orig));
         addCustomModel(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, (orig, evt) -> new LargeSNABakedModel(orig));
+        addCustomModel(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, (orig, evt) -> new LargeAntiprotonicNucleosynthesizerBakedModel(orig));
+        addCustomModel(LargeMachineBlocks.LARGE_PIGMENT_MIXER, (orig, evt) -> new LargePigmentMixerBakedModel(orig));
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             addCustomModel(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, (orig, evt) -> new LargeHeatGeneratorBakedModel(orig));
             addCustomModel(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR, (orig, evt) -> new LargeGasGeneratorBakedModel(orig));
@@ -95,6 +100,8 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(MoreMachineTileEntityTypes.WIRELESS_TRANSMISSION_STATION.get(), RenderWirelessTransmissionStation::new);
+        event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER.get(), RenderLargeAntiprotonicNucleosynthesizer::new);
+        event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER.get(), RenderLargePigmentMixer::new);
     }
 
     @SubscribeEvent
@@ -123,10 +130,22 @@ public class ClientRegistration {
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_CHEMICAL_INFUSER, GuiLargeChemicalInfuser::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR, GuiLargeElectrolyticSeparator::new);
         ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, GuiLargeSolarNeutronActivator::new);
+        ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, GuiLargeAntiprotonicNucleosynthesizer::new);
+        ClientRegistrationUtil.registerScreen(event, LargeMachineContainerTypes.LARGE_PIGMENT_MIXER, GuiLargePigmentMixer::new);
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
         }
+    }
+
+    @SubscribeEvent
+    public static void registerAdditionalModels(RegisterAdditional event) {
+        LargeMachineModelCache.INSTANCE.setup(event);
+    }
+
+    @SubscribeEvent
+    public static void onModelBake(BakingCompleted event) {
+        LargeMachineModelCache.INSTANCE.onBake(event);
     }
 
     @SubscribeEvent

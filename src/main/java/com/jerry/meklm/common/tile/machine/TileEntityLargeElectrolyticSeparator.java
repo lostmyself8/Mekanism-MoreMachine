@@ -1,7 +1,7 @@
 package com.jerry.meklm.common.tile.machine;
 
-import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
-import com.jerry.meklm.common.capabilities.holder.fluid.CanAdjustFluidTankHelper;
+import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
+import com.jerry.meklm.common.capabilities.holder.fluid.AdjustableFluidTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.tile.INotNeedConfig;
 
@@ -211,7 +211,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @NotNull
     @Override
     protected IFluidTankHolder getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        CanAdjustFluidTankHelper builder = CanAdjustFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK || side == RelativeSide.LEFT || side == RelativeSide.RIGHT, null);
+        AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK || side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> false);
         builder.addTank(fluidTank = BasicFluidTank.input(MAX_FLUID, this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT, RelativeSide.RIGHT);
         return builder.build();
     }
@@ -219,7 +219,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @NotNull
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        CanAdjustChemicalTankHelper builder = CanAdjustChemicalTankHelper.forSide(facingSupplier, null, side -> side == RelativeSide.FRONT);
+        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, null, side -> side == RelativeSide.FRONT);
         builder.addTank(leftTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
         builder.addTank(rightTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
         return builder.build();

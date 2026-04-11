@@ -1,6 +1,7 @@
 package com.jerry.mekaf.generated.mekaf;
 
 import com.jerry.mekaf.common.tile.factory.*;
+import com.jerry.mekaf.common.tile.factory.base.*;
 
 import mekanism.common.integration.computer.FactoryRegistry;
 import mekanism.common.integration.computer.IComputerMethodRegistry;

@@ -1,5 +1,6 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToItemFactory;
 import com.jerry.mekaf.common.upgrade.ChemicalToItemUpgradeData;
 
 import mekanism.api.chemical.ChemicalStack;
@@ -45,6 +46,7 @@ public class TileEntityCrystallizingFactory extends TileEntityChemicalToItemFact
 
     public TileEntityCrystallizingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
+
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
     }

@@ -1,6 +1,6 @@
 package com.jerry.mekaf.client.gui.element.tab;
 
-import com.jerry.mekaf.common.tile.factory.TileEntityAdvancedFactoryBase;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
 import com.jerry.mekmm.common.network.to_server.MoreMachinePacketGuiInteract;
 

@@ -1,10 +1,7 @@
 package com.jerry.mekaf.common.inventory.container.tile;
 
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
-import com.jerry.mekaf.common.tile.factory.TileEntityAdvancedFactoryBase;
-import com.jerry.mekaf.common.tile.factory.TileEntityChemicalToChemicalFactory;
-import com.jerry.mekaf.common.tile.factory.TileEntityLiquifyingFactory;
-import com.jerry.mekaf.common.tile.factory.TileEntityPressurizedReactingFactory;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -23,10 +20,11 @@ public class AdvancedFactoryContainer extends MekanismTileContainer<TileEntityAd
 
     @Override
     protected int getInventoryYOffset() {
+        int invY = 85 + 13 * tile.getTankCount();
         if (tile.hasExtraResourceBar()) {
-            return tile instanceof TileEntityChemicalToChemicalFactory<?> ? 121 : tile instanceof TileEntityPressurizedReactingFactory ? 103 : 108;
+            invY += 10 + 8 * (tile.getBarCount() - 1);
         }
-        return tile instanceof TileEntityChemicalToChemicalFactory<?> ? 112 : tile instanceof TileEntityLiquifyingFactory ? 85 : 98;
+        return invY;
     }
 
     @Override

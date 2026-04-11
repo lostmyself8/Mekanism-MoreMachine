@@ -1,0 +1,27 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "mekanism:alloys/reinforced"
+    },
+    "C": {
+      "tag": "c:circuits/elite"
+    },
+    "I": {
+      "tag": "c:ingots/gold"
+    },
+    "P": {
+      "item": "mekmm:advanced_pigment_extracting_factory"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekmm:elite_pigment_extracting_factory"
+  }
+}

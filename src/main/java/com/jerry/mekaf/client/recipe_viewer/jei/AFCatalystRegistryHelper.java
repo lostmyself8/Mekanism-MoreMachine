@@ -6,60 +6,49 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.client.recipe_viewer.jei.MekanismJEI;
-import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
-import mekanism.common.registries.MekanismBlocks;
+import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.tier.FactoryTier;
 
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
-
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
-
-import java.util.List;
 
 public class AFCatalystRegistryHelper {
 
     private AFCatalystRegistryHelper() {}
 
-    /**
-     * 用于往“ENERGY_CONVERSION”或“CHEMICAL_CONVERSION”添加新机器，与Mekanism的CatalystRegistryHelper中的register方法
-     * 功能是一致的，只是多了一个需否需要基础机器的参数，平常使用可以直接填true，对于“ENERGY_CONVERSION”或“CHEMICAL_CONVERSION”
-     * 可能得填写false。
-     *
-     * @param needOrdinary 是否需要注册最基础的机器
-     */
-    public static void register(IRecipeCatalystRegistration registry, boolean needOrdinary, IRecipeViewerRecipeType<?>... categories) {
-        for (IRecipeViewerRecipeType<?> category : categories) {
-            register(registry, MekanismJEI.genericRecipeType(category), category.workstations(), needOrdinary);
+    public static void register(IRecipeCatalystRegistration registry) {
+        for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.OXIDIZING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.OXIDIZING));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.DISSOLVING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.DISSOLUTION));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.WASHING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.WASHING));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CRYSTALLIZING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.CRYSTALLIZING));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PRESSURISED_REACTING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.REACTION));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CENTRIFUGING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.CENTRIFUGING));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.LIQUIFYING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.NUTRITIONAL_LIQUIFICATION));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PIGMENT_EXTRACTING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.PIGMENT_EXTRACTING));
+            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PAINTING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.PAINTING));
         }
     }
 
-    public static void register(IRecipeCatalystRegistration registry, RecipeType<?> recipeType, List<ItemLike> workstations, boolean needOrdinary) {
-        for (ItemLike workstation : workstations) {
-            Item item = workstation.asItem();
-            if (needOrdinary) {
-                registry.addRecipeCatalyst(item, recipeType);
-            }
-            for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
-                if (workstation == MekanismBlocks.CHEMICAL_OXIDIZER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.OXIDIZING), recipeType);
-                } else if (workstation == MekanismBlocks.CHEMICAL_INFUSER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CHEMICAL_INFUSING), recipeType);
-                } else if (workstation == MekanismBlocks.CHEMICAL_DISSOLUTION_CHAMBER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.DISSOLVING), recipeType);
-                } else if (workstation == MekanismBlocks.CHEMICAL_WASHER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.WASHING), recipeType);
-                } else if (workstation == MekanismBlocks.CHEMICAL_CRYSTALLIZER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CRYSTALLIZING), recipeType);
-                } else if (workstation == MekanismBlocks.PRESSURIZED_REACTION_CHAMBER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PRESSURISED_REACTING), recipeType);
-                } else if (workstation == MekanismBlocks.ISOTOPIC_CENTRIFUGE) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CENTRIFUGING), recipeType);
-                } else if (workstation == MekanismBlocks.NUTRITIONAL_LIQUIFIER) {
-                    registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.LIQUIFYING), recipeType);
-                }
-            }
-        }
-    }
+    // public static void register(EmiRegistry registry) {
+    // for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.OXIDIZING),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.OXIDIZING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.DISSOLUTION),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.DISSOLVING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.WASHING),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.WASHING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.CRYSTALLIZING),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CRYSTALLIZING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.REACTION),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PRESSURISED_REACTING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.CENTRIFUGING),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CENTRIFUGING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.NUTRITIONAL_LIQUIFICATION),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.LIQUIFYING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.PIGMENT_EXTRACTING),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PIGMENT_EXTRACTING)));
+    // registry.addWorkstation(MekanismEmiRecipeCategory.create(RecipeViewerRecipeType.PAINTING),
+    // EmiStack.of(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PAINTING)));
+    // }
+    // }
 }

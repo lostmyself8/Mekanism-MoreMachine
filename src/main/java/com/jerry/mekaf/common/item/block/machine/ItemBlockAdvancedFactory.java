@@ -27,14 +27,14 @@ public class ItemBlockAdvancedFactory extends ItemBlockTooltip<BlockTile<?, ?>> 
 
     private static AttachedSideConfig getSideConfig(BlockAdvancedFactory<?> block) {
         return switch (Attribute.getOrThrow(block.builtInRegistryHolder(), AttributeAdvancedFactoryType.class).getAdvancedFactoryType()) {
-            case OXIDIZING -> AttachedSideConfig.CHEMICAL_OUT_MACHINE;
+            case OXIDIZING, PIGMENT_EXTRACTING -> AttachedSideConfig.CHEMICAL_OUT_MACHINE;
             case DISSOLVING -> AttachedSideConfig.DISSOLUTION;
-            case CHEMICAL_INFUSING -> AdvancedFactoryAttachedSideConfig.CHEMICAL_INFUSING;
             case WASHING -> AttachedSideConfig.WASHER;
             case PRESSURISED_REACTING -> AttachedSideConfig.REACTION;
             case CRYSTALLIZING -> AttachedSideConfig.CRYSTALLIZER;
             case CENTRIFUGING -> AdvancedFactoryAttachedSideConfig.CENTRIFUGE;
             case LIQUIFYING -> AttachedSideConfig.LIQUIFIER;
+            case PAINTING -> AttachedSideConfig.PAINTING;
         };
     }
 

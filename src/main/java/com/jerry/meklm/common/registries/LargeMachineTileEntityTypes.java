@@ -4,10 +4,7 @@ import com.jerry.meklm.common.item.block.ItemBlockMaxChemicalTank;
 import com.jerry.meklm.common.item.block.ItemBlockMidChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
+import com.jerry.meklm.common.tile.machine.*;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -73,6 +70,19 @@ public class LargeMachineTileEntityTypes {
 
     public static final TileEntityTypeRegistryObject<TileEntityLargeSolarNeutronActivator> LARGE_SOLAR_NEUTRON_ACTIVATOR = LM_TILE_ENTITY_TYPES
             .mekBuilder(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, TileEntityLargeSolarNeutronActivator::new)
+            .serverTicker(TileEntityMekanism::tickServer)
+            .withSimple(Capabilities.CONFIG_CARD)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntityLargeAntiprotonicNucleosynthesizer> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = LM_TILE_ENTITY_TYPES
+            .mekBuilder(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, TileEntityLargeAntiprotonicNucleosynthesizer::new)
+            .clientTicker(TileEntityMekanism::tickClient)
+            .serverTicker(TileEntityMekanism::tickServer)
+            .withSimple(Capabilities.CONFIG_CARD)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntityLargePigmentMixer> LARGE_PIGMENT_MIXER = LM_TILE_ENTITY_TYPES.mekBuilder(LargeMachineBlocks.LARGE_PIGMENT_MIXER, TileEntityLargePigmentMixer::new)
+            .clientTicker(TileEntityMekanism::tickClient)
             .serverTicker(TileEntityMekanism::tickServer)
             .withSimple(Capabilities.CONFIG_CARD)
             .build();

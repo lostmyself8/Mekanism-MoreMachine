@@ -1,7 +1,7 @@
 package com.jerry.meklm.common.tile.prefab;
 
 import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
-import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
+import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.chemical.LargeChemicalTankChemicalTank;
 import com.jerry.meklm.common.tile.INotNeedConfig;
 
@@ -94,7 +94,7 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     @Override
     public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
         // 化学品下进上出
-        CanAdjustChemicalTankHelper builder = CanAdjustChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
+        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
         builder.addTank(chemicalTank = LargeChemicalTankChemicalTank.create(tier, listener), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
     }

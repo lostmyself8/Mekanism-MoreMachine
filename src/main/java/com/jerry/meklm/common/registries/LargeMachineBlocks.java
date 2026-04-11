@@ -5,10 +5,7 @@ import com.jerry.meklm.common.item.block.ItemBlockMaxChemicalTank;
 import com.jerry.meklm.common.item.block.ItemBlockMidChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
+import com.jerry.meklm.common.tile.machine.*;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -30,6 +27,7 @@ import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.resource.BlockResourceInfo;
 import mekanism.common.tile.TileEntityChemicalTank;
+import mekanism.common.tile.machine.TileEntityAntiprotonicNucleosynthesizer;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -118,6 +116,34 @@ public class LargeMachineBlocks {
                             .addChemicalFillSlot(0)
                             .addChemicalDrainSlot(1)
                             .build()));
+
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>>> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = LM_BLOCKS.register("large_antiprotonic_nucleosynthesizer", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, properties -> properties.mapColor(MapColor.METAL)),
+            (block, properties) -> new ItemBlockTooltip<>(block, true, properties)).forItemHolder(
+                    holder -> holder
+                            .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
+                                    .addBasic(TileEntityAntiprotonicNucleosynthesizer.MAX_GAS, MekanismRecipeType.NUCLEOSYNTHESIZING, InputRecipeCache.ItemChemical::containsInputB)
+                                    .build())
+                            .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                                    .addChemicalFillOrConvertSlot(0)
+                                    .addInput(MekanismRecipeType.NUCLEOSYNTHESIZING, InputRecipeCache.ItemChemical::containsInputA)
+                                    .addOutput()
+                                    .addEnergy()
+                                    .build()));
+
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>>> LARGE_PIGMENT_MIXER = LM_BLOCKS.register("large_pigment_mixer", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_PIGMENT_MIXER, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())),
+            (block, properties) -> new ItemBlockTooltip<>(block, true, properties)).forItemHolder(
+                    holder -> holder
+                            .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
+                                    .addBasic(TileEntityLargePigmentMixer.MAX_INPUT_PIGMENT, MekanismRecipeType.PIGMENT_MIXING, InputRecipeCache.EitherSideChemical::containsInput)
+                                    .addBasic(TileEntityLargePigmentMixer.MAX_INPUT_PIGMENT, MekanismRecipeType.PIGMENT_MIXING, InputRecipeCache.EitherSideChemical::containsInput)
+                                    .addBasic(TileEntityLargePigmentMixer.MAX_OUTPUT_PIGMENT)
+                                    .build())
+                            .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                                    .addChemicalFillSlot(0)
+                                    .addChemicalFillSlot(1)
+                                    .addChemicalDrainSlot(2)
+                                    .addEnergy()
+                                    .build()));
 
     private static BlockRegistryObject<BlockTileModel<TileEntityMidChemicalTank, Machine<TileEntityMidChemicalTank>>, ItemBlockMidChemicalTank> registerMidChemicalTank(
                                                                                                                                                                         Machine<TileEntityMidChemicalTank> type) {

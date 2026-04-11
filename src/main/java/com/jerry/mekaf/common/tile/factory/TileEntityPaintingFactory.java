@@ -1,5 +1,7 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToItemAdvancedFactory;
+
 import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
 import mekanism.api.chemical.BasicChemicalTank;
@@ -19,6 +21,7 @@ import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
+import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
@@ -31,9 +34,6 @@ import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLoo
 import mekanism.common.recipe.lookup.cache.DoubleInputRecipeCache.CheckRecipeType;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
-import mekanism.common.tile.component.config.ConfigInfo;
-import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.util.InventoryUtils;
 
@@ -85,10 +85,6 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     public TileEntityPaintingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
 
-        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
-        if (itemConfig != null) {
-            itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, chemicalInputSlot));
-        }
         configComponent.setupInputConfig(TransmissionType.CHEMICAL, chemicalTank);
 
         ejectorComponent = new TileComponentEjector(this);
@@ -101,6 +97,17 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     @Override
     protected void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
         builder.addTank(chemicalTank = BasicChemicalTank.inputModern(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
+    }
+
+    @Override
+    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
+        super.addSlots(builder, listener, updateSortingListener);
+        builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 7, 57));
+    }
+
+    @Override
+    protected @Nullable IInventorySlot getExtraSlot() {
+        return chemicalInputSlot;
     }
 
     @Override
@@ -130,6 +137,15 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     @Override
     protected int getNeededInput(ItemStackChemicalToItemStackRecipe recipe, ItemStack inputStack) {
         return MathUtils.clampToInt(recipe.getItemInput().getNeededAmount(inputStack));
+    }
+
+    public IChemicalTank getChemicalTankBar() {
+        return chemicalTank;
+    }
+
+    @Override
+    public boolean hasExtraResourceBar() {
+        return true;
     }
 
     @NotNull
@@ -167,6 +183,11 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
                 .setOnFinish(this::markForSave)
                 .setOperatingTicksChanged(operatingTicks -> progress[cacheIndex] = operatingTicks)
                 .setBaselineMaxOperations(this::getOperationsPerTick);
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider provider) {
+        return super.getUpdateTag(provider);
     }
 
     @Override
