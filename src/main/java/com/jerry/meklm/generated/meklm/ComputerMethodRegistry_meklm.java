@@ -20,6 +20,8 @@ public class ComputerMethodRegistry_meklm implements IComputerMethodRegistry {
         FactoryRegistry.register(TileEntityLargeElectrolyticSeparator.class, TileEntityLargeElectrolyticSeparator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityConfigurableMachine.class, TileEntityRecipeMachine.class);
         FactoryRegistry.register(TileEntityLargeRotaryCondensentrator.class, TileEntityLargeRotaryCondensentrator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityConfigurableMachine.class, TileEntityRecipeMachine.class);
         FactoryRegistry.register(TileEntityLargeSolarNeutronActivator.class, TileEntityLargeSolarNeutronActivator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityConfigurableMachine.class, TileEntityRecipeMachine.class);
+        FactoryRegistry.register(TileEntityLargeAntiprotonicNucleosynthesizer.class, TileEntityLargeAntiprotonicNucleosynthesizer$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityConfigurableMachine.class, TileEntityRecipeMachine.class);
+        FactoryRegistry.register(TileEntityLargePigmentMixer.class, TileEntityLargePigmentMixer$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityConfigurableMachine.class, TileEntityRecipeMachine.class);
 
         FactoryRegistry.register(TileEntityLargeChemicalTank.class, TileEntityLargeChemicalTank$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityConfigurableMachine.class);
     }

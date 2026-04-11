@@ -1,6 +1,6 @@
 package com.jerry.mekmm.common.network.to_server;
 
-import com.jerry.mekaf.common.tile.factory.TileEntityAdvancedFactoryBase;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;

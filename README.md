@@ -12,8 +12,6 @@
 
 **The factory added oxidizing factory, dissolving factory and so on.**
 
-**However, their models and textures are not very good at present, because it takes a little time to make models, and then with new models, they will be replaced.**
-
 **Because it is not compatible with Kubejs and Crt, if you want to add your own recipes, you can only use the most primitive methods (such as Kubejs' custom). If you want to know the Json format of the corresponding machine, you can check the Wiki on Github.**
 
 ## Recycler

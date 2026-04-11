@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,active=false": {
+      "model": "mekmm:block/factory/painting/creative"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/factory/painting/creative",
+      "y": 180
+    },
+    "facing=east,active=false": {
+      "model": "mekmm:block/factory/painting/creative",
+      "y": 90
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/factory/painting/creative",
+      "y": -90
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/factory/painting/active/creative"
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/factory/painting/active/creative",
+      "y": 180
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/factory/painting/active/creative",
+      "y": 90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/factory/painting/active/creative",
+      "y": -90
+    }
+  }
+}

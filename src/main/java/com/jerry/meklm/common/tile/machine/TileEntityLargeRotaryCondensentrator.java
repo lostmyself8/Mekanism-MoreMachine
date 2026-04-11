@@ -1,7 +1,7 @@
 package com.jerry.meklm.common.tile.machine;
 
-import com.jerry.meklm.common.capabilities.holder.chemical.CanAdjustChemicalTankHelper;
-import com.jerry.meklm.common.capabilities.holder.fluid.CanAdjustFluidTankHelper;
+import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
+import com.jerry.meklm.common.capabilities.holder.fluid.AdjustableFluidTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.tile.INotNeedConfig;
 
@@ -194,7 +194,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @NotNull
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        CanAdjustChemicalTankHelper builder = CanAdjustChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.LEFT);
+        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.LEFT);
         builder.addTank(chemicalTank = BasicChemicalTank.createModern(CAPACITY, (gas, automationType) -> automationType == AutomationType.MANUAL || mode,
                 (gas, automationType) -> automationType == AutomationType.INTERNAL || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
                 recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
@@ -208,7 +208,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @NotNull
     @Override
     protected IFluidTankHolder getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        CanAdjustFluidTankHelper builder = CanAdjustFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.RIGHT);
+        AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.RIGHT);
         builder.addTank(fluidTank = BasicFluidTank.create(CAPACITY, (fluid, automationType) -> automationType == AutomationType.MANUAL || !mode,
                 (fluid, automationType) -> automationType == AutomationType.INTERNAL || mode, this::isValidFluid, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         return builder.build();

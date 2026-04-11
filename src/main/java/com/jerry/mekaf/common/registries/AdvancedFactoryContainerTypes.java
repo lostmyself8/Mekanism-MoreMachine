@@ -1,7 +1,7 @@
 package com.jerry.mekaf.common.registries;
 
 import com.jerry.mekaf.common.inventory.container.tile.AdvancedFactoryContainer;
-import com.jerry.mekaf.common.tile.factory.TileEntityAdvancedFactoryBase;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
 import com.jerry.mekmm.Mekmm;
 

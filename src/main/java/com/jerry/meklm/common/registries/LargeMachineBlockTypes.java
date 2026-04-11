@@ -6,10 +6,7 @@ import com.jerry.meklm.common.tier.MaxChemicalTankTier;
 import com.jerry.meklm.common.tier.MidChemicalTankTier;
 import com.jerry.meklm.common.tile.TileEntityMaxChemicalTank;
 import com.jerry.meklm.common.tile.TileEntityMidChemicalTank;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeChemicalInfuser;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeElectrolyticSeparator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeRotaryCondensentrator;
-import com.jerry.meklm.common.tile.machine.TileEntityLargeSolarNeutronActivator;
+import com.jerry.meklm.common.tile.machine.*;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
@@ -21,6 +18,7 @@ import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.*;
 import mekanism.common.block.attribute.AttributeHasBounding.HandleBoundingBlock;
 import mekanism.common.block.attribute.AttributeHasBounding.TriBooleanFunction;
+import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.content.blocktype.Machine.MachineBuilder;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -119,6 +117,33 @@ public class LargeMachineBlockTypes {
             .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeSolarNeutronActivator")
             .replace(Attributes.ACTIVE)
+            .build();
+
+    // Antiprotonic Nucleosynthesizer
+    public static final Machine<TileEntityLargeAntiprotonicNucleosynthesizer> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = MachineBuilder
+            .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, MekanismLang.DESCRIPTION_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .withGui(() -> LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .withEnergyConfig(MekanismConfig.usage.antiprotonicNucleosynthesizer, MekanismConfig.storage.antiprotonicNucleosynthesizer)
+            .withSound(MekanismSounds.ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .with(AttributeUpgradeSupport.MUFFLING_ONLY)
+            .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
+            .withCustomShape(LargeMachineBlockShapes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .with(MoreMachineBounding.FULL_JAVA_ENTITY)
+            .withComputerSupport("largeAntiprotonicNucleosynthesizer")
+            .build();
+
+    // Pigment Mixer
+    public static final Machine<TileEntityLargePigmentMixer> LARGE_PIGMENT_MIXER = MachineBuilder
+            .createMachine(() -> LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER, MekanismLang.DESCRIPTION_PIGMENT_MIXER)
+            .withGui(() -> LargeMachineContainerTypes.LARGE_PIGMENT_MIXER)
+            .withSound(MekanismSounds.PIGMENT_MIXER)
+            .withEnergyConfig(MekanismConfig.usage.pigmentMixer, MekanismConfig.storage.pigmentMixer)
+            .with(AttributeUpgradeSupport.DEFAULT_MACHINE_UPGRADES)
+            .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
+            .withCustomShape(LargeMachineBlockShapes.LARGE_PIGMENT_MIXER)
+            .with(AttributeCustomSelectionBox.JSON)
+            .with(MoreMachineBounding.LARGE_PIGMENT_MIXER)
+            .withComputerSupport("largePigmentMixer")
             .build();
 
     private static <TILE extends TileEntityLargeChemicalTank<?>> Machine<TILE> createLargeChemicalTank(ILargeChemicalTankTier tier, Supplier<TileEntityTypeRegistryObject<TILE>> tile, Supplier<BlockRegistryObject<?, ?>> upgradeBlock) {

@@ -1,6 +1,7 @@
 package com.jerry.mekaf.common.tile.factory;
 
 import com.jerry.mekaf.common.inventory.slot.AdvancedFactoryInputInventorySlot;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 import com.jerry.mekaf.common.upgrade.PRCUpgradeData;
 
 import mekanism.api.Action;
@@ -188,6 +189,11 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
             reactionOutputHandlers[i] = OutputHelper.getOutputHandler(outputSlot, NOT_ENOUGH_SPACE_ITEM_OUTPUT_ERROR, outputChemicalTank, NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR);
             processInfoSlots[i] = new PRCProcessInfo(i, inputSlot, outputSlot);
         }
+    }
+
+    @Override
+    public int getBarCount() {
+        return 2;
     }
 
     @Override

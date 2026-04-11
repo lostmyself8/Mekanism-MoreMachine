@@ -2,6 +2,10 @@ package com.jerry.mekaf.client.gui.machine;
 
 import com.jerry.mekaf.client.gui.element.tab.AdvancedFactoryGuiSortingTab;
 import com.jerry.mekaf.common.tile.factory.*;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToChemicalFactory;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToItemFactory;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -37,16 +41,19 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
 
     @Nullable
     private GuiDumpButton<?> dumpButton;
+    private final int tankCount;
 
     public GuiAdvancedFactory(MekanismTileContainer<TileEntityAdvancedFactoryBase<?>> container, Inventory inv, Component title) {
         super(container, inv, title);
-        imageHeight += tile instanceof TileEntityPressurizedReactingFactory ? 8 : tile instanceof TileEntityLiquifyingFactory ? 0 : 13;
-        if (tile instanceof TileEntityChemicalToChemicalFactory<?>) imageHeight += 13;
+        tankCount = tile.getTankCount();
+        // 根据储罐数量决定gui布局
+        imageHeight += 13 * tankCount;
+        inventoryLabelY = 75 + 13 * tankCount;
         if (tile.hasExtraResourceBar()) {
-            imageHeight += 11;
-            inventoryLabelY = tile instanceof TileEntityChemicalToChemicalFactory<?> ? 111 : tile instanceof TileEntityPressurizedReactingFactory ? 93 : 98;
-        } else {
-            inventoryLabelY = tile instanceof TileEntityChemicalToChemicalFactory<?> ? 103 : tile instanceof TileEntityLiquifyingFactory ? 75 : 88;
+            int num = tile.getBarCount() - 1;
+            imageHeight += 11 + 8 * num;
+            // 第一个额外资源槽加10像素，后面的加8像素
+            inventoryLabelY += 10 + 8 * num;
         }
 
         if (tile.tier == FactoryTier.ULTIMATE) {
@@ -82,8 +89,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             addRenderableWidget(new GuiDownArrow(this, imageWidth + 8, 90));
         }
         addRenderableWidget(new AdvancedFactoryGuiSortingTab(this, tile));
-        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16,
-                tile instanceof TileEntityItemToChemicalFactory<?> || tile instanceof TileEntityChemicalToItemFactory<?> ? 65 : tile instanceof TileEntityChemicalToChemicalFactory<?> ? 78 : 52))
+        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16, 13 * tankCount + 52))
                 .warning(WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY, 0));
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getLastUsage));
 
@@ -109,11 +115,9 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
                 dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 76));
             } else {
                 addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.getChemicalTankBar(), tile.getChemicalTanks(null)),
-                        7, tile instanceof TileEntityChemicalToChemicalFactory<?> ? 102 : 89,
-                        getBarWidth(), 4, true))
+                        7, 13 * tankCount + 76, getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
-                dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(),
-                        tile instanceof TileEntityChemicalToChemicalFactory<?> ? 102 : 89));
+                dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 13 * tankCount + 76));
             }
         }
 
@@ -154,8 +158,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         // 所有工厂都有的进度条
         for (int i = 0; i < tile.tier.processes; i++) {
             int cacheIndex = i;
-            addRenderableWidget(new GuiProgress(() -> tile.getScaledProgress(1, cacheIndex), ProgressType.DOWN, this, 4 + tile.getXPos(i),
-                    tile instanceof TileEntityChemicalToChemicalFactory<?> || tile instanceof TileEntityChemicalToItemFactory<?> ? 46 : 33))
+            addRenderableWidget(new GuiProgress(() -> tile.getScaledProgress(1, cacheIndex), ProgressType.DOWN, this, 4 + tile.getXPos(i), 13 * tile.UpperTankCount() + 33))
                     .recipeViewerCategory(tile)
                     .warning(WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT, cacheIndex));
         }

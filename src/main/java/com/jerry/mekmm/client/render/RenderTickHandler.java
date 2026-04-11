@@ -1,6 +1,6 @@
 package com.jerry.mekmm.client.render;
 
-import com.jerry.mekmm.client.renderer.NoDepthRenderType;
+import com.jerry.mekmm.client.renderer.MoreMachineRenderType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -48,7 +48,7 @@ public class RenderTickHandler {
     private static void renderHighlight(PoseStack poseStack, MultiBufferSource bufferSource, BlockPos pos, Vec3 cameraPos, BlockHighlightManager.HighlightData data, long gameTime) {
         poseStack.pushPose();
         poseStack.translate(pos.getX() - cameraPos.x, pos.getY() - cameraPos.y, pos.getZ() - cameraPos.z);
-        VertexConsumer consumer = bufferSource.getBuffer(NoDepthRenderType.LINES_NO_DEPTH);
+        VertexConsumer consumer = bufferSource.getBuffer(MoreMachineRenderType.LINES_NO_DEPTH);
         float alpha = data.getAlpha(gameTime);
         LevelRenderer.renderLineBox(poseStack, consumer, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, data.getRed(), data.getGreen(), data.getBlue(), alpha);
         poseStack.popPose();

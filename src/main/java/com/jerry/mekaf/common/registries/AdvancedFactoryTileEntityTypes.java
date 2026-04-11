@@ -4,6 +4,7 @@ import com.jerry.mekaf.common.block.prefab.BlockAdvancedFactoryMachine;
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.item.block.machine.ItemBlockAdvancedFactory;
 import com.jerry.mekaf.common.tile.factory.*;
+import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
@@ -34,14 +35,15 @@ public class AdvancedFactoryTileEntityTypes {
 
     static {
         for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
-            registerFactory(tier, AdvancedFactoryType.OXIDIZING, TileEntityOxidizingFactory::new);
+            registerFactory(tier, AdvancedFactoryType.OXIDIZING, TileEntityItemStackToChemicalStackFactory::new);
             registerFactory(tier, AdvancedFactoryType.DISSOLVING, TileEntityDissolvingFactory::new);
-            registerFactory(tier, AdvancedFactoryType.CHEMICAL_INFUSING, TileEntityChemicalInfusingFactory::new);
             registerFactory(tier, AdvancedFactoryType.WASHING, TileEntityWashingFactory::new);
             registerFactory(tier, AdvancedFactoryType.PRESSURISED_REACTING, TileEntityPressurizedReactingFactory::new);
             registerFactory(tier, AdvancedFactoryType.CRYSTALLIZING, TileEntityCrystallizingFactory::new);
             registerFactory(tier, AdvancedFactoryType.CENTRIFUGING, TileEntityCentrifugingFactory::new);
             registerFactory(tier, AdvancedFactoryType.LIQUIFYING, TileEntityLiquifyingFactory::new);
+            registerFactory(tier, AdvancedFactoryType.PIGMENT_EXTRACTING, TileEntityItemStackToChemicalStackFactory::new);
+            registerFactory(tier, AdvancedFactoryType.PAINTING, TileEntityPaintingFactory::new);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToChemicalFactory;
 import com.jerry.mekaf.common.upgrade.ChemicalToChemicalUpgradeData;
 
 import mekanism.api.IContentsListener;
