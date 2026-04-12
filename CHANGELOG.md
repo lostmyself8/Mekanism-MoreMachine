@@ -1,5 +1,21 @@
 # ChangeLog
 
+## Version [v1.3.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.1-1.21.1...v1.3.2-1.21.1)
+### Added
+
+- 同步部分1.20.1的更新 by @lostmyself8 in [#164](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/164)
+
+### Fixed
+
+- 通过mixin使得高级工厂可以使用安装器升级原始机器 by @lostmyself8 in [#160](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/160)
+- 同步部分1.20.1的更新 by @lostmyself8 in [#164](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/164)
+- fix-build by @lostmyself8 in [#165](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/165)
+
+### Changed
+
+- Updated PT_BR localization by @PrincessStelllar in [#139](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/139)
+
+ 
 ## Version [v1.3.1](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.0-1.21.1...v1.3.1-1.21.1)
 ### Added
 
