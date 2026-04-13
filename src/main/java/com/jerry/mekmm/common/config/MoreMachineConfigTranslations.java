@@ -48,6 +48,8 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     ENERGY_STORAGE_LARGE_CHEMICAL_INFUSER(TranslationPreset.ENERGY_STORAGE, "Large Chemical Infuser"),
     ENERGY_STORAGE_LARGE_ELECTROLYTIC_SEPARATOR(TranslationPreset.ENERGY_STORAGE, "Large Electrolytic Separator"),
     ENERGY_STORAGE_LARGE_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Heat Generator"),
+    ENERGY_STORAGE_LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER(TranslationPreset.ENERGY_STORAGE, "Large Antiprotonic Nucleosynthesizer"),
+    ENERGY_STORAGE_LARGE_PIGMENT_MIXER(TranslationPreset.ENERGY_STORAGE, "Large Pigment Mixer"),
 
     // Usage Config
     ENERGY_USAGE_RECYCLER(TranslationPreset.ENERGY_USAGE, "Recycler"),
@@ -63,6 +65,8 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     ENERGY_USAGE_CHEMICAL_REPLICATOR(TranslationPreset.ENERGY_USAGE, "Chemical Replicator"),
     ENERGY_USAGE_LARGE_ROTARY_CONDENSENTRATOR(TranslationPreset.ENERGY_USAGE, "Large Rotary Condensentrator"),
     ENERGY_USAGE_LARGE_CHEMICAL_INFUSER(TranslationPreset.ENERGY_USAGE, "Large Chemical Infuser"),
+    ENERGY_USAGE_LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER(TranslationPreset.ENERGY_USAGE, "Large Antiprotonic Nucleosynthesizer"),
+    ENERGY_USAGE_LARGE_PIGMENT_MIXER(TranslationPreset.ENERGY_USAGE, "Large Pigment Mixer"),
 
     // General Config
     GAS_COLLECT_AMOUNT("general.collect.amount", "Gas Collect Amount", "mB of Unstable Dimensional Gas collected by the Ambient Gas Collector."),

@@ -26,6 +26,7 @@ import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -125,6 +126,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addSlots(builder, listener, updateSortingListener);
         builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 7, 70));
+        chemicalInputSlot.setSlotOverlay(SlotOverlay.MINUS);
     }
 
     public IChemicalTank getChemicalTankBar() {

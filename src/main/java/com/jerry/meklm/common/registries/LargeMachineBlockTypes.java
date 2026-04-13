@@ -18,7 +18,6 @@ import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.*;
 import mekanism.common.block.attribute.AttributeHasBounding.HandleBoundingBlock;
 import mekanism.common.block.attribute.AttributeHasBounding.TriBooleanFunction;
-import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.content.blocktype.Machine.MachineBuilder;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -123,7 +122,7 @@ public class LargeMachineBlockTypes {
     public static final Machine<TileEntityLargeAntiprotonicNucleosynthesizer> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, MekanismLang.DESCRIPTION_ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
-            .withEnergyConfig(MekanismConfig.usage.antiprotonicNucleosynthesizer, MekanismConfig.storage.antiprotonicNucleosynthesizer)
+            .withEnergyConfig(MoreMachineConfig.usage.largeAntiprotonicNucleosynthesizer, MoreMachineConfig.storage.largeAntiprotonicNucleosynthesizer)
             .withSound(MekanismSounds.ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
             .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
@@ -137,7 +136,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER, MekanismLang.DESCRIPTION_PIGMENT_MIXER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_PIGMENT_MIXER)
             .withSound(MekanismSounds.PIGMENT_MIXER)
-            .withEnergyConfig(MekanismConfig.usage.pigmentMixer, MekanismConfig.storage.pigmentMixer)
+            .withEnergyConfig(MoreMachineConfig.usage.largePigmentMixer, MoreMachineConfig.storage.largePigmentMixer)
             .with(AttributeUpgradeSupport.DEFAULT_MACHINE_UPGRADES)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_PIGMENT_MIXER)

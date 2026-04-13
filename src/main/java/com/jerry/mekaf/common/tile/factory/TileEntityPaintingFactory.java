@@ -20,11 +20,13 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
+import mekanism.common.Mekanism;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -35,6 +37,8 @@ import mekanism.common.recipe.lookup.cache.DoubleInputRecipeCache.CheckRecipeTyp
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IHasDumpButton;
+import mekanism.common.upgrade.AdvancedMachineUpgradeData;
+import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.InventoryUtils;
 
 import net.minecraft.core.BlockPos;
@@ -103,6 +107,7 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addSlots(builder, listener, updateSortingListener);
         builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 7, 57));
+        chemicalInputSlot.setSlotOverlay(SlotOverlay.MINUS);
     }
 
     @Override
@@ -215,6 +220,25 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     public void saveAdditional(@NotNull CompoundTag nbtTags, @NotNull HolderLookup.Provider provider) {
         super.saveAdditional(nbtTags, provider);
         nbtTags.putLongArray(SerializationConstants.USED_SO_FAR, Arrays.copyOf(usedSoFar, usedSoFar.length));
+    }
+
+    @Override
+    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+        if (upgradeData instanceof AdvancedMachineUpgradeData data) {
+            super.parseUpgradeData(provider, upgradeData);
+            chemicalTank.deserializeNBT(provider, data.stored.serializeNBT(provider));
+            chemicalInputSlot.deserializeNBT(provider, data.chemicalSlot.serializeNBT(provider));
+            System.arraycopy(data.usedSoFar, 0, usedSoFar, 0, data.usedSoFar.length);
+        } else {
+            Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
+        }
+    }
+
+    @NotNull
+    @Override
+    public AdvancedMachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+        return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, usedSoFar, chemicalTank, chemicalInputSlot, energySlot,
+                inputItemSlots, outputItemSlots, isSorting(), getComponents());
     }
 
     @Override
