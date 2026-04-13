@@ -25,6 +25,8 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
     public final CachedLongValue largeRotaryCondensentrator;
     public final CachedLongValue largeChemicalInfuser;
     public final CachedLongValue largeElectrolyticSeparator;
+    public final CachedLongValue largeAntiprotonicNucleosynthesizer;
+    public final CachedLongValue largePigmentMixer;
     public final CachedLongValue largeHeatGenerator;
 
     MoreMachineStorageConfig() {
@@ -50,6 +52,8 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
         largeRotaryCondensentrator = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_ROTARY_CONDENSENTRATOR, "largeRotaryCondensentrator", 4_096_000L, 1);
         largeChemicalInfuser = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_CHEMICAL_INFUSER, "largeChemicalInfuser", 4_096_000L, 1);
         largeElectrolyticSeparator = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_ELECTROLYTIC_SEPARATOR, "largeElectrolyticSeparator", 4_096_000L, 1);
+        largeAntiprotonicNucleosynthesizer = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, "largeAntiprotonicNucleosynthesizer", 51_200_000_000L, 1);
+        largePigmentMixer = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_PIGMENT_MIXER, "largePigmentMixer", 4_096_000L, 1);
         largeHeatGenerator = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_HEAT_GENERATOR, "largeHeatGenerator", 256_600_000L, 1);
 
         configSpec = builder.build();
