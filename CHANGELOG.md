@@ -1,5 +1,15 @@
 # ChangeLog
 
+## Version [v1.3.3](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.2-1.21.1...v1.3.3-1.21.1)
+### Fixed
+
+- hotfix by @lostmyself8 in [#168](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/168)
+
+### Changed
+
+- Updated PT_BR localization by @PrincessStelllar in [#167](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/167)
+
+ 
 ## Version [v1.3.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.1-1.21.1...v1.3.2-1.21.1)
 ### Added
 
