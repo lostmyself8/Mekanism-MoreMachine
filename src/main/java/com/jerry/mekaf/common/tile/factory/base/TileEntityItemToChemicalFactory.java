@@ -75,6 +75,7 @@ public abstract class TileEntityItemToChemicalFactory<RECIPE extends MekanismRec
         ConfigInfo chemicalConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (chemicalConfig != null) {
             chemicalConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo(false, true, outputChemicalTanks));
+            chemicalConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(false, true, outputChemicalTanks));
         }
 
         configComponent.setupItemIOConfig(inputItemSlots, Collections.emptyList(), energySlot, false);
