@@ -39,7 +39,6 @@ import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.IUpgradeData;
@@ -94,13 +93,6 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
             itemConfig.addSlotInfo(DataType.INPUT, new InventorySlotInfo(true, false, fluidSlot));
             itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, fluidOutputSlot));
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, fluidSlot, fluidOutputSlot));
-        }
-        ConfigInfo config = configComponent.getConfig(TransmissionType.CHEMICAL);
-        if (config != null) {
-            config.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, false, inputChemicalTanks));
-            List<IChemicalTank> ioTank = outputChemicalTanks;
-            ioTank.addAll(inputChemicalTanks);
-            config.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, ioTank));
         }
 
         configComponent.setupInputConfig(TransmissionType.FLUID, fluidTank);

@@ -25,13 +25,15 @@ import java.util.List;
 
 public class ItemBlockAdvancedFactory extends ItemBlockTooltip<BlockTile<?, ?>> {
 
+    // 这里只是预设，真正控制侧面配置应当在方块实体中处理
+    // 预设可以不遵守方块实体中设置的配置，但人为调控后可能无法恢复到预设状态
     private static AttachedSideConfig getSideConfig(BlockAdvancedFactory<?> block) {
         return switch (Attribute.getOrThrow(block.builtInRegistryHolder(), AttributeAdvancedFactoryType.class).getAdvancedFactoryType()) {
-            case OXIDIZING, PIGMENT_EXTRACTING -> AttachedSideConfig.CHEMICAL_OUT_MACHINE;
-            case DISSOLVING -> AttachedSideConfig.DISSOLUTION;
+            case OXIDIZING, PIGMENT_EXTRACTING -> AdvancedFactoryAttachedSideConfig.CHEMICAL_OUT_NO_ITEM_OUT_MACHINE;
+            case DISSOLVING -> AdvancedFactoryAttachedSideConfig.DISSOLUTION;
             case WASHING -> AttachedSideConfig.WASHER;
             case PRESSURISED_REACTING -> AttachedSideConfig.REACTION;
-            case CRYSTALLIZING -> AttachedSideConfig.CRYSTALLIZER;
+            case CRYSTALLIZING -> AdvancedFactoryAttachedSideConfig.CRYSTALLIZER;
             case CENTRIFUGING -> AdvancedFactoryAttachedSideConfig.CENTRIFUGE;
             case LIQUIFYING -> AttachedSideConfig.LIQUIFIER;
             case PAINTING -> AttachedSideConfig.PAINTING;

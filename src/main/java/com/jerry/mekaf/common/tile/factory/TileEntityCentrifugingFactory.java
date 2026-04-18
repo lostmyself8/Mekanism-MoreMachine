@@ -22,9 +22,6 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleChemical;
 import mekanism.common.tile.component.TileComponentEjector;
-import mekanism.common.tile.component.config.ConfigInfo;
-import mekanism.common.tile.component.config.DataType;
-import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.util.UpgradeUtils;
 
@@ -55,13 +52,6 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
 
     public TileEntityCentrifugingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
-        ConfigInfo config = configComponent.getConfig(TransmissionType.CHEMICAL);
-        if (config != null) {
-            config.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, false, inputChemicalTanks));
-            List<IChemicalTank> ioTank = outputChemicalTanks;
-            ioTank.addAll(inputChemicalTanks);
-            config.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, ioTank));
-        }
         configComponent.addDisabledSides(RelativeSide.TOP);
 
         ejectorComponent = new TileComponentEjector(this);

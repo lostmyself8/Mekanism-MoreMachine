@@ -72,13 +72,14 @@ public abstract class TileEntityChemicalToItemFactory<RECIPE extends MekanismRec
             outputItemSlots.add(info.outputSlot());
         }
 
-        configComponent.setupItemIOConfig(Collections.emptyList(), outputItemSlots, energySlot, false);
-        IInventorySlot extraSlot = getExtraSlot();
-        if (extraSlot != null) {
-            ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
-            if (itemConfig != null) {
+        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
+        if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, outputItemSlots));
+            IInventorySlot extraSlot = getExtraSlot();
+            if (extraSlot != null) {
                 itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, extraSlot));
             }
+            itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
         }
         ConfigInfo chemicalConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (chemicalConfig != null) {
