@@ -14,14 +14,6 @@ import java.util.Map;
 
 public class AdvancedFactoryAttachedSideConfig {
 
-    public static final LightConfigInfo SINGLE_INPUT_2 = Util.make(() -> {
-        Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
-
-        sideConfig.put(RelativeSide.RIGHT, DataType.INPUT_2);
-        sideConfig.put(RelativeSide.BACK, DataType.ENERGY);
-        return new LightConfigInfo(sideConfig, false);
-    });
-
     public static final LightConfigInfo ENERGY_ONLY_NO_TOP = Util.make(() -> {
         Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
         for (RelativeSide side : EnumUtils.SIDES) {
@@ -38,10 +30,54 @@ public class AdvancedFactoryAttachedSideConfig {
         return new LightConfigInfo(sideConfig, false);
     });
 
-    public static final AttachedSideConfig CHEMICAL_INFUSING = Util.make(() -> {
+    public static final LightConfigInfo INPUT_ENERGY_ONLY = Util.make(() -> {
+        Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
+        for (RelativeSide side : EnumUtils.SIDES) {
+            sideConfig.put(side, DataType.INPUT);
+        }
+        sideConfig.put(RelativeSide.BACK, DataType.ENERGY);
+        return new LightConfigInfo(sideConfig, false);
+    });
+
+    public static final LightConfigInfo EXTRA_MACHINE_NO_OUT = Util.make(() -> {
+        Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
+        for (RelativeSide side : EnumUtils.SIDES) {
+            sideConfig.put(side, DataType.INPUT);
+        }
+        sideConfig.put(RelativeSide.BOTTOM, DataType.EXTRA);
+        sideConfig.put(RelativeSide.BACK, DataType.ENERGY);
+        return new LightConfigInfo(sideConfig, false);
+    });
+
+    public static final LightConfigInfo OUTPUT_ENERGY_ONLY = Util.make(() -> {
+        Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
+        for (RelativeSide side : EnumUtils.SIDES) {
+            sideConfig.put(side, DataType.OUTPUT);
+        }
+        sideConfig.put(RelativeSide.BACK, DataType.ENERGY);
+        return new LightConfigInfo(sideConfig, false);
+    });
+
+    public static final AttachedSideConfig CHEMICAL_OUT_NO_ITEM_OUT_MACHINE = Util.make(() -> {
         Map<TransmissionType, LightConfigInfo> configInfo = new EnumMap<>(TransmissionType.class);
-        configInfo.put(TransmissionType.ITEM, SINGLE_INPUT_2);
-        configInfo.put(TransmissionType.CHEMICAL, LightConfigInfo.TWO_INPUT_AND_OUT);
+        configInfo.put(TransmissionType.ITEM, INPUT_ENERGY_ONLY);
+        configInfo.put(TransmissionType.CHEMICAL, LightConfigInfo.RIGHT_OUTPUT);
+        configInfo.put(TransmissionType.ENERGY, LightConfigInfo.INPUT_ONLY);
+        return new AttachedSideConfig(configInfo);
+    });
+
+    public static final AttachedSideConfig DISSOLUTION = Util.make(() -> {
+        Map<TransmissionType, LightConfigInfo> configInfo = new EnumMap<>(TransmissionType.class);
+        configInfo.put(TransmissionType.ITEM, EXTRA_MACHINE_NO_OUT);
+        configInfo.put(TransmissionType.CHEMICAL, LightConfigInfo.OUT_EJECT);
+        configInfo.put(TransmissionType.ENERGY, LightConfigInfo.INPUT_ONLY);
+        return new AttachedSideConfig(configInfo);
+    });
+
+    public static final AttachedSideConfig CRYSTALLIZER = Util.make(() -> {
+        Map<TransmissionType, LightConfigInfo> configInfo = new EnumMap<>(TransmissionType.class);
+        configInfo.put(TransmissionType.ITEM, OUTPUT_ENERGY_ONLY);
+        configInfo.put(TransmissionType.CHEMICAL, LightConfigInfo.INPUT_ONLY);
         configInfo.put(TransmissionType.ENERGY, LightConfigInfo.INPUT_ONLY);
         return new AttachedSideConfig(configInfo);
     });

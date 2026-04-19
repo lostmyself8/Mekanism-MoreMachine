@@ -70,9 +70,14 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
             outputChemicalTanks.add(info.outputTank());
         }
 
+        // 172行的setupIOConfig()并不适用
         ConfigInfo chemicalConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (chemicalConfig != null) {
+            chemicalConfig.addSlotInfo(DataType.INPUT, new ChemicalSlotInfo(true, false, inputChemicalTanks));
             chemicalConfig.addSlotInfo(DataType.OUTPUT, new ChemicalSlotInfo(false, true, outputChemicalTanks));
+            List<IChemicalTank> ioTank = outputChemicalTanks;
+            ioTank.addAll(inputChemicalTanks);
+            chemicalConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, ioTank));
         }
         ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
         if (itemConfig != null) {
