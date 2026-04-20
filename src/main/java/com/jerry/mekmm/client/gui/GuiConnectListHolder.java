@@ -10,13 +10,16 @@ import mekanism.client.gui.element.GuiElementHolder;
 import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.scroll.GuiScrollBar;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
+import mekanism.common.tile.TileEntityBoundingBlock;
 import mekanism.common.tile.base.TileEntityMekanism;
+import mekanism.common.util.WorldUtils;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,8 +72,13 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
         }
     }
 
+    // TODO:这里或许不需要List，mek这里是为了标签按钮和模组按钮
     private List<ItemStack> getRenderStacks(ConnectionConfig config) {
         if (config != null) {
+            BlockEntity tile = WorldUtils.getTileEntity(level, config.pos());
+            if (tile instanceof TileEntityBoundingBlock boundingBlock) {
+                return List.of(level.getBlockState(boundingBlock.getMainPos()).getBlock().asItem().getDefaultInstance());
+            }
             return List.of(level.getBlockState(config.pos()).getBlock().asItem().getDefaultInstance());
         }
         return Collections.emptyList();
