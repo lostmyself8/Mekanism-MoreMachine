@@ -46,6 +46,7 @@ public class ItemBlockWirelessTransmissionStation extends ItemBlockTooltip<Block
                 .component(MoreMachineDataComponents.FLUIDS_RATE, TileEntityWirelessTransmissionStation.DEFAULT_FLUIDS_RATE)
                 .component(MoreMachineDataComponents.CHEMICALS_RATE, TileEntityWirelessTransmissionStation.DEFAULT_CHEMICALS_RATE)
                 .component(MoreMachineDataComponents.ITEMS_RATE, TileEntityWirelessTransmissionStation.DEFAULT_ITEMS_RATE)
+                .component(MoreMachineDataComponents.HEAT_RATE, TileEntityWirelessTransmissionStation.DEFAULT_HEAT_RATE)
                 .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                 .component(MekanismDataComponents.SIDE_CONFIG, SIDE_CONFIG));
     }

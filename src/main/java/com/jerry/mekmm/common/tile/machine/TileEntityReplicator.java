@@ -1,5 +1,7 @@
 package com.jerry.mekmm.common.tile.machine;
 
+import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
+import com.jerry.mekmm.api.datamaps.ItemReplicatorRecipe;
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
@@ -48,7 +50,6 @@ import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
-import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -65,7 +66,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemStackChemicalToItemStackRecipe> {
 
@@ -157,10 +157,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
 
     public static boolean isValidItemInput(ItemStack stack) {
-        if (customRecipeMap != null) {
-            return customRecipeMap.containsKey(Objects.requireNonNull(RegistryUtils.getName(stack.getItemHolder())).toString());
-        }
-        return false;
+        return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.getItemHolder()) != null;
     }
 
     @Override
@@ -204,19 +201,35 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
         return MMRecipeViewerRecipeType.REPLICATOR;
     }
 
+    // public static MMBasicItemStackChemicalToItemStackRecipe getRecipe(ItemStack itemStack, ChemicalStack
+    // chemicalStack) {
+    // if (chemicalStack.isEmpty() || itemStack.isEmpty()) {
+    // return null;
+    // }
+    // if (customRecipeMap != null) {
+    // Holder<Item> itemHolder = itemStack.getItemHolder();
+    // // 如果为空则赋值为0
+    // int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(itemHolder).toString(), 0);
+    // // 防止null和配置文件中出现0
+    // if (amount == 0) return null;
+    // return new ReplicatorIRecipeSingle(
+    // IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
+    // IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
+    // new ItemStack(itemHolder, 1));
+    // }
+    // return null;
+    // }
+
     public static MMBasicItemStackChemicalToItemStackRecipe getRecipe(ItemStack itemStack, ChemicalStack chemicalStack) {
         if (chemicalStack.isEmpty() || itemStack.isEmpty()) {
             return null;
         }
-        if (customRecipeMap != null) {
-            Holder<Item> itemHolder = itemStack.getItemHolder();
-            // 如果为空则赋值为0
-            int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(itemHolder).toString(), 0);
-            // 防止null和配置文件中出现0
-            if (amount == 0) return null;
+        Holder<Item> itemHolder = itemStack.getItemHolder();
+        ItemReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(itemHolder);
+        if (recipe != null) {
             return new ReplicatorIRecipeSingle(
                     IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, recipe.UUAmount()),
                     new ItemStack(itemHolder, 1));
         }
         return null;

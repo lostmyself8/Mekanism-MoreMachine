@@ -1,5 +1,7 @@
 package com.jerry.mekmm.common.tile.machine;
 
+import com.jerry.mekmm.api.datamaps.ChemicalReplicatorRecipe;
+import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
@@ -45,7 +47,6 @@ import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
-import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -59,7 +60,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBasicChemicalChemicalToChemicalRecipe> {
 
@@ -166,10 +166,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
 
     // 需要复制的化学品
     public static boolean isValidInputChemical(ChemicalStack stack) {
-        if (customRecipeMap != null) {
-            return customRecipeMap.containsKey(Objects.requireNonNull(RegistryUtils.getName(stack.getChemicalHolder())).toString());
-        }
-        return false;
+        return IMoreMachineDataMapTypes.INSTANCE.getChemicalReplicatorRecipe(stack.getChemicalHolder()) != null;
     }
 
     // uu物质
@@ -223,16 +220,26 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
         if (chemicalStack.isEmpty() || UUStack.isEmpty()) {
             return null;
         }
-        if (customRecipeMap != null) {
-            Holder<Chemical> chemicalHolder = chemicalStack.getChemicalHolder();
-            // 如果为空则赋值为0
-            int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(chemicalHolder).toString(), 0);
-            // 防止null和配置文件中出现0
-            if (amount == 0) return null;
+
+        // if (customRecipeMap != null) {
+        // Holder<Chemical> chemicalHolder = chemicalStack.getChemicalHolder();
+        // // 如果为空则赋值为0
+        // int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(chemicalHolder).toString(), 0);
+        // // 防止null和配置文件中出现0
+        // if (amount == 0) return null;
+        // return new ChemicalReplicatorIRecipeSingle(
+        // IngredientCreatorAccess.chemicalStack().fromHolder(chemicalHolder, 1000),
+        // IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
+        // new ChemicalStack(chemicalHolder, 1000));
+        // }
+
+        Holder<Chemical> chemicalHolder = chemicalStack.getChemicalHolder();
+        ChemicalReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getChemicalReplicatorRecipe(chemicalHolder);
+        if (recipe != null) {
             return new ChemicalReplicatorIRecipeSingle(
-                    IngredientCreatorAccess.chemicalStack().fromHolder(chemicalHolder, 1000),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
-                    new ChemicalStack(chemicalHolder, 1000));
+                    IngredientCreatorAccess.chemicalStack().fromHolder(chemicalHolder, recipe.inputAmount()),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, recipe.UUAmount()),
+                    new ChemicalStack(chemicalHolder, recipe.outputAmount()));
         }
         return null;
     }

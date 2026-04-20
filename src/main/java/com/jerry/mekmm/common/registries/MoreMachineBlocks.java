@@ -47,7 +47,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.neoforge.fluids.FluidType;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -151,7 +150,7 @@ public class MoreMachineBlocks {
                     .component(MekanismDataComponents.SIDE_CONFIG, MoreMachineAttachedSideConfig.FLUID_REPLICATOR)))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
-                            .addBasic(FluidType.BUCKET_VOLUME, TileEntityFluidReplicator::isValidFluidInput)
+                            .addBasic(TileEntityFluidReplicator.MAX_FLUID / 2, TileEntityFluidReplicator::isValidFluidInput)
                             .addBasic(TileEntityFluidReplicator.MAX_FLUID)
                             .build())
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()

@@ -15,4 +15,8 @@ public class MoreMachineSerializationConstants {
 
     // Recipe
     public static final String MOLD = "mold";
+
+    public static final String INPUT_AMOUNT = "input_amount";
+    public static final String UU_AMOUNT = "uu_amount";
+    public static final String OUTPUT_AMOUNT = "output_amount";
 }
