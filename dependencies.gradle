@@ -17,6 +17,12 @@ dependencies {
     compileOnly(forge.mekanismcovers)
     compileOnly(forge.evolvedmekanism)
 
+    // FTB
+    compileOnly(forge.architectury)
+
+    compileOnly(forge.ftblibrary)
+    compileOnly(forge.ftbultimine)
+
     // Crt
     compileOnly(forge.crt)
 
@@ -47,6 +53,11 @@ dependencies {
     localRuntime(forge.mekanismcovers)
     localRuntime(forge.igleelibrary)
     localRuntime(forge.evolvedmekanism)
+
+    // FTB //
+    localRuntime(forge.architectury)
+    localRuntime(forge.ftblibrary)
+    localRuntime(forge.ftbultimine)
 
     // Crt
     localRuntime(forge.crt)
