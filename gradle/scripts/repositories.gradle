@@ -42,13 +42,6 @@ repositories {
             includeGroup("dev.architectury")
         }
     }
-    exclusiveContent { // shedaniel - REI, architectury, cloth-config
-        forRepository { maven { url = "https://maven.shedaniel.me/" } }
-        filter {
-            includeGroupAndSubgroups("me.shedaniel")
-            includeGroup("dev.architectury")
-        }
-    }
     exclusiveContent { // terraformers - EMI
         forRepository { maven { url = "https://maven.terraformersmc.com/releases/" } }
         filter { includeGroup("dev.emi") }
