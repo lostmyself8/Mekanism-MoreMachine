@@ -28,6 +28,13 @@ repositories {
         name = 'IzzelAliz Maven'
         url = 'https://maven.izzel.io/releases/'
     }
+    maven {
+        name = 'FTB Mods'
+        url = "https://maven.ftb.dev/releases"
+        content {
+            includeGroup("dev.ftb.mods")
+        }
+    }
     exclusiveContent { // shedaniel - REI, architectury, cloth-config
         forRepository { maven { url = "https://maven.shedaniel.me/" } }
         filter {

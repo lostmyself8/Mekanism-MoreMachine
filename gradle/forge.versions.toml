@@ -7,6 +7,11 @@ shimmer = "1.20.1-0.2.4"
 ccTweaked = "1.113.1"
 cucumber = "1.21.1-8.0.9"
 mysticalagriculture = "1.21.1-8.0.9"
+architectury = "13.0.8"
+
+## ftb mod ##
+ftblibrary = "2101.1.31"
+ftbultimine  = "2101.1.13"
 
 ## modrinth maven ##
 sodium = "mc1.21.1-0.6.13-neoforge"
@@ -43,6 +48,10 @@ shimmer             = { module = "com.lowdragmc.shimmer:Shimmer-forge", version.
 crt                 = { module = "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1", version.ref = "crt" }
 cucumber            = { module = "com.blakebr0.cucumber:Cucumber", version.ref = "cucumber" }
 mysticalagriculture = { module = "com.blakebr0.mysticalagriculture:MysticalAgriculture", version.ref = "mysticalagriculture" }
+architectury        = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury" }
+
+ftblibrary          = { module = "dev.ftb.mods:ftb-library-neoforge", version.ref = "ftblibrary" }
+ftbultimine            = { module = "dev.ftb.mods:ftb-ultimine-neoforge", version.ref = "ftbultimine" }
 
 jade                = { module = "maven.modrinth:jade", version.ref = "jade" }
 sodium              = { module = "maven.modrinth:sodium", version.ref = "sodium" }
