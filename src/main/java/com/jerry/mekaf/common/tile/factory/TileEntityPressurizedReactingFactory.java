@@ -16,6 +16,7 @@ import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
 import mekanism.api.radiation.IRadiationManager;
 import mekanism.api.recipes.PressurizedReactionRecipe;
+import mekanism.api.recipes.PressurizedReactionRecipe.PressurizedReactionRecipeOutput;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.PressurizedReactionCachedRecipe;
@@ -23,6 +24,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
+import mekanism.api.recipes.vanilla_input.ReactionRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
@@ -120,7 +122,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     private long recipeEnergyRequired = 0;
     private final IInputHandler<@NotNull FluidStack> fluidInputHandler;
     private final IInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
-    protected IOutputHandler<PressurizedReactionRecipe.@NotNull PressurizedReactionRecipeOutput>[] reactionOutputHandlers;
+    protected IOutputHandler<@NotNull PressurizedReactionRecipeOutput>[] reactionOutputHandlers;
 
     protected final List<IInventorySlot> inputItemSlots;
     protected final List<IInventorySlot> outputItemSlots;
@@ -237,7 +239,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Override
-    public @NotNull IMekanismRecipeTypeProvider<?, PressurizedReactionRecipe, ItemFluidChemical<PressurizedReactionRecipe>> getRecipeType() {
+    public @NotNull IMekanismRecipeTypeProvider<ReactionRecipeInput, PressurizedReactionRecipe, ItemFluidChemical<PressurizedReactionRecipe>> getRecipeType() {
         return MekanismRecipeType.REACTION;
     }
 
