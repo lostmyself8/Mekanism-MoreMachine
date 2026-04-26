@@ -45,12 +45,14 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class TileEntityAmbientGasCollector extends TileEntityMekanism {
 
+    // 会按这个顺序进行自动弹出（顺时针）
+    private static final RelativeSide[] OUTPUT_SIDES = { RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.BACK, RelativeSide.RIGHT };
     /**
      * How many ticks it takes to run an operation.
      */
@@ -74,7 +76,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
     private int outputRate = BASE_OUTPUT_RATE;
 
     private boolean noBlocking = true;
-    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalHandlerAbove = Collections.emptyList();
+    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalHandler;
 
     @Getter
     private MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer;
@@ -135,12 +137,22 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
         }
         usedEnergy = clientEnergyUsed > 0L;
         if (!chemicalTank.isEmpty()) {
-            if (chemicalHandlerAbove.isEmpty()) {
-                chemicalHandlerAbove = List.of(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.north(), Direction.UP));
+            if (chemicalHandler == null) {
+                RelativeSide[] outputSides = getOutputSides();
+                chemicalHandler = new ArrayList<>(outputSides.length);
+                for (RelativeSide outputSide : getOutputSides()) {
+                    // 从相对位置获取绝对位置
+                    Direction side = outputSide.getDirection(getDirection());
+                    chemicalHandler.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.relative(side), side.getOpposite()));
+                }
             }
-            ChemicalUtil.emit(chemicalHandlerAbove, chemicalTank, outputRate);
+            ChemicalUtil.emit(chemicalHandler, chemicalTank, outputRate);
         }
         return sendUpdatePacket;
+    }
+
+    protected RelativeSide[] getOutputSides() {
+        return OUTPUT_SIDES;
     }
 
     public int estimateIncrementAmount() {

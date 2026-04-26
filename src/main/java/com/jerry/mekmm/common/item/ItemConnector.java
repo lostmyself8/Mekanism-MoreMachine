@@ -22,6 +22,7 @@ import mekanism.common.MekanismLang;
 import mekanism.common.item.interfaces.IItemHUDProvider;
 import mekanism.common.lib.radial.IRadialModeItem;
 import mekanism.common.lib.transmitter.TransmissionType;
+import mekanism.common.tile.TileEntityBoundingBlock;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
@@ -136,9 +137,17 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
                 return InteractionResult.CONSUME;
             }
             // 如果绑定到自己
-            if (pos == globalPos.pos()) {
+            if (pos.equals(globalPos.pos())) {
                 player.displayClientMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
                 return InteractionResult.CONSUME;
+            }
+            // 防止出现端口在绑定方块上的情况。这个情况应当视为连接自身
+            if (tile instanceof TileEntityBoundingBlock boundingBlock) {
+                BlockPos mainPos = boundingBlock.getMainPos();
+                if (mainPos.equals(globalPos.pos())) {
+                    player.displayClientMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
+                    return InteractionResult.CONSUME;
+                }
             }
             // 获取保存位置的方块实体
             TileEntityConnectableMachine linkTile = WorldUtils.getTileEntity(TileEntityConnectableMachine.class, world, globalPos.pos(), true);

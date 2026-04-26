@@ -1,5 +1,7 @@
 package com.jerry.mekmm.common.tile.factory;
 
+import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
+import com.jerry.mekmm.api.datamaps.ItemReplicatorRecipe;
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
@@ -39,7 +41,6 @@ import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.InventoryUtils;
-import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -56,7 +57,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToItemFactory<MMBasicItemStackChemicalToItemStackRecipe> implements IHasDumpButton,
@@ -147,11 +147,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
 
     @Override
     public boolean isValidInputItem(ItemStack stack) {
-        Item item = stack.getItem();
-        if (customRecipeMap != null) {
-            return customRecipeMap.containsKey(Objects.requireNonNull(RegistryUtils.getName(item.builtInRegistryHolder())).toString());
-        }
-        return false;
+        return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.getItemHolder()) != null;
     }
 
     @Override
@@ -186,16 +182,13 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
         if (chemicalStack.isEmpty() || itemStack.isEmpty()) {
             return null;
         }
-        if (customRecipeMap != null) {
-            Item item = itemStack.getItem();
-            // 如果为空则赋值为0
-            int amount = customRecipeMap.getOrDefault(RegistryUtils.getName(itemStack.getItemHolder()).toString(), 0);
-            // 防止null和配置文件中出现0
-            if (amount == 0) return null;
+        Holder<Item> itemHolder = itemStack.getItemHolder();
+        ItemReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(itemHolder);
+        if (recipe != null) {
             return new ReplicatorIRecipeSingle(
-                    IngredientCreatorAccess.item().from(item, 1),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
-                    new ItemStack(item, 1));
+                    IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, recipe.UUAmount()),
+                    new ItemStack(itemHolder, 1));
         }
         return null;
     }

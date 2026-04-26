@@ -1,5 +1,7 @@
 package com.jerry.mekmm.common.tile.machine;
 
+import com.jerry.mekmm.api.datamaps.FluidReplicatorRecipe;
+import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
@@ -52,7 +54,6 @@ import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.FluidSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
-import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -68,7 +69,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFluidChemicalToFluidRecipe> {
 
@@ -149,7 +149,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
     @Override
     protected @Nullable IFluidTankHolder getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         FluidTankHelper builder = FluidTankHelper.forSideWithConfig(this);
-        builder.addTank(inputTank = BasicFluidTank.input(FluidType.BUCKET_VOLUME, TileEntityFluidReplicator::isValidFluidInput, recipeCacheListener));
+        builder.addTank(inputTank = BasicFluidTank.input(MAX_FLUID / 2, TileEntityFluidReplicator::isValidFluidInput, recipeCacheListener));
         builder.addTank(outputTank = BasicFluidTank.output(MAX_FLUID, recipeCacheUnpauseListener));
         return builder.build();
     }
@@ -192,10 +192,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
     }
 
     public static boolean isValidFluidInput(FluidStack stack) {
-        if (customRecipeMap != null) {
-            return customRecipeMap.containsKey(Objects.requireNonNull(RegistryUtils.getName(stack.getFluidHolder())).toString());
-        }
-        return false;
+        return IMoreMachineDataMapTypes.INSTANCE.getFluidReplicatorRecipe(stack.getFluidHolder()) != null;
     }
 
     public static boolean isValidChemicalInput(ChemicalStack stack) {
@@ -250,16 +247,27 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         if (chemicalStack.isEmpty() || fluidStack.isEmpty()) {
             return null;
         }
-        if (customRecipeMap != null) {
-            Holder<Fluid> fluidHolder = fluidStack.getFluidHolder();
-            // 如果为空则赋值为0
-            int amount = customRecipeMap.getOrDefault(Objects.requireNonNull(RegistryUtils.getName(fluidHolder)).toString(), 0);
-            // 防止null和配置文件中出现0
-            if (amount == 0) return null;
+
+        // if (customRecipeMap != null) {
+        // Holder<Fluid> fluidHolder = fluidStack.getFluidHolder();
+        // // 如果为空则赋值为0
+        // int amount =
+        // customRecipeMap.getOrDefault(Objects.requireNonNull(RegistryUtils.getName(fluidHolder)).toString(), 0);
+        // // 防止null和配置文件中出现0
+        // if (amount == 0) return null;
+        // return new FluidReplicatorIRecipeSingle(
+        // IngredientCreatorAccess.fluid().fromHolder(fluidHolder, 1000),
+        // IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
+        // new FluidStack(fluidHolder, FluidType.BUCKET_VOLUME));
+        // }
+
+        Holder<Fluid> fluidHolder = fluidStack.getFluidHolder();
+        FluidReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getFluidReplicatorRecipe(fluidHolder);
+        if (recipe != null) {
             return new FluidReplicatorIRecipeSingle(
-                    IngredientCreatorAccess.fluid().fromHolder(fluidHolder, 1000),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
-                    new FluidStack(fluidHolder, FluidType.BUCKET_VOLUME));
+                    IngredientCreatorAccess.fluid().fromHolder(fluidHolder, recipe.inputAmount()),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, recipe.UUAmount()),
+                    new FluidStack(fluidHolder, recipe.outputAmount()));
         }
         return null;
     }
