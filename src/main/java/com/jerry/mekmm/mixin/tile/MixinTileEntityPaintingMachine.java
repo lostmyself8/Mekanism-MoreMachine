@@ -61,6 +61,6 @@ public abstract class MixinTileEntityPaintingMachine extends TileEntityProgressM
     @Override
     public @Nullable AdvancedMachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
-                usedSoFar, pigmentTank, pigmentInputSlot, energySlot, inputSlot, outputSlot, getComponents());
+                usedSoFar, pigmentTank, pigmentInputSlot, energySlot, inputSlot, outputSlot, getComponents(), problemPath());
     }
 }

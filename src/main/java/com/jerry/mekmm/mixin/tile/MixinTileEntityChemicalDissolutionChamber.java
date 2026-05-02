@@ -63,6 +63,6 @@ public abstract class MixinTileEntityChemicalDissolutionChamber extends TileEnti
     @Override
     public @Nullable ItemChemicalToChemicalUpgradeData getUpgradeData(Provider provider) {
         return new ItemChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                getOperatingTicks(), usedSoFar, energySlot, gasInputSlot, inputSlot, injectTank, outputTank, getComponents());
+                getOperatingTicks(), usedSoFar, energySlot, gasInputSlot, inputSlot, injectTank, outputTank, getComponents(), problemPath());
     }
 }

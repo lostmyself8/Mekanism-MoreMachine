@@ -62,6 +62,6 @@ public abstract class MixinTileEntityPressurizedReactionChamber extends TileEnti
     @Override
     public @Nullable PRCUpgradeData getUpgradeData(Provider provider) {
         return new PRCUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot,
-                inputGasTank, inputFluidTank, inputSlot, outputSlot, outputGasTank, getComponents());
+                inputGasTank, inputFluidTank, inputSlot, outputSlot, outputGasTank, getComponents(), problemPath());
     }
 }

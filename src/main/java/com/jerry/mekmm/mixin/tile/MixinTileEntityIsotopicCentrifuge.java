@@ -53,6 +53,6 @@ public abstract class MixinTileEntityIsotopicCentrifuge extends TileEntityRecipe
     @Override
     public @Nullable ChemicalToChemicalUpgradeData getUpgradeData(Provider provider) {
         return new ChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                0, energySlot, inputTank, outputTank, getComponents());
+                0, energySlot, inputTank, outputTank, getComponents(), problemPath());
     }
 }

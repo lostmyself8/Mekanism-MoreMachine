@@ -49,8 +49,10 @@ import mekanism.common.util.MekanismUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.ItemStackMap;
@@ -146,12 +148,12 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     public static boolean isValidInputStatic(ItemStack stack) {
-        FoodProperties food = stack.getFoodProperties(null);
+        FoodProperties food = stack.get(DataComponents.FOOD);
         return food != null && food.nutrition() > 0;
     }
 
     public boolean isValidInputItem(ItemStack stack) {
-        FoodProperties food = stack.getFoodProperties(null);
+        FoodProperties food = stack.get(DataComponents.FOOD);
         return food != null && food.nutrition() > 0;
     }
 
@@ -175,15 +177,16 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         if (stack.isEmpty()) {
             return null;
         }
-        FoodProperties food = stack.getFoodProperties(null);
+        FoodProperties food = stack.get(DataComponents.FOOD);
         if (food == null || food.nutrition() <= 0) {
             // If the food provides no healing don't allow consuming it as it won't provide any paste
             return null;
         }
+        UseRemainder remainder = stack.get(DataComponents.USE_REMAINDER);
         return new NutritionalLiquifierIRecipe(
                 IngredientCreatorAccess.item().from(stack, 1),
-                MekanismFluids.NUTRITIONAL_PASTE.asStack(food.nutrition() * 50),
-                food.usingConvertsTo().orElse(ItemStack.EMPTY));
+                MekanismFluids.NUTRITIONAL_PASTE.asTemplate(food.nutrition() * 50),
+                remainder == null ? null : remainder.convertInto());
     }
 
     @Override

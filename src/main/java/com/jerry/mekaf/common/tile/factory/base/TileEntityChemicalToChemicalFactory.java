@@ -239,7 +239,7 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
                 ChemicalStack inputStack = inputTank.getStack();
                 CCRecipeProcessInfo<RECIPE> recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new CCRecipeProcessInfo<>());
                 recipeProcessInfo.processes.add(processInfo);
-                recipeProcessInfo.totalAmount += inputStack.getAmount();
+                recipeProcessInfo.totalAmount += inputStack.amount();
                 if (recipeProcessInfo.lazyMinPerTank == null && !CommonWorldTickHandler.flushTagAndRecipeCaches) {
                     // If we don't have a lazily initialized min per slot calculation set for it yet
                     // and our cache is not invalid/out of date due to a reload

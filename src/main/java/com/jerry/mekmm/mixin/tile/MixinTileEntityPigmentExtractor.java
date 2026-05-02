@@ -53,6 +53,6 @@ public abstract class MixinTileEntityPigmentExtractor extends TileEntityProgress
     @Override
     public @Nullable ItemToChemicalUpgradeData getUpgradeData(Provider provider) {
         return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                getOperatingTicks(), energySlot, inputSlot, pigmentTank, getComponents());
+                getOperatingTicks(), energySlot, inputSlot, pigmentTank, getComponents(), problemPath());
     }
 }

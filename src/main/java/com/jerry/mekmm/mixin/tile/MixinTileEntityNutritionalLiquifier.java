@@ -55,6 +55,6 @@ public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProg
     @Override
     public @Nullable NutritionLiquifyingUpgradeData getUpgradeData(Provider provider) {
         return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
-                energySlot, inputSlot, outputSlot, fluidTank, getComponents());
+                energySlot, inputSlot, outputSlot, fluidTank, getComponents(), problemPath());
     }
 }

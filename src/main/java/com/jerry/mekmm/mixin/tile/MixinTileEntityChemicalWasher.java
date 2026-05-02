@@ -62,6 +62,6 @@ public abstract class MixinTileEntityChemicalWasher extends TileEntityRecipeMach
     @Override
     public @Nullable FluidChemicalToChemicalUpgradeData getUpgradeData(Provider provider) {
         return new FluidChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), 0, 0,
-                energySlot, fluidSlot, fluidOutputSlot, inputTank, fluidTank, outputTank, getComponents());
+                energySlot, fluidSlot, fluidOutputSlot, inputTank, fluidTank, outputTank, getComponents(), problemPath());
     }
 }

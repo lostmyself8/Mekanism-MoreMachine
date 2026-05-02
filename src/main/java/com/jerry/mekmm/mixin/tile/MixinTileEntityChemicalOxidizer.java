@@ -53,6 +53,6 @@ public abstract class MixinTileEntityChemicalOxidizer extends TileEntityProgress
     @Override
     public @Nullable ItemToChemicalUpgradeData getUpgradeData(Provider provider) {
         return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                getOperatingTicks(), energySlot, inputSlot, gasTank, getComponents());
+                getOperatingTicks(), energySlot, inputSlot, gasTank, getComponents(), problemPath());
     }
 }
