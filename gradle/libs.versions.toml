@@ -1,12 +1,12 @@
 [versions]
-minecraft = "1.21.1"
-neoForge = "21.1.194"
-loader = "4"
-parchment = "2024.11.17" # https://parchmentmc.org/docs/getting-started
-shadow = "8.3.5"
-spotless = "7.0.4"
-modDevGradle = "2.0.118"
-lombok = "8.13.1"
+minecraft = "26.1.2"
+neoForge = "26.1.2.36-beta"
+loader = "11.0.13"
+parchment = "2025.12.20" # https://parchmentmc.org/docs/getting-started
+shadow = "9.4.1"
+spotless = "8.4.0"
+modDevGradle = "2.0.141"
+lombok = "9.5.0"
 jetbrains-annotations = "26.0.1"
 mixin = "0.8.7"
 

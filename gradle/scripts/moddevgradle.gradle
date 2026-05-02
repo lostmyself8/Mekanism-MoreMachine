@@ -7,7 +7,7 @@ neoForge {
     version = libs.versions.neoForge.get()
 
     parchment {
-        minecraftVersion = libs.versions.minecraft.get()
+        minecraftVersion = "1.21.11"
         mappingsVersion = libs.versions.parchment.get()
     }
 

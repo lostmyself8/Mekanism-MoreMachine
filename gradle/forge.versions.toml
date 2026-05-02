@@ -1,10 +1,9 @@
 [versions]
-jei = "19.21.0.247"
-emi = "1.1.22+1.21.1"
-crt = "21.0.35"
-mekanism = "1.21.1-10.7.19.85"
-shimmer = "1.20.1-0.2.4"
-ccTweaked = "1.113.1"
+jei = "29.5.0.28"
+emi = "1.1.22"
+crt = "21.0.38"
+mekanism = "26.1.2-10.8.0.homebaked"
+ccTweaked = "1.116.1"
 cucumber = "1.21.1-8.0.9"
 mysticalagriculture = "1.21.1-8.0.9"
 architectury = "13.0.8"
@@ -14,13 +13,13 @@ ftblibrary = "2101.1.31"
 ftbultimine  = "2101.1.13"
 
 ## modrinth maven ##
-sodium = "mc1.21.1-0.6.13-neoforge"
-iris = "1.8.8+1.21.1-neoforge"
-modernui = "RM220vWV" #3.12.0.2
-jade = "15.10.3+neoforge"
+sodium = "mc26.1.1-0.8.9-neoforge"
+iris = "1.10.9+26.1-neoforge"
+jade = "26.0.10+neoforge"
 jer = "1.6.0.17"
-ferritecore = "7.0.2-neoforge"
-modernfix = "4SPHwiDB" # 5.24.3+mc1.21.1
+ferritecore = "9.0.0-neoforge"
+modernfix = "5.27.0+mc26.1"
+modernui = "RM220vWV" #3.12.0.2 - not yet for 26.1
 
 ## curseforge maven ##
 mekanismcovers = "6071684"
@@ -33,9 +32,9 @@ jech = "4.5.22"
 
 
 [libraries]
-jei-common-api      = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
-jei-neoforge-api       = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
-jei-neoforge-impl      = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
+jei-common-api      = { module = "mezz.jei:jei-26.1.2-common-api", version.ref = "jei" }
+jei-neoforge-api       = { module = "mezz.jei:jei-26.1.2-neoforge-api", version.ref = "jei" }
+jei-neoforge-impl      = { module = "mezz.jei:jei-26.1.2-neoforge", version.ref = "jei" }
 emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
 jer                 = { module = "maven.modrinth:just-enough-resources-jer", version.ref = "jer" }
 
@@ -44,7 +43,9 @@ cc-tweaked-forge-api  = { module = "cc.tweaked:cc-tweaked-1.21.1-forge-api", ver
 cc-tweaked-forge-impl = { module = "cc.tweaked:cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
 
 mekanism            = { module = "mekanism:Mekanism", version.ref = "mekanism" }
-shimmer             = { module = "com.lowdragmc.shimmer:Shimmer-forge", version.ref = "shimmer" }
+mekanism-additions  = { module = "mekanism:MekanismAdditions", version.ref = "mekanism" }
+mekanism-generators = { module = "mekanism:MekanismGenerators", version.ref = "mekanism" }
+mekanism-tools      = { module = "mekanism:MekanismTools", version.ref = "mekanism" }
 crt                 = { module = "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1", version.ref = "crt" }
 cucumber            = { module = "com.blakebr0.cucumber:Cucumber", version.ref = "cucumber" }
 mysticalagriculture = { module = "com.blakebr0.mysticalagriculture:MysticalAgriculture", version.ref = "mysticalagriculture" }

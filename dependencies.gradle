@@ -10,9 +10,9 @@ dependencies {
 
     // Mekanism
     compileOnly(forge.mekanism)
-    compileOnly(variantOf(forge.mekanism) { classifier("additions") })
-    compileOnly(variantOf(forge.mekanism) { classifier("generators") })
-    compileOnly(variantOf(forge.mekanism) { classifier("tools") })
+    compileOnly(forge.mekanism.additions)
+    compileOnly(forge.mekanism.generators)
+    compileOnly(forge.mekanism.tools)
 
     compileOnly(forge.mekanismcovers)
     compileOnly(forge.evolvedmekanism)
@@ -46,9 +46,9 @@ dependencies {
 
     // Mekanism
     localRuntime(forge.mekanism)
-    localRuntime(variantOf(forge.mekanism) { classifier("additions") })
-    localRuntime(variantOf(forge.mekanism) { classifier("generators") })
-    localRuntime(variantOf(forge.mekanism) { classifier("tools") })
+    localRuntime(forge.mekanism.additions)
+    localRuntime(forge.mekanism.generators)
+    localRuntime(forge.mekanism.tools)
 
     localRuntime(forge.mekanismcovers)
     localRuntime(forge.igleelibrary)
@@ -77,7 +77,7 @@ dependencies {
     // Client-only runtime mods //
     clientLocalRuntime(forge.sodium)
     clientLocalRuntime(forge.iris)
-    clientLocalRuntime(forge.modernui)
+//    clientLocalRuntime(forge.modernui) // not yet for 26.1
 
     //////////////////////////////////////////////////////
     // Runtime mods for dev testing with unclean client //
