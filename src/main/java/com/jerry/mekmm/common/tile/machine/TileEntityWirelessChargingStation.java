@@ -37,13 +37,17 @@ import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -127,7 +131,11 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     private long chargeSuit(Player player, long toCharge) {
-        for (ItemStack stack : player.getArmorSlots()) {
+        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
+            if (!slot.isArmor()) {
+                continue;
+            }
+            ItemStack stack = player.getItemBySlot(slot);
             // charge方法会检测是否是含能量槽的物品
             toCharge = charge(energyContainer, stack, toCharge);
             if (toCharge == 0L) break;
@@ -141,7 +149,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         toCharge = charge(energyContainer, mainHand, toCharge);
         toCharge = charge(energyContainer, offHand, toCharge);
         if (toCharge > 0L) {
-            for (ItemStack stack : player.getInventory().items) {
+            for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
                 if (stack != mainHand && stack != offHand) {
                     toCharge = charge(energyContainer, stack, toCharge);
                     if (toCharge == 0L) break;
@@ -154,17 +162,55 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
 
     private void chargeCurios(Player player, long toCharge) {
         if (Mekanism.hooks.curios.isLoaded()) {
-            IItemHandler handler = CuriosIntegration.getCuriosInventory(player);
+            ResourceHandler<ItemResource> handler = CuriosIntegration.getCuriosInventory(player);
             if (handler == null) {
                 return;
             }
-            for (int slot = 0, slots = handler.getSlots(); slot < slots; slot++) {
-                toCharge = charge(energyContainer, handler.getStackInSlot(slot), toCharge);
+            for (int slot = 0, slots = handler.size(); slot < slots; slot++) {
+                toCharge = chargeCurio(handler, slot, toCharge);
                 if (toCharge == 0L) {
                     return;
                 }
             }
         }
+    }
+
+    private long chargeCurio(ResourceHandler<ItemResource> handler, int slot, long amount) {
+        if (amount <= 0L) {
+            return amount;
+        }
+        ItemStack stack = ItemUtil.getStack(handler, slot);
+        if (stack.isEmpty()) {
+            return amount;
+        }
+        IStrictEnergyHandler energyHandler = EnergyCompatUtils.getStrictEnergyHandler(stack);
+        if (energyHandler == null) {
+            return amount;
+        }
+        long remaining = energyHandler.insertEnergy(amount, Action.SIMULATE);
+        if (remaining >= amount) {
+            return amount;
+        }
+        long toExtract = amount - remaining;
+        long simulatedExtract = energyContainer.extract(toExtract, Action.SIMULATE, AutomationType.MANUAL);
+        if (simulatedExtract <= 0L) {
+            return amount;
+        }
+        long inserted = simulatedExtract - energyHandler.insertEnergy(simulatedExtract, Action.EXECUTE);
+        if (inserted <= 0L) {
+            return amount;
+        }
+        ItemResource originalResource = handler.getResource(slot);
+        int count = handler.getAmountAsInt(slot);
+        try (Transaction transaction = Transaction.open(null)) {
+            if (handler.extract(slot, originalResource, count, transaction) == count &&
+                  handler.insert(slot, ItemResource.of(stack), count, transaction) == count) {
+                transaction.commit();
+                energyContainer.extract(inserted, Action.EXECUTE, AutomationType.MANUAL);
+                return amount - inserted;
+            }
+        }
+        return amount;
     }
 
     private long charge(IEnergyContainer energyContainer, ItemStack stack, long amount) {
