@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.api.recipes.cache;
+package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
 import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe;

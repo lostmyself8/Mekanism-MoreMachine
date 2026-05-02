@@ -1,4 +1,4 @@
-﻿package com.jerry.datagen.common.recipe;
+package com.jerry.datagen.common.recipe;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.resource.PrimaryResource;

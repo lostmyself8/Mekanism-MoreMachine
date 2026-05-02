@@ -1,4 +1,4 @@
-﻿package com.jerry.datagen.common.recipe.imp;
+package com.jerry.datagen.common.recipe.imp;
 
 import com.jerry.datagen.common.recipe.BaseRecipeProvider;
 import com.jerry.datagen.common.recipe.ISubRecipeProvider;

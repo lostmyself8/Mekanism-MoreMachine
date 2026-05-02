@@ -215,7 +215,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     // return new ReplicatorIRecipeSingle(
     // IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
     // IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
-    // new ItemStack(itemHolder, 1));
+    // new ItemStackTemplate(itemHolder, 1));
     // }
     // return null;
     // }
@@ -230,7 +230,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
             return new ReplicatorIRecipeSingle(
                     IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
                     IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, recipe.UUAmount()),
-                    new ItemStack(itemHolder, 1));
+                    new ItemStackTemplate(itemHolder, 1));
         }
         return null;
     }
@@ -253,3 +253,4 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
     // End methods IComputerTile
 }
+

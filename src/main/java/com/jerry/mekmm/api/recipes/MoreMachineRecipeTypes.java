@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.api.recipes;
+package com.jerry.mekmm.api.recipes;
 
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.common.Mekanism;

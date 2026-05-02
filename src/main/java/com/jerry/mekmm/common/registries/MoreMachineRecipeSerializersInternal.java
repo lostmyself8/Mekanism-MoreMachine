@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.common.registries;
+package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;

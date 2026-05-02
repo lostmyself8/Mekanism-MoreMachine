@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.api.recipes;
+package com.jerry.mekmm.api.recipes;
 
 import com.jerry.mekmm.Mekmm;
 

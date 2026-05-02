@@ -49,6 +49,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -190,7 +191,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
             return new ReplicatorIRecipeSingle(
                     IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
                     IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, recipe.UUAmount()),
-                    new ItemStack(itemHolder, 1));
+                    new ItemStackTemplate(itemHolder, 1));
         }
         return null;
     }
@@ -232,3 +233,4 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
     }
     // End methods IComputerTile
 }
+

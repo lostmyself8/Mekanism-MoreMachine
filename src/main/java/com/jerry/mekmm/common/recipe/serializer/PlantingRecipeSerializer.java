@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.common.recipe.serializer;
+package com.jerry.mekmm.common.recipe.serializer;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicPlantingRecipe;

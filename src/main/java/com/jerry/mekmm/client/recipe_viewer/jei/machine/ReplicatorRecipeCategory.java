@@ -25,6 +25,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -46,7 +47,7 @@ public class ReplicatorRecipeCategory extends BaseRecipeCategory<MMBasicItemStac
     private static final Codec<MMBasicItemStackChemicalToItemStackRecipe> RECIPE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemStackIngredient.CODEC.fieldOf(SerializationConstants.INPUT).forGetter(MMBasicItemStackChemicalToItemStackRecipe::getItemInput),
             IngredientCreatorAccess.chemicalStack().codec().fieldOf(SerializationConstants.CHEMICAL_INPUT).forGetter(MMBasicItemStackChemicalToItemStackRecipe::getChemicalInput),
-            ItemStack.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(MMBasicItemStackChemicalToItemStackRecipe::getOutputRaw)).apply(instance, ReplicatorIRecipeSingle::new));
+            ItemStackTemplate.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(MMBasicItemStackChemicalToItemStackRecipe::getOutputRaw)).apply(instance, ReplicatorIRecipeSingle::new));
 
     private final GuiGauge<?> inputGauge;
     private final GuiSlot outputSlot;
@@ -81,7 +82,7 @@ public class ReplicatorRecipeCategory extends BaseRecipeCategory<MMBasicItemStac
         ContextMap slotDisplayContext = getSlotDisplayContext();
         initItem(builder, RecipeIngredientRole.INPUT, inputSlot, recipe.getItemInput().getRepresentations(slotDisplayContext));
         initChemical(builder, RecipeIngredientRole.INPUT, inputGauge, recipe.getChemicalInput().getRepresentations(slotDisplayContext));
-        initItem(builder, RecipeIngredientRole.OUTPUT, outputSlot, recipe.getOutputDefinition());
+        initItem(builder, RecipeIngredientRole.OUTPUT, outputSlot, recipe.getOutputDefinition().stream().map(ItemStackTemplate::create).toList());
         initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
     }
 

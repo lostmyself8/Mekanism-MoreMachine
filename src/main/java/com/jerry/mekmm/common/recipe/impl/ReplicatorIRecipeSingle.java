@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.common.recipe.impl;
+package com.jerry.mekmm.common.recipe.impl;
 
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;

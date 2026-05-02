@@ -1,4 +1,4 @@
-﻿package com.jerry.mekmm.api.recipes.basic;
+package com.jerry.mekmm.api.recipes.basic;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
