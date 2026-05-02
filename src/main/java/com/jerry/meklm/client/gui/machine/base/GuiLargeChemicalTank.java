@@ -14,7 +14,7 @@ import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.IWarningTracker;
 import mekanism.common.util.text.TextUtils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -52,10 +52,10 @@ public class GuiLargeChemicalTank extends GuiMekanismTile<TileEntityLargeChemica
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics, 85);
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        renderInventoryText(GuiGraphicsExtractor, 85);
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 
     @Override

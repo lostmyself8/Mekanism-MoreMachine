@@ -15,7 +15,7 @@ import mekanism.common.tile.component.config.DataType;
 import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.StorageUtils;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;

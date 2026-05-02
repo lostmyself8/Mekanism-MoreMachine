@@ -21,10 +21,10 @@ import mekanism.common.lib.Color;
 import mekanism.common.lib.effect.BoltEffect;
 import mekanism.common.util.text.TextUtils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
+import net.minecraft.util.Util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.phys.Vec3;
 
@@ -80,16 +80,16 @@ public class GuiLargeAntiprotonicNucleosynthesizer extends GuiConfigurableTile<T
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics);
-        screen.drawScrollingString(guiGraphics, MekanismLang.PROCESS_RATE.translate(TextUtils.getPercent(tile.getProcessRate())), 0,
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        renderInventoryText(GuiGraphicsExtractor);
+        screen.drawScrollingString(GuiGraphicsExtractor, MekanismLang.PROCESS_RATE.translate(TextUtils.getPercent(tile.getProcessRate())), 0,
                 screen.getHeight() - font().lineHeight - 2, TextAlignment.CENTER, screenTextColor(), 2, false);
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
-        PoseStack pose = guiGraphics.pose();
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
+        PoseStack pose = GuiGraphicsExtractor.pose();
         pose.pushPose();
         pose.translate(0, 0, 100);
-        MultiBufferSource.BufferSource renderer = guiGraphics.bufferSource();
+        MultiBufferSource.BufferSource renderer = GuiGraphicsExtractor.bufferSource();
         float partialTicks = MekanismRenderer.getPartialTick();
         bolt.update(this, boltSupplier.get(), partialTicks);
         bolt.render(partialTicks, pose, renderer);

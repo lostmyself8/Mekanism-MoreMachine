@@ -14,7 +14,7 @@ import mekanism.client.gui.element.tab.GuiEnergyTab;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -51,9 +51,9 @@ public class GuiLargeChemicalInfuser extends GuiMekanismTile<TileEntityLargeChem
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        renderTitleTextWithOffset(guiGraphics, 1, centerGauge.getRelativeX(), 4, TextAlignment.LEFT);
-        renderInventoryText(guiGraphics, centerGauge.getRelativeX());
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleTextWithOffset(GuiGraphicsExtractor, 1, centerGauge.getRelativeX(), 4, TextAlignment.LEFT);
+        renderInventoryText(GuiGraphicsExtractor, centerGauge.getRelativeX());
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

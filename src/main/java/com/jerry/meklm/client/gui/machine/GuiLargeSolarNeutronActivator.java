@@ -11,7 +11,7 @@ import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -38,9 +38,9 @@ public class GuiLargeSolarNeutronActivator extends GuiMekanismTile<TileEntityLar
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics);
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        renderInventoryText(GuiGraphicsExtractor);
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

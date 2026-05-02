@@ -3,33 +3,11 @@ package com.jerry.meklm.client.model.bake;
 import com.jerry.meklm.common.base.holiday.holiday_info.ElectroSeparatorHolidayInfo;
 
 import mekanism.api.annotations.NothingNullByDefault;
-import mekanism.client.model.baked.ExtensionBakedModel;
-import mekanism.client.render.lib.QuadTransformation;
-
-import net.minecraft.client.resources.model.BakedModel;
-import net.neoforged.neoforge.client.model.data.ModelData;
-
-import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
-public class LargeElectrolyticSeparatorBakedModel extends ExtensionBakedModel<Void> {
+public class LargeElectrolyticSeparatorBakedModel extends TranslatedHolidayBakedModel {
 
-    public LargeElectrolyticSeparatorBakedModel(BakedModel original) {
-        super(original);
-    }
-
-    @Nullable
-    @Override
-    protected QuadsKey<Void> createKey(QuadsKey<Void> key, ModelData data) {
-        QuadTransformation holidayTransform = ElectroSeparatorHolidayInfo.getTransform();
-        if (holidayTransform != null) {
-            return key.transform(holidayTransform);
-        }
-        return null;
-    }
-
-    @Override
-    protected LargeElectrolyticSeparatorBakedModel wrapModel(BakedModel model) {
-        return new LargeElectrolyticSeparatorBakedModel(model);
+    public LargeElectrolyticSeparatorBakedModel(Object original) {
+        super(original, ElectroSeparatorHolidayInfo::getTransform);
     }
 }

@@ -24,7 +24,7 @@ import mekanism.common.network.PacketUtils;
 import mekanism.common.network.to_server.PacketGuiInteract;
 import mekanism.common.network.to_server.PacketGuiInteract.GuiInteraction;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -86,10 +86,10 @@ public class GuiLargeRotaryCondensentrator extends GuiMekanismTile<TileEntityLar
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
         ILangEntry modeLang = tile.getMode() ? MekanismLang.DECONDENSENTRATING : MekanismLang.CONDENSENTRATING;
-        drawScrollingString(guiGraphics, modeLang.translate(), 4, imageHeight - 92, TextAlignment.LEFT, titleTextColor(), energyBar.getRelativeX() - 4, 2, false);
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+        drawScrollingString(GuiGraphicsExtractor, modeLang.translate(), 4, imageHeight - 92, TextAlignment.LEFT, titleTextColor(), energyBar.getRelativeX() - 4, 2, false);
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

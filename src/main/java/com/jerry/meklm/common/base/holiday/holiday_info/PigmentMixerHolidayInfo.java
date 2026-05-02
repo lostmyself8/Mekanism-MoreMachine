@@ -11,7 +11,7 @@ import mekanism.common.Mekanism;
 import mekanism.common.base.holiday.HolidayManager;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -26,9 +26,9 @@ import java.util.function.Predicate;
 @EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT)
 public class PigmentMixerHolidayInfo extends BaseHolidayInfo {
 
-    private static final Predicate<ResourceLocation> IS_FIRST = s -> s.getPath().contains("screen_hello");
-    private static final Predicate<ResourceLocation> IS_SECOND = s -> s.getPath().contains("screen_logo");
-    private static final Predicate<ResourceLocation> IS_THIRD = s -> s.getPath().contains("screen_cmd");
+    private static final Predicate<Identifier> IS_FIRST = s -> s.getPath().contains("screen_hello");
+    private static final Predicate<Identifier> IS_SECOND = s -> s.getPath().contains("screen_logo");
+    private static final Predicate<Identifier> IS_THIRD = s -> s.getPath().contains("screen_cmd");
     private static Map<Holiday, QuadTransformation> HOLIDAY_MINER_TRANSFORMS = Collections.emptyMap();
 
     private PigmentMixerHolidayInfo() {}
