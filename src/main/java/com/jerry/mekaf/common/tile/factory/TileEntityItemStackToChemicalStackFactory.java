@@ -119,6 +119,6 @@ public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToC
     @Override
     public @Nullable ItemToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                progress, energySlot, inputItemSlots, outputChemicalTanks, isSorting(), getComponents());
+                progress, energySlot, inputItemSlots, outputChemicalTanks, isSorting(), getComponents(), problemPath());
     }
 }

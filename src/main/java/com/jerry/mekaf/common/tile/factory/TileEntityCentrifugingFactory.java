@@ -124,6 +124,6 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
     @Override
     public @Nullable ChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                progress, energySlot, inputChemicalTanks, outputChemicalTanks, isSorting(), getComponents());
+                progress, energySlot, inputChemicalTanks, outputChemicalTanks, isSorting(), getComponents(), problemPath());
     }
 }

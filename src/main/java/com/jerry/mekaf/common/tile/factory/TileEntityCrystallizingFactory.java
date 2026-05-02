@@ -107,6 +107,6 @@ public class TileEntityCrystallizingFactory extends TileEntityChemicalToItemFact
     @Override
     public @Nullable ChemicalToItemUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ChemicalToItemUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                progress, energySlot, inputChemicalTanks, outputItemSlots, isSorting(), getComponents());
+                progress, energySlot, inputChemicalTanks, outputItemSlots, isSorting(), getComponents(), problemPath());
     }
 }
