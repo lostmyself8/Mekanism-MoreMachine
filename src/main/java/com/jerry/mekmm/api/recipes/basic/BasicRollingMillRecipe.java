@@ -1,4 +1,4 @@
-package com.jerry.mekmm.api.recipes.basic;
+﻿package com.jerry.mekmm.api.recipes.basic;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
@@ -12,7 +12,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStack;`r`nimport net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -25,9 +25,7 @@ public class BasicRollingMillRecipe extends BasicItemStackToItemStackRecipe {
      * @param input  Input.
      * @param output Output.
      */
-    public BasicRollingMillRecipe(ItemStackIngredient input, ItemStack output) {
-        super(input, output, MoreMachineRecipeTypes.TYPE_ROLLING_MILL.value());
-    }
+    public BasicRollingMillRecipe(ItemStackIngredient input, ItemStackTemplate output) {`r`n        super(input, output, MoreMachineRecipeTypes.TYPE_ROLLING_MILL.value());`r`n    }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -44,3 +42,4 @@ public class BasicRollingMillRecipe extends BasicItemStackToItemStackRecipe {
         return new ItemStack(CNC_ROLLING_MILL);
     }
 }
+

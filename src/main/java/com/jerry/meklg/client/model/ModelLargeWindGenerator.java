@@ -12,9 +12,10 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.resources.Identifier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -22,10 +23,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ModelLargeWindGenerator extends MekanismJavaModel {
+public class ModelLargeWindGenerator extends MekanismJavaModel<ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState> {
 
     public static final ModelLayerLocation LARGE_WIND_GENERATOR_LAYER = new ModelLayerLocation(Mekmm.rl("large_wind_generator"), "main");
-    private static final ResourceLocation LARGE_WIND_GENERATOR_TEXTURE = Mekmm.rl("render/large_wind_generator.png");
+    private static final Identifier LARGE_WIND_GENERATOR_TEXTURE = Mekmm.rl("render/large_wind_generator.png");
 
     private static final ModelPartData body_r1 = new ModelPartData("body_r1", CubeListBuilder.create()
             .texOffs(488, 484).addBox(-4.0F, -15.0F, -2.0F, 8.0F, 15.0F, 3.0F, new CubeDeformation(0.0F)),
@@ -487,37 +488,43 @@ public class ModelLargeWindGenerator extends MekanismJavaModel {
         return createLayerDefinition(1024, 1024, FAN, BODY, TOP, BASE);
     }
 
-    private final RenderType RENDER_TYPE = renderType(LARGE_WIND_GENERATOR_TEXTURE);
+    private final RenderType RENDER_TYPE = RenderTypes.entitySolid(LARGE_WIND_GENERATOR_TEXTURE);
     private final List<ModelPart> parts;
     private final ModelPart fans;
 
     public ModelLargeWindGenerator(EntityModelSet entityModelSet) {
-        super(RenderType::entitySolid);
-        ModelPart root = entityModelSet.bakeLayer(LARGE_WIND_GENERATOR_LAYER);
+        super(entityModelSet.bakeLayer(LARGE_WIND_GENERATOR_LAYER));
         parts = getRenderableParts(root, FAN, BODY, TOP, BASE);
         fans = FAN.getFromRoot(root);
     }
 
-    public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
-        float baseRotation = getAbsoluteRotation(angle);
-        setRotation(fans, 0F, 0F, baseRotation);
-        // 渲染材质
-        renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
+    @Override
+    public void collect(LargeWindGeneratorRotationRenderState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
+        setupAnim(state);
+        collectParts(parts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, 0xFFFFFFFF, null, hasEffect);
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int light, int overlayLight, int color) {
-        renderPartsToBuffer(parts, poseStack, vertexConsumer, light, overlayLight, color);
+    public void setupAnim(LargeWindGeneratorRotationRenderState state) {
+        super.setupAnim(state);
+        fans.setRotation(0F, 0F, getAbsoluteRotation(state.angle));
     }
 
     public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle) {
-        float baseRotation = getAbsoluteRotation(angle);
-        setRotation(fans, 0F, 0F, baseRotation);
-        // 渲染线框
+        setupAnim(new LargeWindGeneratorRotationRenderState(angle));
         renderPartsAsWireFrame(parts, matrix, vertexBuilder);
     }
 
     private float getAbsoluteRotation(double angle) {
         return (float) Math.toRadians(angle % 360);
+    }
+
+    public static class LargeWindGeneratorRotationRenderState {
+
+        public LargeWindGeneratorRotationRenderState(double angle) {
+            this.angle = angle;
+        }
+
+        public double angle;
     }
 }

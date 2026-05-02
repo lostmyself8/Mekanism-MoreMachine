@@ -3,8 +3,8 @@ package com.jerry.datagen.client.lang;
 import com.jerry.datagen.client.lang.FormatSplitter.Component;
 import com.jerry.datagen.client.lang.FormatSplitter.FormatComponent;
 
-import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
+import net.minecraft.util.Util;
 
 import java.util.*;
 import java.util.regex.Matcher;

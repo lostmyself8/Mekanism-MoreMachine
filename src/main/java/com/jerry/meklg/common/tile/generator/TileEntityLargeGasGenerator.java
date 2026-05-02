@@ -8,7 +8,6 @@ import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.chemical.attribute.ChemicalAttributes;
 import mekanism.api.datamaps.IMekanismDataMapTypes;
 import mekanism.api.datamaps.chemical.attribute.ChemicalFuel;
 import mekanism.api.functions.ConstantPredicates;
@@ -52,8 +51,7 @@ import java.util.function.Predicate;
 
 public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
-    @SuppressWarnings("removal")
-    public static final Predicate<ChemicalStack> HAS_FUEL = chemical -> chemical.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null || chemical.hasLegacy(ChemicalAttributes.Fuel.class);// TODO
+    public static final Predicate<ChemicalStack> HAS_FUEL = chemical -> chemical.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null;
     /**
      * The tank this block is storing fuel in.
      */
@@ -116,7 +114,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
                 ChemicalFuel fuel = fuelTank.getFuel();
                 if (fuel != null) {
                     // Ensure valid data
-                    maxBurnTicks = Math.max(1, fuel.burnTicks());
+                    maxBurnTicks = Math.max(1, fuel.maxBurnPerTick());
                     generationRate = fuel.energyPerTick();
                 }
             }
@@ -334,22 +332,11 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         }
 
         @Nullable
-        @SuppressWarnings("removal")
         public ChemicalFuel getFuel() {
             if (isEmpty()) {
                 return null;
             }
-            ChemicalStack stack = getStack();
-            ChemicalFuel fuel = stack.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
-            if (fuel == null) {// TODO - 1.22: Remove this handling of legacy data
-                // If there is no fuel in the data map, see if one was set manually on the stack
-                ChemicalAttributes.Fuel legacyFuel = stack.getLegacy(ChemicalAttributes.Fuel.class);
-                if (legacyFuel != null) {
-                    // If it was, convert it to the non legacy type
-                    return legacyFuel.asModern();
-                }
-            }
-            return fuel;
+            return getStack().getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
         }
     }
 }

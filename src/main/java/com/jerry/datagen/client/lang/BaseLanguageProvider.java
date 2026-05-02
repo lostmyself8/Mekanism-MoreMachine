@@ -14,12 +14,12 @@ import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registration.impl.FluidRegistryObject;
 import mekanism.common.registration.impl.MekanismDamageType;
 
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -71,7 +71,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
         add(key.value().getDescriptionId(), value);
     }
 
-    protected void addModuleConfig(ResourceLocation configKey, String value) {
+    protected void addModuleConfig(Identifier configKey, String value) {
         add(configKey.toLanguageKey("module"), value);
     }
 
@@ -152,7 +152,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
     }
 
     protected void addAlias(String path, String translation) {
-        add(Util.makeDescriptionId("alias", ResourceLocation.fromNamespaceAndPath(modid, path)), translation);
+        add(Util.makeDescriptionId("alias", Identifier.fromNamespaceAndPath(modid, path)), translation);
     }
 
     @Override

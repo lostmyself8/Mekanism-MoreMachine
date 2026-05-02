@@ -1,6 +1,7 @@
 package com.jerry.datagen;
 
 import com.jerry.datagen.common.loot.MoreMachineLootProvider;
+import com.jerry.datagen.common.recipe.MekmmRecipeRunner;
 import com.jerry.datagen.common.recipe.imp.MoreMachineRecipeProvider;
 
 import com.jerry.mekmm.Mekmm;
@@ -22,7 +23,6 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.fml.util.ObfuscationReflectionHelper;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
@@ -61,19 +61,18 @@ public class MekmmDataGenerator {
     private MekmmDataGenerator() {}
 
     @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
+    public static void gatherData(GatherDataEvent.Client event) {
         bootstrapConfigs(Mekanism.MODID);
         bootstrapConfigs(Mekmm.MOD_ID);
         bootstrapIMC();
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         // Client side data generators
         // gen.addProvider(event.includeClient(), new MoreMachineLangProvider(output));
         // Server side data generators
-        gen.addProvider(event.includeServer(), new MoreMachineLootProvider(output, lookupProvider));
-        gen.addProvider(event.includeServer(), new MoreMachineRecipeProvider(output, lookupProvider, existingFileHelper));
+        gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
+        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, MoreMachineRecipeProvider::new));
         // Data generator to help with persisting data when porting across MC versions when optional deps aren't updated
         // yet
         // DO NOT ADD OTHERS AFTER THIS ONE

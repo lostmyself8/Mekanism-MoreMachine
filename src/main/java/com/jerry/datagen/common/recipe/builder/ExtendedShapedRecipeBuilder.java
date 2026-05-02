@@ -4,11 +4,12 @@ import com.jerry.datagen.common.recipe.pattern.RecipePattern;
 
 import mekanism.api.annotations.NothingNullByDefault;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -58,6 +59,10 @@ public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShape
     }
 
     public ExtendedShapedRecipeBuilder key(char symbol, TagKey<Item> tag) {
+        throw new UnsupportedOperationException("Tag ingredients require a HolderSet in 26.1.2; use key(char, Ingredient) from providers with registry lookups.");
+    }
+
+    public ExtendedShapedRecipeBuilder key(char symbol, HolderSet<Item> tag) {
         return key(symbol, Ingredient.of(tag));
     }
 
@@ -81,7 +86,7 @@ public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShape
     }
 
     @Override
-    protected void validate(ResourceLocation id) {
+    protected void ensureValid(ResourceKey<Recipe<?>> id) {
         if (pattern.isEmpty()) {
             throw new IllegalStateException("No pattern is defined for shaped recipe " + id + "!");
         }
@@ -106,11 +111,10 @@ public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShape
     @Override
     protected Recipe<?> asRecipe() {
         return wrapRecipe(new ShapedRecipe(
-                Objects.requireNonNullElse(this.group, ""),
-                RecipeBuilder.determineBookCategory(this.category),
+                RecipeBuilder.createCraftingCommonInfo(this.showNotification),
+                RecipeBuilder.createCraftingBookInfo(this.category, Objects.requireNonNullElse(this.group, "")),
                 ShapedRecipePattern.of(this.key, this.pattern),
-                new ItemStack(this.result, this.count),
-                this.showNotification));
+                resultStack()));
     }
 
     protected Recipe<?> wrapRecipe(ShapedRecipe recipe) {

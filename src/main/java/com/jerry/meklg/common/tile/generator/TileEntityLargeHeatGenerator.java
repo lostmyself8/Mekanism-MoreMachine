@@ -40,6 +40,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -106,7 +107,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
         // Divide the burn time by 20 as that is the ratio of how much a bucket of lava would burn for
         // TODO: Eventually we may want to grab the 20 dynamically in case some mod is changing the burn time of a lava
         // bucket
-        builder.addSlot(fuelSlot = FluidFuelInventorySlot.forFuel(lavaTank, stack -> stack.getBurnTime(null) / 20, size -> new FluidStack(Fluids.LAVA, size),
+        builder.addSlot(fuelSlot = FluidFuelInventorySlot.forFuel(lavaTank, stack -> level == null ? 0 : stack.getBurnTime(null, level.fuelValues()) / 20, size -> new FluidStack(Fluids.LAVA, size),
                 listener, 17, 35), RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.BACK, RelativeSide.TOP, RelativeSide.BOTTOM);
         builder.addSlot(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35), RelativeSide.RIGHT);
         return builder.build();
@@ -206,7 +207,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             }
             boost = passiveLavaAmount * lavaSides;
         }
-        if (level.dimensionType().ultraWarm()) {
+        if (level.dimension() == Level.NETHER) {
             boost += MoreMachineConfig.generators.largeHeatGenerationNether.get();
         }
         return boost;

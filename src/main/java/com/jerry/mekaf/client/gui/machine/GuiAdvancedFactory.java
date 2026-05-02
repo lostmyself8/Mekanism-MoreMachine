@@ -29,7 +29,7 @@ import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -44,20 +44,17 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
     private final int tankCount;
 
     public GuiAdvancedFactory(MekanismTileContainer<TileEntityAdvancedFactoryBase<?>> container, Inventory inv, Component title) {
-        super(container, inv, title);
+        super(container, inv, title, getImageWidth(container.getTileEntity()), getImageHeight(container.getTileEntity()));
         tankCount = tile.getTankCount();
         // 根据储罐数量决定gui布局
-        imageHeight += 13 * tankCount;
         inventoryLabelY = 75 + 13 * tankCount;
         if (tile.hasExtraResourceBar()) {
             int num = tile.getBarCount() - 1;
-            imageHeight += 11 + 8 * num;
             // 第一个额外资源槽加10像素，后面的加8像素
             inventoryLabelY += 10 + 8 * num;
         }
 
         if (tile.tier == FactoryTier.ULTIMATE) {
-            imageWidth += 34;
             inventoryLabelX = 26;
         }
         // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
@@ -65,11 +62,30 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
-            imageWidth += (36 * (index + 2)) + (2 * index);
             inventoryLabelX = (22 * (index + 2)) - (3 * index);
         }
         titleLabelY = 4;
         dynamicSlots = true;
+    }
+
+    private static int getImageHeight(TileEntityAdvancedFactoryBase<?> tile) {
+        int height = 166 + 13 * tile.getTankCount();
+        if (tile.hasExtraResourceBar()) {
+            height += 11 + 8 * (tile.getBarCount() - 1);
+        }
+        return height;
+    }
+
+    private static int getImageWidth(TileEntityAdvancedFactoryBase<?> tile) {
+        int width = 176;
+        if (tile.tier == FactoryTier.ULTIMATE) {
+            width += 34;
+        }
+        if (Mekmm.hooks.evolvedMekanism.isLoaded() && tile.tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal()) {
+            int index = tile.tier.ordinal() - 4;
+            width += (36 * (index + 2)) + (2 * index);
+        }
+        return width;
     }
 
     private boolean isEMLoadAndTierOrdinalAboveOverLocked() {
@@ -185,9 +201,9 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics, dumpButton == null ? getXSize() : dumpButton.getRelativeX());
+        renderInventoryText(guiGraphics, dumpButton == null ? imageWidth : dumpButton.getRelativeX());
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
     }
 }
