@@ -40,6 +40,7 @@ import mekanism.common.upgrade.MachineUpgradeData;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Block;
@@ -63,7 +64,7 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
     public static final int BASE_TICKS_REQUIRED = 10 * SharedConstants.TICKS_PER_SECOND;
 
     private final IOutputHandler<@NotNull ChanceOutput> chanceOutputHandler;
-    private final IInputHandler<@NotNull ItemStack> inputHandler;
+    private final IInputHandler<Item, @NotNull ItemStack> inputHandler;
 
     @Getter
     private MachineEnergyContainer<TileEntityRecycler> energyContainer;

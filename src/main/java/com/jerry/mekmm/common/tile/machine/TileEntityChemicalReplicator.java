@@ -95,8 +95,8 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
 
     private MachineEnergyContainer<TileEntityChemicalReplicator> energyContainer;
 
-    private final ILongInputHandler<@NotNull ChemicalStack> firstInputHandler;
-    private final ILongInputHandler<ChemicalStack> secondaryInputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> firstInputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> secondaryInputHandler;
     private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
     // 气罐槽
     // UU物质
@@ -134,8 +134,8 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(inputTank = BasicChemicalTank.inputModern(MAX_GAS, TileEntityChemicalReplicator::isValidInputChemical, recipeCacheListener));
-        builder.addTank(uuTank = BasicChemicalTank.inputModern(MAX_GAS, TileEntityChemicalReplicator::isValidChemicalInput, recipeCacheListener));
+        builder.addTank(inputTank = BasicChemicalTank.input(MAX_GAS, TileEntityChemicalReplicator::isValidInputChemical, recipeCacheListener));
+        builder.addTank(uuTank = BasicChemicalTank.input(MAX_GAS, TileEntityChemicalReplicator::isValidChemicalInput, recipeCacheListener));
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener));
         return builder.build();
     }
@@ -166,7 +166,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
 
     // 需要复制的化学品
     public static boolean isValidInputChemical(ChemicalStack stack) {
-        return IMoreMachineDataMapTypes.INSTANCE.getChemicalReplicatorRecipe(stack.getChemicalHolder()) != null;
+        return IMoreMachineDataMapTypes.INSTANCE.getChemicalReplicatorRecipe(stack.typeHolder()) != null;
     }
 
     // uu物质
@@ -233,7 +233,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
         // new ChemicalStack(chemicalHolder, 1000));
         // }
 
-        Holder<Chemical> chemicalHolder = chemicalStack.getChemicalHolder();
+        Holder<Chemical> chemicalHolder = chemicalStack.typeHolder();
         ChemicalReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getChemicalReplicatorRecipe(chemicalHolder);
         if (recipe != null) {
             return new ChemicalReplicatorIRecipeSingle(

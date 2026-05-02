@@ -14,6 +14,7 @@ import mekanism.api.RelativeSide;
 import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -29,6 +30,7 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.Mekanism;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
@@ -59,19 +61,24 @@ import mekanism.common.util.StatUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
+import com.mojang.serialization.Codec;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.LongStream;
 
 public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<PlantingRecipe> implements IBoundingBlock, IHasDumpButton, ConstantUsageRecipeLookupHandler,
                                        ItemChemicalRecipeLookupHandler<PlantingRecipe> {
@@ -84,8 +91,8 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
             if (secondaryStack.isEmpty()) {
                 return true;
             }
-            ItemStack secondaryOutput = chanceOutput.getMaxSecondaryOutput();
-            return secondaryOutput.isEmpty() || ItemStack.isSameItemSameComponents(secondaryOutput, secondaryStack);
+            ItemStackTemplate secondaryOutput = chanceOutput.getMaxSecondaryOutput();
+            return secondaryOutput == null || ItemStack.isSameItemSameComponents(secondaryStack, secondaryOutput);
         }
         return false;
     };
@@ -101,8 +108,8 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
-    private IInputHandler<@NotNull ItemStack>[] inputHandlers;
-    private final ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
+    private IInputHandler<Item, @NotNull ItemStack>[] inputHandlers;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
     private IOutputHandler<ChanceOutput>[] outputHandlers;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItem", docPlaceholder = "chemical item (extra) slot")
@@ -136,7 +143,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     @Override
     public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        chemicalTank = BasicChemicalTank.inputModern(TileEntityPlantingStation.MAX_GAS * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener));
+        chemicalTank = BasicChemicalTank.input(TileEntityPlantingStation.MAX_GAS * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener));
         builder.addTank(chemicalTank);
         return builder.build();
     }
@@ -223,7 +230,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     protected boolean isCachedRecipeValid(@Nullable CachedRecipe<PlantingRecipe> cached, @NotNull ItemStack stack) {
         if (cached != null) {
             PlantingRecipe cachedRecipe = cached.getRecipe();
-            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.getTypeHolder()));
+            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.getType()));
         }
         return false;
     }
@@ -260,11 +267,14 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
-        if (nbt.contains(SerializationConstants.USED_SO_FAR, Tag.TAG_LONG_ARRAY)) {
-            long[] savedUsed = nbt.getLongArray(SerializationConstants.USED_SO_FAR);
-            if (tier.processes != savedUsed.length) {
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        Optional<LongStream> savedUsage = input.read(SerializationConstants.USED_SO_FAR, Codec.LONG_STREAM);
+        if (savedUsage.isPresent()) {
+            long[] savedUsed = savedUsage.get().toArray();
+            if (tier.processes > savedUsed.length) {
+                // If we have more elements than were saved make sure to zero everything so that the ones past the end
+                // get properly reset
                 Arrays.fill(usedSoFar, 0);
             }
             for (int i = 0; i < tier.processes && i < savedUsed.length; i++) {
@@ -276,9 +286,9 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags, @NotNull HolderLookup.Provider provider) {
-        super.saveAdditional(nbtTags, provider);
-        nbtTags.putLongArray(SerializationConstants.USED_SO_FAR, Arrays.copyOf(usedSoFar, usedSoFar.length));
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.store(SerializationConstants.USED_SO_FAR, Codec.LONG_STREAM, Arrays.stream(usedSoFar));
     }
 
     @Override
@@ -299,13 +309,13 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof PlantingUpgradeData data) {
             // Generic factory upgrade data handling
-            super.parseUpgradeData(provider, upgradeData);
+            super.parseUpgradeData(upgradeData, provider);
             // Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
-            chemicalTank.deserializeNBT(provider, data.stored.serializeNBT(provider));
-            chemicalSlot.deserializeNBT(provider, data.chemicalSlot.serializeNBT(provider));
+            ContainerType.CHEMICAL.copy(data.chemicalTank, chemicalTank);
+            ContainerType.ITEM.copy(data.chemicalSlot, chemicalSlot);
             System.arraycopy(data.usedSoFar, 0, usedSoFar, 0, data.usedSoFar.length);
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
@@ -316,7 +326,7 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     @Override
     public PlantingUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new PlantingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, usedSoFar, chemicalTank, energySlot, chemicalSlot,
-                inputSlots, outputSlots, isSorting(), getComponents());
+                inputSlots, outputSlots, isSorting(), getComponents(), problemPath());
     }
 
     @Override

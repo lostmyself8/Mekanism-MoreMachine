@@ -2,10 +2,10 @@ package com.jerry.mekmm.common;
 
 import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 
+import net.minecraft.util.TriState;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 
 public class MoreMachinePlayerTracker {

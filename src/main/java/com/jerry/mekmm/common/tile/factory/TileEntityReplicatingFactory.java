@@ -12,6 +12,7 @@ import com.jerry.mekmm.common.util.ValidatorUtils;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -23,6 +24,7 @@ import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.Mekanism;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
@@ -77,7 +79,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
 
     public static HashMap<String, Integer> customRecipeMap = ValidatorUtils.getRecipeFromConfig(MoreMachineConfig.general.itemReplicatorRecipe.get());
 
-    private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
+    private final ILongInputHandler<Chemical, ChemicalStack> chemicalInputHandler;
     // 化学品存储槽
     @Getter
     @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class, methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" }, docPlaceholder = "chemical tank")
@@ -105,7 +107,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
     @Override
     public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        chemicalTank = BasicChemicalTank.inputModern(MAX_GAS * tier.processes, TileEntityReplicatingFactory::isValidChemicalInput, markAllMonitorsChanged(listener));
+        chemicalTank = BasicChemicalTank.input(MAX_GAS * tier.processes, TileEntityReplicatingFactory::isValidChemicalInput, markAllMonitorsChanged(listener));
         builder.addTank(chemicalTank);
         return builder.build();
     }
@@ -147,7 +149,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
 
     @Override
     public boolean isValidInputItem(ItemStack stack) {
-        return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.getItemHolder()) != null;
+        return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.typeHolder()) != null;
     }
 
     @Override
@@ -182,7 +184,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
         if (chemicalStack.isEmpty() || itemStack.isEmpty()) {
             return null;
         }
-        Holder<Item> itemHolder = itemStack.getItemHolder();
+        Holder<Item> itemHolder = itemStack.typeHolder();
         ItemReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(itemHolder);
         if (recipe != null) {
             return new ReplicatorIRecipeSingle(
@@ -199,13 +201,13 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof AdvancedMachineUpgradeData data) {
             // Generic factory upgrade data handling
-            super.parseUpgradeData(provider, upgradeData);
+            super.parseUpgradeData(upgradeData, provider);
             // Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
-            chemicalTank.deserializeNBT(provider, data.stored.serializeNBT(provider));
-            chemicalSlot.deserializeNBT(provider, data.chemicalSlot.serializeNBT(provider));
+            ContainerType.CHEMICAL.copy(data.stored, chemicalTank);
+            ContainerType.ITEM.copy(data.chemicalSlot, chemicalSlot);
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
         }
@@ -214,7 +216,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
     @Override
     public @Nullable AdvancedMachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, null, chemicalTank, chemicalSlot, energySlot,
-                inputSlots, outputSlots, isSorting(), getComponents());
+                inputSlots, outputSlots, isSorting(), getComponents(), problemPath());
     }
 
     @Override

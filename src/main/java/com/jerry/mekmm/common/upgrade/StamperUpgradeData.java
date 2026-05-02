@@ -10,6 +10,7 @@ import mekanism.common.tile.interfaces.IRedstoneControl.RedstoneControl;
 import mekanism.common.upgrade.MachineUpgradeData;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.util.ProblemReporter;
 
 import java.util.List;
 
@@ -19,16 +20,17 @@ public class StamperUpgradeData extends MachineUpgradeData {
 
     // Stamper Constructor
     public StamperUpgradeData(HolderLookup.Provider provider, boolean redstone, RedstoneControl controlType, IEnergyContainer energyContainer, int operatingTicks,
-                              EnergyInventorySlot energySlot, InputInventorySlot extraSlot, InputInventorySlot inputSlot, OutputInventorySlot outputSlot, List<ITileComponent> components) {
-        super(provider, redstone, controlType, energyContainer, operatingTicks, energySlot, inputSlot, outputSlot, components);
+                              EnergyInventorySlot energySlot, InputInventorySlot extraSlot, InputInventorySlot inputSlot, OutputInventorySlot outputSlot,
+                              List<ITileComponent> components, ProblemReporter.PathElement problemPath) {
+        super(provider, redstone, controlType, energyContainer, operatingTicks, energySlot, inputSlot, outputSlot, components, problemPath);
         this.extraSlot = extraSlot;
     }
 
     // Stamper Factory Constructor
     public StamperUpgradeData(HolderLookup.Provider provider, boolean redstone, RedstoneControl controlType, IEnergyContainer energyContainer, int[] progress,
                               EnergyInventorySlot energySlot, InputInventorySlot extraSlot, List<IInventorySlot> inputSlots, List<IInventorySlot> outputSlots, boolean sorting,
-                              List<ITileComponent> components) {
-        super(provider, redstone, controlType, energyContainer, progress, energySlot, inputSlots, outputSlots, sorting, components);
+                              List<ITileComponent> components, ProblemReporter.PathElement problemPath) {
+        super(provider, redstone, controlType, energyContainer, progress, energySlot, inputSlots, outputSlots, sorting, components, problemPath);
         this.extraSlot = extraSlot;
     }
 }

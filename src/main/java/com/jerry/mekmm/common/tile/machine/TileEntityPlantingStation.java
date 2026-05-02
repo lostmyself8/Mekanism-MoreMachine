@@ -13,6 +13,7 @@ import mekanism.api.RelativeSide;
 import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.functions.ConstantPredicates;
@@ -63,10 +64,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import lombok.Getter;
@@ -102,8 +105,8 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     public IChemicalTank chemicalTank;
 
     private final IOutputHandler<ChanceOutput> outputHandler;
-    private final IInputHandler<ItemStack> itemInputHandler;
-    private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
+    private final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInput", docPlaceholder = "input slot")
     InputInventorySlot inputSlot;
@@ -154,7 +157,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(chemicalTank = BasicChemicalTank.createModern(MAX_GAS, allowExtractingChemical() ? ConstantPredicates.alwaysTrueBi() : ConstantPredicates.notExternal(),
+        builder.addTank(chemicalTank = BasicChemicalTank.create(MAX_GAS, allowExtractingChemical() ? ConstantPredicates.alwaysTrueBi() : ConstantPredicates.notExternal(),
                 (gas, automationType) -> containsRecipeBA(inputSlot.getStack(), gas), this::containsRecipeB, recipeCacheListener));
         return builder.build();
     }
@@ -247,7 +250,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     @Override
     public @NotNull PlantingUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new PlantingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), usedSoFar, chemicalTank, energySlot, chemicalSlot, inputSlot,
-                mainOutputSlot, secondaryOutputSlot, getComponents());
+                mainOutputSlot, secondaryOutputSlot, getComponents(), problemPath());
     }
 
     @Override
@@ -256,15 +259,15 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
-        usedSoFar = nbt.getLong(SerializationConstants.USED_SO_FAR);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        usedSoFar = input.getLongOr(SerializationConstants.USED_SO_FAR, usedSoFar);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags, @NotNull HolderLookup.Provider provider) {
-        super.saveAdditional(nbtTags, provider);
-        nbtTags.putLong(SerializationConstants.USED_SO_FAR, usedSoFar);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong(SerializationConstants.USED_SO_FAR, usedSoFar);
     }
 
     @Override

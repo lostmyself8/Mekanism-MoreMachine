@@ -31,13 +31,13 @@ import mekanism.common.util.*;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidType;
 
@@ -182,9 +182,15 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.@NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
-        operatingTicks = nbt.getInt(SerializationConstants.PROGRESS);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt(SerializationConstants.PROGRESS, operatingTicks);
+    }
+
+    @Override
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        operatingTicks = input.getIntOr(SerializationConstants.PROGRESS, operatingTicks);
     }
 
     @Override
@@ -224,7 +230,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableBoolean.create(this::usedEnergy, value -> usedEnergy = value));
-        container.track(SyncableBoolean.create(this::getNotBlocking, value -> noBlocking = value));
+        container.track(SyncableBoolean.create(this::usedEnergy, v -> usedEnergy = v));
+        container.track(SyncableBoolean.create(this::getNotBlocking, v -> noBlocking = v));
     }
 }

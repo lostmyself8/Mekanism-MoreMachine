@@ -33,16 +33,16 @@ import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
-import mekanism.common.util.NBTUtils;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import lombok.Getter;
@@ -191,19 +191,19 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     @Override
-    public void writeSustainedData(HolderLookup.Provider provider, CompoundTag data) {
-        super.writeSustainedData(provider, data);
-        data.putBoolean(MoreMachineSerializationConstants.CHARGE_EQUIPMENT, getChargeEquipment());
-        data.putBoolean(MoreMachineSerializationConstants.CHARGE_INVENTORY, getChargeInventory());
-        data.putBoolean(MoreMachineSerializationConstants.CHARGE_CURIOS, getChargeCurios());
+    public void writeSustainedData(@NotNull ValueOutput output) {
+        super.writeSustainedData(output);
+        output.putBoolean(MoreMachineSerializationConstants.CHARGE_EQUIPMENT, getChargeEquipment());
+        output.putBoolean(MoreMachineSerializationConstants.CHARGE_INVENTORY, getChargeInventory());
+        output.putBoolean(MoreMachineSerializationConstants.CHARGE_CURIOS, getChargeCurios());
     }
 
     @Override
-    public void readSustainedData(HolderLookup.Provider provider, CompoundTag data) {
-        super.readSustainedData(provider, data);
-        NBTUtils.setBooleanIfPresent(data, MoreMachineSerializationConstants.CHARGE_EQUIPMENT, value -> chargeEquipment = value);
-        NBTUtils.setBooleanIfPresent(data, MoreMachineSerializationConstants.CHARGE_INVENTORY, value -> chargeInventory = value);
-        NBTUtils.setBooleanIfPresent(data, MoreMachineSerializationConstants.CHARGE_CURIOS, value -> chargeCurios = value);
+    public void readSustainedData(@NotNull ValueInput input) {
+        super.readSustainedData(input);
+        chargeEquipment = input.getBooleanOr(MoreMachineSerializationConstants.CHARGE_EQUIPMENT, chargeEquipment);
+        chargeInventory = input.getBooleanOr(MoreMachineSerializationConstants.CHARGE_INVENTORY, chargeInventory);
+        chargeCurios = input.getBooleanOr(MoreMachineSerializationConstants.CHARGE_CURIOS, chargeCurios);
     }
 
     public void toggleChargeEquipment() {
@@ -246,7 +246,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     @Override
-    protected void applyImplicitComponents(@NotNull DataComponentInput input) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter input) {
         super.applyImplicitComponents(input);
         chargeEquipment = input.getOrDefault(MoreMachineDataComponents.CHARGE_EQUIPMENT, chargeEquipment);
         chargeInventory = input.getOrDefault(MoreMachineDataComponents.CHARGE_INVENTORY, chargeInventory);
@@ -256,9 +256,9 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableBoolean.create(this::getChargeEquipment, value -> chargeEquipment = value));
-        container.track(SyncableBoolean.create(this::getChargeInventory, value -> chargeInventory = value));
-        container.track(SyncableBoolean.create(this::getChargeCurios, value -> chargeCurios = value));
+        container.track(SyncableBoolean.create(this::getChargeEquipment, v -> chargeEquipment = v));
+        container.track(SyncableBoolean.create(this::getChargeInventory, v -> chargeInventory = v));
+        container.track(SyncableBoolean.create(this::getChargeCurios, v -> chargeCurios = v));
     }
 
     // Methods relating to IComputerTile

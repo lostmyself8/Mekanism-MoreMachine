@@ -17,7 +17,9 @@ import mekanism.common.tier.FactoryTier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -28,8 +30,8 @@ import java.util.Set;
 
 public abstract class TileEntityMoreMachineItemToItemFactory<RECIPE extends MekanismRecipe<?>> extends TileEntityMoreMachineFactory<RECIPE> {
 
-    protected IInputHandler<@NotNull ItemStack>[] inputHandlers;
-    protected IOutputHandler<@NotNull ItemStack>[] outputHandlers;
+    protected IInputHandler<Item, @NotNull ItemStack>[] inputHandlers;
+    protected IOutputHandler<@NotNull ItemStackTemplate>[] outputHandlers;
 
     protected TileEntityMoreMachineItemToItemFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes) {
         super(blockProvider, pos, state, errorTypes, globalErrorTypes);

@@ -10,6 +10,7 @@ import com.jerry.mekmm.common.util.MoreMachineUtils;
 import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -55,10 +56,13 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
@@ -116,11 +120,11 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     protected EnergyInventorySlot energySlot;
-    protected IInputHandler<@NotNull ChemicalStack>[] chemicalInputHandlers;
+    protected IInputHandler<Chemical, @NotNull ChemicalStack>[] chemicalInputHandlers;
     protected IOutputHandler<@NotNull ChemicalStack>[] chemicalOutputHandlers;
-    protected IInputHandler<@NotNull ItemStack>[] itemInputHandlers;
-    protected IOutputHandler<@NotNull ItemStack>[] itemOutputHandlers;
-    protected IInputHandler<@NotNull FluidStack>[] fluidInputHandlers;
+    protected IInputHandler<Item, @NotNull ItemStack>[] itemInputHandlers;
+    protected IOutputHandler<@NotNull ItemStackTemplate>[] itemOutputHandlers;
+    protected IInputHandler<Fluid, @NotNull FluidStack>[] fluidInputHandlers;
     protected IOutputHandler<@NotNull FluidStack>[] fluidOutputHandlers;
 
     protected TileEntityAdvancedFactoryBase(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes) {

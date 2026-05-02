@@ -14,6 +14,7 @@ import com.jerry.mekmm.common.util.ValidatorUtils;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.recipes.cache.CachedRecipe;
@@ -62,6 +63,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import org.jetbrains.annotations.NotNull;
@@ -104,9 +106,9 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
 
     private MachineEnergyContainer<TileEntityFluidReplicator> energyContainer;
 
-    private final IInputHandler<@NotNull FluidStack> fluidInputHandler;
-    private final IOutputHandler<@NotNull FluidStack> fluidOutputHandler;
-    private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
+    private final IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler;
+    private final IOutputHandler<@NotNull FluidStackTemplate> fluidOutputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputTankOutputSlot", docPlaceholder = "input tank output slot")
     FluidInventorySlot inputTankOutputSlot;
@@ -158,7 +160,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(uuTank = BasicChemicalTank.inputModern(MAX_GAS, TileEntityFluidReplicator::isValidChemicalInput, recipeCacheListener));
+        builder.addTank(uuTank = BasicChemicalTank.input(MAX_GAS, TileEntityFluidReplicator::isValidChemicalInput, recipeCacheListener));
         return builder.build();
     }
 
@@ -192,7 +194,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
     }
 
     public static boolean isValidFluidInput(FluidStack stack) {
-        return IMoreMachineDataMapTypes.INSTANCE.getFluidReplicatorRecipe(stack.getFluidHolder()) != null;
+        return IMoreMachineDataMapTypes.INSTANCE.getFluidReplicatorRecipe(stack.typeHolder()) != null;
     }
 
     public static boolean isValidChemicalInput(ChemicalStack stack) {
@@ -261,7 +263,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         // new FluidStack(fluidHolder, FluidType.BUCKET_VOLUME));
         // }
 
-        Holder<Fluid> fluidHolder = fluidStack.getFluidHolder();
+        Holder<Fluid> fluidHolder = fluidStack.typeHolder();
         FluidReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getFluidReplicatorRecipe(fluidHolder);
         if (recipe != null) {
             return new FluidReplicatorIRecipeSingle(

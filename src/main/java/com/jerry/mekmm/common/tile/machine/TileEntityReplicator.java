@@ -14,6 +14,7 @@ import com.jerry.mekmm.common.util.ValidatorUtils;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.recipes.cache.CachedRecipe;
@@ -25,7 +26,6 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
-import mekanism.common.Mekanism;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
@@ -49,7 +49,6 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
-import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -57,6 +56,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -90,9 +90,9 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
 
     private MachineEnergyContainer<TileEntityReplicator> energyContainer;
 
-    protected final IInputHandler<@NotNull ItemStack> itemInputHandler;
-    private final IOutputHandler<ItemStack> outputHandler;
-    private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
+    protected final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
+    private final IOutputHandler<ItemStackTemplate> outputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getItemInput", docPlaceholder = "item input slot")
     InputInventorySlot inputSlot;
@@ -122,7 +122,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(chemicalTank = BasicChemicalTank.inputModern(MAX_GAS, TileEntityReplicator::isValidChemicalInput, recipeCacheListener));
+        builder.addTank(chemicalTank = BasicChemicalTank.input(MAX_GAS, TileEntityReplicator::isValidChemicalInput, recipeCacheListener));
         return builder.build();
     }
 
@@ -157,7 +157,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
 
     public static boolean isValidItemInput(ItemStack stack) {
-        return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.getItemHolder()) != null;
+        return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.typeHolder()) != null;
     }
 
     @Override
@@ -224,7 +224,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
         if (chemicalStack.isEmpty() || itemStack.isEmpty()) {
             return null;
         }
-        Holder<Item> itemHolder = itemStack.getItemHolder();
+        Holder<Item> itemHolder = itemStack.typeHolder();
         ItemReplicatorRecipe recipe = IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(itemHolder);
         if (recipe != null) {
             return new ReplicatorIRecipeSingle(
@@ -241,22 +241,9 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
-        if (upgradeData instanceof AdvancedMachineUpgradeData data) {
-            // Generic factory upgrade data handling
-            super.parseUpgradeData(provider, upgradeData);
-            // Copy the contents using NBT so that if it is not actually valid due to a reload we don't crash
-            chemicalTank.deserializeNBT(provider, data.stored.serializeNBT(provider));
-            chemicalSlot.deserializeNBT(provider, data.chemicalSlot.serializeNBT(provider));
-        } else {
-            Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
-        }
-    }
-
-    @Override
     public @Nullable AdvancedMachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), 0, chemicalTank, chemicalSlot, energySlot,
-                inputSlot, outputSlot, getComponents());
+                inputSlot, outputSlot, getComponents(), problemPath());
     }
 
     // Methods relating to IComputerTile

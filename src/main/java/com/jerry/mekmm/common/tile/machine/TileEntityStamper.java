@@ -40,7 +40,9 @@ import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -60,9 +62,9 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     public static final int BASE_TICKS_REQUIRED = 10 * SharedConstants.TICKS_PER_SECOND;
 
-    private final IOutputHandler<@NotNull ItemStack> outputHandler;
-    private final IInputHandler<@NotNull ItemStack> itemInputHandler;
-    private final IInputHandler<@NotNull ItemStack> moldInputHandler;
+    private final IOutputHandler<@NotNull ItemStackTemplate> outputHandler;
+    private final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
+    private final IInputHandler<Item, @NotNull ItemStack> moldInputHandler;
 
     @Getter
     private MachineEnergyContainer<TileEntityStamper> energyContainer;
@@ -152,7 +154,7 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
     @NotNull
     @Override
     public StamperUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new StamperUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot, moldInputSlot, itemInputSlot, outputSlot, getComponents());
+        return new StamperUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot, moldInputSlot, itemInputSlot, outputSlot, getComponents(), problemPath());
     }
 
     @Override

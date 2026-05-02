@@ -103,7 +103,7 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
     }
 
     protected ISyncableData syncableMaxOutput() {
-        return SyncableLong.create(this::getMaxOutput, value -> maxOutput = value);
+        return SyncableLong.create(this::getMaxOutput, v -> maxOutput = v);
     }
 
     @ComputerMethod(methodDescription = "Get the amount of energy produced by this generator in the last tick.")
