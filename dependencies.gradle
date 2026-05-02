@@ -8,7 +8,12 @@ dependencies {
 //    compileOnly(forge.emi) // no 26.1 build
 //    modCompileOnly(forge.jer)
 
-    // Mekanism
+    // Mekanism (jarjar embedded)
+    jarJar(forge.mekanism)
+    jarJar(forge.mekanism.additions)
+    jarJar(forge.mekanism.generators)
+    jarJar(forge.mekanism.tools)
+
     compileOnly(forge.mekanism)
     compileOnly(forge.mekanism.additions)
     compileOnly(forge.mekanism.generators)
