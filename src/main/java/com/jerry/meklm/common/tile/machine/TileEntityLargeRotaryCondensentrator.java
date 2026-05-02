@@ -69,6 +69,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -76,11 +77,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.redstone.Redstone;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -107,14 +110,15 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             NOT_ENOUGH_SPACE_FLUID_OUTPUT_ERROR,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private final IOutputHandler<@NotNull ChemicalStack> chemicalOutputHandler;
-    private final IOutputHandler<@NotNull FluidStack> fluidOutputHandler;
+    private final IOutputHandler<@NotNull FluidStackTemplate> fluidOutputHandler;
     private final IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler;
     private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @Nullable
     private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> leftOutputCaches;
     @Nullable
-    private List<BlockCapabilityCache<IFluidHandler, @Nullable Direction>> rightOutputCaches;
+    @SuppressWarnings("removal")
+    private List<BlockCapabilityCache<net.neoforged.neoforge.fluids.capability.IFluidHandler, @Nullable Direction>> rightOutputCaches;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded",
@@ -204,7 +208,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     }
 
     private boolean isValidChemical(@NotNull ChemicalStack chemical) {
-        return getRecipeType().getInputCache().containsInput(level, chemical);
+        return getRecipeType().getInputCache().containsInputChemical(level, chemical);
     }
 
     @NotNull
@@ -217,7 +221,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     }
 
     private boolean isValidFluid(@NotNull FluidStack fluidStack) {
-        return getRecipeType().getInputCache().containsInput(level, fluidStack);
+        return getRecipeType().getInputCache().containsInputFluid(level, fluidStack);
     }
 
     @NotNull
@@ -308,19 +312,19 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     }
 
     @Override
-    public void readSustainedData(HolderLookup.Provider provider, @NotNull CompoundTag data) {
-        super.readSustainedData(provider, data);
-        NBTUtils.setBooleanIfPresent(data, SerializationConstants.MODE, value -> mode = value);
+    public void readSustainedData(@NotNull ValueInput input) {
+        super.readSustainedData(input);
+        mode = input.getBooleanOr(SerializationConstants.MODE, mode);
     }
 
     @Override
-    public void writeSustainedData(HolderLookup.Provider provider, CompoundTag data) {
-        super.writeSustainedData(provider, data);
-        data.putBoolean(SerializationConstants.MODE, mode);
+    public void writeSustainedData(@NotNull ValueOutput output) {
+        super.writeSustainedData(output);
+        output.putBoolean(SerializationConstants.MODE, mode);
     }
 
     @Override
-    protected void applyImplicitComponents(@NotNull BlockEntity.DataComponentInput input) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter input) {
         super.applyImplicitComponents(input);
         mode = input.getOrDefault(MekanismDataComponents.ROTARY_MODE, mode);
     }

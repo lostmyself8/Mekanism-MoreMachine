@@ -295,7 +295,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         // Get the brightness of the sun; note that there are some implementations that depend on the base
         // brightness function which doesn't take into account the fact that rain can't occur in some biomes.
         // 这里会计算对应的峰值，因此不需要在之前计算
-        float brightness = WorldUtils.getSunBrightness(level, 1.0F);
+        float brightness = WorldUtils.getSunBrightness(level, worldPosition);
         float generationMultiplier = solarCheck.getProductionMultiplier();
         for (LargeSNA check : solarChecks) {
             generationMultiplier += check.getProductionMultiplier();
@@ -431,7 +431,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         public LargeSNA(Level world, BlockPos pos) {
             super(world, pos);
             // Recheck between every 10-30 ticks, to not end up checking each position each tick
-            recheckFrequency = Mth.nextInt(world.random, MekanismUtils.TICKS_PER_HALF_SECOND, MekanismUtils.TICKS_PER_HALF_SECOND + SharedConstants.TICKS_PER_SECOND);
+            recheckFrequency = Mth.nextInt(world.getRandom(), MekanismUtils.TICKS_PER_HALF_SECOND, MekanismUtils.TICKS_PER_HALF_SECOND + SharedConstants.TICKS_PER_SECOND);
         }
 
         @Override
@@ -461,7 +461,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
                 if (world.canSeeSky(above)) {
                     // If the spot above can see the sun, check to make sure we can see through the block there
                     BlockState state = world.getBlockState(above);
-                    canSeeSun = !state.liquid() && state.getLightBlock(world, above) <= 0;
+                    canSeeSun = !state.liquid() && state.propagatesSkylightDown();
                 } else {
                     canSeeSun = false;
                 }
