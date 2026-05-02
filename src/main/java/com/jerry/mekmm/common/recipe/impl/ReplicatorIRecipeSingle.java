@@ -1,4 +1,4 @@
-package com.jerry.mekmm.common.recipe.impl;
+﻿package com.jerry.mekmm.common.recipe.impl;
 
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -8,6 +8,7 @@ import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -18,21 +19,20 @@ public class ReplicatorIRecipeSingle extends MMBasicItemStackChemicalToItemStack
      * @param chemicalInput Chemical input.
      * @param output        Output.
      */
-    public ReplicatorIRecipeSingle(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStack output) {
+    public ReplicatorIRecipeSingle(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStackTemplate output) {
         super(itemInput, chemicalInput, output);
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<ReplicatorIRecipeSingle> getSerializer() {
         return null;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<ReplicatorIRecipeSingle> getType() {
         return null;
     }
 
-    @Override
     public String getGroup() {
         return "duplicator";
     }
@@ -42,3 +42,4 @@ public class ReplicatorIRecipeSingle extends MMBasicItemStackChemicalToItemStack
         return new ItemStack(MoreMachineBlocks.REPLICATOR);
     }
 }
+

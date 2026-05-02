@@ -1,4 +1,4 @@
-package com.jerry.mekmm.api.recipes.basic;
+﻿package com.jerry.mekmm.api.recipes.basic;
 
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
@@ -129,3 +129,4 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
         }
     }
 }
+

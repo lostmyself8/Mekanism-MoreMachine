@@ -1,18 +1,17 @@
-package com.jerry.mekmm.api.recipes;
+﻿package com.jerry.mekmm.api.recipes;
 
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.MekanismRecipe;
-import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +34,7 @@ import java.util.function.BiPredicate;
 public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRecipeInput> implements BiPredicate<@NotNull ItemStack, ChemicalStack> {
 
     protected static final RandomSource RANDOM = RandomSource.create();
-    private static final Holder<Item> PLANTING_STATION = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "plating_station"));
+    private static final Holder<Item> PLANTING_STATION = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "plating_station"));
 
     @Override
     public abstract boolean test(ItemStack itemStack, ChemicalStack chemicalStack);
@@ -110,11 +109,10 @@ public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRe
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<PlantingRecipe> getType() {
         return MoreMachineRecipeTypes.TYPE_PLANTING.value();
     }
 
-    @Override
     public String getGroup() {
         return "planting_station";
     }
@@ -123,4 +121,18 @@ public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRe
     public ItemStack getToastSymbol() {
         return new ItemStack(PLANTING_STATION);
     }
+    /**
+     * Represents a precalculated chance based output.
+     */
+    public interface ChanceOutput {
+
+        ItemStack getMainOutput();
+
+        ItemStack getMaxSecondaryOutput();
+
+        ItemStack getSecondaryOutput();
+
+        ItemStack nextSecondaryOutput();
+    }
 }
+

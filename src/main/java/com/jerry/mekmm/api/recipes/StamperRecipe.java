@@ -1,4 +1,4 @@
-package com.jerry.mekmm.api.recipes;
+﻿package com.jerry.mekmm.api.recipes;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -7,9 +7,8 @@ import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -26,7 +25,7 @@ import java.util.function.BiPredicate;
 @NothingNullByDefault
 public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implements BiPredicate<@NotNull ItemStack, @NotNull ItemStack> {
 
-    private static final Holder<Item> STAMPER = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "stamper"));
+    private static final Holder<Item> STAMPER = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "stamper"));
 
     @Override
     public abstract boolean test(ItemStack input, ItemStack extra);
@@ -43,7 +42,7 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
 
     @NotNull
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider provider) {
+    public ItemStack assemble(RecipeInput input) {
         if (!isIncomplete() && input.size() == 2) {
             ItemStack mainInput = input.getItem(0);
             ItemStack extraInput = input.getItem(1);
@@ -60,7 +59,6 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
         return !isIncomplete() && input.size() == 2 && test(input.getItem(0), input.getItem(1));
     }
 
-    @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width * height > 1;
     }
@@ -81,9 +79,6 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
     @Contract(value = "_, _ -> new", pure = true)
     public abstract ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack extra);
 
-    @NotNull
-    @Override
-    public abstract ItemStack getResultItem(@NotNull HolderLookup.Provider provider);
 
     /**
      * For JEI, gets the output representations to display.
@@ -98,11 +93,16 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
     }
 
     @Override
+    public void logMissingTags() {
+        getInput().logMissingTags();
+        getMold().logMissingTags();
+    }
+
+    @Override
     public final RecipeType<StamperRecipe> getType() {
         return MoreMachineRecipeTypes.TYPE_STAMPING.value();
     }
 
-    @Override
     public String getGroup() {
         return "stamper";
     }
@@ -112,3 +112,6 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
         return new ItemStack(STAMPER);
     }
 }
+
+
+

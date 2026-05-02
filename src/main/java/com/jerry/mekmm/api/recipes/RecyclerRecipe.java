@@ -1,4 +1,4 @@
-package com.jerry.mekmm.api.recipes;
+﻿package com.jerry.mekmm.api.recipes;
 
 import com.jerry.mekmm.Mekmm;
 
@@ -76,11 +76,15 @@ public abstract class RecyclerRecipe extends MekanismRecipe<SingleRecipeInput> i
     }
 
     @Override
+    public void logMissingTags() {
+        getInput().logMissingTags();
+    }
+
+    @Override
     public final RecipeType<RecyclerRecipe> getType() {
         return MoreMachineRecipeTypes.TYPE_RECYCLER.value();
     }
 
-    @Override
     public String getGroup() {
         return "recycler";
     }
@@ -125,3 +129,6 @@ public abstract class RecyclerRecipe extends MekanismRecipe<SingleRecipeInput> i
         ItemStack nextChanceOutput();
     }
 }
+
+
+

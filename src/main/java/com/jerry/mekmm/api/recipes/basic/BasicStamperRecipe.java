@@ -1,4 +1,4 @@
-package com.jerry.mekmm.api.recipes.basic;
+﻿package com.jerry.mekmm.api.recipes.basic;
 
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
@@ -6,7 +6,6 @@ import com.jerry.mekmm.api.recipes.StamperRecipe;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
@@ -60,11 +59,6 @@ public class BasicStamperRecipe extends StamperRecipe {
         return output.copy();
     }
 
-    @NotNull
-    @Override
-    public ItemStack getResultItem(@NotNull HolderLookup.Provider provider) {
-        return output.copy();
-    }
 
     @Override
     public List<ItemStack> getOutputDefinition() {
@@ -99,3 +93,5 @@ public class BasicStamperRecipe extends StamperRecipe {
         return hash;
     }
 }
+
+

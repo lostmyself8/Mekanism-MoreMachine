@@ -49,13 +49,12 @@ public class PlantingRecipeSerializer {
         StreamCodec<RegistryFriendlyByteBuf, BasicPlantingRecipe> streamCodec = StreamCodec.composite(
               ItemStackIngredient.STREAM_CODEC, PlantingRecipe::getItemInput,
               IngredientCreatorAccess.chemicalStack().streamCodec(), PlantingRecipe::getChemicalInput,
-              ItemStack.OPTIONAL_STREAM_CODEC, recipe -> recipe.getMainOutputRaw().orElse(ItemStack.EMPTY),`r`n              ItemStack.OPTIONAL_STREAM_CODEC, recipe -> recipe.getSecondaryOutputRaw().orElse(ItemStack.EMPTY),
+              ItemStack.OPTIONAL_STREAM_CODEC, recipe -> recipe.getMainOutputRaw().orElse(ItemStack.EMPTY),
+              ItemStack.OPTIONAL_STREAM_CODEC, recipe -> recipe.getSecondaryOutputRaw().orElse(ItemStack.EMPTY),
               ByteBufCodecs.DOUBLE, PlantingRecipe::getSecondaryChance,
-              ByteBufCodecs.BOOL, BasicPlantingRecipe::perTickUsage,
-              (itemInput, chemicalInput, mainOutput, secondaryOutput, secondChance, perTickUsage) ->
-                    factory.apply(itemInput, chemicalInput, mainOutput, secondaryOutput, secondChance, perTickUsage)
+              ByteBufCodecs.BOOL, PlantingRecipe::perTickUsage,
+              factory
         );
         return new RecipeSerializer<>(codec, streamCodec);
     }
 }
-
