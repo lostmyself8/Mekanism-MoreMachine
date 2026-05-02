@@ -46,9 +46,9 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        renderInventoryTextAndOther(guiGraphics, GeneratorsLang.GAS_BURN_RATE.translate(tile.getUsed()));
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        renderInventoryTextAndOther(GuiGraphicsExtractor, GeneratorsLang.GAS_BURN_RATE.translate(tile.getUsed()));
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

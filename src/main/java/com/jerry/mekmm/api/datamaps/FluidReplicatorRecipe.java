@@ -5,7 +5,7 @@ import com.jerry.mekmm.api.MoreMachineSerializationConstants;
 import com.jerry.mekmm.common.tile.machine.TileEntityFluidReplicator;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,7 +15,7 @@ public record FluidReplicatorRecipe(int inputAmount, long UUAmount, int outputAm
     private static final int FLUID_TANK_CAP = TileEntityFluidReplicator.MAX_FLUID;
     private static final long CHEMICAL_TANK_CAP = TileEntityFluidReplicator.MAX_GAS;
 
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "fluid_replicator");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "fluid_replicator");
 
     private static final Codec<Integer> INPUT_AMOUNT_CODEC = Codec.intRange(1, FLUID_TANK_CAP / 2);
     private static final Codec<Long> UU_AMOUNT_CODEC = MoreMachineUtils.longRange(1L, CHEMICAL_TANK_CAP);

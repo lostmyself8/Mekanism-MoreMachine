@@ -10,7 +10,7 @@ import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Util.ProblemReporter.PathElement;
+import net.minecraft.util.ProblemReporter.PathElement;
 
 import java.util.Collections;
 import java.util.List;

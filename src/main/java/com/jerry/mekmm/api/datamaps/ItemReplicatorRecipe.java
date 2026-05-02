@@ -5,7 +5,7 @@ import com.jerry.mekmm.api.MoreMachineSerializationConstants;
 import com.jerry.mekmm.common.tile.machine.TileEntityReplicator;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,7 +14,7 @@ public record ItemReplicatorRecipe(long UUAmount) {
 
     private static final long TANK_CAP = TileEntityReplicator.MAX_GAS;
 
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "item_replicator");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "item_replicator");
 
     private static final Codec<Long> UU_AMOUNT_CODEC = MoreMachineUtils.longRange(1L, TANK_CAP);
 

@@ -5,8 +5,8 @@ import com.jerry.mekmm.Mekmm;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.ILangEntry;
 
-import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.resources.Identifier;
 
 @NothingNullByDefault
 public enum APIMoreMachineLang implements ILangEntry {
@@ -18,7 +18,7 @@ public enum APIMoreMachineLang implements ILangEntry {
     private final String key;
 
     APIMoreMachineLang(String type, String path) {
-        this(Util.makeDescriptionId(type, ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, path)));
+        this(Util.makeDescriptionId(type, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, path)));
     }
 
     APIMoreMachineLang(String key) {

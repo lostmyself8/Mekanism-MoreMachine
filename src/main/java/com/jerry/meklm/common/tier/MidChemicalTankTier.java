@@ -5,7 +5,7 @@ import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 import mekanism.api.tier.BaseTier;
 import mekanism.common.config.value.CachedLongValue;
 
-import net.minecraft.util.Util.StringRepresentable;
+import net.minecraft.util.StringRepresentable;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import lombok.Getter;
