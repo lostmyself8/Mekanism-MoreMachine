@@ -23,6 +23,7 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
@@ -41,7 +42,6 @@ import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookup
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
 import mekanism.common.registries.MekanismFluids;
-import mekanism.common.tile.component.ITileComponent;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
@@ -247,34 +247,31 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof NutritionLiquifyingUpgradeData data) {
             redstone = data.redstone;
             setControlType(data.controlType);
             getEnergyContainer().setEnergy(data.energyContainer.getEnergy());
             sorting = data.sorting;
-            energySlot.deserializeNBT(provider, data.energySlot.serializeNBT(provider));
+            ContainerType.ITEM.copy(data.energySlot, energySlot);
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.inputSlots.size(); i++) {
-                // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
-                inputItemSlots.get(i).deserializeNBT(provider, data.inputSlots.get(i).serializeNBT(provider));
+                ContainerType.ITEM.copy(data.inputSlots.get(i), inputItemSlots.get(i));
             }
             for (int i = 0; i < data.outputSlots.size(); i++) {
                 outputItemSlots.get(i).setStack(data.outputSlots.get(i).getStack());
             }
-            for (ITileComponent component : getComponents()) {
-                component.read(data.components, provider);
-            }
-            fluidTank.deserializeNBT(provider, data.fluidTank.serializeNBT(provider));
+            readUpgradeComponents(provider, data.components);
+            ContainerType.FLUID.copy(data.fluidTank, fluidTank);
         } else {
-            super.parseUpgradeData(provider, upgradeData);
+            super.parseUpgradeData(upgradeData, provider);
         }
     }
 
     @Override
     public @Nullable NutritionLiquifyingUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress,
-                energySlot, inputItemSlots, outputItemSlots, fluidTank, isSorting(), getComponents());
+                energySlot, inputItemSlots, outputItemSlots, fluidTank, isSorting(), getComponents(), problemPath());
     }
 
     // Methods relating to IComputerTile

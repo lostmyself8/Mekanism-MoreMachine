@@ -43,16 +43,17 @@ import mekanism.common.recipe.lookup.IRecipeLookupHandler;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tier.FactoryTier;
+import mekanism.common.tile.component.ITileComponent;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.MekanismUtils;
-import mekanism.common.util.NBTUtils;
 import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -62,10 +63,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -356,10 +357,11 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
-        if (nbt.contains(SerializationConstants.PROGRESS, Tag.TAG_INT_ARRAY)) {
-            int[] savedProgress = nbt.getIntArray(SerializationConstants.PROGRESS);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        Optional<int[]> optionalProgress = input.getIntArray(SerializationConstants.PROGRESS);
+        if (optionalProgress.isPresent()) {
+            int[] savedProgress = optionalProgress.get();
             if (tier.processes != savedProgress.length) {
                 Arrays.fill(progress, 0);
             }
@@ -370,21 +372,21 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags, @NotNull HolderLookup.Provider provider) {
-        super.saveAdditional(nbtTags, provider);
-        nbtTags.putIntArray(SerializationConstants.PROGRESS, Arrays.copyOf(progress, progress.length));
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putIntArray(SerializationConstants.PROGRESS, Arrays.copyOf(progress, progress.length));
     }
 
     @Override
-    public void writeSustainedData(HolderLookup.Provider provider, CompoundTag data) {
-        super.writeSustainedData(provider, data);
-        data.putBoolean(SerializationConstants.SORTING, isSorting());
+    public void writeSustainedData(@NotNull ValueOutput output) {
+        super.writeSustainedData(output);
+        output.putBoolean(SerializationConstants.SORTING, isSorting());
     }
 
     @Override
-    public void readSustainedData(HolderLookup.Provider provider, @NotNull CompoundTag data) {
-        super.readSustainedData(provider, data);
-        NBTUtils.setBooleanIfPresent(data, SerializationConstants.SORTING, value -> sorting = value);
+    public void readSustainedData(@NotNull ValueInput input) {
+        super.readSustainedData(input);
+        sorting = input.getBooleanOr(SerializationConstants.SORTING, sorting);
     }
 
     @Override
@@ -394,7 +396,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     @Override
-    protected void applyImplicitComponents(@NotNull BlockEntity.DataComponentInput input) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter input) {
         super.applyImplicitComponents(input);
         sorting = input.getOrDefault(MekanismDataComponents.SORTING, sorting);
     }

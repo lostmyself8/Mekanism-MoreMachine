@@ -29,6 +29,7 @@ import mekanism.api.recipes.vanilla_input.ReactionRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
@@ -47,7 +48,6 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ITripleRecipeLookupHandler.ItemFluidChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.ItemFluidChemical;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
-import mekanism.common.tile.component.ITileComponent;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
@@ -158,7 +158,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
 
     @Override
     protected void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
-        builder.addTank(inputChemicalTank = BasicChemicalTank.createModern(MAX_CHEMICAL * tier.processes, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputChemicalTank),
+        builder.addTank(inputChemicalTank = BasicChemicalTank.create(MAX_CHEMICAL * tier.processes, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputChemicalTank),
                 ConstantPredicates.alwaysTrueBi(), this::containsRecipeC, ChemicalAttributeValidator.ALWAYS_ALLOW, markAllMonitorsChanged(listener)));
         builder.addTank(outputChemicalTank = BasicChemicalTank.output(MAX_CHEMICAL * tier.processes, markAllMonitorsChanged(listener)));
     }
@@ -326,36 +326,33 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof PRCUpgradeData data) {
             redstone = data.redstone;
             setControlType(data.controlType);
             getEnergyContainer().setEnergy(data.energyContainer.getEnergy());
             sorting = data.sorting;
-            energySlot.deserializeNBT(provider, data.energySlot.serializeNBT(provider));
+            ContainerType.ITEM.copy(data.energySlot, energySlot);
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.inputSlots.size(); i++) {
-                // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
-                inputItemSlots.get(i).deserializeNBT(provider, data.inputSlots.get(i).serializeNBT(provider));
+                ContainerType.ITEM.copy(data.inputSlots.get(i), inputItemSlots.get(i));
             }
             for (int i = 0; i < data.outputSlots.size(); i++) {
                 outputItemSlots.get(i).setStack(data.outputSlots.get(i).getStack());
             }
-            for (ITileComponent component : getComponents()) {
-                component.read(data.components, provider);
-            }
-            inputChemicalTank.deserializeNBT(provider, data.inputChemicalTank.serializeNBT(provider));
-            inputFluidTank.deserializeNBT(provider, data.inputFluidTank.serializeNBT(provider));
-            outputChemicalTank.deserializeNBT(provider, data.outputTank.serializeNBT(provider));
+            readUpgradeComponents(provider, data.components);
+            ContainerType.CHEMICAL.copy(data.inputChemicalTank, inputChemicalTank);
+            ContainerType.FLUID.copy(data.inputFluidTank, inputFluidTank);
+            ContainerType.CHEMICAL.copy(data.outputTank, outputChemicalTank);
         } else {
-            super.parseUpgradeData(provider, upgradeData);
+            super.parseUpgradeData(upgradeData, provider);
         }
     }
 
     @Override
     public @Nullable PRCUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new PRCUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, energySlot,
-                inputChemicalTank, inputFluidTank, inputItemSlots, outputItemSlots, outputChemicalTank, isSorting(), getComponents());
+                inputChemicalTank, inputFluidTank, inputItemSlots, outputItemSlots, outputChemicalTank, isSorting(), getComponents(), problemPath());
     }
 
     @Override

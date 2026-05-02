@@ -19,6 +19,7 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.Mekanism;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
@@ -204,12 +205,12 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof FluidChemicalToChemicalUpgradeData data) {
-            super.parseUpgradeData(provider, upgradeData);
-            fluidTank.deserializeNBT(provider, data.inputTank.serializeNBT(provider));
-            fluidSlot.deserializeNBT(provider, data.fluidInputSlot.serializeNBT(provider));
-            fluidOutputSlot.deserializeNBT(provider, data.fluidOutputSlot.serializeNBT(provider));
+            super.parseUpgradeData(upgradeData, provider);
+            ContainerType.FLUID.copy(data.inputTank, fluidTank);
+            ContainerType.ITEM.copy(data.fluidInputSlot, fluidSlot);
+            ContainerType.ITEM.copy(data.fluidOutputSlot, fluidOutputSlot);
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
         }
@@ -218,7 +219,7 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
     @Override
     public @Nullable FluidChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new FluidChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, null,
-                energySlot, fluidSlot, fluidOutputSlot, inputChemicalTanks, fluidTank, outputChemicalTanks, isSorting(), getComponents());
+                energySlot, fluidSlot, fluidOutputSlot, inputChemicalTanks, fluidTank, outputChemicalTanks, isSorting(), getComponents(), problemPath());
     }
 
     @Override

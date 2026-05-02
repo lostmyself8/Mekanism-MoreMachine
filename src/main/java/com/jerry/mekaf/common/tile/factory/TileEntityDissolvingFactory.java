@@ -23,6 +23,7 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.Mekanism;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
@@ -48,15 +49,17 @@ import mekanism.common.util.StatUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.mojang.serialization.Codec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -120,7 +123,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     @Override
     protected void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addTanks(builder, listener, updateSortingListener);
-        builder.addTank(chemicalTank = BasicChemicalTank.inputModern(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
+        builder.addTank(chemicalTank = BasicChemicalTank.input(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
     }
 
     @Override
@@ -154,7 +157,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ChemicalDissolutionRecipe> cached, @NotNull ItemStack stack) {
         if (cached != null) {
             ChemicalDissolutionRecipe cachedRecipe = cached.getRecipe();
-            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.getTypeHolder()));
+            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.getType()));
         }
         return false;
     }
@@ -228,33 +231,31 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
-        if (nbt.contains(SerializationConstants.USED_SO_FAR, Tag.TAG_LONG_ARRAY)) {
-            long[] savedUsed = nbt.getLongArray(SerializationConstants.USED_SO_FAR);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        input.read(SerializationConstants.USED_SO_FAR, Codec.LONG_STREAM).ifPresentOrElse(savedUsedStream -> {
+            long[] savedUsed = savedUsedStream.toArray();
             if (tier.processes != savedUsed.length) {
                 Arrays.fill(usedSoFar, 0);
             }
             for (int i = 0; i < tier.processes && i < savedUsed.length; i++) {
                 usedSoFar[i] = savedUsed[i];
             }
-        } else {
-            Arrays.fill(usedSoFar, 0);
-        }
+        }, () -> Arrays.fill(usedSoFar, 0));
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags, @NotNull HolderLookup.Provider provider) {
-        super.saveAdditional(nbtTags, provider);
-        nbtTags.putLongArray(SerializationConstants.USED_SO_FAR, Arrays.copyOf(usedSoFar, usedSoFar.length));
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.store(SerializationConstants.USED_SO_FAR, Codec.LONG_STREAM, Arrays.stream(usedSoFar));
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof ItemChemicalToChemicalUpgradeData data) {
-            super.parseUpgradeData(provider, upgradeData);
-            chemicalTank.deserializeNBT(provider, data.inputTank.serializeNBT(provider));
-            chemicalInputSlot.deserializeNBT(provider, data.chemicalSlot.serializeNBT(provider));
+            super.parseUpgradeData(upgradeData, provider);
+            ContainerType.CHEMICAL.copy(data.inputTank, chemicalTank);
+            ContainerType.ITEM.copy(data.chemicalSlot, chemicalInputSlot);
             System.arraycopy(data.usedSoFar, 0, usedSoFar, 0, data.usedSoFar.length);
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
@@ -264,7 +265,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     @Override
     public @Nullable ItemChemicalToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new ItemChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
-                progress, usedSoFar, energySlot, chemicalInputSlot, inputItemSlots, chemicalTank, outputChemicalTanks, isSorting(), getComponents());
+                progress, usedSoFar, energySlot, chemicalInputSlot, inputItemSlots, chemicalTank, outputChemicalTanks, isSorting(), getComponents(), problemPath());
     }
 
     @Override
