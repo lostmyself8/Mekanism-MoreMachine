@@ -11,6 +11,7 @@ import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter.PathElement;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,14 +31,14 @@ public class NutritionLiquifyingUpgradeData implements IUpgradeData {
 
     public NutritionLiquifyingUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                           IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot, InputInventorySlot inputSlot,
-                                          IInventorySlot outputSlot, IExtendedFluidTank fluidTank, List<ITileComponent> components) {
+                                          IInventorySlot outputSlot, IExtendedFluidTank fluidTank, List<ITileComponent> components, PathElement problemPath) {
         this(provider, redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, Collections.singletonList(inputSlot),
-                Collections.singletonList(outputSlot), fluidTank, false, components);
+                Collections.singletonList(outputSlot), fluidTank, false, components, problemPath);
     }
 
     public NutritionLiquifyingUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                           IEnergyContainer energyContainer, int[] progress, EnergyInventorySlot energySlot, List<IInventorySlot> inputSlots,
-                                          List<IInventorySlot> outputSlots, IExtendedFluidTank fluidTank, boolean sorting, List<ITileComponent> components) {
+                                          List<IInventorySlot> outputSlots, IExtendedFluidTank fluidTank, boolean sorting, List<ITileComponent> components, PathElement problemPath) {
         this.redstone = redstone;
         this.controlType = controlType;
         this.energyContainer = energyContainer;
@@ -47,9 +48,6 @@ public class NutritionLiquifyingUpgradeData implements IUpgradeData {
         this.outputSlots = outputSlots;
         this.fluidTank = fluidTank;
         this.sorting = sorting;
-        this.components = new CompoundTag();
-        for (ITileComponent component : components) {
-            component.write(this.components, provider);
-        }
+        this.components = IUpgradeData.readComponents(provider, components, problemPath);
     }
 }

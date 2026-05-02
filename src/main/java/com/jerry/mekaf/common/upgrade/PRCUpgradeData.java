@@ -12,6 +12,7 @@ import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter.PathElement;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,15 +35,15 @@ public class PRCUpgradeData implements IUpgradeData {
     public PRCUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                           IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot,
                           IChemicalTank inputChemicalTank, BasicFluidTank inputFluidTank, InputInventorySlot inputSlot,
-                          IInventorySlot outputSlot, IChemicalTank outputTank, List<ITileComponent> components) {
+                          IInventorySlot outputSlot, IChemicalTank outputTank, List<ITileComponent> components, PathElement problemPath) {
         this(provider, redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, inputChemicalTank, inputFluidTank, Collections.singletonList(inputSlot),
-                Collections.singletonList(outputSlot), outputTank, false, components);
+                Collections.singletonList(outputSlot), outputTank, false, components, problemPath);
     }
 
     public PRCUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                           IEnergyContainer energyContainer, int[] progress, EnergyInventorySlot energySlot,
                           IChemicalTank inputChemicalTank, BasicFluidTank inputFluidTank, List<IInventorySlot> inputSlots,
-                          List<IInventorySlot> outputSlots, IChemicalTank outputTank, boolean sorting, List<ITileComponent> components) {
+                          List<IInventorySlot> outputSlots, IChemicalTank outputTank, boolean sorting, List<ITileComponent> components, PathElement problemPath) {
         this.redstone = redstone;
         this.controlType = controlType;
         this.energyContainer = energyContainer;
@@ -54,9 +55,6 @@ public class PRCUpgradeData implements IUpgradeData {
         this.outputSlots = outputSlots;
         this.outputTank = outputTank;
         this.sorting = sorting;
-        this.components = new CompoundTag();
-        for (ITileComponent component : components) {
-            component.write(this.components, provider);
-        }
+        this.components = IUpgradeData.readComponents(provider, components, problemPath);
     }
 }

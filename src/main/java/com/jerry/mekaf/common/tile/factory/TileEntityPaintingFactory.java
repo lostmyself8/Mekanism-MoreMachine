@@ -5,6 +5,7 @@ import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToItemAdvancedFact
 import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -81,7 +82,7 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     private final ChemicalUsageMultiplier chemicalUsageMultiplier = ChemicalUsageMultiplier.constantUse(this::getTicksRequired, this::getTicksRequired);
     private final long[] usedSoFar;
 
-    private final ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputChemicalItem", docPlaceholder = "chemical slot")
     ChemicalInventorySlot chemicalInputSlot;

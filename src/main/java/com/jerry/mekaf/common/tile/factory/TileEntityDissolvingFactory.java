@@ -7,6 +7,7 @@ import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -77,7 +78,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
 
-    private final ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
+    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     private final ChemicalUsageMultiplier injectUsageMultiplier;
     private double injectUsage = 1;

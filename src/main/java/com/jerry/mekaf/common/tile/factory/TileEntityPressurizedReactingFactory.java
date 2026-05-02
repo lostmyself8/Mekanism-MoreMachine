@@ -8,6 +8,7 @@ import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
@@ -62,6 +63,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.util.ItemStackMap;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -120,8 +122,8 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     public IChemicalTank outputChemicalTank;
 
     private long recipeEnergyRequired = 0;
-    private final IInputHandler<@NotNull FluidStack> fluidInputHandler;
-    private final IInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
+    private final IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
     protected IOutputHandler<@NotNull PressurizedReactionRecipeOutput>[] reactionOutputHandlers;
 
     protected final List<IInventorySlot> inputItemSlots;

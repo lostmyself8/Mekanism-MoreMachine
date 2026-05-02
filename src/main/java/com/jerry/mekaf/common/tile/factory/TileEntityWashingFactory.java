@@ -50,6 +50,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
@@ -79,7 +80,7 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
                             docPlaceholder = "fluid tank")
     public BasicFluidTank fluidTank;
 
-    private final IInputHandler<@NotNull FluidStack> fluidInputHandler;
+    private final IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidItemInput", docPlaceholder = "fluid item input slot")
     FluidInventorySlot fluidSlot;

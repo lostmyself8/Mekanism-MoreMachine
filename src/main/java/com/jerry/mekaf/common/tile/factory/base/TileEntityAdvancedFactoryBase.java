@@ -20,6 +20,7 @@ import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.common.CommonWorldTickHandler;
+import mekanism.common.Mekanism;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
@@ -56,12 +57,15 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -424,6 +428,15 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         container.track(SyncableLong.create(this::getLastUsage, value -> lastUsage = value));
         container.track(SyncableBoolean.create(this::isSorting, value -> sorting = value));
         container.track(SyncableInt.create(this::getTicksRequired, value -> ticksRequired = value));
+    }
+
+    protected void readUpgradeComponents(HolderLookup.Provider provider, CompoundTag components) {
+        try (var reporter = new ProblemReporter.ScopedCollector(problemPath(), Mekanism.logger)) {
+            ValueInput input = TagValueInput.create(reporter, provider, components);
+            for (ITileComponent component : getComponents()) {
+                component.read(input);
+            }
+        }
     }
 
     // Methods relating to IComputerTile

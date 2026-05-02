@@ -9,6 +9,7 @@ import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter.PathElement;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,14 +28,14 @@ public class ChemicalToChemicalUpgradeData implements IUpgradeData {
 
     public ChemicalToChemicalUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                          IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot,
-                                         IChemicalTank inputTank, IChemicalTank outputTank, List<ITileComponent> components) {
+                                         IChemicalTank inputTank, IChemicalTank outputTank, List<ITileComponent> components, PathElement problemPath) {
         this(provider, redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, Collections.singletonList(inputTank),
-                Collections.singletonList(outputTank), false, components);
+                Collections.singletonList(outputTank), false, components, problemPath);
     }
 
     public ChemicalToChemicalUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                          IEnergyContainer energyContainer, int[] progress, EnergyInventorySlot energySlot,
-                                         List<IChemicalTank> inputTanks, List<IChemicalTank> outputTanks, boolean sorting, List<ITileComponent> components) {
+                                         List<IChemicalTank> inputTanks, List<IChemicalTank> outputTanks, boolean sorting, List<ITileComponent> components, PathElement problemPath) {
         this.redstone = redstone;
         this.controlType = controlType;
         this.energyContainer = energyContainer;
@@ -43,9 +44,6 @@ public class ChemicalToChemicalUpgradeData implements IUpgradeData {
         this.inputTanks = inputTanks;
         this.outputTanks = outputTanks;
         this.sorting = sorting;
-        this.components = new CompoundTag();
-        for (ITileComponent component : components) {
-            component.write(this.components, provider);
-        }
+        this.components = IUpgradeData.readComponents(provider, components, problemPath);
     }
 }

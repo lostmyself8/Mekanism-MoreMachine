@@ -20,6 +20,7 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.common.CommonWorldTickHandler;
+import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -104,7 +105,7 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
             };
             int index = i;
             outputTank[i] = BasicChemicalTank.output(MAX_CHEMICAL * tier.processes, updateSortingAndUnpause);
-            inputTank[i] = BasicChemicalTank.createModern(MAX_CHEMICAL * tier.processes,
+            inputTank[i] = BasicChemicalTank.create(MAX_CHEMICAL * tier.processes,
                     // 这个type似乎没什么用，就不增加isValidInputChemical的参数了
                     ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank[index]), (stack, type) -> isValidInputChemical(stack),
                     stack -> isChemicalValidForTank(stack) && inputProducesOutput(index, stack, outputTank[index], false),
@@ -179,26 +180,24 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof ChemicalToChemicalUpgradeData data) {
             redstone = data.redstone;
             setControlType(data.controlType);
             getEnergyContainer().setEnergy(data.energyContainer.getEnergy());
             sorting = data.sorting;
-            energySlot.deserializeNBT(provider, data.energySlot.serializeNBT(provider));
+            ContainerType.ITEM.copy(data.energySlot, energySlot);
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.inputTanks.size(); i++) {
                 // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
-                inputChemicalTanks.get(i).deserializeNBT(provider, data.inputTanks.get(i).serializeNBT(provider));
+                ContainerType.CHEMICAL.copy(data.inputTanks.get(i), inputChemicalTanks.get(i));
             }
             for (int i = 0; i < data.outputTanks.size(); i++) {
                 outputChemicalTanks.get(i).setStack(data.outputTanks.get(i).getStack());
             }
-            for (ITileComponent component : getComponents()) {
-                component.read(data.components, provider);
-            }
+            readUpgradeComponents(provider, data.components);
         } else {
-            super.parseUpgradeData(provider, upgradeData);
+            super.parseUpgradeData(upgradeData, provider);
         }
     }
 
