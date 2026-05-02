@@ -2,6 +2,7 @@ package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.MekanismRecipe;
@@ -11,13 +12,14 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.*;
 
-public class PlantingNoPerTickUsageCacheRecipe<INPUT_A, INPUT_B, OUTPUT, RECIPE extends MekanismRecipe<?> & BiPredicate<INPUT_A, INPUT_B>> extends MoreMachineTwoInputCachedRecipe<INPUT_A, INPUT_B, OUTPUT, RECIPE> {
+public class PlantingNoPerTickUsageCacheRecipe<HOLDER_A, INPUT_A extends net.minecraft.core.TypedInstance<HOLDER_A>, HOLDER_B, INPUT_B extends net.minecraft.core.TypedInstance<HOLDER_B>, OUTPUT, RECIPE extends MekanismRecipe<?> & BiPredicate<INPUT_A, INPUT_B>> extends MoreMachineTwoInputCachedRecipe<HOLDER_A, INPUT_A, HOLDER_B, INPUT_B, OUTPUT, RECIPE> {
 
     /**
      * @param recipe                   Recipe.
@@ -34,14 +36,14 @@ public class PlantingNoPerTickUsageCacheRecipe<INPUT_A, INPUT_B, OUTPUT, RECIPE 
      * @param secondaryInputEmptyCheck Checks if the secondary input is empty.
      * @param outputEmptyCheck         Checks if the output is empty (indicating something went horribly wrong).
      */
-    protected PlantingNoPerTickUsageCacheRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<INPUT_A> inputHandler, IInputHandler<INPUT_B> secondaryInputHandler, IOutputHandler<OUTPUT> outputHandler, Supplier<InputIngredient<INPUT_A>> inputSupplier, Supplier<InputIngredient<INPUT_B>> secondaryInputSupplier, BiFunction<INPUT_A, INPUT_B, OUTPUT> outputGetter, Predicate<INPUT_A> inputEmptyCheck, Predicate<INPUT_B> secondaryInputEmptyCheck, Predicate<OUTPUT> outputEmptyCheck) {
+    protected PlantingNoPerTickUsageCacheRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<HOLDER_A, INPUT_A> inputHandler, IInputHandler<HOLDER_B, INPUT_B> secondaryInputHandler, IOutputHandler<OUTPUT> outputHandler, Supplier<InputIngredient<HOLDER_A, INPUT_A>> inputSupplier, Supplier<InputIngredient<HOLDER_B, INPUT_B>> secondaryInputSupplier, BiFunction<INPUT_A, INPUT_B, OUTPUT> outputGetter, Predicate<INPUT_A> inputEmptyCheck, Predicate<INPUT_B> secondaryInputEmptyCheck, Predicate<OUTPUT> outputEmptyCheck) {
         super(recipe, recheckAllErrors, inputHandler, secondaryInputHandler, outputHandler, inputSupplier, secondaryInputSupplier, outputGetter, inputEmptyCheck, secondaryInputEmptyCheck, outputEmptyCheck);
     }
 
-    public static PlantingNoPerTickUsageCacheRecipe<ItemStack, ChemicalStack, ChanceOutput, PlantingRecipe> planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors,
-                                                                                                                     IInputHandler<@NotNull ItemStack> itemInputHandler,
-                                                                                                                     ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler,
-                                                                                                                     IOutputHandler<ChanceOutput> outputHandler) {
+    public static PlantingNoPerTickUsageCacheRecipe<Item, ItemStack, Chemical, ChemicalStack, ChanceOutput, PlantingRecipe> planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors,
+                                                                                                                                     IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
+                                                                                                                                     ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler,
+                                                                                                                                     IOutputHandler<ChanceOutput> outputHandler) {
         return new PlantingNoPerTickUsageCacheRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput, recipe::getOutput,
                 ConstantPredicates.ITEM_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.alwaysFalse());
     }

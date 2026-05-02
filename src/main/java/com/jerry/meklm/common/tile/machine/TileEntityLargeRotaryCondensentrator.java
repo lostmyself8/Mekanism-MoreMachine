@@ -7,6 +7,7 @@ import com.jerry.meklm.common.tile.INotNeedConfig;
 
 import mekanism.api.*;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
@@ -74,6 +75,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.redstone.Redstone;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -106,8 +108,8 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     private final IOutputHandler<@NotNull ChemicalStack> chemicalOutputHandler;
     private final IOutputHandler<@NotNull FluidStack> fluidOutputHandler;
-    private final IInputHandler<@NotNull FluidStack> fluidInputHandler;
-    private final IInputHandler<@NotNull ChemicalStack> chemicalInputHandler;
+    private final IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @Nullable
     private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> leftOutputCaches;
@@ -195,7 +197,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.LEFT);
-        builder.addTank(chemicalTank = BasicChemicalTank.createModern(CAPACITY, (gas, automationType) -> automationType == AutomationType.MANUAL || mode,
+        builder.addTank(chemicalTank = BasicChemicalTank.create(CAPACITY, (gas, automationType) -> automationType == AutomationType.MANUAL || mode,
                 (gas, automationType) -> automationType == AutomationType.INTERNAL || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
                 recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
         return builder.build();
@@ -265,14 +267,14 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             leftOutputCaches = new ArrayList<>(1);
             Direction left = RelativeSide.LEFT.getDirection(getDirection());
             Direction up = RelativeSide.TOP.getDirection(getDirection());
-            leftOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(up.getNormal()).offset(getLeftSide().getNormal()).relative(left), left.getOpposite()));
+            leftOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(up.getUnitVec3i()).offset(getLeftSide().getUnitVec3i()).relative(left), left.getOpposite()));
         }
         ChemicalUtil.emit(leftOutputCaches, chemicalTank, chemicalTank.getCapacity());
         if (rightOutputCaches == null) {
             rightOutputCaches = new ArrayList<>(1);
             Direction right = RelativeSide.RIGHT.getDirection(getDirection());
             Direction up = RelativeSide.TOP.getDirection(getDirection());
-            rightOutputCaches.add(Capabilities.FLUID.createCache((ServerLevel) level, worldPosition.offset(up.getNormal()).offset(getRightSide().getNormal()).relative(right), right.getOpposite()));
+            rightOutputCaches.add(Capabilities.FLUID.createCache((ServerLevel) level, worldPosition.offset(up.getUnitVec3i()).offset(getRightSide().getUnitVec3i()).relative(right), right.getOpposite()));
         }
         FluidUtils.emit(rightOutputCaches, fluidTank, fluidTank.getCapacity());
     }

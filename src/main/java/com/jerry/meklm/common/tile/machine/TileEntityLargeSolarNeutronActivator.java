@@ -10,6 +10,7 @@ import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
@@ -107,7 +108,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     private byte seeSunCount = 0;
 
     private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
-    private final IInputHandler<@NotNull ChemicalStack> inputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> inputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input slot")
     ChemicalInventorySlot inputSlot;
@@ -144,7 +145,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.RIGHT || side == RelativeSide.LEFT, side -> side == RelativeSide.BACK);
         // Allow extracting out of the input gas tank if it isn't external OR the output tank is empty AND the input is
         // radioactive
-        builder.addTank(inputTank = BasicChemicalTank.createModern(MAX_GAS, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank),
+        builder.addTank(inputTank = BasicChemicalTank.create(MAX_GAS, ChemicalTankHelper.radioactiveInputTankPredicate(() -> outputTank),
                 ConstantPredicates.alwaysTrueBi(), this::containsRecipe, ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheListener), RelativeSide.RIGHT, RelativeSide.LEFT, RelativeSide.BACK);
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.BACK);
         return builder.build();
@@ -201,8 +202,8 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         if (chemicalOutputCaches == null) {
             chemicalOutputCaches = new ArrayList<>(2);
             Direction side = RelativeSide.BACK.getDirection(getDirection());
-            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal()).relative(side), side.getOpposite()));
-            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()).relative(side), side.getOpposite()));
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getLeftSide().getUnitVec3i()).relative(side), side.getOpposite()));
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getRightSide().getUnitVec3i()).relative(side), side.getOpposite()));
         }
         ChemicalUtil.emit(chemicalOutputCaches, outputTank, outputTank.getCapacity());
     }

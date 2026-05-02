@@ -8,6 +8,7 @@ import mekanism.api.RelativeSide;
 import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.recipes.NucleosynthesizingRecipe;
@@ -61,9 +62,13 @@ import mekanism.common.util.WorldUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.redstone.Redstone;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.fluids.FluidType;
 
@@ -97,9 +102,9 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     private long usedSoFar;
     private int numPowering;
 
-    protected final IOutputHandler<@NotNull ItemStack> outputHandler;
-    protected final IInputHandler<@NotNull ItemStack> itemInputHandler;
-    protected final ILongInputHandler<@NotNull ChemicalStack> gasInputHandler;
+    protected final IOutputHandler<@NotNull ItemStackTemplate> outputHandler;
+    protected final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
+    protected final ILongInputHandler<Chemical, @NotNull ChemicalStack> gasInputHandler;
 
     @Getter
     private MachineEnergyContainer<TileEntityLargeAntiprotonicNucleosynthesizer> energyContainer;
@@ -137,7 +142,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> false);
-        builder.addTank(gasTank = BasicChemicalTank.inputModern(MAX_GAS, gas -> containsRecipeBA(inputSlot.getStack(), gas), this::containsRecipeB, recipeCacheListener), RelativeSide.BACK);
+        builder.addTank(gasTank = BasicChemicalTank.input(MAX_GAS, gas -> containsRecipeBA(inputSlot.getStack(), gas), this::containsRecipeB, recipeCacheListener), RelativeSide.BACK);
         return builder.build();
     }
 
@@ -239,15 +244,15 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, @NotNull HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
-        usedSoFar = nbt.getLong(SerializationConstants.USED_SO_FAR);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        usedSoFar = input.getLongOr(SerializationConstants.USED_SO_FAR, usedSoFar);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags, @NotNull HolderLookup.Provider provider) {
-        super.saveAdditional(nbtTags, provider);
-        nbtTags.putLong(SerializationConstants.USED_SO_FAR, usedSoFar);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong(SerializationConstants.USED_SO_FAR, usedSoFar);
     }
 
     @Override

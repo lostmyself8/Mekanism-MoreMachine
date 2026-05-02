@@ -7,6 +7,7 @@ import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
@@ -111,8 +112,8 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Chemica
     private int numPowering;
 
     private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
-    private final IInputHandler<@NotNull ChemicalStack> leftInputHandler;
-    private final IInputHandler<@NotNull ChemicalStack> rightInputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> leftInputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> rightInputHandler;
 
     @Getter
     private MachineEnergyContainer<TileEntityLargePigmentMixer> energyContainer;
@@ -161,9 +162,9 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Chemica
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> side == RelativeSide.FRONT);
-        builder.addTank(leftInputTank = BasicChemicalTank.inputModern(MAX_INPUT_PIGMENT, pigment -> containsRecipe(pigment, rightInputTank.getStack()),
+        builder.addTank(leftInputTank = BasicChemicalTank.input(MAX_INPUT_PIGMENT, pigment -> containsRecipe(pigment, rightInputTank.getStack()),
                 this::containsRecipe, recipeCacheListener), RelativeSide.LEFT);
-        builder.addTank(rightInputTank = BasicChemicalTank.inputModern(MAX_INPUT_PIGMENT, pigment -> containsRecipe(pigment, leftInputTank.getStack()),
+        builder.addTank(rightInputTank = BasicChemicalTank.input(MAX_INPUT_PIGMENT, pigment -> containsRecipe(pigment, leftInputTank.getStack()),
                 this::containsRecipe, recipeCacheListener), RelativeSide.RIGHT);
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_OUTPUT_PIGMENT, recipeCacheUnpauseListener), RelativeSide.FRONT);
         return builder.build();
@@ -210,8 +211,8 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Chemica
         if (chemicalOutputCaches == null) {
             chemicalOutputCaches = new ArrayList<>(2);
             Direction side = RelativeSide.FRONT.getDirection(getDirection());
-            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal()).relative(side), side.getOpposite()));
-            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()).relative(side), side.getOpposite()));
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getLeftSide().getUnitVec3i()).relative(side), side.getOpposite()));
+            chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getRightSide().getUnitVec3i()).relative(side), side.getOpposite()));
         }
         ChemicalUtil.emit(chemicalOutputCaches, outputTank, outputTank.getCapacity());
     }

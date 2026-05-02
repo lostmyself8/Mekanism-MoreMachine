@@ -9,6 +9,7 @@ import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,13 +22,13 @@ import java.util.function.*;
 @NothingNullByDefault
 public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
 
-    private final IInputHandler<ItemStack> inputHandler;
-    private final IInputHandler<ItemStack> secondaryInputHandler;
+    private final IInputHandler<Item, ItemStack> inputHandler;
+    private final IInputHandler<Item, ItemStack> secondaryInputHandler;
     private final IOutputHandler<ItemStack> outputHandler;
     private final Predicate<ItemStack> inputEmptyCheck;
     private final Predicate<ItemStack> secondaryInputEmptyCheck;
-    private final Supplier<? extends InputIngredient<ItemStack>> inputSupplier;
-    private final Supplier<? extends InputIngredient<ItemStack>> secondaryInputSupplier;
+    private final Supplier<? extends InputIngredient<Item, ItemStack>> inputSupplier;
+    private final Supplier<? extends InputIngredient<Item, ItemStack>> secondaryInputSupplier;
     private final BiFunction<ItemStack, ItemStack, ItemStack> outputGetter;
     private final Predicate<ItemStack> outputEmptyCheck;
     private final BiConsumer<ItemStack, ItemStack> inputsSetter;
@@ -48,8 +49,8 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
      *                         to gather all the errors. It is recommended to not
      *                         do this every tick or if there is no one viewing recipes.
      */
-    protected StamperCachedRecipe(StamperRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<ItemStack> inputHandler, IInputHandler<ItemStack> secondaryInputHandler,
-                                  IOutputHandler<ItemStack> outputHandler, Supplier<InputIngredient<ItemStack>> inputSupplier, Supplier<InputIngredient<ItemStack>> secondaryInputSupplier,
+    protected StamperCachedRecipe(StamperRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, ItemStack> inputHandler, IInputHandler<Item, ItemStack> secondaryInputHandler,
+                                  IOutputHandler<ItemStack> outputHandler, Supplier<InputIngredient<Item, ItemStack>> inputSupplier, Supplier<InputIngredient<Item, ItemStack>> secondaryInputSupplier,
                                   BiFunction<ItemStack, ItemStack, ItemStack> outputGetter, Predicate<ItemStack> inputEmptyCheck, Predicate<ItemStack> secondaryInputEmptyCheck,
                                   Predicate<ItemStack> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
@@ -81,7 +82,7 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
      * @param outputHandler     Output handler.
      */
     public static StamperCachedRecipe createCache(StamperRecipe recipe,
-                                                  BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> inputHandler, IInputHandler<@NotNull ItemStack> extraInputHandler,
+                                                  BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> inputHandler, IInputHandler<Item, @NotNull ItemStack> extraInputHandler,
                                                   IOutputHandler<@NotNull ItemStack> outputHandler) {
         return new StamperCachedRecipe(recipe, recheckAllErrors, inputHandler, extraInputHandler, outputHandler, recipe::getInput, recipe::getMold,
                 recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY);

@@ -10,6 +10,7 @@ import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ import java.util.function.Supplier;
  * Base class to help implement handling of recipes with one input.
  */
 @NothingNullByDefault
-public class MoreMachineOneInputCachedRecipe<INPUT, OUTPUT, RECIPE extends MekanismRecipe<?> & Predicate<INPUT>> extends OneInputCachedRecipe<INPUT, OUTPUT, RECIPE> {
+public class MoreMachineOneInputCachedRecipe<HOLDER, INPUT extends net.minecraft.core.TypedInstance<HOLDER>, OUTPUT, RECIPE extends MekanismRecipe<?> & Predicate<INPUT>> extends OneInputCachedRecipe<HOLDER, INPUT, OUTPUT, RECIPE> {
 
     /**
      * @param recipe           Recipe.
@@ -37,7 +38,7 @@ public class MoreMachineOneInputCachedRecipe<INPUT, OUTPUT, RECIPE extends Mekan
      * @param inputEmptyCheck  Checks if the input is empty.
      * @param outputEmptyCheck Checks if the output is empty (indicating something went horribly wrong).
      */
-    protected MoreMachineOneInputCachedRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<INPUT> inputHandler, IOutputHandler<OUTPUT> outputHandler, Supplier<? extends InputIngredient<INPUT>> inputSupplier, Function<INPUT, OUTPUT> outputGetter, Predicate<INPUT> inputEmptyCheck, Predicate<OUTPUT> outputEmptyCheck) {
+    protected MoreMachineOneInputCachedRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<HOLDER, INPUT> inputHandler, IOutputHandler<OUTPUT> outputHandler, Supplier<? extends InputIngredient<HOLDER, INPUT>> inputSupplier, Function<INPUT, OUTPUT> outputGetter, Predicate<INPUT> inputEmptyCheck, Predicate<OUTPUT> outputEmptyCheck) {
         super(recipe, recheckAllErrors, inputHandler, outputHandler, inputSupplier, outputGetter, inputEmptyCheck, outputEmptyCheck);
     }
 
@@ -51,9 +52,9 @@ public class MoreMachineOneInputCachedRecipe<INPUT, OUTPUT, RECIPE extends Mekan
      * @param inputHandler     Input handler.
      * @param outputHandler    Output handler.
      */
-    public static MoreMachineOneInputCachedRecipe<@NotNull ItemStack, RecyclerRecipe.@NotNull ChanceOutput, RecyclerRecipe> recycler(RecyclerRecipe recipe, BooleanSupplier recheckAllErrors,
-                                                                                                                                     IInputHandler<@NotNull ItemStack> inputHandler,
-                                                                                                                                     IOutputHandler<RecyclerRecipe.@NotNull ChanceOutput> outputHandler) {
+    public static MoreMachineOneInputCachedRecipe<Item, @NotNull ItemStack, RecyclerRecipe.@NotNull ChanceOutput, RecyclerRecipe> recycler(RecyclerRecipe recipe, BooleanSupplier recheckAllErrors,
+                                                                                                                                           IInputHandler<Item, @NotNull ItemStack> inputHandler,
+                                                                                                                                           IOutputHandler<RecyclerRecipe.@NotNull ChanceOutput> outputHandler) {
         return new MoreMachineOneInputCachedRecipe<>(recipe, recheckAllErrors, inputHandler, outputHandler, recipe::getInput, recipe::getOutput, ConstantPredicates.ITEM_EMPTY,
                 ConstantPredicates.alwaysFalse());
     }

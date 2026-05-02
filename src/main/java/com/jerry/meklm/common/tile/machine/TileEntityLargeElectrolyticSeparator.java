@@ -79,6 +79,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -119,7 +120,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
 
     private static final LongObjectToLongFunction<TileEntityLargeElectrolyticSeparator> BASE_ENERGY_CALCULATOR = (base, tile) -> base * tile.getRecipeEnergyMultiplier();
     private final IOutputHandler<@NotNull ElectrolysisRecipeOutput> outputHandler;
-    private final IInputHandler<@NotNull FluidStack> inputHandler;
+    private final IInputHandler<Fluid, @NotNull FluidStack> inputHandler;
 
     /**
      * This separator's water slot.
@@ -274,13 +275,13 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
         if (leftOutputCaches == null) {
             leftOutputCaches = new ArrayList<>(1);
             Direction side = RelativeSide.FRONT.getDirection(getDirection());
-            leftOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getLeftSide().getNormal()).relative(side), side.getOpposite()));
+            leftOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getLeftSide().getUnitVec3i()).relative(side), side.getOpposite()));
         }
         ChemicalUtil.emit(leftOutputCaches, leftTank, leftTank.getCapacity());
         if (rightOutputCaches == null) {
             rightOutputCaches = new ArrayList<>(1);
             Direction side = RelativeSide.FRONT.getDirection(getDirection());
-            rightOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getNormal()).offset(getRightSide().getNormal()).relative(side), side.getOpposite()));
+            rightOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getRightSide().getUnitVec3i()).relative(side), side.getOpposite()));
         }
         ChemicalUtil.emit(rightOutputCaches, rightTank, rightTank.getCapacity());
     }

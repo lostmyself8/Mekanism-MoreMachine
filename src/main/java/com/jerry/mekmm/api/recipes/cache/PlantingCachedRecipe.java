@@ -3,6 +3,7 @@ package com.jerry.mekmm.api.recipes.cache;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
@@ -13,6 +14,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +35,8 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
 
     protected final Predicate<ChanceOutput> outputEmptyCheck;
     protected final IOutputHandler<@NotNull ChanceOutput> outputHandler;
-    protected final IInputHandler<@NotNull ItemStack> itemInputHandler;
-    protected final ILongInputHandler<ChemicalStack> chemicalInputHandler;
+    protected final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
+    protected final ILongInputHandler<Chemical, ChemicalStack> chemicalInputHandler;
     protected final ChemicalUsageMultiplier chemicalUsage;
     protected final LongConsumer chemicalUsedSoFarChanged;
     protected long chemicalUsageMultiplier;
@@ -59,8 +61,8 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
      * @param chemicalUsedSoFarChanged Called when the number chemical usage so far changes.
      * @param outputHandler            Output handler.
      */
-    public PlantingCachedRecipe(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
-                                ILongInputHandler<ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, LongConsumer chemicalUsedSoFarChanged,
+    public PlantingCachedRecipe(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
+                                ILongInputHandler<Chemical, ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, LongConsumer chemicalUsedSoFarChanged,
                                 IOutputHandler<@NotNull ChanceOutput> outputHandler, Predicate<ChanceOutput> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
         this.itemInputHandler = Objects.requireNonNull(itemInputHandler, "Item input handler cannot be null.");
@@ -136,7 +138,7 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
             // how much we need to use
             if (!chemicalStack.isEmpty() && recipe.test(itemInput, chemicalStack)) {
                 ChemicalStack recipeChemical = chemicalInputHandler.getRecipeInput(recipe.getChemicalInput());
-                return !recipeChemical.isEmpty() && chemicalStack.getAmount() >= recipeChemical.getAmount();
+                return !recipeChemical.isEmpty() && chemicalStack.amount() >= recipeChemical.amount();
             }
         }
         return false;
@@ -176,8 +178,8 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
         }
     }
 
-    public static PlantingCachedRecipe planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
-                                                ILongInputHandler<@NotNull ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
+    public static PlantingCachedRecipe planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
+                                                ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
                                                 LongConsumer chemicalUsedSoFarChanged, IOutputHandler<ChanceOutput> outputHandler) {
         return new PlantingCachedRecipe(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, chemicalUsage,
                 chemicalUsedSoFarChanged, outputHandler, ConstantPredicates.alwaysFalse());

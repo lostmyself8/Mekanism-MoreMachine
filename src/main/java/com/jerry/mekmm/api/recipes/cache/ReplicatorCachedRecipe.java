@@ -5,6 +5,7 @@ import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
 
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.MekanismRecipe;
@@ -14,7 +15,9 @@ import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +27,15 @@ import java.util.Objects;
 import java.util.function.*;
 
 @NothingNullByDefault
-public class ReplicatorCachedRecipe<TYPE, RECIPE extends MekanismRecipe<?> & BiPredicate<TYPE, ChemicalStack>> extends CachedRecipe<RECIPE> {
+public class ReplicatorCachedRecipe<HOLDER, TYPE extends net.minecraft.core.TypedInstance<HOLDER>, RECIPE extends MekanismRecipe<?> & BiPredicate<TYPE, ChemicalStack>> extends CachedRecipe<RECIPE> {
 
-    private final IInputHandler<TYPE> inputHandler;
-    private final IInputHandler<ChemicalStack> secondaryInputHandler;
+    private final IInputHandler<HOLDER, TYPE> inputHandler;
+    private final IInputHandler<Chemical, ChemicalStack> secondaryInputHandler;
     private final IOutputHandler<TYPE> outputHandler;
     private final Predicate<TYPE> inputEmptyCheck;
     private final Predicate<ChemicalStack> secondaryInputEmptyCheck;
-    private final Supplier<? extends InputIngredient<TYPE>> inputSupplier;
-    private final Supplier<? extends InputIngredient<ChemicalStack>> secondaryInputSupplier;
+    private final Supplier<? extends InputIngredient<HOLDER, TYPE>> inputSupplier;
+    private final Supplier<? extends InputIngredient<Chemical, ChemicalStack>> secondaryInputSupplier;
     private final BiFunction<TYPE, ChemicalStack, TYPE> outputGetter;
     private final Predicate<TYPE> outputEmptyCheck;
     private final BiConsumer<TYPE, ChemicalStack> inputsSetter;
@@ -53,8 +56,8 @@ public class ReplicatorCachedRecipe<TYPE, RECIPE extends MekanismRecipe<?> & BiP
      *                         to gather all the errors. It is recommended to not
      *                         do this every tick or if there is no one viewing recipes.
      */
-    private ReplicatorCachedRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<TYPE> inputHandler, IInputHandler<ChemicalStack> secondaryInputHandler,
-                                   IOutputHandler<TYPE> outputHandler, Supplier<InputIngredient<TYPE>> inputSupplier, Supplier<InputIngredient<ChemicalStack>> secondaryInputSupplier,
+    private ReplicatorCachedRecipe(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<HOLDER, TYPE> inputHandler, IInputHandler<Chemical, ChemicalStack> secondaryInputHandler,
+                                   IOutputHandler<TYPE> outputHandler, Supplier<InputIngredient<HOLDER, TYPE>> inputSupplier, Supplier<InputIngredient<Chemical, ChemicalStack>> secondaryInputSupplier,
                                    BiFunction<TYPE, ChemicalStack, TYPE> outputGetter, Predicate<TYPE> inputEmptyCheck, Predicate<ChemicalStack> secondaryInputEmptyCheck,
                                    Predicate<TYPE> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
@@ -74,20 +77,20 @@ public class ReplicatorCachedRecipe<TYPE, RECIPE extends MekanismRecipe<?> & BiP
         this.outputSetter = output -> this.output = output;
     }
 
-    public static <RECIPE extends MMBasicItemStackChemicalToItemStackRecipe> ReplicatorCachedRecipe<ItemStack, RECIPE> createItemReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ItemStack> itemInputHandler,
-                                                                                                                                            IInputHandler<@NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStack> outputHandler) {
+    public static <RECIPE extends MMBasicItemStackChemicalToItemStackRecipe> ReplicatorCachedRecipe<Item, ItemStack, RECIPE> createItemReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
+                                                                                                                                                  IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput,
                 recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.ITEM_EMPTY);
     }
 
-    public static <RECIPE extends BasicFluidChemicalToFluidRecipe> ReplicatorCachedRecipe<FluidStack, RECIPE> createFluidReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull FluidStack> fluidInputHandler,
-                                                                                                                                    IInputHandler<@NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStack> outputHandler) {
+    public static <RECIPE extends BasicFluidChemicalToFluidRecipe> ReplicatorCachedRecipe<Fluid, FluidStack, RECIPE> createFluidReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler,
+                                                                                                                                           IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, fluidInputHandler, chemicalInputHandler, outputHandler, recipe::getFluidInput, recipe::getChemicalInput,
                 recipe::getOutput, ConstantPredicates.FLUID_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.FLUID_EMPTY);
     }
 
-    public static <RECIPE extends MMBasicChemicalChemicalToChemicalRecipe> ReplicatorCachedRecipe<ChemicalStack, RECIPE> createChemicalReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<@NotNull ChemicalStack> firstInputHandler,
-                                                                                                                                                  IInputHandler<@NotNull ChemicalStack> secondaryInputHandler, IOutputHandler<@NotNull ChemicalStack> outputHandler) {
+    public static <RECIPE extends MMBasicChemicalChemicalToChemicalRecipe> ReplicatorCachedRecipe<Chemical, ChemicalStack, RECIPE> createChemicalReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Chemical, @NotNull ChemicalStack> firstInputHandler,
+                                                                                                                                                            IInputHandler<Chemical, @NotNull ChemicalStack> secondaryInputHandler, IOutputHandler<@NotNull ChemicalStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, firstInputHandler, secondaryInputHandler, outputHandler, recipe::getLeftInput, recipe::getRightInput,
                 recipe::getOutput, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.CHEMICAL_EMPTY);
     }
