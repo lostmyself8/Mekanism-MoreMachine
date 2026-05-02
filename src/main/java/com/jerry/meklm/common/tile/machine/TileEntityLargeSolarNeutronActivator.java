@@ -287,20 +287,24 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         return super.canFunction() && canSeeSun();
     }
 
-    private float recalculateProductionRate() {
-        if (level == null || !canFunction() || solarCheck == null) {
+    public float getPeakProductionRate() {
+        if (!canFunction() || solarCheck == null) {
             return 0;
         }
-        // Get the brightness of the sun; note that there are some implementations that depend on the base
-        // brightness function which doesn't take into account the fact that rain can't occur in some biomes.
-        // 这里会计算对应的峰值，因此不需要在之前计算
-        float brightness = WorldUtils.getSunBrightness(level, 1.0F);
         float generationMultiplier = solarCheck.getProductionMultiplier();
         for (LargeSNA check : solarChecks) {
             generationMultiplier += check.getProductionMultiplier();
         }
         generationMultiplier /= solarChecks.length + 1;
-        return MekanismConfig.general.maxSolarNeutronActivatorRate.get() * generationMultiplier * brightness * (1 - reduceMultiplier());
+        return MekanismConfig.general.maxSolarNeutronActivatorRate.get() * generationMultiplier;
+    }
+
+    private float recalculateProductionRate() {
+        if (level == null) {
+            return 0;
+        }
+        float brightness = WorldUtils.getSunBrightness(level, 1.0F);
+        return getPeakProductionRate() * brightness * (1 - reduceMultiplier());
     }
 
     @NotNull

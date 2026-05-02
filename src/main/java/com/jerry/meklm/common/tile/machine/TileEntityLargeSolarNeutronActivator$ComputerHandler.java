@@ -68,7 +68,7 @@ public class TileEntityLargeSolarNeutronActivator$ComputerHandler extends Comput
     }
 
     public static Object getPeakProductionRate_0(TileEntityLargeSolarNeutronActivator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(subject.solarCheck.getPeakMultiplier());
+        return helper.convert(subject.getPeakProductionRate());
     }
 
     private static float getter$productionRate(TileEntityLargeSolarNeutronActivator subject) {
