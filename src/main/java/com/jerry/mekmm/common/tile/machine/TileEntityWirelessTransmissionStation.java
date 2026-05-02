@@ -61,15 +61,18 @@ import mekanism.common.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.items.IItemHandler;
 
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -161,7 +164,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     @Override
     public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
         ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(chemicalTank = BasicChemicalTank.createModern(MAX_CHEMICAL, ConstantPredicates.alwaysTrue(), ConstantPredicates.alwaysTrue(), listener));
+        builder.addTank(chemicalTank = BasicChemicalTank.create(MAX_CHEMICAL, ConstantPredicates.alwaysTrue(), ConstantPredicates.alwaysTrue(), listener));
         return builder.build();
     }
 
@@ -237,15 +240,16 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         return sendUpdatePacket;
     }
 
+    @SuppressWarnings("removal")
     private void transportItems() {
         if (itemsRate <= 0) return;
         // TODO:在某种情况下可以平分，希望可以做到不需要给定面即可输出
         // 获取自身的弹出能力
-        IItemHandler selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
+        net.neoforged.neoforge.items.IItemHandler selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
         if (selfHandler == null) return;
 
-        for (BlockCapabilityCache<IItemHandler, Direction> cache : connectionManager.getItemCaches()) {
-            IItemHandler target = cache.getCapability();
+        for (BlockCapabilityCache<net.neoforged.neoforge.items.IItemHandler, Direction> cache : connectionManager.getItemCaches()) {
+            net.neoforged.neoforge.items.IItemHandler target = cache.getCapability();
             if (target != null) {
                 TransitRequest request = TransitRequest.definedItem(selfHandler, 1, itemsRate, Finder.ANY);
                 if (!request.isEmpty()) {
@@ -445,58 +449,61 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    public @NotNull CompoundTag getReducedUpdateTag(HolderLookup.@NotNull Provider provider) {
-        CompoundTag updateTag = super.getReducedUpdateTag(provider);
-        connectionManager.saveToNBT(updateTag);
-        updateTag.putLong(MoreMachineSerializationConstants.ENERGY_RATE, getEnergyRate());
-        updateTag.putInt(MoreMachineSerializationConstants.FLUIDS_RATE, getFluidsRate());
-        updateTag.putLong(MoreMachineSerializationConstants.CHEMICALS_RATE, getChemicalsRate());
-        updateTag.putInt(MoreMachineSerializationConstants.ITEM_RATE, getItemsRate());
-        updateTag.putDouble(MoreMachineSerializationConstants.HEAT_RATE, getHeatRate());
-        return updateTag;
+    public void writeReducedUpdatedTag(@NotNull ValueOutput output) {
+        super.writeReducedUpdatedTag(output);
+        CompoundTag connections = new CompoundTag();
+        connectionManager.saveToNBT(connections);
+        output.store(connections);
+        output.putLong(MoreMachineSerializationConstants.ENERGY_RATE, getEnergyRate());
+        output.putInt(MoreMachineSerializationConstants.FLUIDS_RATE, getFluidsRate());
+        output.putLong(MoreMachineSerializationConstants.CHEMICALS_RATE, getChemicalsRate());
+        output.putInt(MoreMachineSerializationConstants.ITEM_RATE, getItemsRate());
+        output.putDouble(MoreMachineSerializationConstants.HEAT_RATE, getHeatRate());
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-        super.handleUpdateTag(tag, provider);
-        connectionManager.loadFromNBT(tag);
-        NBTUtils.setIntIfPresent(tag, MoreMachineSerializationConstants.ENERGY_RATE, this::setEnergyRate);
-        NBTUtils.setIntIfPresent(tag, MoreMachineSerializationConstants.FLUIDS_RATE, this::setFluidsRate);
-        NBTUtils.setIntIfPresent(tag, MoreMachineSerializationConstants.CHEMICALS_RATE, this::setChemicalsRate);
-        NBTUtils.setIntIfPresent(tag, MoreMachineSerializationConstants.ITEM_RATE, this::setItemsRate);
-        NBTUtils.setIntIfPresent(tag, MoreMachineSerializationConstants.HEAT_RATE, this::setHeatRate);
+    public void handleUpdateTag(@NotNull ValueInput input) {
+        super.handleUpdateTag(input);
+        input.read(MapCodec.assumeMapUnsafe(CompoundTag.CODEC)).ifPresent(connectionManager::loadFromNBT);
+        readRates(input);
+    }
+
+    private void readRates(ValueInput input) {
+        setEnergyRate(Math.min(input.getLongOr(MoreMachineSerializationConstants.ENERGY_RATE, energyRate), MoreMachineConfig.general.energyRate.get()));
+        setFluidsRate(Math.min(input.getIntOr(MoreMachineSerializationConstants.FLUIDS_RATE, fluidsRate), MoreMachineConfig.general.fluidsRate.get()));
+        setChemicalsRate(Math.min(input.getLongOr(MoreMachineSerializationConstants.CHEMICALS_RATE, chemicalsRate), MoreMachineConfig.general.chemicalsRate.get()));
+        setItemsRate(Math.min(input.getIntOr(MoreMachineSerializationConstants.ITEM_RATE, itemsRate), MoreMachineConfig.general.itemsRate.get()));
+        setHeatRate(Math.min(input.getDoubleOr(MoreMachineSerializationConstants.HEAT_RATE, heatRate), MoreMachineConfig.general.heatRate.get()));
     }
 
     @Override
-    public void readSustainedData(HolderLookup.Provider provider, CompoundTag dataMap) {
-        super.readSustainedData(provider, dataMap);
-        setEnergyRate(Math.min(dataMap.getLong(MoreMachineSerializationConstants.ENERGY_RATE), MoreMachineConfig.general.energyRate.get()));
-        setFluidsRate(Math.min(dataMap.getInt(MoreMachineSerializationConstants.FLUIDS_RATE), MoreMachineConfig.general.fluidsRate.get()));
-        setChemicalsRate(Math.min(dataMap.getLong(MoreMachineSerializationConstants.CHEMICALS_RATE), MoreMachineConfig.general.chemicalsRate.get()));
-        setItemsRate(Math.min(dataMap.getInt(MoreMachineSerializationConstants.ITEM_RATE), MoreMachineConfig.general.itemsRate.get()));
-        setHeatRate(Math.min(dataMap.getDouble(MoreMachineSerializationConstants.HEAT_RATE), MoreMachineConfig.general.heatRate.get()));
+    public void readSustainedData(@NotNull ValueInput input) {
+        super.readSustainedData(input);
+        readRates(input);
     }
 
     @Override
-    public void writeSustainedData(HolderLookup.Provider provider, CompoundTag dataMap) {
-        super.writeSustainedData(provider, dataMap);
-        dataMap.putLong(MoreMachineSerializationConstants.ENERGY_RATE, getEnergyRate());
-        dataMap.putInt(MoreMachineSerializationConstants.FLUIDS_RATE, getFluidsRate());
-        dataMap.putLong(MoreMachineSerializationConstants.CHEMICALS_RATE, getChemicalsRate());
-        dataMap.putInt(MoreMachineSerializationConstants.ITEM_RATE, getItemsRate());
-        dataMap.putDouble(MoreMachineSerializationConstants.HEAT_RATE, getHeatRate());
+    public void writeSustainedData(@NotNull ValueOutput output) {
+        super.writeSustainedData(output);
+        output.putLong(MoreMachineSerializationConstants.ENERGY_RATE, getEnergyRate());
+        output.putInt(MoreMachineSerializationConstants.FLUIDS_RATE, getFluidsRate());
+        output.putLong(MoreMachineSerializationConstants.CHEMICALS_RATE, getChemicalsRate());
+        output.putInt(MoreMachineSerializationConstants.ITEM_RATE, getItemsRate());
+        output.putDouble(MoreMachineSerializationConstants.HEAT_RATE, getHeatRate());
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.@NotNull Provider provider) {
-        super.loadAdditional(nbt, provider);
-        connectionManager.loadFromNBT(nbt);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        input.read(MapCodec.assumeMapUnsafe(CompoundTag.CODEC)).ifPresent(connectionManager::loadFromNBT);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbtTags, HolderLookup.@NotNull Provider provider) {
-        super.saveAdditional(nbtTags, provider);
-        connectionManager.saveToNBT(nbtTags);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        CompoundTag connections = new CompoundTag();
+        connectionManager.saveToNBT(connections);
+        output.store(connections);
     }
 
     @Override
@@ -527,7 +534,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    protected void applyImplicitComponents(@NotNull DataComponentInput input) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter input) {
         super.applyImplicitComponents(input);
         setEnergyRate(Math.min(input.getOrDefault(MoreMachineDataComponents.ENERGY_RATE, energyRate), MoreMachineConfig.general.energyRate.get()));
         setFluidsRate(Math.min(input.getOrDefault(MoreMachineDataComponents.FLUIDS_RATE, fluidsRate), MoreMachineConfig.general.fluidsRate.get()));

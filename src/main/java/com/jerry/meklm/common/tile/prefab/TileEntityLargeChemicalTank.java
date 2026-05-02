@@ -29,6 +29,7 @@ import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableEnum;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
+import mekanism.common.Mekanism;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tile.TileEntityChemicalTank.GasMode;
 import mekanism.common.tile.component.ITileComponent;
@@ -46,12 +47,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import lombok.Getter;
@@ -188,7 +192,7 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     }
 
     @Override
-    public void parseUpgradeData(HolderLookup.Provider provider, @NotNull IUpgradeData upgradeData) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
         if (upgradeData instanceof ChemicalTankUpgradeData data) {
             redstone = data.redstone;
             setControlType(data.controlType);
@@ -196,30 +200,33 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
             fillSlot.setStack(data.fillSlot.getStack());
             dumping = data.dumping;
             getChemicalTank().setStack(data.storedChemical);
-            for (ITileComponent component : getComponents()) {
-                component.read(data.components, provider);
+            try (var reporter = new ProblemReporter.ScopedCollector(problemPath(), Mekanism.logger)) {
+                ValueInput input = TagValueInput.create(reporter, provider, data.components);
+                for (ITileComponent component : getComponents()) {
+                    component.read(input);
+                }
             }
         } else {
-            super.parseUpgradeData(provider, upgradeData);
+            super.parseUpgradeData(upgradeData, provider);
         }
     }
 
     @NotNull
     @Override
     public ChemicalTankUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new ChemicalTankUpgradeData(provider, redstone, getControlType(), drainSlot, fillSlot, dumping, getChemicalTank().getStack(), getComponents());
+        return new ChemicalTankUpgradeData(provider, redstone, getControlType(), drainSlot, fillSlot, dumping, getChemicalTank().getStack(), getComponents(), problemPath());
     }
 
     @Override
-    public void writeSustainedData(HolderLookup.Provider provider, CompoundTag dataMap) {
-        super.writeSustainedData(provider, dataMap);
-        NBTUtils.writeEnum(dataMap, SerializationConstants.DUMP_MODE, dumping);
+    public void writeSustainedData(@NotNull ValueOutput output) {
+        super.writeSustainedData(output);
+        NBTUtils.writeEnum(output, SerializationConstants.DUMP_MODE, dumping);
     }
 
     @Override
-    public void readSustainedData(HolderLookup.Provider provider, @NotNull CompoundTag data) {
-        super.readSustainedData(provider, data);
-        NBTUtils.setEnumIfPresent(data, SerializationConstants.DUMP_MODE, GasMode.BY_ID, mode -> dumping = mode);
+    public void readSustainedData(@NotNull ValueInput input) {
+        super.readSustainedData(input);
+        NBTUtils.setEnumIfPresent(input, SerializationConstants.DUMP_MODE, GasMode.BY_ID, mode -> dumping = mode);
     }
 
     @Override
@@ -229,7 +236,7 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     }
 
     @Override
-    protected void applyImplicitComponents(@NotNull BlockEntity.DataComponentInput input) {
+    protected void applyImplicitComponents(@NotNull DataComponentGetter input) {
         super.applyImplicitComponents(input);
         dumping = input.getOrDefault(MekanismDataComponents.DUMP_MODE, dumping);
     }

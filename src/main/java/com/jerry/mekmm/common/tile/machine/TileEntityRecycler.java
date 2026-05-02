@@ -155,7 +155,7 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
     @NotNull
     @Override
     public MachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new MachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot, inputSlot, outputSlot, getComponents());
+        return new MachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot, inputSlot, outputSlot, getComponents(), problemPath());
     }
 
     // Methods relating to IComputerTile
