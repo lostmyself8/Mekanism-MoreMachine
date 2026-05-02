@@ -5,7 +5,7 @@ dependencies {
 
     // Recipe Viewers
     compileOnly(forge.bundles.jei)
-    compileOnly(forge.emi)
+//    compileOnly(forge.emi) // no 26.1 build
 //    modCompileOnly(forge.jer)
 
     // Mekanism

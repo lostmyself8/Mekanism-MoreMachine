@@ -61,7 +61,8 @@ neoForge {
         }
 
         data {
-            data()
+            clientData()
+            serverData()
             sourceSet = sourceSets.main
             ideName = "Data Generation"
 
