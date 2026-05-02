@@ -7,7 +7,6 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 import com.jerry.meklm.client.gui.machine.*;
 import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
 import com.jerry.meklm.client.model.LargeMachineModelCache;
-import com.jerry.meklm.client.model.bake.*;
 import com.jerry.meklm.client.render.tileentity.RenderLargeAntiprotonicNucleosynthesizer;
 import com.jerry.meklm.client.render.tileentity.RenderLargePigmentMixer;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
@@ -21,15 +20,11 @@ import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStationConfig;
 import com.jerry.mekmm.client.gui.machine.*;
 import com.jerry.mekmm.client.render.RenderTickHandler;
 import com.jerry.mekmm.client.render.tileentity.RenderWirelessTransmissionStation;
-import com.jerry.mekmm.common.item.ItemConnector;
-import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineContainerTypes;
-import com.jerry.mekmm.common.registries.MoreMachineItems;
 import com.jerry.mekmm.common.registries.MoreMachineTileEntityTypes;
 
 import mekanism.client.ClientRegistrationUtil;
-import mekanism.client.render.lib.QuadTransformation;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -44,8 +39,6 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
-import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
-import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
 
@@ -56,42 +49,6 @@ public class ClientRegistration {
     public static void init(FMLClientSetupEvent event) {
         NeoForge.EVENT_BUS.register(new ClientTickHandler());
         NeoForge.EVENT_BUS.register(new RenderTickHandler());
-
-        addCustomModel(MoreMachineBlocks.WIRELESS_CHARGING_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
-                QuadTransformation.translate(0, 1, 0)));
-        addCustomModel(MoreMachineBlocks.WIRELESS_TRANSMISSION_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
-                QuadTransformation.translate(0, 1, 0)));
-        // LargeMachine
-        addCustomModel(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
-                QuadTransformation.translate(0, 1, 0)));
-        addCustomModel(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
-                QuadTransformation.translate(0, 1, 0)));
-        addCustomModel(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
-                QuadTransformation.translate(0, 1, 0)));
-        addCustomModel(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, (orig, evt) -> new TransformedBakedModel<Void>(orig,
-                QuadTransformation.translate(0, 1, 0)));
-        // 偏移在LargeRotaryCondensentratorBakedModel中
-        addCustomModel(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR, (orig, evt) -> new LargeRotaryCondensentratorBakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER, (orig, evt) -> new LargeChemicalInfuserBakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR, (orig, evt) -> new LargeElectrolyticSeparatorBakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR, (orig, evt) -> new LargeSNABakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, (orig, evt) -> new LargeAntiprotonicNucleosynthesizerBakedModel(orig));
-        addCustomModel(LargeMachineBlocks.LARGE_PIGMENT_MIXER, (orig, evt) -> new LargePigmentMixerBakedModel(orig));
-        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
-            addCustomModel(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, (orig, evt) -> new LargeHeatGeneratorBakedModel(orig));
-            addCustomModel(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR, (orig, evt) -> new LargeGasGeneratorBakedModel(orig));
-        }
-
-        ClientRegistrationUtil.setPropertyOverride(MoreMachineItems.CONNECTOR, Mekmm.rl("mode"), (stack, world, entity, seed) -> {
-            ConnectorMode mode = ((ItemConnector) stack.getItem()).getMode(stack);
-            return switch (mode) {
-                case ITEMS -> 1;
-                case FLUIDS -> 2;
-                case CHEMICALS -> 3;
-                case ENERGY -> 4;
-                case HEAT -> 5;
-            };
-        });
     }
 
     @SubscribeEvent

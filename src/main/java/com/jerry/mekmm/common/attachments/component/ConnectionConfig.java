@@ -35,9 +35,9 @@ public record ConnectionConfig(BlockPos pos, Direction direction, TransmissionTy
      * 从NBT加载
      */
     public static ConnectionConfig fromNBT(CompoundTag tag) {
-        BlockPos pos = BlockPos.of(tag.getLong("pos"));
-        Direction dir = Direction.values()[(tag.getByte("direction"))];
-        TransmissionType type = TransmissionType.values()[tag.getByte("type")];
+        BlockPos pos = BlockPos.of(tag.getLong("pos").orElse(0L));
+        Direction dir = Direction.values()[Byte.toUnsignedInt(tag.getByte("direction").orElse((byte) 0)) % Direction.values().length];
+        TransmissionType type = TransmissionType.values()[Byte.toUnsignedInt(tag.getByte("type").orElse((byte) 0)) % TransmissionType.values().length];
         return new ConnectionConfig(pos, dir, type);
     }
 }

@@ -14,6 +14,7 @@ import mekanism.client.render.MekanismRenderer;
 import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -82,9 +83,9 @@ public class ConnectListButton extends MekanismButton {
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         setVisibility(getConnection() != null);
-        super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Nullable
@@ -93,14 +94,14 @@ public class ConnectListButton extends MekanismButton {
     }
 
     @Override
-    public void drawBackground(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
-        super.drawBackground(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
-        GuiGraphicsExtractor.blit(TEXTURE, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    public void drawBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override
-    public void renderForeground(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
-        super.renderForeground(GuiGraphicsExtractor, mouseX, mouseY);
+    public void renderForeground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+        super.renderForeground(guiGraphics, mouseX, mouseY);
         ConnectionConfig connection = getConnection();
         if (connection != prevConnection) {
             slotDisplay.updateStackList();
@@ -114,9 +115,9 @@ public class ConnectListButton extends MekanismButton {
             case ITEM -> EnumColor.GRAY;
             case HEAT -> EnumColor.ORANGE;
         };
-        GuiUtils.fill(GuiGraphicsExtractor, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), MekanismRenderer.getColorARGB(color, 0.3F));
+        GuiUtils.fill(guiGraphics, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), MekanismRenderer.getColorARGB(color, 0.3F));
         Component connectionDescriptor = level.getBlockState(connection.pos()).getBlock().asItem().getDefaultInstance().getHoverName();
         // 这里width代替了FilterButton里面的textWidth，但似乎可以更长
-        drawScrollingString(GuiGraphicsExtractor, connectionDescriptor, 19, 3, TextAlignment.LEFT, titleTextColor(), 227, 3, false);
+        drawScrollingString(guiGraphics, connectionDescriptor, 19, 3, TextAlignment.LEFT, titleTextColor(), 227, 3, false);
     }
 }

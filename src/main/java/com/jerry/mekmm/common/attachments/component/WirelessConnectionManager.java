@@ -208,17 +208,15 @@ public class WirelessConnectionManager {
      */
     public void loadFromNBT(CompoundTag tag) {
         connections.clear();
-        if (tag.contains("connections", Tag.TAG_LIST)) {
-            ListTag list = tag.getList("connections", Tag.TAG_COMPOUND);
+        tag.getList("connections").ifPresent(list -> {
             for (int i = 0; i < list.size(); i++) {
                 try {
-                    ConnectionConfig config = ConnectionConfig.fromNBT(list.getCompound(i));
-                    connections.add(config);
+                    list.getCompound(i).map(ConnectionConfig::fromNBT).ifPresent(connections::add);
                 } catch (Exception e) {
                     Mekmm.LOGGER.warn("Failed to load wireless connection: {}", e.getMessage());
                 }
             }
-        }
+        });
         // 标记需要重建缓存
         cacheDirty = true;
     }
