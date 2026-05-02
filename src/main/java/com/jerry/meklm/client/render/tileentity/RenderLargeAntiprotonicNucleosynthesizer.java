@@ -1,57 +1,65 @@
 package com.jerry.meklm.client.render.tileentity;
 
 import com.jerry.meklm.common.tile.machine.TileEntityLargeAntiprotonicNucleosynthesizer;
-
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
-
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.EnumColor;
 import mekanism.client.model.ModelEnergyCore;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.client.render.tileentity.RenderEnergyCube;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
-public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntityRenderer<TileEntityLargeAntiprotonicNucleosynthesizer> {
+public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntityRenderer<TileEntityLargeAntiprotonicNucleosynthesizer, RenderLargeAntiprotonicNucleosynthesizer.LargeAntiprotonicNucleosynthesizerRenderState> {
 
     private final ModelEnergyCore core;
 
     public RenderLargeAntiprotonicNucleosynthesizer(Context context) {
         super(context);
-        core = new ModelEnergyCore(context.getModelSet());
+        core = new ModelEnergyCore(context.entityModelSet());
     }
 
     @Override
-    protected void render(TileEntityLargeAntiprotonicNucleosynthesizer tile, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int overlayLight, ProfilerFiller profiler) {
-        float ticks = Minecraft.getInstance().levelRenderer.getTicks() + partialTick;
-        float scaledTicks = 4 * ticks;
-        matrix.pushPose();
-        switch (tile.getDirection()) {
-            case NORTH -> matrix.translate(2.5 / 16, 1.5, 2.5 / 16);
-            case SOUTH -> matrix.translate(13.5 / 16, 1.5, 13.5 / 16);
-            case WEST -> matrix.translate(2.5 / 16, 1.5, 13.5 / 16f);
-            case EAST -> matrix.translate(13.5 / 16f, 1.5, 2.5 / 16);
-        }
-        matrix.scale(0.5F, 0.5F, 0.5F);
-        renderCore(matrix, renderer, overlayLight, scaledTicks);
-        matrix.popPose();
-        endIfNeeded(renderer, core.RENDER_TYPE);
+    public LargeAntiprotonicNucleosynthesizerRenderState createRenderState() {
+        return new LargeAntiprotonicNucleosynthesizerRenderState();
     }
 
-    private void renderCore(PoseStack matrix, MultiBufferSource renderer, int overlayLight, float scaledTicks) {
+    @Override
+    public void extractRenderState(TileEntityLargeAntiprotonicNucleosynthesizer tile, LargeAntiprotonicNucleosynthesizerRenderState state, float partialTick,
+          Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        super.extractRenderState(tile, state, partialTick, cameraPosition, breakProgress);
+        state.direction = tile.getDirection();
+        state.ticks = tile.getLevel().getGameTime() + partialTick;
+    }
+
+    @Override
+    public void submit(LargeAntiprotonicNucleosynthesizerRenderState state, PoseStack matrix, SubmitNodeCollector nodeCollector, CameraRenderState camera) {
+        if (state.direction == null) {
+            return;
+        }
+        float scaledTicks = 4 * state.ticks;
         matrix.pushPose();
+        switch (state.direction) {
+            case NORTH -> matrix.translate(2.5 / 16, 1.5, 2.5 / 16);
+            case SOUTH -> matrix.translate(13.5 / 16, 1.5, 13.5 / 16);
+            case WEST -> matrix.translate(2.5 / 16, 1.5, 13.5 / 16F);
+            case EAST -> matrix.translate(13.5 / 16F, 1.5, 2.5 / 16);
+        }
+        matrix.scale(0.5F, 0.5F, 0.5F);
         matrix.mulPose(Axis.YP.rotationDegrees(scaledTicks));
         matrix.mulPose(RenderEnergyCube.coreVec.rotationDegrees(36F + scaledTicks));
-        core.render(matrix, renderer.getBuffer(core.RENDER_TYPE), LightTexture.FULL_BRIGHT, overlayLight, EnumColor.PURPLE, 1);
+        core.collect(EnumColor.PURPLE.getPackedColor(), matrix, nodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, false);
         matrix.popPose();
     }
 
@@ -63,5 +71,12 @@ public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntity
     @Override
     protected String getProfilerSection() {
         return MoreMachineProfilerConstants.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER;
+    }
+
+    public static class LargeAntiprotonicNucleosynthesizerRenderState extends BlockEntityRenderState {
+
+        @Nullable
+        public Direction direction;
+        public float ticks;
     }
 }
