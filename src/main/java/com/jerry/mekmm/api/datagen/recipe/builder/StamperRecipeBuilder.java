@@ -8,7 +8,11 @@ import mekanism.api.datagen.recipe.MekanismRecipeBuilder;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.Recipe;
 
 @NothingNullByDefault
 public class StamperRecipeBuilder extends MekanismRecipeBuilder<StamperRecipeBuilder> {
@@ -42,12 +46,17 @@ public class StamperRecipeBuilder extends MekanismRecipeBuilder<StamperRecipeBui
         return new BasicStamperRecipe(input, mold, output);
     }
 
+    @Override
+    public ResourceKey<Recipe<?>> defaultId() {
+        return RecipeBuilder.getDefaultRecipeId(ItemStackTemplate.fromNonEmptyStack(output));
+    }
+
     /**
      * Builds this recipe using the output item's name as the recipe name.
      *
      * @param recipeOutput Finished Recipe Consumer.
      */
     public void build(RecipeOutput recipeOutput) {
-        build(recipeOutput, output.getItemHolder());
+        save(recipeOutput);
     }
 }

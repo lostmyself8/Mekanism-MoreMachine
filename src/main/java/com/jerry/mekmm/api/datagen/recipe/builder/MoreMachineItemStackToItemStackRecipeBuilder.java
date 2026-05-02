@@ -8,11 +8,12 @@ import mekanism.api.datagen.recipe.builder.ItemStackToItemStackRecipeBuilder;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 @NothingNullByDefault
 public class MoreMachineItemStackToItemStackRecipeBuilder extends ItemStackToItemStackRecipeBuilder {
 
-    protected MoreMachineItemStackToItemStackRecipeBuilder(ItemStackIngredient input, ItemStack output, Factory factory) {
+    protected MoreMachineItemStackToItemStackRecipeBuilder(ItemStackIngredient input, ItemStackTemplate output, Factory factory) {
         super(input, output, factory);
     }
 
@@ -26,7 +27,7 @@ public class MoreMachineItemStackToItemStackRecipeBuilder extends ItemStackToIte
         if (output.isEmpty()) {
             throw new IllegalArgumentException("This lathing recipe requires a non empty item output.");
         }
-        return new MoreMachineItemStackToItemStackRecipeBuilder(input, output, BasicLatheRecipe::new);
+        return new MoreMachineItemStackToItemStackRecipeBuilder(input, ItemStackTemplate.fromNonEmptyStack(output), BasicLatheRecipe::new);
     }
 
     /**
@@ -39,6 +40,6 @@ public class MoreMachineItemStackToItemStackRecipeBuilder extends ItemStackToIte
         if (output.isEmpty()) {
             throw new IllegalArgumentException("This rolling mill recipe requires a non empty item output.");
         }
-        return new MoreMachineItemStackToItemStackRecipeBuilder(input, output, BasicRollingMillRecipe::new);
+        return new MoreMachineItemStackToItemStackRecipeBuilder(input, ItemStackTemplate.fromNonEmptyStack(output), BasicRollingMillRecipe::new);
     }
 }

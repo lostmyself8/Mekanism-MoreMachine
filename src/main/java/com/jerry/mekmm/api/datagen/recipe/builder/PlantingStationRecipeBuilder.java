@@ -8,6 +8,9 @@ import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 
 @NothingNullByDefault
@@ -17,6 +20,7 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
     private final ChemicalStackIngredient chemicalInput;
     private final ItemStack mainOutput;
     private final ItemStack secondaryOutput;
+    private final ItemStackTemplate defaultOutput;
     private final double secondaryChance;
     private final boolean perTickUsage;
 
@@ -25,6 +29,7 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
         this.chemicalInput = chemicalInput;
         this.mainOutput = mainOutput;
         this.secondaryOutput = secondaryOutput;
+        this.defaultOutput = ItemStackTemplate.fromNonEmptyStack(mainOutput.isEmpty() ? secondaryOutput : mainOutput);
         this.secondaryChance = secondaryChance;
         this.perTickUsage = perTickUsage;
     }
@@ -92,5 +97,10 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
     @Override
     protected Recipe<?> asRecipe() {
         return new BasicPlantingRecipe(itemInput, chemicalInput, mainOutput, secondaryOutput, secondaryChance, perTickUsage);
+    }
+
+    @Override
+    public ResourceKey<Recipe<?>> defaultId() {
+        return RecipeBuilder.getDefaultRecipeId(defaultOutput);
     }
 }
