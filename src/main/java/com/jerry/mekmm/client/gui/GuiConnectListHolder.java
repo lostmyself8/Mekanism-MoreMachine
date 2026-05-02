@@ -61,15 +61,15 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
         }
     }
 
-    protected void drawScreenText(GuiGraphicsExtractor guiGraphics, Component text, int y) {
-        drawScreenText(guiGraphics, text, 0, y);
+    protected void drawScreenText(GuiGraphicsExtractor GuiGraphicsExtractor, Component text, int y) {
+        drawScreenText(GuiGraphicsExtractor, text, 0, y);
     }
 
-    protected void drawScreenText(GuiGraphicsExtractor guiGraphics, Component text, int x, int y) {
+    protected void drawScreenText(GuiGraphicsExtractor GuiGraphicsExtractor, Component text, int x, int y) {
         // TODO: Do we want to make usages of this method eventually set the text to be rendered within the gui element
         // for the screen?
         if (leftScreen != null) {// Validate it was properly set
-            leftScreen.drawScaledScrollingString(guiGraphics, text, x, y, TextAlignment.LEFT, screenTextColor(), leftScreen.getXSize() - x, 5, false, 0.8F);
+            leftScreen.drawScaledScrollingString(GuiGraphicsExtractor, text, x, y, TextAlignment.LEFT, screenTextColor(), leftScreen.getXSize() - x, 5, false, 0.8F);
         }
     }
 
@@ -97,8 +97,8 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
-        renderInventoryText(guiGraphics);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
+        renderInventoryText(GuiGraphicsExtractor);
     }
 }

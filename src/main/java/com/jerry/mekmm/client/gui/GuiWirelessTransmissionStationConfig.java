@@ -74,14 +74,14 @@ public class GuiWirelessTransmissionStationConfig extends GuiConnectListHolder<T
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
-        renderTitleTextWithOffset(guiGraphics, 14);// Adjust spacing for back button
-        drawScreenText(guiGraphics, MoreMachineLang.WTS_ENERGY_RATE.translate(EnergyDisplay.of(tile.getEnergyRate())), 7);
-        drawScreenText(guiGraphics, MoreMachineLang.WTS_FLUIDS_RATE.translate(tile.getFluidsRate()), 34);
-        drawScreenText(guiGraphics, MoreMachineLang.WTS_CHEMICALS_RATE.translate(tile.getChemicalsRate()), 61);
-        drawScreenText(guiGraphics, MoreMachineLang.WTS_ITEMS_RATE.translate(tile.getItemsRate()), 88);
-        drawScreenText(guiGraphics, MoreMachineLang.WTS_HEAT_RATE.translate(MekanismUtils.getTemperatureDisplay(tile.getHeatRate(), UnitDisplayUtils.TemperatureUnit.KELVIN, false)), 115);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
+        renderTitleTextWithOffset(GuiGraphicsExtractor, 14);// Adjust spacing for back button
+        drawScreenText(GuiGraphicsExtractor, MoreMachineLang.WTS_ENERGY_RATE.translate(EnergyDisplay.of(tile.getEnergyRate())), 7);
+        drawScreenText(GuiGraphicsExtractor, MoreMachineLang.WTS_FLUIDS_RATE.translate(tile.getFluidsRate()), 34);
+        drawScreenText(GuiGraphicsExtractor, MoreMachineLang.WTS_CHEMICALS_RATE.translate(tile.getChemicalsRate()), 61);
+        drawScreenText(GuiGraphicsExtractor, MoreMachineLang.WTS_ITEMS_RATE.translate(tile.getItemsRate()), 88);
+        drawScreenText(GuiGraphicsExtractor, MoreMachineLang.WTS_HEAT_RATE.translate(MekanismUtils.getTemperatureDisplay(tile.getHeatRate(), UnitDisplayUtils.TemperatureUnit.KELVIN, false)), 115);
     }
 
     @Override

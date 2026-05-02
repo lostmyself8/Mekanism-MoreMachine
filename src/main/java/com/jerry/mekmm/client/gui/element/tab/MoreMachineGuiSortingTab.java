@@ -26,14 +26,14 @@ public class MoreMachineGuiSortingTab extends GuiInsetElement<TileEntityMoreMach
     }
 
     @Override
-    public void drawBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.drawBackground(guiGraphics, mouseX, mouseY, partialTicks);
-        drawScrollingString(guiGraphics, BooleanStateDisplay.OnOff.of(dataSource.isSorting()).getTextComponent(), 0, 24, TextAlignment.CENTER, titleTextColor(), 3, false);
+    public void drawBackground(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackground(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
+        drawScrollingString(GuiGraphicsExtractor, BooleanStateDisplay.OnOff.of(dataSource.isSorting()).getTextComponent(), 0, 24, TextAlignment.CENTER, titleTextColor(), 3, false);
     }
 
     @Override
-    protected void colorTab(GuiGraphicsExtractor guiGraphics) {
-        MekanismRenderer.color(guiGraphics, SpecialColors.TAB_FACTORY_SORT);
+    protected void colorTab(GuiGraphicsExtractor GuiGraphicsExtractor) {
+        MekanismRenderer.color(GuiGraphicsExtractor, SpecialColors.TAB_FACTORY_SORT);
     }
 
     @Override

@@ -14,7 +14,7 @@ import mekanism.common.util.EnumUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 
 import com.mojang.serialization.Codec;
@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class MoreMachineUtils {
 
     // 维度居然没有翻译文件。。。
-    public static Component formatDim(ResourceLocation id) {
+    public static Component formatDim(Identifier id) {
         return Component.translatableWithFallback(id.toLanguageKey("dimension"), id.toString());
     }
 

@@ -136,9 +136,9 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics, dumpButton == null ? getImageWidth() : dumpButton.getRelativeX());
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        renderInventoryText(GuiGraphicsExtractor, dumpButton == null ? getImageWidth() : dumpButton.getRelativeX());
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

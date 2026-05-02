@@ -15,14 +15,14 @@ import mekanism.client.recipe_viewer.emi.recipe.MekanismEmiRecipe;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import dev.emi.emi.api.widget.WidgetHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidReplicatorEmiRecipe extends MekanismEmiRecipe<BasicFluidChemicalToFluidRecipe> {
 
-    public FluidReplicatorEmiRecipe(MekanismEmiRecipeCategory category, ResourceLocation id, BasicFluidChemicalToFluidRecipe recipes) {
+    public FluidReplicatorEmiRecipe(MekanismEmiRecipeCategory category, Identifier id, BasicFluidChemicalToFluidRecipe recipes) {
         super(category, id, recipes);
         super.addInputDefinition(recipe.getChemicalInput());
         addInputDefinition(recipe.getFluidInput());

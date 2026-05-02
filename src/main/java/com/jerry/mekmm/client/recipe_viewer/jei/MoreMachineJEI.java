@@ -19,7 +19,7 @@ import mekanism.client.recipe_viewer.jei.RecipeRegistryHelper;
 import mekanism.client.recipe_viewer.jei.machine.ItemStackToItemStackRecipeCategory;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import mezz.jei.api.IModPlugin;
@@ -36,9 +36,9 @@ import org.jetbrains.annotations.NotNull;
 public class MoreMachineJEI implements IModPlugin {
 
     @Override
-    public @NotNull ResourceLocation getPluginUid() {
+    public @NotNull Identifier getPluginUid() {
         // 不能使用Mekmm.rl()，原因见MekanismJEI.class
-        return ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "jei_plugin");
+        return Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "jei_plugin");
     }
 
     @Override

@@ -50,8 +50,8 @@ public class GuiFluidReplicator extends GuiConfigurableTile<TileEntityFluidRepli
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

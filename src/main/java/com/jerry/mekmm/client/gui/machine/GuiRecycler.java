@@ -41,9 +41,9 @@ public class GuiRecycler extends GuiConfigurableTile<TileEntityRecycler, Mekanis
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics);
-        super.drawForegroundText(guiGraphics, mouseX, mouseY);
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        renderTitleText(GuiGraphicsExtractor);
+        renderInventoryText(GuiGraphicsExtractor);
+        super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
     }
 }

@@ -133,8 +133,8 @@ public class GuiViewConnection extends GuiWindow {
     }
 
     @Override
-    public void renderForeground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        super.renderForeground(guiGraphics, mouseX, mouseY);
-        drawTitleText(guiGraphics, MoreMachineLang.VIEW_CONNECTION.translate(), 6);
+    public void renderForeground(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        super.renderForeground(GuiGraphicsExtractor, mouseX, mouseY);
+        drawTitleText(GuiGraphicsExtractor, MoreMachineLang.VIEW_CONNECTION.translate(), 6);
     }
 }

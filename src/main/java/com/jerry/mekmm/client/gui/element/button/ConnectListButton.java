@@ -82,9 +82,9 @@ public class ConnectListButton extends MekanismButton {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
         setVisibility(getConnection() != null);
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
     }
 
     @Nullable
@@ -93,14 +93,14 @@ public class ConnectListButton extends MekanismButton {
     }
 
     @Override
-    public void drawBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.drawBackground(guiGraphics, mouseX, mouseY, partialTicks);
-        guiGraphics.blit(TEXTURE, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    public void drawBackground(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackground(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
+        GuiGraphicsExtractor.blit(TEXTURE, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override
-    public void renderForeground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        super.renderForeground(guiGraphics, mouseX, mouseY);
+    public void renderForeground(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        super.renderForeground(GuiGraphicsExtractor, mouseX, mouseY);
         ConnectionConfig connection = getConnection();
         if (connection != prevConnection) {
             slotDisplay.updateStackList();
@@ -114,9 +114,9 @@ public class ConnectListButton extends MekanismButton {
             case ITEM -> EnumColor.GRAY;
             case HEAT -> EnumColor.ORANGE;
         };
-        GuiUtils.fill(guiGraphics, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), MekanismRenderer.getColorARGB(color, 0.3F));
+        GuiUtils.fill(GuiGraphicsExtractor, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), MekanismRenderer.getColorARGB(color, 0.3F));
         Component connectionDescriptor = level.getBlockState(connection.pos()).getBlock().asItem().getDefaultInstance().getHoverName();
         // 这里width代替了FilterButton里面的textWidth，但似乎可以更长
-        drawScrollingString(guiGraphics, connectionDescriptor, 19, 3, TextAlignment.LEFT, titleTextColor(), 227, 3, false);
+        drawScrollingString(GuiGraphicsExtractor, connectionDescriptor, 19, 3, TextAlignment.LEFT, titleTextColor(), 227, 3, false);
     }
 }
