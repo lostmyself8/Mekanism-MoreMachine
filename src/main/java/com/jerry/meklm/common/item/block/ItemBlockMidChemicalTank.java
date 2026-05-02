@@ -15,10 +15,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemBlockMidChemicalTank extends ItemBlockLargeChemicalTank<TileEntityMidChemicalTank> {
 
@@ -32,10 +33,11 @@ public class ItemBlockMidChemicalTank extends ItemBlockLargeChemicalTank<TileEnt
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    @Deprecated
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, @NotNull TooltipFlag flag) {
         MidChemicalTankTier tier = getTier();
-        StorageUtils.addStoredSubstance(stack, tooltip, false);
-        tooltip.add(MekanismLang.CAPACITY_MB.translateColored(EnumColor.INDIGO, EnumColor.GRAY, TextUtils.format(tier.getStorage())));
-        super.appendHoverText(stack, context, tooltip, flag);
+        StorageUtils.addStoredSubstance(stack, tooltipAdder, false);
+        tooltipAdder.accept(MekanismLang.CAPACITY_MB.translateColored(EnumColor.INDIGO, EnumColor.GRAY, TextUtils.format(tier.getStorage())));
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
     }
 }
