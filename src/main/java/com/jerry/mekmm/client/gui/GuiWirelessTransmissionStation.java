@@ -24,7 +24,7 @@ import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils;
 import mekanism.common.util.text.EnergyDisplay;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -35,8 +35,7 @@ import java.util.List;
 public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEntityWirelessTransmissionStation, WirelessTransmissionStationContainer> {
 
     public GuiWirelessTransmissionStation(WirelessTransmissionStationContainer container, Inventory inv, Component title) {
-        super(container, inv, title);
-        imageHeight += 14;
+        super(container, inv, title, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT + 14);
         dynamicSlots = true;
     }
 
@@ -85,7 +84,7 @@ public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEnti
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
         // renderInventoryText(guiGraphics);
         super.drawForegroundText(guiGraphics, mouseX, mouseY);

@@ -33,7 +33,7 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
         largeHeatTankCapacity = CachedIntValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_HEAT_TANK_CAPACITY.applyToBuilder(builder)
                 .defineInRange("tankCapacity", 240 * FluidType.BUCKET_VOLUME, 1, Integer.MAX_VALUE));
         largeHeatGenerationFluidRate = CachedIntValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_HEAT_FLUID_RATE.applyToBuilder(builder)
-                .define("largeHeatGenerationFluidRate", 10, value -> value instanceof Integer i && i > 0 && i <= largeHeatTankCapacity.getOrDefault() / 100));
+                .define("largeHeatGenerationFluidRate", 10, v -> v instanceof Integer i && i > 0 && i <= largeHeatTankCapacity.getOrDefault() / 100));
         builder.pop();
 
         MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS.applyToBuilder(builder).push("gas_generator");

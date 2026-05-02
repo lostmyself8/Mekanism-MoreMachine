@@ -1,5 +1,6 @@
 package com.jerry.mekmm.common.tile.factory;
 
+import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.block.attribute.MoreMachineAttributeFactoryType;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlot;
@@ -65,6 +66,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ItemStackMap;
 
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
@@ -155,6 +157,13 @@ public abstract class TileEntityMoreMachineFactory<RECIPE extends MekanismRecipe
             recheckAllRecipeErrors[i] = TileEntityRecipeMachine.shouldRecheckAllErrors(this);
         }
         errorTracker = new ErrorTracker(errorTypes, globalErrorTypes, tier.processes);
+    }
+
+    public boolean isEMLoadAndTierOrdinalAboveOverLocked() {
+        if (Mekmm.hooks.evolvedMekanism.isLoaded()) {
+            return tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal();
+        }
+        return false;
     }
 
     /**

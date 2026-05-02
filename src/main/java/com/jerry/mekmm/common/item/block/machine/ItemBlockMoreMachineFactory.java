@@ -14,13 +14,13 @@ import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tier.FactoryTier;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?>> {
 
@@ -48,12 +48,12 @@ public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?
     }
 
     @Override
-    protected void addTypeDetails(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    protected void addTypeDetails(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, @NotNull TooltipFlag flag) {
         // Should always be present but validate it just in case
         MoreMachineAttributeFactoryType factoryType = Attribute.get(getBlock(), MoreMachineAttributeFactoryType.class);
         if (factoryType != null) {
-            tooltip.add(MekanismLang.FACTORY_TYPE.translateColored(EnumColor.INDIGO, EnumColor.GRAY, factoryType.getMoreMachineFactoryType()));
+            tooltipAdder.accept(MekanismLang.FACTORY_TYPE.translateColored(EnumColor.INDIGO, EnumColor.GRAY, factoryType.getMoreMachineFactoryType()));
         }
-        super.addTypeDetails(stack, context, tooltip, flag);
+        super.addTypeDetails(stack, context, tooltipDisplay, tooltipAdder, flag);
     }
 }

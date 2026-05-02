@@ -12,6 +12,7 @@ import mekanism.client.recipe_viewer.jei.HolderRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -20,7 +21,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import org.jetbrains.annotations.NotNull;
 
-// 虽然可以直接使用融合机的RecipeCategory，但复制一份应该更好
 public class StamperRecipeCategory extends HolderRecipeCategory<StamperRecipe> {
 
     private final GuiSlot input;
@@ -39,10 +39,11 @@ public class StamperRecipeCategory extends HolderRecipeCategory<StamperRecipe> {
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, RecipeHolder<StamperRecipe> recipeHolder, @NotNull IFocusGroup focusGroup) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, RecipeHolder<@NotNull StamperRecipe> recipeHolder, @NotNull IFocusGroup focusGroup) {
         StamperRecipe recipe = recipeHolder.value();
-        initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getInput().getRepresentations());
-        initItem(builder, RecipeIngredientRole.INPUT, extra, recipe.getMold().getRepresentations());
+        ContextMap slotDisplayContext = getSlotDisplayContext();
+        initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getInput().getRepresentations(slotDisplayContext));
+        initItem(builder, RecipeIngredientRole.INPUT, extra, recipe.getMold().getRepresentations(slotDisplayContext));
         initItem(builder, RecipeIngredientRole.OUTPUT, output, recipe.getOutputDefinition());
     }
 }

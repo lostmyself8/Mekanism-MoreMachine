@@ -17,7 +17,7 @@ import mekanism.common.inventory.warning.WarningTracker;
 import mekanism.common.util.text.EnergyDisplay;
 import mekanism.common.util.text.TextUtils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -50,7 +50,7 @@ public class GuiAmbientGasCollector extends GuiMekanismTile<TileEntityAmbientGas
             if (chemicalStack.isEmpty()) {
                 list.add(MekanismLang.NO_CHEMICAL.translate());
             } else {
-                list.add(MekanismLang.GENERIC_STORED_MB.translate(chemicalStack, TextUtils.format(chemicalStack.getAmount())));
+                list.add(MekanismLang.GENERIC_STORED_MB.translate(chemicalStack, TextUtils.format(chemicalStack.amount())));
             }
             return list;
         }));
@@ -67,7 +67,7 @@ public class GuiAmbientGasCollector extends GuiMekanismTile<TileEntityAmbientGas
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
         renderInventoryText(guiGraphics);
         super.drawForegroundText(guiGraphics, mouseX, mouseY);

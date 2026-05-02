@@ -1,6 +1,5 @@
 package com.jerry.mekmm.client.gui.machine;
 
-import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.client.gui.element.tab.MoreMachineGuiSortingTab;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.factory.TileEntityPlantingFactory;
@@ -19,11 +18,10 @@ import mekanism.common.inventory.warning.WarningTracker;
 import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,13 +30,37 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     @Nullable
     private GuiDumpButton<?> dumpButton;
 
-    public GuiMoreMachineFactory(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container, Inventory inv, Component title) {
-        super(container, inv, title);
+    private static int calcHeight(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container) {
+        TileEntityMoreMachineFactory<?> tile = container.getTileEntity();
+        int imageHeight = DEFAULT_IMAGE_HEIGHT;
         if (tile.hasSecondaryResourceBar()) {
             imageHeight += 11;
+        } else if (tile instanceof TileEntityPlantingFactory) {
+            imageHeight += 20;
+        }
+        return imageHeight;
+    }
+
+    private static int calcWidth(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container) {
+        TileEntityMoreMachineFactory<?> tile = container.getTileEntity();
+        int imageWidth = DEFAULT_IMAGE_WIDTH;
+        if (tile.tier == FactoryTier.ULTIMATE) {
+            imageWidth += 34;
+        }
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
+            // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
+            // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
+            int index = tile.tier.ordinal() - 4;
+            imageWidth += (36 * (index + 2)) + (2 * index);
+        }
+        return imageWidth;
+    }
+
+    public GuiMoreMachineFactory(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container, Inventory inv, Component title) {
+        super(container, inv, title, calcWidth(container), calcHeight(container));
+        if (tile.hasSecondaryResourceBar()) {
             inventoryLabelY = 85;
             if (tile instanceof TileEntityPlantingFactory) {
-                imageHeight += 20;
                 inventoryLabelY = 105;
             }
         } else {
@@ -46,26 +68,17 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
         }
 
         if (tile.tier == FactoryTier.ULTIMATE) {
-            imageWidth += 34;
             inventoryLabelX = 26;
         }
         // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
-        if (isEMLoadAndTierOrdinalAboveOverLocked()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
-            imageWidth += (36 * (index + 2)) + (2 * index);
             inventoryLabelX = (22 * (index + 2)) - (3 * index);
         }
         titleLabelY = 4;
         dynamicSlots = true;
-    }
-
-    private boolean isEMLoadAndTierOrdinalAboveOverLocked() {
-        if (Mekmm.hooks.evolvedMekanism.isLoaded()) {
-            return tile.tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal();
-        }
-        return false;
     }
 
     @Override
@@ -103,7 +116,7 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     }
 
     private int getBarWidth() {
-        if (isEMLoadAndTierOrdinalAboveOverLocked()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
@@ -113,7 +126,7 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     }
 
     private int getButtonX() {
-        if (isEMLoadAndTierOrdinalAboveOverLocked()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的便宜，但未得到验证
             int index = tile.tier.ordinal() - 4;
@@ -123,9 +136,9 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
-        renderInventoryText(guiGraphics, dumpButton == null ? getXSize() : dumpButton.getRelativeX());
+        renderInventoryText(guiGraphics, dumpButton == null ? getImageWidth() : dumpButton.getRelativeX());
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
     }
 }

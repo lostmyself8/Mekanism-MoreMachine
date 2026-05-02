@@ -15,7 +15,7 @@ import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.util.EnumUtils;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.util.EnumMap;
 import java.util.Map;

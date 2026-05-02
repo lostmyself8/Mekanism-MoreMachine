@@ -22,7 +22,8 @@ import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 
 import com.mojang.serialization.Codec;
@@ -77,17 +78,18 @@ public class ReplicatorRecipeCategory extends BaseRecipeCategory<MMBasicItemStac
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MMBasicItemStackChemicalToItemStackRecipe recipe, IFocusGroup focuses) {
-        initItem(builder, RecipeIngredientRole.INPUT, inputSlot, recipe.getItemInput().getRepresentations());
-        initChemical(builder, RecipeIngredientRole.INPUT, inputGauge, recipe.getChemicalInput().getRepresentations());
+        ContextMap slotDisplayContext = getSlotDisplayContext();
+        initItem(builder, RecipeIngredientRole.INPUT, inputSlot, recipe.getItemInput().getRepresentations(slotDisplayContext));
+        initChemical(builder, RecipeIngredientRole.INPUT, inputGauge, recipe.getChemicalInput().getRepresentations(slotDisplayContext));
         initItem(builder, RecipeIngredientRole.OUTPUT, outputSlot, recipe.getOutputDefinition());
-        initItem(builder, RecipeIngredientRole.CATALYST, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
+        initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
     }
 
     @Override
-    public @Nullable ResourceLocation getRegistryName(MMBasicItemStackChemicalToItemStackRecipe recipe) {
-        List<@NotNull ItemStack> representations = recipe.getItemInput().getRepresentations();
+    public @Nullable Identifier getIdentifier(MMBasicItemStackChemicalToItemStackRecipe recipe) {
+        List<@NotNull ItemStack> representations = recipe.getItemInput().getRepresentations(getSlotDisplayContext());
         if (representations.size() == 1) {
-            ResourceLocation itemId = BuiltInRegistries.ITEM.getKeyOrNull(representations.getFirst().getItem());
+            Identifier itemId = BuiltInRegistries.ITEM.getKeyOrNull(representations.getFirst().getItem());
             if (itemId != null) {
                 return RecipeViewerUtils.synthetic(itemId, "replicator", Mekmm.MOD_ID);
             }

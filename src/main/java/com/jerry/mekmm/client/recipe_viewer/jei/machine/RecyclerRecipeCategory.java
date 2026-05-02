@@ -22,6 +22,7 @@ import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import org.jetbrains.annotations.NotNull;
 
 @NothingNullByDefault
 public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe> {
@@ -40,7 +41,7 @@ public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe>
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<RecyclerRecipe> recipeHolder, IFocusGroup focuses) {
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<@NotNull RecyclerRecipe> recipeHolder, IFocusGroup focuses) {
         super.createRecipeExtras(builder, recipeHolder, focuses);
         double secondaryChance = recipeHolder.value().getOutputChance();
         if (secondaryChance > 0) {
@@ -52,9 +53,9 @@ public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<RecyclerRecipe> recipeHolder, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<@NotNull RecyclerRecipe> recipeHolder, IFocusGroup focuses) {
         RecyclerRecipe recipe = recipeHolder.value();
-        initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getInput().getRepresentations());
+        initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getInput().getRepresentations(getSlotDisplayContext()));
         initItem(builder, RecipeIngredientRole.OUTPUT, output, recipe.getChanceOutputDefinition());
     }
 }

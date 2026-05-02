@@ -19,7 +19,8 @@ import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextMap;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import com.mojang.serialization.Codec;
@@ -77,17 +78,18 @@ public class FluidReplicatorRecipeCategory extends BaseRecipeCategory<BasicFluid
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BasicFluidChemicalToFluidRecipe recipe, IFocusGroup focuses) {
-        initFluid(builder, RecipeIngredientRole.INPUT, fluidInputGauge, recipe.getFluidInput().getRepresentations());
-        initChemical(builder, RecipeIngredientRole.INPUT, gasInputGauge, recipe.getChemicalInput().getRepresentations());
+        ContextMap slotDisplayContext = getSlotDisplayContext();
+        initFluid(builder, RecipeIngredientRole.INPUT, fluidInputGauge, recipe.getFluidInput().getRepresentations(slotDisplayContext));
+        initChemical(builder, RecipeIngredientRole.INPUT, gasInputGauge, recipe.getChemicalInput().getRepresentations(slotDisplayContext));
         initFluid(builder, RecipeIngredientRole.OUTPUT, outputGauge, recipe.getOutputDefinition());
-        initItem(builder, RecipeIngredientRole.CATALYST, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
+        initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
     }
 
     @Override
-    public @Nullable ResourceLocation getRegistryName(BasicFluidChemicalToFluidRecipe recipe) {
-        List<@NotNull FluidStack> representations = recipe.getFluidInput().getRepresentations();
+    public @Nullable Identifier getIdentifier(BasicFluidChemicalToFluidRecipe recipe) {
+        List<@NotNull FluidStack> representations = recipe.getFluidInput().getRepresentations(getSlotDisplayContext());
         if (representations.size() == 1) {
-            ResourceLocation fluidId = BuiltInRegistries.FLUID.getKeyOrNull(representations.getFirst().getFluid());
+            Identifier fluidId = BuiltInRegistries.FLUID.getKeyOrNull(representations.getFirst().getFluid());
             if (fluidId != null) {
                 return RecipeViewerUtils.synthetic(fluidId, "replicator", Mekmm.MOD_ID);
             }

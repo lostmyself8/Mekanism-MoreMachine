@@ -21,9 +21,9 @@ import mekanism.common.network.PacketUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.text.EnergyDisplay;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,9 +32,9 @@ import java.util.List;
 
 public class GuiWirelessChargingStation extends GuiConfigurableTile<TileEntityWirelessChargingStation, MekanismTileContainer<TileEntityWirelessChargingStation>> {
 
-    private static final ResourceLocation EQUIPS = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/equips.png");
-    private static final ResourceLocation INVENTORY = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/inventory.png");
-    private static final ResourceLocation CURIOS = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/curios.png");
+    private static final Identifier EQUIPS = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/equips.png");
+    private static final Identifier INVENTORY = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/inventory.png");
+    private static final Identifier CURIOS = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/curios.png");
 
     public GuiWirelessChargingStation(MekanismTileContainer<TileEntityWirelessChargingStation> container, Inventory inv, Component title) {
         super(container, inv, title);
@@ -64,7 +64,7 @@ public class GuiWirelessChargingStation extends GuiConfigurableTile<TileEntityWi
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         renderTitleText(guiGraphics);
         renderInventoryText(guiGraphics);
         super.drawForegroundText(guiGraphics, mouseX, mouseY);

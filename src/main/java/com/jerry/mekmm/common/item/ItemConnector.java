@@ -41,10 +41,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -89,19 +86,19 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
     }
 
     @Override
-    public boolean canPerformAction(@NotNull ItemStack stack, @NotNull ItemAbility action) {
-        if (action == MoreMachineItemAbilities.CONNECT_CHEMICALS) {
+    public boolean canPerformAction(@NotNull ItemInstance stack, @NotNull ItemAbility itemAbility) {
+        if (itemAbility == MoreMachineItemAbilities.CONNECT_CHEMICALS) {
             return getMode(stack) == ConnectorMode.CHEMICALS;
-        } else if (action == MoreMachineItemAbilities.CONNECT_ENERGY) {
+        } else if (itemAbility == MoreMachineItemAbilities.CONNECT_ENERGY) {
             return getMode(stack) == ConnectorMode.ENERGY;
-        } else if (action == MoreMachineItemAbilities.CONNECT_FLUIDS) {
+        } else if (itemAbility == MoreMachineItemAbilities.CONNECT_FLUIDS) {
             return getMode(stack) == ConnectorMode.FLUIDS;
-        } else if (action == MoreMachineItemAbilities.CONNECT_HEAT) {
+        } else if (itemAbility == MoreMachineItemAbilities.CONNECT_HEAT) {
             return getMode(stack) == ConnectorMode.HEAT;
-        } else if (action == MoreMachineItemAbilities.CONNECT_ITEMS) {
+        } else if (itemAbility == MoreMachineItemAbilities.CONNECT_ITEMS) {
             return getMode(stack) == ConnectorMode.ITEMS;
         }
-        return super.canPerformAction(stack, action);
+        return super.canPerformAction(stack, itemAbility);
     }
 
     @Override
@@ -122,7 +119,7 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
             }
             if (!world.isClientSide) {
                 stack.set(MoreMachineDataComponents.CONNECT_FROM, GlobalPos.of(world.dimension(), pos));
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_FROM.translate(EnumColor.INDIGO, TextComponentUtil.translate(block.getDescriptionId())), true);
+                player.sendOverlayMessage(MoreMachineLang.CONNECTOR_FROM.translate(EnumColor.INDIGO, TextComponentUtil.translate(block.getDescriptionId())), true);
             }
         } else {
             // 禁用交互效果在MoreMachinePlayerTracker
@@ -133,19 +130,19 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
             // 如果跨纬度
             if (world.dimension() != globalPos.dimension()) {
                 // Ciallo～(∠・ω< )⌒★
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_ACROSS_DIMENSION.translate(EnumColor.DARK_RED), true);
+                player.sendOverlayMessage(MoreMachineLang.CONNECTOR_ACROSS_DIMENSION.translate(EnumColor.DARK_RED), true);
                 return InteractionResult.CONSUME;
             }
             // 如果绑定到自己
             if (pos.equals(globalPos.pos())) {
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
+                player.sendOverlayMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
                 return InteractionResult.CONSUME;
             }
             // 防止出现端口在绑定方块上的情况。这个情况应当视为连接自身
             if (tile instanceof TileEntityBoundingBlock boundingBlock) {
                 BlockPos mainPos = boundingBlock.getMainPos();
                 if (mainPos.equals(globalPos.pos())) {
-                    player.displayClientMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
+                    player.sendOverlayMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
                     return InteractionResult.CONSUME;
                 }
             }
@@ -155,23 +152,23 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
                 Component translateName = TextComponentUtil.translate(block.getDescriptionId());
                 switch (linkTile.connectOrCut(pos, side, getMode(stack).transmissionType)) {
                     case CONNECT -> {
-                        player.displayClientMessage(MoreMachineLang.CONNECTOR_TO.translate(EnumColor.INDIGO, translateName, EnumColor.INDIGO, side), true);
+                        player.sendOverlayMessage(MoreMachineLang.CONNECTOR_TO.translate(EnumColor.INDIGO, translateName, EnumColor.INDIGO, side), true);
                         return InteractionResult.SUCCESS;
                     }
                     case DISCONNECT -> {
-                        player.displayClientMessage(MoreMachineLang.CONNECTOR_DISCONNECT.translate(EnumColor.INDIGO, translateName, EnumColor.INDIGO, side), true);
+                        player.sendOverlayMessage(MoreMachineLang.CONNECTOR_DISCONNECT.translate(EnumColor.INDIGO, translateName, EnumColor.INDIGO, side), true);
                         return InteractionResult.SUCCESS;
                     }
                     case CONNECT_FAIL -> {
                         // 连接到没有能力或者不能连接的方块上时发出的消息
-                        player.displayClientMessage(MoreMachineLang.CONNECTOR_FAIL.translate(EnumColor.DARK_RED, translateName, EnumColor.DARK_RED, side), true);
+                        player.sendOverlayMessage(MoreMachineLang.CONNECTOR_FAIL.translate(EnumColor.DARK_RED, translateName, EnumColor.DARK_RED, side), true);
                         return InteractionResult.FAIL;
                     }
                 }
                 return InteractionResult.PASS;
             } else {
                 // 绑定后中心方块被拆除
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_LOSE.translate(EnumColor.DARK_RED, MoreMachineUtils.formatPos(globalPos.pos())), true);
+                player.sendOverlayMessage(MoreMachineLang.CONNECTOR_LOSE.translate(EnumColor.DARK_RED, MoreMachineUtils.formatPos(globalPos.pos())), true);
                 return InteractionResult.FAIL;
             }
         }
@@ -185,7 +182,7 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
             if (!level.isClientSide) {
                 if (getStoredPosition(connector) != null) {
                     connector.remove(MoreMachineDataComponents.CONNECT_FROM);
-                    player.displayClientMessage(MoreMachineLang.CONNECTOR_CLEARED.translate(), true);
+                    player.sendOverlayMessage(MoreMachineLang.CONNECTOR_CLEARED.translate(), true);
                 }
             }
             return InteractionResultHolder.sidedSuccess(connector, level.isClientSide);

@@ -15,8 +15,8 @@ import mekanism.api.chemical.ChemicalStack;
 import mekanism.client.recipe_viewer.RecipeViewerUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -28,8 +28,8 @@ public class MMRecipeViewerUtils {
 
     private MMRecipeViewerUtils() {}
 
-    public static Map<ResourceLocation, MMBasicItemStackChemicalToItemStackRecipe> getItemReplicatorRecipes() {
-        Map<ResourceLocation, MMBasicItemStackChemicalToItemStackRecipe> replicator = new HashMap<>();
+    public static Map<Identifier, MMBasicItemStackChemicalToItemStackRecipe> getItemReplicatorRecipes() {
+        Map<Identifier, MMBasicItemStackChemicalToItemStackRecipe> replicator = new HashMap<>();
         // TODO: Do we want to loop creative tabs or something instead?
         // In theory recipe loaders should init the creative tabs before we are called so we wouldn't need to call
         // CreativeModeTab#buildContents, and in theory we only need to care about things in search so could use:
@@ -38,30 +38,30 @@ public class MMRecipeViewerUtils {
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
             MMBasicItemStackChemicalToItemStackRecipe recipe = TileEntityReplicator.getRecipe(entry.getValue().getDefaultInstance(), MoreMachineChemicals.UU_MATTER.asStack(1));
             if (recipe != null) {
-                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().location(), "replicator", Mekmm.MOD_ID), recipe);
+                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
         }
         return replicator;
     }
 
-    public static Map<ResourceLocation, BasicFluidChemicalToFluidRecipe> getFluidReplicatorRecipes() {
-        Map<ResourceLocation, BasicFluidChemicalToFluidRecipe> replicator = new HashMap<>();
+    public static Map<Identifier, BasicFluidChemicalToFluidRecipe> getFluidReplicatorRecipes() {
+        Map<Identifier, BasicFluidChemicalToFluidRecipe> replicator = new HashMap<>();
         for (Map.Entry<ResourceKey<Fluid>, Fluid> entry : BuiltInRegistries.FLUID.entrySet()) {
             BasicFluidChemicalToFluidRecipe recipe = TileEntityFluidReplicator.getRecipe(new FluidStack(entry.getValue(), 1), MoreMachineChemicals.UU_MATTER.asStack(1));
             if (recipe != null) {
-                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().location(), "replicator", Mekmm.MOD_ID), recipe);
+                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
         }
         return replicator;
     }
 
-    public static Map<ResourceLocation, MMBasicChemicalChemicalToChemicalRecipe> getChemicalReplicatorRecipes() {
-        Map<ResourceLocation, MMBasicChemicalChemicalToChemicalRecipe> replicator = new HashMap<>();
+    public static Map<Identifier, MMBasicChemicalChemicalToChemicalRecipe> getChemicalReplicatorRecipes() {
+        Map<Identifier, MMBasicChemicalChemicalToChemicalRecipe> replicator = new HashMap<>();
         for (Map.Entry<ResourceKey<Chemical>, Chemical> entry : MekanismAPI.CHEMICAL_REGISTRY.entrySet()) {
             // mek将很多方法弃用了，所以只能使用这个办法。
             MMBasicChemicalChemicalToChemicalRecipe recipe = TileEntityChemicalReplicator.getRecipe(new ChemicalStack(MekanismAPI.CHEMICAL_REGISTRY.wrapAsHolder(entry.getValue()), 1), MoreMachineChemicals.UU_MATTER.asStack(1));
             if (recipe != null) {
-                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().location(), "replicator", Mekmm.MOD_ID), recipe);
+                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
         }
         return replicator;

@@ -23,7 +23,8 @@ import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextMap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -81,20 +82,19 @@ public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasic
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, MMBasicChemicalChemicalToChemicalRecipe recipe, IFocusGroup focuses) {
-        initChemical(builder, RecipeIngredientRole.INPUT, firstGauge, recipe.getLeftInput().getRepresentations());
-        initChemical(builder, RecipeIngredientRole.INPUT, secondaryGauge, recipe.getRightInput().getRepresentations());
+        ContextMap slotDisplayContext = getSlotDisplayContext();
+        initChemical(builder, RecipeIngredientRole.INPUT, firstGauge, recipe.getLeftInput().getRepresentations(slotDisplayContext));
+        initChemical(builder, RecipeIngredientRole.INPUT, secondaryGauge, recipe.getRightInput().getRepresentations(slotDisplayContext));
         initChemical(builder, RecipeIngredientRole.OUTPUT, outputGauge, recipe.getOutputDefinition());
-        initItem(builder, RecipeIngredientRole.CATALYST, extra, RecipeViewerUtils.getStacksFor(recipe.getRightInput(), true));
+        initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getRightInput(), true));
     }
 
     @Override
-    public @Nullable ResourceLocation getRegistryName(MMBasicChemicalChemicalToChemicalRecipe recipe) {
-        List<@NotNull ChemicalStack> representations = recipe.getLeftInput().getRepresentations();
+    public @Nullable Identifier getIdentifier(MMBasicChemicalChemicalToChemicalRecipe recipe) {
+        List<@NotNull ChemicalStack> representations = recipe.getLeftInput().getRepresentations(getSlotDisplayContext());
         if (representations.size() == 1) {
-            ResourceLocation chemicalId = MekanismAPI.CHEMICAL_REGISTRY.getKey(representations.getFirst().getChemical());
-            if (chemicalId != null) {
-                return RecipeViewerUtils.synthetic(chemicalId, "replicator", Mekmm.MOD_ID);
-            }
+            Identifier chemicalId = MekanismAPI.CHEMICAL_REGISTRY.getKey(representations.getFirst().getChemical());
+            return RecipeViewerUtils.synthetic(chemicalId, "replicator", Mekmm.MOD_ID);
         }
         return null;
     }

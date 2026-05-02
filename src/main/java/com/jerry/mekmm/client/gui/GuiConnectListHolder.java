@@ -14,7 +14,7 @@ import mekanism.common.tile.TileEntityBoundingBlock;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.WorldUtils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -38,10 +38,11 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
     Level level;
 
     protected GuiConnectListHolder(CONTAINER container, Inventory inv, Component title) {
-        super(container, inv, title);
+        // Height相比于矿机增加了7
+        super(container, inv, title, DEFAULT_IMAGE_WIDTH + 100, DEFAULT_IMAGE_HEIGHT + 95);
         level = inv.player.level();
-        imageHeight += 95;// 相比于矿机增加了7
-        imageWidth += 100;
+        // imageHeight += 95;// 相比于矿机增加了7
+        // imageWidth += 100;
         inventoryLabelX += 50;
         inventoryLabelY = imageHeight - 94;
         dynamicSlots = true;
@@ -60,11 +61,11 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
         }
     }
 
-    protected void drawScreenText(GuiGraphics guiGraphics, Component text, int y) {
+    protected void drawScreenText(GuiGraphicsExtractor guiGraphics, Component text, int y) {
         drawScreenText(guiGraphics, text, 0, y);
     }
 
-    protected void drawScreenText(GuiGraphics guiGraphics, Component text, int x, int y) {
+    protected void drawScreenText(GuiGraphicsExtractor guiGraphics, Component text, int x, int y) {
         // TODO: Do we want to make usages of this method eventually set the text to be rendered within the gui element
         // for the screen?
         if (leftScreen != null) {// Validate it was properly set
@@ -96,7 +97,7 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
     }
 
     @Override
-    protected void drawForegroundText(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void drawForegroundText(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         super.drawForegroundText(guiGraphics, mouseX, mouseY);
         renderInventoryText(guiGraphics);
     }

@@ -12,7 +12,7 @@ import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.registries.MekanismDataComponents;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.util.EnumMap;
 import java.util.Map;

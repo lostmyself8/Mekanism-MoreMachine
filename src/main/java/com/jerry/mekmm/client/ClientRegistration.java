@@ -29,7 +29,6 @@ import com.jerry.mekmm.common.registries.MoreMachineItems;
 import com.jerry.mekmm.common.registries.MoreMachineTileEntityTypes;
 
 import mekanism.client.ClientRegistrationUtil;
-import mekanism.client.model.baked.ExtensionBakedModel.TransformedBakedModel;
 import mekanism.client.render.lib.QuadTransformation;
 
 import net.neoforged.api.distmarker.Dist;
@@ -38,7 +37,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
-import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional;
+import net.neoforged.neoforge.client.event.ModelEvent.RegisterStandalone;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -49,8 +48,6 @@ import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
 import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
-
-import static mekanism.client.ClientRegistration.addCustomModel;
 
 @EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT)
 public class ClientRegistration {
@@ -139,7 +136,7 @@ public class ClientRegistration {
     }
 
     @SubscribeEvent
-    public static void registerAdditionalModels(RegisterAdditional event) {
+    public static void registerAdditionalModels(RegisterStandalone event) {
         LargeMachineModelCache.INSTANCE.setup(event);
     }
 

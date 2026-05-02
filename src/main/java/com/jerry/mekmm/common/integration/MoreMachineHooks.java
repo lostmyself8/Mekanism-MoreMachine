@@ -1,6 +1,6 @@
 package com.jerry.mekmm.common.integration;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModList;
 
@@ -19,8 +19,8 @@ public final class MoreMachineHooks {
             InterModComms.sendTo(modId, method, toSend);
         }
 
-        public ResourceLocation rl(String path) {
-            return ResourceLocation.fromNamespaceAndPath(modId, path);
+        public Identifier rl(String path) {
+            return Identifier.fromNamespaceAndPath(modId, path);
         }
 
         public void assertLoaded() {

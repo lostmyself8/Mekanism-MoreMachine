@@ -13,10 +13,10 @@ import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.common.util.MekanismUtils;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -30,7 +30,7 @@ import java.util.function.ObjIntConsumer;
 
 public class ConnectListButton extends MekanismButton {
 
-    private static final ResourceLocation TEXTURE = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI_BUTTON, "lists_holder.png");
+    private static final Identifier TEXTURE = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI_BUTTON, "lists_holder.png");
 
     protected static final int TEXTURE_WIDTH = 131;// 156
     protected static final int TEXTURE_HEIGHT = 58;
@@ -93,13 +93,13 @@ public class ConnectListButton extends MekanismButton {
     }
 
     @Override
-    public void drawBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void drawBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackground(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.blit(TEXTURE, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override
-    public void renderForeground(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderForeground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         super.renderForeground(guiGraphics, mouseX, mouseY);
         ConnectionConfig connection = getConnection();
         if (connection != prevConnection) {

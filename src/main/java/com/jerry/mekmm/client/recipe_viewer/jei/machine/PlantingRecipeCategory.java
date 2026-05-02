@@ -17,6 +17,7 @@ import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.util.text.TextUtils;
 
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -25,6 +26,7 @@ import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -48,7 +50,7 @@ public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe>
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<PlantingRecipe> recipeHolder, IFocusGroup focuses) {
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<@NotNull PlantingRecipe> recipeHolder, IFocusGroup focuses) {
         super.createRecipeExtras(builder, recipeHolder, focuses);
         double secondaryChance = recipeHolder.value().getSecondaryChance();
         if (secondaryChance > 0) {
@@ -61,18 +63,19 @@ public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<PlantingRecipe> recipeHolder, IFocusGroup focusGroup) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<@NotNull PlantingRecipe> recipeHolder, IFocusGroup focusGroup) {
         PlantingRecipe recipe = recipeHolder.value();
-        initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getItemInput().getRepresentations());
-        List<ChemicalStack> scaledChemicals = recipe.getChemicalInput().getRepresentations();
+        ContextMap slotDisplayContext = getSlotDisplayContext();
+        initItem(builder, RecipeIngredientRole.INPUT, input, recipe.getItemInput().getRepresentations(slotDisplayContext));
+        List<ChemicalStack> scaledChemicals = recipe.getChemicalInput().getRepresentations(slotDisplayContext);
         if (recipe.perTickUsage()) {
             scaledChemicals = scaledChemicals.stream()
-                    .map(chemical -> chemical.copyWithAmount(chemical.getAmount() * TileEntityPlantingStation.BASE_TICKS_REQUIRED))
+                    .map(chemical -> chemical.copyWithAmount(chemical.amount() * TileEntityPlantingStation.BASE_TICKS_REQUIRED))
                     .toList();
         }
         initChemical(builder, RecipeIngredientRole.INPUT, chemicalInput, scaledChemicals);
         initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 4, output.getY() + 4, recipe.getMainOutputDefinition());
         initItem(builder, RecipeIngredientRole.OUTPUT, output.getX() + 20, output.getY() + 4, recipe.getSecondaryOutputDefinition());
-        initItem(builder, RecipeIngredientRole.CATALYST, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
+        initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getChemicalInput(), true));
     }
 }

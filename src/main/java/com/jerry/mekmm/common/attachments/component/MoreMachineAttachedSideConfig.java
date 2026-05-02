@@ -6,7 +6,7 @@ import mekanism.common.attachments.component.AttachedSideConfig.LightConfigInfo;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.config.DataType;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.util.EnumMap;
 import java.util.Map;

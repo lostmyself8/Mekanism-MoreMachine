@@ -6,8 +6,9 @@ import mekanism.common.MekanismLang;
 import mekanism.common.registries.MekanismSounds;
 import mekanism.common.util.MekanismUtils;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.resources.Identifier;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -15,15 +16,15 @@ import java.util.function.BooleanSupplier;
 
 public class GuiWirelessChargingStationSwitch extends GuiTexturedElement {
 
-    public static final ResourceLocation SWITCH = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/switch.png");
+    public static final Identifier SWITCH = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/switch.png");
     public static final int BUTTON_SIZE_X = 15, BUTTON_SIZE_Y = 8;
 
     private final SwitchType type;
-    private final ResourceLocation icon;
+    private final Identifier icon;
     private final BooleanSupplier stateSupplier;
     private final IClickable onToggle;
 
-    public GuiWirelessChargingStationSwitch(IGuiWrapper gui, int x, int y, ResourceLocation icon, BooleanSupplier stateSupplier, IClickable onToggle, SwitchType type) {
+    public GuiWirelessChargingStationSwitch(IGuiWrapper gui, int x, int y, Identifier icon, BooleanSupplier stateSupplier, IClickable onToggle, SwitchType type) {
         super(SWITCH, gui, x, y, type.width, type.height);
         this.type = type;
         this.icon = icon;
@@ -34,7 +35,7 @@ public class GuiWirelessChargingStationSwitch extends GuiTexturedElement {
     }
 
     @Override
-    public void drawBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void drawBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackground(guiGraphics, mouseX, mouseY, partialTicks);
         boolean state = stateSupplier.getAsBoolean();
         guiGraphics.blit(getResource(), relativeX + type.switchX, relativeY + type.switchY, 0, state ? 0 : BUTTON_SIZE_Y, BUTTON_SIZE_X, BUTTON_SIZE_Y, BUTTON_SIZE_X, BUTTON_SIZE_Y * 2);
@@ -43,15 +44,15 @@ public class GuiWirelessChargingStationSwitch extends GuiTexturedElement {
     }
 
     @Override
-    public void renderForeground(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderForeground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         super.renderForeground(guiGraphics, mouseX, mouseY);
         drawScaledScrollingString(guiGraphics, MekanismLang.ON.translate(), type.switchX, type.switchY, TextAlignment.CENTER, 0x101010, BUTTON_SIZE_X, 1, false, 0.5F);
         drawScaledScrollingString(guiGraphics, MekanismLang.OFF.translate(), type.switchX, type.switchY + BUTTON_SIZE_Y + 1, TextAlignment.CENTER, 0x101010, BUTTON_SIZE_X, 1, false, 0.5F);
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY, int button) {
-        onToggle.onClick(this, mouseX, mouseY);
+    public void onClick(@NotNull MouseButtonEvent event, boolean doubleClick) {
+        onToggle.onClick(this, event, doubleClick);
     }
 
     public enum SwitchType {
