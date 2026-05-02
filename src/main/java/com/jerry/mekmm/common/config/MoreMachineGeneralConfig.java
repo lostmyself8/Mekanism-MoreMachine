@@ -47,9 +47,9 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
         builder.pop();
 
         MoreMachineConfigTranslations.GENERAL_WIRELESS_TRANSMISSION_STATION_MAX_OUTPUT_RATE.applyToBuilder(builder).push("wireless_transmission_station_max_output_rate");
-        energyRate = CachedLongValue.define(this, builder, MoreMachineConfigTranslations.ENERGY_RATE, "energyRate", 100_000L, 1, Long.MAX_VALUE);
-        fluidsRate = CachedIntValue.wrap(this, MoreMachineConfigTranslations.FLUIDS_RATE.applyToBuilder(builder).defineInRange("fluidsRate", 1_000, 1, Integer.MAX_VALUE));
-        chemicalsRate = CachedLongValue.define(this, builder, MoreMachineConfigTranslations.CHEMICALS_RATE, "chemicalsRate", 4_000L, 1, Long.MAX_VALUE);
+        energyRate = CachedLongValue.define(this, builder, MoreMachineConfigTranslations.ENERGY_RATE, "energyRate", 10_000_000L, 1, Long.MAX_VALUE);
+        fluidsRate = CachedIntValue.wrap(this, MoreMachineConfigTranslations.FLUIDS_RATE.applyToBuilder(builder).defineInRange("fluidsRate", 10_000, 1, Integer.MAX_VALUE));
+        chemicalsRate = CachedLongValue.define(this, builder, MoreMachineConfigTranslations.CHEMICALS_RATE, "chemicalsRate", 40_000L, 1, Long.MAX_VALUE);
         itemsRate = CachedIntValue.wrap(this, MoreMachineConfigTranslations.ITEMS_RATE.applyToBuilder(builder).defineInRange("itemsRate", 64, 1, 64));
         // 2的32次方/128
         heatRate = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.HEAT_RATE.applyToBuilder(builder).defineInRange("heatRate", 16_777_216D, 0.1, Long.MAX_VALUE));
