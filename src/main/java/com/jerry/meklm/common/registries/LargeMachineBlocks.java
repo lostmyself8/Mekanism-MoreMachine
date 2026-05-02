@@ -15,6 +15,7 @@ import mekanism.common.attachments.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
 import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
 import mekanism.common.block.attribute.AttributeTier;
+import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
 import mekanism.common.content.blocktype.BlockType;
 import mekanism.common.content.blocktype.Machine;
@@ -36,7 +37,6 @@ import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class LargeMachineBlocks {
 
@@ -52,8 +52,8 @@ public class LargeMachineBlocks {
     public static final BlockRegistryObject<BlockTileModel<TileEntityMaxChemicalTank, Machine<TileEntityMaxChemicalTank>>, ItemBlockMaxChemicalTank> ELITE_MAX_CHEMICAL_TANK = registerMaxChemicalTank(LargeMachineBlockTypes.ELITE_MAX_CHEMICAL_TANK);
     public static final BlockRegistryObject<BlockTileModel<TileEntityMaxChemicalTank, Machine<TileEntityMaxChemicalTank>>, ItemBlockMaxChemicalTank> ULTIMATE_MAX_CHEMICAL_TANK = registerMaxChemicalTank(LargeMachineBlockTypes.ULTIMATE_MAX_CHEMICAL_TANK);
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeRotaryCondensentrator, Machine<TileEntityLargeRotaryCondensentrator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeRotaryCondensentrator, Machine<TileEntityLargeRotaryCondensentrator>>>> LARGE_ROTARY_CONDENSENTRATOR = LM_BLOCKS.register("large_rotary_condensentrator", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ROTARY_CONDENSENTRATOR,
-            properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())),
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeRotaryCondensentrator, Machine<TileEntityLargeRotaryCondensentrator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeRotaryCondensentrator, Machine<TileEntityLargeRotaryCondensentrator>>>> LARGE_ROTARY_CONDENSENTRATOR = LM_BLOCKS.register("large_rotary_condensentrator",
+            properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ROTARY_CONDENSENTRATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
             (block, properties) -> new ItemBlockTooltip<>(block, true, properties
                     .component(MekanismDataComponents.ROTARY_MODE, false)))
             .forItemHolder(holder -> holder
@@ -71,7 +71,8 @@ public class LargeMachineBlocks {
                             .addEnergy()
                             .build()));
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeChemicalInfuser, Machine<TileEntityLargeChemicalInfuser>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeChemicalInfuser, Machine<TileEntityLargeChemicalInfuser>>>> LARGE_CHEMICAL_INFUSER = LM_BLOCKS.register("large_chemical_infuser", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_CHEMICAL_INFUSER, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())),
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeChemicalInfuser, Machine<TileEntityLargeChemicalInfuser>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeChemicalInfuser, Machine<TileEntityLargeChemicalInfuser>>>> LARGE_CHEMICAL_INFUSER = LM_BLOCKS.register("large_chemical_infuser",
+            properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_CHEMICAL_INFUSER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
             (block, properties) -> new ItemBlockTooltip<>(block, true, properties))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
@@ -86,7 +87,8 @@ public class LargeMachineBlocks {
                             .addEnergy()
                             .build()));
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeElectrolyticSeparator, Machine<TileEntityLargeElectrolyticSeparator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeElectrolyticSeparator, Machine<TileEntityLargeElectrolyticSeparator>>>> LARGE_ELECTROLYTIC_SEPARATOR = LM_BLOCKS.register("large_electrolytic_separator", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ELECTROLYTIC_SEPARATOR, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())),
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeElectrolyticSeparator, Machine<TileEntityLargeElectrolyticSeparator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeElectrolyticSeparator, Machine<TileEntityLargeElectrolyticSeparator>>>> LARGE_ELECTROLYTIC_SEPARATOR = LM_BLOCKS.register("large_electrolytic_separator",
+            properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ELECTROLYTIC_SEPARATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
             (block, properties) -> new ItemBlockTooltip<>(block, true, properties
                     .component(MekanismDataComponents.DUMP_MODE, TileEntityChemicalTank.GasMode.IDLE)
                     .component(MekanismDataComponents.SECONDARY_DUMP_MODE, TileEntityChemicalTank.GasMode.IDLE)))
@@ -105,7 +107,8 @@ public class LargeMachineBlocks {
                             .addEnergy()
                             .build()));
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeSolarNeutronActivator, Machine<TileEntityLargeSolarNeutronActivator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeSolarNeutronActivator, Machine<TileEntityLargeSolarNeutronActivator>>>> LARGE_SOLAR_NEUTRON_ACTIVATOR = LM_BLOCKS.register("large_solar_neutron_activator", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, properties -> properties.mapColor(MapColor.COLOR_BLUE)),
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeSolarNeutronActivator, Machine<TileEntityLargeSolarNeutronActivator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeSolarNeutronActivator, Machine<TileEntityLargeSolarNeutronActivator>>>> LARGE_SOLAR_NEUTRON_ACTIVATOR = LM_BLOCKS.register("large_solar_neutron_activator",
+            properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.COLOR_BLUE)),
             (block, properties) -> new ItemBlockTooltip<>(block, true, properties))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
@@ -117,7 +120,8 @@ public class LargeMachineBlocks {
                             .addChemicalDrainSlot(1)
                             .build()));
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>>> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = LM_BLOCKS.register("large_antiprotonic_nucleosynthesizer", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, properties -> properties.mapColor(MapColor.METAL)),
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>>> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = LM_BLOCKS.register("large_antiprotonic_nucleosynthesizer",
+            properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)),
             (block, properties) -> new ItemBlockTooltip<>(block, true, properties)).forItemHolder(
                     holder -> holder
                             .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
@@ -130,7 +134,8 @@ public class LargeMachineBlocks {
                                     .addEnergy()
                                     .build()));
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>>> LARGE_PIGMENT_MIXER = LM_BLOCKS.register("large_pigment_mixer", () -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_PIGMENT_MIXER, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())),
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>>> LARGE_PIGMENT_MIXER = LM_BLOCKS.register("large_pigment_mixer",
+            properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_PIGMENT_MIXER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
             (block, properties) -> new ItemBlockTooltip<>(block, true, properties)).forItemHolder(
                     holder -> holder
                             .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
@@ -147,7 +152,7 @@ public class LargeMachineBlocks {
 
     private static BlockRegistryObject<BlockTileModel<TileEntityMidChemicalTank, Machine<TileEntityMidChemicalTank>>, ItemBlockMidChemicalTank> registerMidChemicalTank(
                                                                                                                                                                         Machine<TileEntityMidChemicalTank> type) {
-        return registerTieredBlock(type, "_mid_chemical_tank", color -> new BlockTileModel<>(type, properties -> properties.mapColor(color)), ItemBlockMidChemicalTank::new)
+        return registerTieredBlock(type, "_mid_chemical_tank", (properties, color) -> new BlockTileModel<>(type, BlockTile.defaultProperties(properties).mapColor(color)), ItemBlockMidChemicalTank::new)
                 .forItemHolder(holder -> holder
                         .addAttachedContainerCapabilities(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                                 .addTank(ComponentBackedLargeChemicalTankTank::create).build())
@@ -159,7 +164,7 @@ public class LargeMachineBlocks {
 
     private static BlockRegistryObject<BlockTileModel<TileEntityMaxChemicalTank, Machine<TileEntityMaxChemicalTank>>, ItemBlockMaxChemicalTank> registerMaxChemicalTank(
                                                                                                                                                                         Machine<TileEntityMaxChemicalTank> type) {
-        return registerTieredBlock(type, "_max_chemical_tank", color -> new BlockTileModel<>(type, properties -> properties.mapColor(color)), ItemBlockMaxChemicalTank::new)
+        return registerTieredBlock(type, "_max_chemical_tank", (properties, color) -> new BlockTileModel<>(type, BlockTile.defaultProperties(properties).mapColor(color)), ItemBlockMaxChemicalTank::new)
                 .forItemHolder(holder -> holder
                         .addAttachedContainerCapabilities(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                                 .addTank(ComponentBackedLargeChemicalTankTank::create).build())
@@ -170,14 +175,16 @@ public class LargeMachineBlocks {
     }
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(BlockType type, String suffix,
-                                                                                                                      Function<MapColor, ? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
+                                                                                                                      BiFunction<net.minecraft.world.level.block.state.BlockBehaviour.Properties, MapColor, ? extends BLOCK> blockCreator,
+                                                                                                                      BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
         ITier tier = type.get(AttributeTier.class).tier();
-        return registerTieredBlock(tier, suffix, () -> blockSupplier.apply(tier.getBaseTier().getMapColor()), itemCreator);
+        return registerTieredBlock(tier, suffix, properties -> blockCreator.apply(properties, tier.getBaseTier().getMapColor()), itemCreator);
     }
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(ITier tier, String suffix,
-                                                                                                                      Supplier<? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
-        return LM_BLOCKS.register(tier.getBaseTier().getLowerName() + suffix, blockSupplier, itemCreator);
+                                                                                                                      Function<net.minecraft.world.level.block.state.BlockBehaviour.Properties, ? extends BLOCK> blockCreator,
+                                                                                                                      BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
+        return LM_BLOCKS.register(tier.getBaseTier().getLowerName() + suffix, blockCreator, itemCreator);
     }
 
     private LargeMachineBlocks() {}
