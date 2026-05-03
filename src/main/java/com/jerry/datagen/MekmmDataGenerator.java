@@ -1,9 +1,9 @@
 package com.jerry.datagen;
 
 import com.jerry.datagen.common.loot.MoreMachineLootProvider;
-
 import com.jerry.datagen.common.recipe.MekmmRecipeRunner;
 import com.jerry.datagen.common.recipe.imp.MoreMachineRecipeProvider;
+
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.common.lib.FieldReflectionHelper;
@@ -61,7 +61,7 @@ public class MekmmDataGenerator {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event) {
-//        bootstrapConfigs(Mekanism.MODID);
+        // bootstrapConfigs(Mekanism.MODID);
         bootstrapConfigs(Mekmm.MOD_ID);
         bootstrapIMC();
         DataGenerator gen = event.getGenerator();
