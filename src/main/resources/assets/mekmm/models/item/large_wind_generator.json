@@ -2,6 +2,7 @@
   "parent": "block/block",
   "loader": "neoforge:obj",
   "model": "mekmm:models/block/large_machine/large_wind_generator.obj",
+  "mtl_override": "mekmm:models/block/large_machine/large_wind_generator.mtl",
   "flip_v": true,
   "display":{
     "gui":{

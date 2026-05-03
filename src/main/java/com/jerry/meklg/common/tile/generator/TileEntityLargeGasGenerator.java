@@ -28,8 +28,6 @@ import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableDouble;
-import mekanism.common.inventory.container.sync.SyncableInt;
-import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
@@ -107,7 +105,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         fuelSlot.fillTank();
         gasUsedLastTick = 0;
 
-//        updateEfficiency();
+        // updateEfficiency();
 
         if (!fuelTank.isEmpty() && canFunction() && cachedFuel != null) {
 
@@ -163,10 +161,10 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-//        container.track(SyncableLong.create(this::getGenerationRate, v -> generationRate = v));
+        // container.track(SyncableLong.create(this::getGenerationRate, v -> generationRate = v));
         container.track(SyncableDouble.create(this::getUsed, v -> gasUsedLastTick = v));
-//        container.track(SyncableInt.create(this::getMaxBurnTicks, v -> maxBurnTicks = v));
-//        container.track(SyncableDouble.create(this::getEfficiencyMultiplier, v -> efficiencyMultiplier = v));
+        // container.track(SyncableInt.create(this::getMaxBurnTicks, v -> maxBurnTicks = v));
+        // container.track(SyncableDouble.create(this::getEfficiencyMultiplier, v -> efficiencyMultiplier = v));
     }
 
     @Nullable
