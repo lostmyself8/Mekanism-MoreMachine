@@ -2,9 +2,10 @@ package com.jerry.datagen;
 
 import com.jerry.datagen.common.loot.MoreMachineLootProvider;
 
+import com.jerry.datagen.common.recipe.MekmmRecipeRunner;
+import com.jerry.datagen.common.recipe.imp.MoreMachineRecipeProvider;
 import com.jerry.mekmm.Mekmm;
 
-import mekanism.common.Mekanism;
 import mekanism.common.lib.FieldReflectionHelper;
 
 import net.minecraft.core.HolderLookup.Provider;
@@ -71,7 +72,7 @@ public class MekmmDataGenerator {
         // Server side data generators
         gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
         HashSet<String> disabledCompats = new HashSet<>();
-//        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput, disabledCompats), Mekmm.MOD_ID));
+        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput, disabledCompats), Mekmm.MOD_ID));
         // Data generator to help with persisting data when porting across MC versions when optional deps aren't updated
         // yet
         // DO NOT ADD OTHERS AFTER THIS ONE
@@ -114,15 +115,15 @@ public class MekmmDataGenerator {
         DeferredWorkQueue enqueueIMC = new DeferredWorkQueue("IMC Bootstrap: Enqueue IMC");
         for (ModContainer mod : ModList.get().getSortedMods()) {
             // Handle all our modules
-            if (mod.getModId().startsWith(Mekanism.MODID) || mod.getModId().startsWith(Mekmm.MOD_ID)) {
+            if (mod.getModId().startsWith(Mekmm.MOD_ID)) {
                 mods.add(mod);
-                mod.getEventBus().post(new InterModEnqueueEvent(mod, enqueueIMC));
+                Objects.requireNonNull(mod.getEventBus()).post(new InterModEnqueueEvent(mod, enqueueIMC));
             }
         }
         enqueueIMC.runTasks();
         DeferredWorkQueue processIMC = new DeferredWorkQueue("IMC Bootstrap: Process IMC");
         for (ModContainer mod : mods) {
-            mod.getEventBus().post(new InterModProcessEvent(mod, processIMC));
+            Objects.requireNonNull(mod.getEventBus()).post(new InterModProcessEvent(mod, processIMC));
         }
         processIMC.runTasks();
     }
