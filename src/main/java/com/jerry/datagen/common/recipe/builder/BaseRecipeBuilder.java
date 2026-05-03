@@ -3,8 +3,8 @@ package com.jerry.datagen.common.recipe.builder;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.datagen.recipe.MekanismRecipeBuilder;
 
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;

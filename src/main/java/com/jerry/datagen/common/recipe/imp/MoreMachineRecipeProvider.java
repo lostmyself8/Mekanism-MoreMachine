@@ -336,5 +336,3 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .build(consumer, Mekmm.rl("wireless_transmission_station"));
     }
 }
-
-

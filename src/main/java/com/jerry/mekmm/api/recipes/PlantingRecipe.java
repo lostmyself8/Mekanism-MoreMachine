@@ -121,6 +121,7 @@ public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRe
     public ItemStack getToastSymbol() {
         return new ItemStack(PLANTING_STATION);
     }
+
     /**
      * Represents a precalculated chance based output.
      */
@@ -135,4 +136,3 @@ public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRe
         ItemStack nextSecondaryOutput();
     }
 }
-

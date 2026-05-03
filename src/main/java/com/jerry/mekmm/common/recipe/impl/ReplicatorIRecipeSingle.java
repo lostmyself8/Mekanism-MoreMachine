@@ -42,4 +42,3 @@ public class ReplicatorIRecipeSingle extends MMBasicItemStackChemicalToItemStack
         return new ItemStack(MoreMachineBlocks.REPLICATOR);
     }
 }
-

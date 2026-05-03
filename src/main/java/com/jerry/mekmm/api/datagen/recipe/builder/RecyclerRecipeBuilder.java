@@ -6,10 +6,10 @@ import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.datagen.recipe.MekanismRecipeBuilder;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 
 @NothingNullByDefault

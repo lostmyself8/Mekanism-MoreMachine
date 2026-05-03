@@ -204,7 +204,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         int count = handler.getAmountAsInt(slot);
         try (Transaction transaction = Transaction.open(null)) {
             if (handler.extract(slot, originalResource, count, transaction) == count &&
-                  handler.insert(slot, ItemResource.of(stack), count, transaction) == count) {
+                    handler.insert(slot, ItemResource.of(stack), count, transaction) == count) {
                 transaction.commit();
                 energyContainer.extract(inserted, Action.EXECUTE, AutomationType.MANUAL);
                 return amount - inserted;

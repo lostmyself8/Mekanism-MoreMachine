@@ -1,14 +1,15 @@
 package com.jerry.meklm.client.render.tileentity;
 
 import com.jerry.meklm.common.tile.machine.TileEntityLargeAntiprotonicNucleosynthesizer;
+
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.EnumColor;
 import mekanism.client.model.ModelEnergyCore;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.client.render.tileentity.RenderEnergyCube;
+
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
@@ -18,6 +19,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
@@ -37,7 +41,7 @@ public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntity
 
     @Override
     public void extractRenderState(TileEntityLargeAntiprotonicNucleosynthesizer tile, LargeAntiprotonicNucleosynthesizerRenderState state, float partialTick,
-          Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+                                   Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
         super.extractRenderState(tile, state, partialTick, cameraPosition, breakProgress);
         state.direction = tile.getDirection();
         state.ticks = tile.getLevel().getGameTime() + partialTick;

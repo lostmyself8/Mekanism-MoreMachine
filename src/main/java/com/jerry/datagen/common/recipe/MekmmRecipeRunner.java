@@ -15,7 +15,7 @@ public class MekmmRecipeRunner extends RecipeProvider.Runner {
     private final BiFunction<HolderLookup.Provider, RecipeOutput, RecipeProvider> factory;
 
     public MekmmRecipeRunner(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries,
-          BiFunction<HolderLookup.Provider, RecipeOutput, RecipeProvider> factory) {
+                             BiFunction<HolderLookup.Provider, RecipeOutput, RecipeProvider> factory) {
         super(packOutput, registries);
         this.factory = factory;
     }

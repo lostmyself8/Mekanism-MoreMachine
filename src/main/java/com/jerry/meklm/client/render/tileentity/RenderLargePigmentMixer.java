@@ -1,17 +1,16 @@
 package com.jerry.meklm.client.render.tileentity;
 
 import com.jerry.meklm.common.tile.machine.TileEntityLargePigmentMixer;
+
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.PoseStack.Pose;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.RenderTickHandler;
 import mekanism.client.render.lib.Outlines;
 import mekanism.client.render.tileentity.IWireFrameRenderer;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.common.block.attribute.Attribute;
+
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
@@ -22,6 +21,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,7 +52,7 @@ public class RenderLargePigmentMixer extends MekanismTileEntityRenderer<TileEnti
 
     @Override
     public void extractRenderState(TileEntityLargePigmentMixer mixer, LargePigmentMixerRenderState state, float partialTick, Vec3 cameraPosition,
-          @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+                                   @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
         super.extractRenderState(mixer, state, partialTick, cameraPosition, breakProgress);
         state.direction = mixer.getDirection();
         state.rotation = (mixer.getLevel().getGameTime() + partialTick) * SHAFT_SPEED % 360;

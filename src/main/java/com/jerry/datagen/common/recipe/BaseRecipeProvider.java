@@ -13,7 +13,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.DifferenceIngredient;
 
 import java.util.*;
 
@@ -76,4 +75,3 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
         return Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.TIN));
     }
 }
-

@@ -253,4 +253,3 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
     // End methods IComputerTile
 }
-

@@ -129,6 +129,3 @@ public abstract class RecyclerRecipe extends MekanismRecipe<SingleRecipeInput> i
         ItemStack nextChanceOutput();
     }
 }
-
-
-

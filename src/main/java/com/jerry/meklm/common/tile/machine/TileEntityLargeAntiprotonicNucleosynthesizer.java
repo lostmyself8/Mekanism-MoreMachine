@@ -61,7 +61,6 @@ import mekanism.common.util.WorldUtils;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.*;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;

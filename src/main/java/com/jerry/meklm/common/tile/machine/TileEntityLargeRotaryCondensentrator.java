@@ -67,16 +67,13 @@ import mekanism.common.util.*;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.redstone.Redstone;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.redstone.Redstone;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -386,8 +383,8 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableBoolean.create(this::getMode, value -> mode = value));
-        container.track(SyncableLong.create(this::getEnergyUsed, value -> clientEnergyUsed = value));
+        container.track(SyncableBoolean.create(this::getMode, v -> mode = v));
+        container.track(SyncableLong.create(this::getEnergyUsed, v -> clientEnergyUsed = v));
     }
 
     @Override

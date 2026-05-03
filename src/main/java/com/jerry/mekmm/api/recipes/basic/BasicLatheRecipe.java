@@ -7,6 +7,7 @@ import com.jerry.mekmm.api.recipes.MoreMachineRecipeTypes;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.basic.BasicItemStackToItemStackRecipe;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
+
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -43,4 +44,3 @@ public class BasicLatheRecipe extends BasicItemStackToItemStackRecipe {
         return new ItemStack(CNC_LATHE);
     }
 }
-

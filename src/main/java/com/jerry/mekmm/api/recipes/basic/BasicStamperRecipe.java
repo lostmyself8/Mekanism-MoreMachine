@@ -59,7 +59,6 @@ public class BasicStamperRecipe extends StamperRecipe {
         return output.copy();
     }
 
-
     @Override
     public List<ItemStack> getOutputDefinition() {
         return Collections.singletonList(output);
@@ -93,5 +92,3 @@ public class BasicStamperRecipe extends StamperRecipe {
         return hash;
     }
 }
-
-

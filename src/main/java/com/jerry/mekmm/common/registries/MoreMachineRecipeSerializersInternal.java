@@ -27,6 +27,3 @@ public class MoreMachineRecipeSerializersInternal {
         MoreMachineRecipeSerializers.ROLLING_MILL = MM_RECIPE_SERIALIZERS.register("rolling_mill", () -> MekanismRecipeSerializer.itemToItem(BasicRollingMillRecipe::new));
     }
 }
-
-
-

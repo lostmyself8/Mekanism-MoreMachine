@@ -23,4 +23,3 @@ public class MoreMachineRecipeTypes {
     public static final DeferredHolder<RecipeType<?>, RecipeType<ItemStackToItemStackRecipe>> TYPE_LATHING = DeferredHolder.create(Registries.RECIPE_TYPE, NAME_LATHING);
     public static final DeferredHolder<RecipeType<?>, RecipeType<ItemStackToItemStackRecipe>> TYPE_ROLLING_MILL = DeferredHolder.create(Registries.RECIPE_TYPE, NAME_ROLLING_MILL);
 }
-

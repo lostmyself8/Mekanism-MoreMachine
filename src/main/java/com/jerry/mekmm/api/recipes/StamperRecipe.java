@@ -79,7 +79,6 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
     @Contract(value = "_, _ -> new", pure = true)
     public abstract ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack extra);
 
-
     /**
      * For JEI, gets the output representations to display.
      *
@@ -112,6 +111,3 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
         return new ItemStack(STAMPER);
     }
 }
-
-
-

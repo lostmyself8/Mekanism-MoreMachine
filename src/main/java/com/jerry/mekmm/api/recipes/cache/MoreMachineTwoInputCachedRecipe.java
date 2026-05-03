@@ -7,6 +7,7 @@ import mekanism.api.recipes.cache.CachedRecipeHelper;
 import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
+
 import net.minecraft.core.TypedInstance;
 
 import org.jetbrains.annotations.Nullable;

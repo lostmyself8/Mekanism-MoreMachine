@@ -5,8 +5,8 @@ import com.jerry.mekmm.Mekmm;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.ILangEntry;
 
-import net.minecraft.util.Util;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 
 @NothingNullByDefault
 public enum APIMoreMachineLang implements ILangEntry {

@@ -57,7 +57,6 @@ public abstract class MMBasicItemStackChemicalToItemStackRecipe extends ItemStac
         return true;
     }
 
-
     @Override
     public boolean test(ItemStack itemStack, ChemicalStack chemicalStack) {
         return itemInput.test(itemStack) && chemicalInput.test(chemicalStack);
@@ -73,5 +72,3 @@ public abstract class MMBasicItemStackChemicalToItemStackRecipe extends ItemStac
         return output;
     }
 }
-
-

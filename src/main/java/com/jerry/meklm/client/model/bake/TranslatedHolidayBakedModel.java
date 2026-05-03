@@ -1,9 +1,11 @@
 package com.jerry.meklm.client.model.bake;
 
-import java.util.function.Supplier;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.lib.QuadTransformation;
+
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 @NothingNullByDefault
 abstract class TranslatedHolidayBakedModel {

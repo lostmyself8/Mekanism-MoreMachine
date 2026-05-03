@@ -79,19 +79,19 @@ public class ReplicatorCachedRecipe<HOLDER, INPUT extends net.minecraft.core.Typ
     }
 
     public static <RECIPE extends MMBasicItemStackChemicalToItemStackRecipe> ReplicatorCachedRecipe<Item, ItemStack, ItemStackTemplate, RECIPE> createItemReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
-                                                                                                                                                                      IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStackTemplate> outputHandler) {
+                                                                                                                                                                     IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStackTemplate> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput,
                 recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, Objects::isNull);
     }
 
     public static <RECIPE extends BasicFluidChemicalToFluidRecipe> ReplicatorCachedRecipe<Fluid, FluidStack, FluidStack, RECIPE> createFluidReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler,
-                                                                                                                                           IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStack> outputHandler) {
+                                                                                                                                                       IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, fluidInputHandler, chemicalInputHandler, outputHandler, recipe::getFluidInput, recipe::getChemicalInput,
                 recipe::getOutput, ConstantPredicates.FLUID_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.FLUID_EMPTY);
     }
 
     public static <RECIPE extends MMBasicChemicalChemicalToChemicalRecipe> ReplicatorCachedRecipe<Chemical, ChemicalStack, ChemicalStack, RECIPE> createChemicalReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Chemical, @NotNull ChemicalStack> firstInputHandler,
-                                                                                                                                                            IInputHandler<Chemical, @NotNull ChemicalStack> secondaryInputHandler, IOutputHandler<@NotNull ChemicalStack> outputHandler) {
+                                                                                                                                                                           IInputHandler<Chemical, @NotNull ChemicalStack> secondaryInputHandler, IOutputHandler<@NotNull ChemicalStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, firstInputHandler, secondaryInputHandler, outputHandler, recipe::getLeftInput, recipe::getRightInput,
                 recipe::getOutput, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.CHEMICAL_EMPTY);
     }
@@ -124,5 +124,3 @@ public class ReplicatorCachedRecipe<HOLDER, INPUT extends net.minecraft.core.Typ
         }
     }
 }
-
-
