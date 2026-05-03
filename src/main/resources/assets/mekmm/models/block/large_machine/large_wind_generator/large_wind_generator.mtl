@@ -1,0 +1,10 @@
+# Made in Blockbench 5.1.3
+newmtl Screen_cmd
+map_Kd #Screen_cmd
+newmtl Screen_logo
+map_Kd #Screen_logo
+newmtl Screen_hello
+map_Kd #Screen_hello
+newmtl Base
+map_Kd #Base
+newmtl none

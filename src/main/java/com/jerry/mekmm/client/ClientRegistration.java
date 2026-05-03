@@ -45,6 +45,7 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
+import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
 import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
 import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
@@ -135,6 +136,7 @@ public class ClientRegistration {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
+            ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR, GuiLargeWindGenerator::new);
         }
     }
 
