@@ -2,15 +2,12 @@ package com.jerry.mekmm.common.tile.prefab;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
-import mekanism.api.math.MathUtils;
 import mekanism.common.capabilities.energy.BasicEnergyContainer;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.energy.BlockEnergyCapabilityCache;
-import mekanism.common.inventory.container.sync.ISyncableData;
-import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.CableUtils;
 
@@ -27,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.LongSupplier;
 
 public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism {
 

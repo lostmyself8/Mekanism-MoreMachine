@@ -152,7 +152,7 @@ public class MoreMachineBounding {
             }
             // 柱子一层
             for (int i = -1; i <= 1; i++) {
-                mutable.setWithOffset(pos,front.getX() * 3 + axis.getX() * i, 2, front.getZ() * 3 + axis.getZ() * i);
+                mutable.setWithOffset(pos, front.getX() * 3 + axis.getX() * i, 2, front.getZ() * 3 + axis.getZ() * i);
                 if (!predicate.accept(level, mutable, data)) {
                     return false;
                 }

@@ -1,8 +1,7 @@
 package com.jerry.meklg.common.tile.generator;
 
-import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
-import lombok.Getter;
+
 import mekanism.api.*;
 import mekanism.api.math.MathUtils;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
@@ -16,25 +15,29 @@ import mekanism.common.inventory.container.sync.SyncableDouble;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
     private static final float SPEED = 32.0F;
 
-    private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[]{RelativeSide.FRONT, RelativeSide.BOTTOM};
+    private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[] { RelativeSide.FRONT, RelativeSide.BOTTOM };
 
     @Getter
     private float angle;
     @Getter
     private double currentMultiplier = 0.0F;
     private boolean isBlacklistDimension;
-    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = {"getEnergyItem"}, docPlaceholder = "energy item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = { "getEnergyItem" }, docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
@@ -88,10 +91,10 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     public float getHeightSpeedRatio() {
         int height = getBlockPos().getY() + 4;
         if (level == null) {
-            //Fallback to default values, but in general this is not going to happen
+            // Fallback to default values, but in general this is not going to happen
             return SPEED * height / 384F;
         }
-        //Shift so that a wind generator at the min build height acts as if it was at a height of zero
+        // Shift so that a wind generator at the min build height acts as if it was at a height of zero
         int minBuildHeight = level.getMinY();
         height -= minBuildHeight;
         return SPEED * height / (level.getMaxY() + 1 - minBuildHeight);
@@ -103,11 +106,11 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     private double getMultiplier() {
         if (level != null) {
             BlockPos top = getBlockPos().above(4);
-            //Validate it isn't fluid logged to help try and prevent https://github.com/mekanism/Mekanism/issues/7344
-            //Clamp the height limits as the logical bounds of the world
+            // Validate it isn't fluid logged to help try and prevent https://github.com/mekanism/Mekanism/issues/7344
+            // Clamp the height limits as the logical bounds of the world
             if (level.getFluidState(top).isEmpty() && level.canSeeSky(top)) {
                 int minBuildHeight = level.getMinY();
-                //Based off of how PortalForcer#createPortal calculates
+                // Based off of how PortalForcer#createPortal calculates
                 // The minus one is to handle that the max level height is treated as exclusive
                 int maxLevelHeight = Math.min(level.getMaxY() + 1, minBuildHeight + level.dimensionType().logicalHeight()) - 1;
                 int minY = Math.max(MekanismGeneratorsConfig.generators.windGenerationMinY.get(), minBuildHeight);
@@ -157,10 +160,10 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         container.track(SyncableBoolean.create(this::isBlacklistDimension, v -> isBlacklistDimension = v));
     }
 
-    //Methods relating to IComputerTile
+    // Methods relating to IComputerTile
     @Override
     protected long getProductionRate() {
         return getActive() ? getCurrentGeneration() : 0L;
     }
-    //End methods IComputerTile
+    // End methods IComputerTile
 }
