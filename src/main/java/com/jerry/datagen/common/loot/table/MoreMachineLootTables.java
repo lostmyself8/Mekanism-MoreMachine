@@ -7,13 +7,13 @@ import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 
 public class MoreMachineLootTables extends BaseBlockLootTables {
 
-    public MoreMachineLootTables(HolderLookup.Provider provider) {
+    public MoreMachineLootTables(Provider provider) {
         super(provider);
     }
 

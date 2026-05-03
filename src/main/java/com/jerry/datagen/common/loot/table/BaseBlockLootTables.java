@@ -17,7 +17,7 @@ import mekanism.common.tile.base.TileEntityUpdateable;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -63,7 +63,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     // one)
     private final Set<Block> toSkip = new ReferenceArraySet<>();
 
-    protected BaseBlockLootTables(HolderLookup.Provider provider) {
+    protected BaseBlockLootTables(Provider provider) {
         // Note: We manually handle explosion resistance on a case by case basis dynamically
         super(Collections.emptySet(), FeatureFlags.VANILLA_SET, provider);
     }
