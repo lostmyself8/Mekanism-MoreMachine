@@ -1,8 +1,7 @@
 {
   "loader": "neoforge:obj",
   "parent": "block/block",
-  "model": "mekmm:models/block/large_machine/large_wind_generator.obj",
-  "mtl_override": "mekmm:models/block/large_machine/large_wind_generator.mtl",
+  "model": "mekmm:models/block/large_machine/large_wind_generator/large_wind_generator.obj",
   "flip_v": true,
   "render_type": "cutout",
   "textures": {
@@ -10,6 +9,6 @@
     "Base": "mekmm:block/large_machine/large_wind_generator/base",
     "Screen_cmd": "mekmm:block/large_machine/screen_off",
     "Screen_logo": "mekmm:block/large_machine/screen_off",
-    "Screen_hello": "mekanism:block/large_machine/models/screen_off"
+    "Screen_hello": "mekmm:block/large_machine/screen_off"
   }
 }

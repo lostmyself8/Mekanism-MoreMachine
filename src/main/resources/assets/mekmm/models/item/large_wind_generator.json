@@ -1,9 +1,5 @@
 {
-  "loader": "neoforge:obj",
-  "parent": "block/block",
-  "model": "mekmm:models/block/large_machine/large_wind_generator.obj",
-  "mtl_override": "mekmm:models/block/large_machine/large_wind_generator.mtl",
-  "flip_v": true,
+  "parent": "mekmm:block/large_machine/large_wind_generator/off",
   "display":{
     "gui":{
       "rotation":[30,225,0],
