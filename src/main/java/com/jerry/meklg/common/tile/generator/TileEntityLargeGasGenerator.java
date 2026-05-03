@@ -20,8 +20,8 @@ import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.integration.energy.EnergyCompatUtils;
@@ -33,7 +33,6 @@ import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
@@ -45,7 +44,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,8 +56,10 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     /**
      * The tank this block is storing fuel in.
      */
-    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class, methodNames = {"getFuel", "getFuelCapacity", "getFuelNeeded",
-            "getFuelFilledPercentage"}, docPlaceholder = "fuel tank")
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getFuel", "getFuelCapacity", "getFuelNeeded",
+                                    "getFuelFilledPercentage" },
+                            docPlaceholder = "fuel tank")
     public FuelTank fuelTank;
 
     @Nullable
@@ -110,10 +110,10 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
         if (!fuelTank.isEmpty() && canFunction() && cachedFuel != null) {
 
-            //how full the tank is, poor-man's "pressure" measurement
+            // how full the tank is, poor-man's "pressure" measurement
             double fullness = fuelTank.getStored() / (double) fuelTank.getCapacity();
 
-            //maximum amount that can be produced AND stored
+            // maximum amount that can be produced AND stored
             long maxJoulesThisTick;
             long energyDensity = cachedFuel.energyDensity();
             maxJoulesThisTick = energyDensity * Math.min((long) Math.ceil(cachedFuel.maxBurnPerTick() * fullness), fuelTank.getStored());
@@ -122,7 +122,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
             }
 
             if (maxJoulesThisTick > 0) {
-                //calculate the mB for this amount of energy, rounded up
+                // calculate the mB for this amount of energy, rounded up
                 long mbThisTick = Math.ceilDiv(maxJoulesThisTick, energyDensity);
                 getEnergyContainer().insert(maxJoulesThisTick, Action.EXECUTE, AutomationType.INTERNAL);
                 fuelTank.extract(mbThisTick, Action.EXECUTE, AutomationType.INTERNAL);
@@ -261,7 +261,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     // Methods relating to IComputerTile
     @Override
     protected long getProductionRate() {
-//        return MathUtils.clampToLong(getGenerationRate() * getUsed() * getMaxBurnTicks());
+        // return MathUtils.clampToLong(getGenerationRate() * getUsed() * getMaxBurnTicks());
         if (cachedFuel == null) {
             return 0;
         }

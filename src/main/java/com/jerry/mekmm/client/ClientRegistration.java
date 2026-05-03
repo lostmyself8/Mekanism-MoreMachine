@@ -4,7 +4,6 @@ import com.jerry.mekaf.client.gui.machine.GuiAdvancedFactory;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 
-import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
 import com.jerry.meklm.client.gui.machine.*;
 import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
 import com.jerry.meklm.client.model.LargeMachineModelCache;
@@ -40,6 +39,7 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
+import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
 

@@ -1,6 +1,5 @@
 package com.jerry.meklg.common.registries;
 
-import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
@@ -22,6 +21,7 @@ import net.minecraft.world.level.material.MapColor;
 
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class LargeGeneratorBlocks {

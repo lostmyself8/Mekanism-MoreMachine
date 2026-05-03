@@ -1,6 +1,5 @@
 package com.jerry.meklg.common.registries;
 
-import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
@@ -9,6 +8,7 @@ import mekanism.common.registration.impl.ContainerTypeRegistryObject;
 
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 
 public class LargeGeneratorContainerTypes {
 

@@ -1,6 +1,5 @@
 package com.jerry.meklg.common.registries;
 
-import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
@@ -19,6 +18,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import com.jerry.meklg.common.content.blocktype.LargeGeneratorBlockShapes;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 
 public class LargeGeneratorBlockTypes {
 
