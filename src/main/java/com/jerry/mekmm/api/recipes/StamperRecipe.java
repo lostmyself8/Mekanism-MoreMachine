@@ -7,10 +7,13 @@ import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.TypedInstance;
+import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -47,7 +50,7 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
             ItemStack mainInput = input.getItem(0);
             ItemStack extraInput = input.getItem(1);
             if (test(mainInput, extraInput)) {
-                return getOutput(mainInput, extraInput);
+                return getOutput(mainInput, extraInput).create();
             }
         }
         return ItemStack.EMPTY;
@@ -77,7 +80,7 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
      * @implNote The passed in inputs should <strong>NOT</strong> be modified.
      */
     @Contract(value = "_, _ -> new", pure = true)
-    public abstract ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack extra);
+    public abstract <INPUT extends TypedInstance<Item> & DataComponentHolder> ItemStackTemplate getOutput(@NotNull INPUT input, @NotNull INPUT extra);
 
     /**
      * For JEI, gets the output representations to display.
@@ -98,12 +101,8 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
     }
 
     @Override
-    public final RecipeType<StamperRecipe> getType() {
+    public final RecipeType<@NotNull StamperRecipe> getType() {
         return MoreMachineRecipeTypes.TYPE_STAMPING.value();
-    }
-
-    public String getGroup() {
-        return "stamper";
     }
 
     @Override

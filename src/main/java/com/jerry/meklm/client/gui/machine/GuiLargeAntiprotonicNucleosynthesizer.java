@@ -11,8 +11,6 @@ import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiChemicalGauge;
 import mekanism.client.gui.element.gauge.GuiEnergyGauge;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
-import mekanism.client.render.MekanismRenderType;
-import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.lib.effect.BoltRenderer;
 import mekanism.common.MekanismLang;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
@@ -22,13 +20,11 @@ import mekanism.common.lib.effect.BoltEffect;
 import mekanism.common.util.text.TextUtils;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.phys.Vec3;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -48,10 +44,8 @@ public class GuiLargeAntiprotonicNucleosynthesizer extends GuiConfigurableTile<T
     private GuiInnerScreen screen;
 
     public GuiLargeAntiprotonicNucleosynthesizer(MekanismTileContainer<TileEntityLargeAntiprotonicNucleosynthesizer> container, Inventory inv, Component title) {
-        super(container, inv, title);
+        super(container, inv, title, DEFAULT_IMAGE_WIDTH + 20, DEFAULT_IMAGE_HEIGHT + 27);
         dynamicSlots = true;
-        imageHeight += 27;
-        imageWidth += 20;
         inventoryLabelY = imageHeight - 93;
     }
 
@@ -86,14 +80,14 @@ public class GuiLargeAntiprotonicNucleosynthesizer extends GuiConfigurableTile<T
         screen.drawScrollingString(GuiGraphicsExtractor, MekanismLang.PROCESS_RATE.translate(TextUtils.getPercent(tile.getProcessRate())), 0,
                 screen.getHeight() - font().lineHeight - 2, TextAlignment.CENTER, screenTextColor(), 2, false);
         super.drawForegroundText(GuiGraphicsExtractor, mouseX, mouseY);
-        PoseStack pose = GuiGraphicsExtractor.pose();
-        pose.pushPose();
-        pose.translate(0, 0, 100);
-        MultiBufferSource.BufferSource renderer = GuiGraphicsExtractor.bufferSource();
-        float partialTicks = MekanismRenderer.getPartialTick();
-        bolt.update(this, boltSupplier.get(), partialTicks);
-        bolt.render(partialTicks, pose, renderer);
-        renderer.endBatch(MekanismRenderType.MEK_LIGHTNING);
-        pose.popPose();
+        // PoseStack pose = GuiGraphicsExtractor.pose();
+        // pose.pushPose();
+        // pose.translate(0, 0, 100);
+        // MultiBufferSource.BufferSource renderer = GuiGraphicsExtractor.bufferSource();
+        // float partialTicks = MekanismRenderer.getPartialTick();
+        // bolt.update(this, boltSupplier.get(), partialTicks);
+        // bolt.render(partialTicks, pose, renderer);
+        // renderer.endBatch(MekanismRenderType.MEK_LIGHTNING);
+        // pose.popPose();
     }
 }

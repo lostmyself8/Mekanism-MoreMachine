@@ -9,6 +9,7 @@ import mekanism.api.recipes.vanilla_input.SingleFluidChemicalRecipeInput;
 
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +71,7 @@ public abstract class FluidChemicalToFluidRecipe extends MekanismRecipe<SingleFl
      * @implNote The passed in inputs should <strong>NOT</strong> be modified.
      */
     @Contract(value = "_, _ -> new", pure = true)
-    public abstract FluidStack getOutput(FluidStack fluidStack, ChemicalStack chemicalStack);
+    public abstract FluidStackTemplate getOutput(FluidStack fluidStack, ChemicalStack chemicalStack);
 
     @Override
     public boolean isIncomplete() {

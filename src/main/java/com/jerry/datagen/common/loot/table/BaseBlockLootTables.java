@@ -37,6 +37,7 @@ import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.*;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.ConditionUserBuilder;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -139,7 +140,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                 continue;
             }
             boolean hasComponents = false;
-            CopyComponentsFunction.Builder componentsBuilder = CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY);
+            CopyComponentsFunction.Builder componentsBuilder = CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY);
             boolean hasContents = false;
             ItemStack stack = new ItemStack(block);
             LootItem.Builder<?> itemLootPool = LootItem.lootTableItem(block);

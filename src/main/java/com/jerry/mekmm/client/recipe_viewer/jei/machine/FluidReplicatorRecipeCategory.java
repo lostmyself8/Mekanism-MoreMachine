@@ -22,6 +22,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -43,7 +44,7 @@ public class FluidReplicatorRecipeCategory extends BaseRecipeCategory<BasicFluid
     private static final Codec<BasicFluidChemicalToFluidRecipe> RECIPE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             FluidStackIngredient.CODEC.fieldOf(SerializationConstants.INPUT).forGetter(BasicFluidChemicalToFluidRecipe::getFluidInput),
             IngredientCreatorAccess.chemicalStack().codec().fieldOf(SerializationConstants.CHEMICAL_INPUT).forGetter(BasicFluidChemicalToFluidRecipe::getChemicalInput),
-            FluidStack.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(BasicFluidChemicalToFluidRecipe::getOutputRaw)).apply(instance, FluidReplicatorIRecipeSingle::new));
+            FluidStackTemplate.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(BasicFluidChemicalToFluidRecipe::getOutputRaw)).apply(instance, FluidReplicatorIRecipeSingle::new));
 
     private final GuiGauge<?> gasInputGauge;
     private final GuiGauge<?> fluidInputGauge;

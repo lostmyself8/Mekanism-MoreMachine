@@ -11,6 +11,7 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,15 +25,15 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
 
     private final IInputHandler<Item, ItemStack> inputHandler;
     private final IInputHandler<Item, ItemStack> secondaryInputHandler;
-    private final IOutputHandler<ItemStack> outputHandler;
+    private final IOutputHandler<ItemStackTemplate> outputHandler;
     private final Predicate<ItemStack> inputEmptyCheck;
     private final Predicate<ItemStack> secondaryInputEmptyCheck;
     private final Supplier<? extends InputIngredient<Item, ItemStack>> inputSupplier;
     private final Supplier<? extends InputIngredient<Item, ItemStack>> secondaryInputSupplier;
-    private final BiFunction<ItemStack, ItemStack, ItemStack> outputGetter;
-    private final Predicate<ItemStack> outputEmptyCheck;
+    private final BiFunction<ItemStack, ItemStack, ItemStackTemplate> outputGetter;
+    private final Predicate<ItemStackTemplate> outputEmptyCheck;
     private final BiConsumer<ItemStack, ItemStack> inputsSetter;
-    private final Consumer<ItemStack> outputSetter;
+    private final Consumer<ItemStackTemplate> outputSetter;
 
     // Note: Our inputs and outputs shouldn't be null in places they are actually used, but we mark them as nullable, so
     // we don't have to initialize them
@@ -41,7 +42,7 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
     @Nullable
     private ItemStack secondaryInput;
     @Nullable
-    private ItemStack output;
+    private ItemStackTemplate output;
 
     /**
      * @param recipe           Recipe.
@@ -50,9 +51,9 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
      *                         do this every tick or if there is no one viewing recipes.
      */
     protected StamperCachedRecipe(StamperRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, ItemStack> inputHandler, IInputHandler<Item, ItemStack> secondaryInputHandler,
-                                  IOutputHandler<ItemStack> outputHandler, Supplier<InputIngredient<Item, ItemStack>> inputSupplier, Supplier<InputIngredient<Item, ItemStack>> secondaryInputSupplier,
-                                  BiFunction<ItemStack, ItemStack, ItemStack> outputGetter, Predicate<ItemStack> inputEmptyCheck, Predicate<ItemStack> secondaryInputEmptyCheck,
-                                  Predicate<ItemStack> outputEmptyCheck) {
+                                  IOutputHandler<ItemStackTemplate> outputHandler, Supplier<InputIngredient<Item, ItemStack>> inputSupplier, Supplier<InputIngredient<Item, ItemStack>> secondaryInputSupplier,
+                                  BiFunction<ItemStack, ItemStack, ItemStackTemplate> outputGetter, Predicate<ItemStack> inputEmptyCheck, Predicate<ItemStack> secondaryInputEmptyCheck,
+                                  Predicate<ItemStackTemplate> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
         this.inputHandler = Objects.requireNonNull(inputHandler, "Input handler cannot be null.");
         this.secondaryInputHandler = Objects.requireNonNull(secondaryInputHandler, "Secondary input handler cannot be null.");
@@ -83,9 +84,9 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
      */
     public static StamperCachedRecipe createCache(StamperRecipe recipe,
                                                   BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> inputHandler, IInputHandler<Item, @NotNull ItemStack> extraInputHandler,
-                                                  IOutputHandler<@NotNull ItemStack> outputHandler) {
+                                                  IOutputHandler<@NotNull ItemStackTemplate> outputHandler) {
         return new StamperCachedRecipe(recipe, recheckAllErrors, inputHandler, extraInputHandler, outputHandler, recipe::getInput, recipe::getMold,
-                recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY);
+                recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.INVALID_ITEM_TEMPLATE);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
                         // 正常流程应该运行moldHandler.calculateOperationsCanSupport(tracker, inputB)
                         // 但这里不需要，因为模具类的输入可能始终为1，我们并不需要通过模具数量来决定并行数量
                         if (tracker.shouldContinueChecking()) {
-                            ItemStack output = outputGetter.apply(inputA, inputB);
+                            ItemStackTemplate output = outputGetter.apply(inputA, inputB);
                             outputSetter.accept(output);
                             // Calculate the max based on the space in the output
                             outputHandler.calculateOperationsCanSupport(tracker, output);

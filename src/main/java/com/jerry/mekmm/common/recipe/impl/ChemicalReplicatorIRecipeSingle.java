@@ -5,11 +5,14 @@ import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.recipes.ChemicalChemicalToChemicalRecipe;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+
+import org.jetbrains.annotations.NotNull;
 
 @NothingNullByDefault
 public class ChemicalReplicatorIRecipeSingle extends MMBasicChemicalChemicalToChemicalRecipe {
@@ -25,18 +28,13 @@ public class ChemicalReplicatorIRecipeSingle extends MMBasicChemicalChemicalToCh
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<@NotNull ChemicalChemicalToChemicalRecipe> getSerializer() {
         return null;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<@NotNull ChemicalChemicalToChemicalRecipe> getType() {
         return null;
-    }
-
-    @Override
-    public String getGroup() {
-        return "duplicator";
     }
 
     @Override

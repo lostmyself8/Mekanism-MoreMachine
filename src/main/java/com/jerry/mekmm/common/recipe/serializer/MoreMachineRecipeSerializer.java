@@ -8,7 +8,7 @@ import mekanism.api.SerializationConstants;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import com.mojang.datafixers.util.Function3;
@@ -18,14 +18,14 @@ public class MoreMachineRecipeSerializer {
 
     private MoreMachineRecipeSerializer() {}
 
-    public static RecipeSerializer<BasicStamperRecipe> stamping(Function3<ItemStackIngredient, ItemStackIngredient, ItemStack, BasicStamperRecipe> factory) {
+    public static RecipeSerializer<BasicStamperRecipe> stamping(Function3<ItemStackIngredient, ItemStackIngredient, ItemStackTemplate, BasicStamperRecipe> factory) {
         return new RecipeSerializer<>(RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemStackIngredient.CODEC.fieldOf(SerializationConstants.INPUT).forGetter(StamperRecipe::getInput),
                 ItemStackIngredient.CODEC.fieldOf(MoreMachineSerializationConstants.MOLD).forGetter(StamperRecipe::getMold),
-                ItemStack.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(BasicStamperRecipe::getOutputRaw)).apply(instance, factory)), StreamCodec.composite(
+                ItemStackTemplate.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(BasicStamperRecipe::getOutputRaw)).apply(instance, factory)), StreamCodec.composite(
                         ItemStackIngredient.STREAM_CODEC, BasicStamperRecipe::getInput,
                         ItemStackIngredient.STREAM_CODEC, BasicStamperRecipe::getMold,
-                        ItemStack.STREAM_CODEC, BasicStamperRecipe::getOutputRaw,
+                        ItemStackTemplate.STREAM_CODEC, BasicStamperRecipe::getOutputRaw,
                         factory));
     }
 }

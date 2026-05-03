@@ -9,27 +9,26 @@ import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
+
+import java.util.Objects;
 
 @NothingNullByDefault
 public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<PlantingStationRecipeBuilder> {
 
     private final ItemStackIngredient itemInput;
     private final ChemicalStackIngredient chemicalInput;
-    private final ItemStack mainOutput;
-    private final ItemStack secondaryOutput;
-    private final ItemStackTemplate defaultOutput;
+    private final ItemStackTemplate mainOutput;
+    private final ItemStackTemplate secondaryOutput;
     private final double secondaryChance;
     private final boolean perTickUsage;
 
-    protected PlantingStationRecipeBuilder(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStack mainOutput, ItemStack secondaryOutput, double secondaryChance, boolean perTickUsage) {
+    protected PlantingStationRecipeBuilder(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStackTemplate mainOutput, ItemStackTemplate secondaryOutput, double secondaryChance, boolean perTickUsage) {
         this.itemInput = itemInput;
         this.chemicalInput = chemicalInput;
         this.mainOutput = mainOutput;
         this.secondaryOutput = secondaryOutput;
-        this.defaultOutput = ItemStackTemplate.fromNonEmptyStack(mainOutput.isEmpty() ? secondaryOutput : mainOutput);
         this.secondaryChance = secondaryChance;
         this.perTickUsage = perTickUsage;
     }
@@ -43,11 +42,9 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
      * @param mainOutput    MainOutput
      * @param perTickUsage  PerTickUsage
      */
-    public static PlantingStationRecipeBuilder planting(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStack mainOutput, boolean perTickUsage) {
-        if (mainOutput.isEmpty()) {
-            throw new IllegalArgumentException("This planting recipe requires a non empty output.");
-        }
-        return new PlantingStationRecipeBuilder(itemInput, chemicalInput, mainOutput, ItemStack.EMPTY, 0, perTickUsage);
+    public static PlantingStationRecipeBuilder planting(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStackTemplate mainOutput, boolean perTickUsage) {
+        Objects.requireNonNull(mainOutput, "This planting recipe requires a non empty output.");
+        return new PlantingStationRecipeBuilder(itemInput, chemicalInput, mainOutput, null, 0, perTickUsage);
     }
 
     /**
@@ -60,16 +57,14 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
      *                        less than one.
      * @param perTickUsage    PerTickUsage
      */
-    public static PlantingStationRecipeBuilder planting(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStack secondaryOutput, double secondaryChance, boolean perTickUsage) {
-        if (secondaryOutput.isEmpty()) {
-            throw new IllegalArgumentException("This planting recipe requires a non empty secondary output.");
-        }
+    public static PlantingStationRecipeBuilder planting(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStackTemplate secondaryOutput, double secondaryChance, boolean perTickUsage) {
+        Objects.requireNonNull(secondaryOutput, "This planting recipe requires a non empty secondary output.");
         if (secondaryChance <= 0 || secondaryChance > 1) {
             throw new IllegalArgumentException("This planting recipe requires a secondary output chance greater than zero and at most one.");
         } else if (secondaryChance == 1) {
             throw new IllegalArgumentException("Planting recipes with a single 100% change output should specify their output as the main output.");
         }
-        return new PlantingStationRecipeBuilder(itemInput, chemicalInput, ItemStack.EMPTY, secondaryOutput, secondaryChance, perTickUsage);
+        return new PlantingStationRecipeBuilder(itemInput, chemicalInput, null, secondaryOutput, secondaryChance, perTickUsage);
     }
 
     /**
@@ -84,10 +79,9 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
      *                        less than one.
      * @param perTickUsage    PerTickUsage
      */
-    public static PlantingStationRecipeBuilder planting(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStack mainOutput, ItemStack secondaryOutput, double secondaryChance, boolean perTickUsage) {
-        if (mainOutput.isEmpty() || secondaryOutput.isEmpty()) {
-            throw new IllegalArgumentException("This planting recipe requires a non empty primary, and secondary output.");
-        }
+    public static PlantingStationRecipeBuilder planting(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStackTemplate mainOutput, ItemStackTemplate secondaryOutput, double secondaryChance, boolean perTickUsage) {
+        Objects.requireNonNull(mainOutput, "This planting recipe requires a non empty output.");
+        Objects.requireNonNull(secondaryOutput, "This planting recipe requires a non empty secondary output.");
         if (secondaryChance <= 0 || secondaryChance > 1) {
             throw new IllegalArgumentException("This planting recipe requires a secondary output chance greater than zero and at most one.");
         }
@@ -101,6 +95,7 @@ public class PlantingStationRecipeBuilder extends MekanismRecipeBuilder<Planting
 
     @Override
     public ResourceKey<Recipe<?>> defaultId() {
-        return RecipeBuilder.getDefaultRecipeId(defaultOutput);
+        ItemStackTemplate template = Objects.requireNonNull(mainOutput != null ? mainOutput : secondaryOutput, "Illegal config");
+        return RecipeBuilder.getDefaultRecipeId(template);
     }
 }

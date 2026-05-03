@@ -509,8 +509,8 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
         addConfigContainerTrackers(container);
-        container.track(SyncableDouble.create(this::getLastTransferLoss, value -> lastTransferLoss = value));
-        container.track(SyncableDouble.create(this::getLastEnvironmentLoss, value -> lastEnvironmentLoss = value));
+        container.track(SyncableDouble.create(this::getLastTransferLoss, v -> lastTransferLoss = v));
+        container.track(SyncableDouble.create(this::getLastEnvironmentLoss, v -> lastEnvironmentLoss = v));
         container.track(SyncableInt.create(connectionManager::getConnectionCount, count -> {}));
     }
 

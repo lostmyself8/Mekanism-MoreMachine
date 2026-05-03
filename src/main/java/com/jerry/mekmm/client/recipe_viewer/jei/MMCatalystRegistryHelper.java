@@ -13,7 +13,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 
 import java.util.List;
@@ -35,17 +35,17 @@ public class MMCatalystRegistryHelper {
         }
     }
 
-    public static void register(IRecipeCatalystRegistration registry, RecipeType<?> recipeType, List<ItemLike> workstations, boolean needOrdinary) {
+    public static void register(IRecipeCatalystRegistration registry, IRecipeType<?> recipeType, List<ItemLike> workstations, boolean needOrdinary) {
         for (ItemLike workstation : workstations) {
             Item item = workstation.asItem();
             if (needOrdinary) {
-                registry.addRecipeCatalyst(item, recipeType);
+                registry.addCraftingStation(recipeType, item);
             }
             if (item instanceof BlockItem blockItem) {
                 MoreMachineAttributeFactoryType factoryType = Attribute.get(blockItem.getBlock(), MoreMachineAttributeFactoryType.class);
                 if (factoryType != null) {
                     for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
-                        registry.addRecipeCatalyst(MoreMachineBlocks.getMoreMachineFactory(tier, factoryType.getMoreMachineFactoryType()), recipeType);
+                        registry.addCraftingStation(recipeType, MoreMachineBlocks.getMoreMachineFactory(tier, factoryType.getMoreMachineFactoryType()));
                     }
                 }
             }

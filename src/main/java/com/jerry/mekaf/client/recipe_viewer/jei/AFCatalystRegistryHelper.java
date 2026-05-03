@@ -17,15 +17,15 @@ public class AFCatalystRegistryHelper {
 
     public static void register(IRecipeCatalystRegistration registry) {
         for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.OXIDIZING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.OXIDIZING));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.DISSOLVING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.DISSOLUTION));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.WASHING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.WASHING));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CRYSTALLIZING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.CRYSTALLIZING));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PRESSURISED_REACTING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.REACTION));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CENTRIFUGING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.CENTRIFUGING));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.LIQUIFYING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.NUTRITIONAL_LIQUIFICATION));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PIGMENT_EXTRACTING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.PIGMENT_EXTRACTING));
-            registry.addRecipeCatalyst(AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PAINTING), MekanismJEI.genericRecipeType(RecipeViewerRecipeType.PAINTING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.OXIDIZING), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.OXIDIZING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.DISSOLUTION), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.DISSOLVING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.WASHING), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.WASHING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.CRYSTALLIZING), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CRYSTALLIZING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.REACTION), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PRESSURISED_REACTING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.CENTRIFUGING), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.CENTRIFUGING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.NUTRITIONAL_LIQUIFICATION), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.LIQUIFYING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.PIGMENT_EXTRACTING), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PIGMENT_EXTRACTING));
+            registry.addCraftingStation(MekanismJEI.genericRecipeType(RecipeViewerRecipeType.PAINTING), AdvancedFactoryBlocks.getAdvancedFactory(tier, AdvancedFactoryType.PAINTING));
         }
     }
 

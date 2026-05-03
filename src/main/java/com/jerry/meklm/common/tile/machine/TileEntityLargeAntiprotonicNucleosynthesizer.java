@@ -257,7 +257,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableLong.create(this::getEnergyUsed, value -> clientEnergyUsed = value));
+        container.track(SyncableLong.create(this::getEnergyUsed, v -> clientEnergyUsed = v));
     }
 
     @Override

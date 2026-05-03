@@ -10,7 +10,6 @@ import mekanism.api.recipes.ingredients.ItemStackIngredient;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -19,9 +18,9 @@ public class StamperRecipeBuilder extends MekanismRecipeBuilder<StamperRecipeBui
 
     private final ItemStackIngredient input;
     private final ItemStackIngredient mold;
-    private final ItemStack output;
+    private final ItemStackTemplate output;
 
-    protected StamperRecipeBuilder(ItemStackIngredient input, ItemStackIngredient mold, ItemStack output) {
+    protected StamperRecipeBuilder(ItemStackIngredient input, ItemStackIngredient mold, ItemStackTemplate output) {
         this.input = input;
         this.mold = mold;
         this.output = output;
@@ -34,10 +33,7 @@ public class StamperRecipeBuilder extends MekanismRecipeBuilder<StamperRecipeBui
      * @param mold   Mold Input.
      * @param output Output.
      */
-    public static StamperRecipeBuilder stamping(ItemStackIngredient input, ItemStackIngredient mold, ItemStack output) {
-        if (output.isEmpty()) {
-            throw new IllegalArgumentException("This stamping recipe requires a non empty item output.");
-        }
+    public static StamperRecipeBuilder stamping(ItemStackIngredient input, ItemStackIngredient mold, ItemStackTemplate output) {
         return new StamperRecipeBuilder(input, mold, output);
     }
 
@@ -48,7 +44,7 @@ public class StamperRecipeBuilder extends MekanismRecipeBuilder<StamperRecipeBui
 
     @Override
     public ResourceKey<Recipe<?>> defaultId() {
-        return RecipeBuilder.getDefaultRecipeId(ItemStackTemplate.fromNonEmptyStack(output));
+        return RecipeBuilder.getDefaultRecipeId(output);
     }
 
     /**

@@ -5,6 +5,7 @@ import com.jerry.mekmm.Mekmm;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.MekanismRecipe;
+import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
@@ -109,30 +110,12 @@ public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRe
     }
 
     @Override
-    public RecipeType<PlantingRecipe> getType() {
+    public RecipeType<@NotNull PlantingRecipe> getType() {
         return MoreMachineRecipeTypes.TYPE_PLANTING.value();
-    }
-
-    public String getGroup() {
-        return "planting_station";
     }
 
     @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(PLANTING_STATION);
-    }
-
-    /**
-     * Represents a precalculated chance based output.
-     */
-    public interface ChanceOutput {
-
-        ItemStack getMainOutput();
-
-        ItemStack getMaxSecondaryOutput();
-
-        ItemStack getSecondaryOutput();
-
-        ItemStack nextSecondaryOutput();
     }
 }

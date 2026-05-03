@@ -244,7 +244,7 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableEnum.create(GasMode.BY_ID, GasMode.IDLE, () -> dumping, value -> dumping = value));
+        container.track(SyncableEnum.create(GasMode.BY_ID, GasMode.IDLE, () -> dumping, v -> dumping = v));
     }
 
     @Override

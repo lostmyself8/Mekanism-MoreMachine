@@ -3,10 +3,15 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
+import mekanism.api.ItemStackTemplateHelper;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
+import net.minecraft.core.TypedInstance;
+import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import org.jetbrains.annotations.Contract;
@@ -21,21 +26,18 @@ public class BasicStamperRecipe extends StamperRecipe {
 
     protected final ItemStackIngredient input;
     protected final ItemStackIngredient mold;
-    protected final ItemStack output;
+    protected final ItemStackTemplate output;
 
     /**
      * @param input  Input.
      * @param mold   Mold.
      * @param output Output.
      */
-    public BasicStamperRecipe(ItemStackIngredient input, ItemStackIngredient mold, ItemStack output) {
+    public BasicStamperRecipe(ItemStackIngredient input, ItemStackIngredient mold, ItemStackTemplate output) {
         this.input = Objects.requireNonNull(input, "Input cannot be null.");
         this.mold = Objects.requireNonNull(mold, "Mold cannot be null.");
         Objects.requireNonNull(output, "Output cannot be null.");
-        if (output.isEmpty()) {
-            throw new IllegalArgumentException("Output cannot be empty.");
-        }
-        this.output = output.copy();
+        this.output = output;
     }
 
     @Override
@@ -55,21 +57,21 @@ public class BasicStamperRecipe extends StamperRecipe {
 
     @Override
     @Contract(value = "_, _ -> new", pure = true)
-    public ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack extra) {
-        return output.copy();
-    }
-
-    @Override
-    public List<ItemStack> getOutputDefinition() {
-        return Collections.singletonList(output);
-    }
-
-    public ItemStack getOutputRaw() {
+    public <INPUT extends TypedInstance<Item> & DataComponentHolder> ItemStackTemplate getOutput(@NotNull INPUT input, @NotNull INPUT extra) {
         return output;
     }
 
     @Override
-    public RecipeSerializer<BasicStamperRecipe> getSerializer() {
+    public List<ItemStack> getOutputDefinition() {
+        return Collections.singletonList(output.create());
+    }
+
+    public ItemStackTemplate getOutputRaw() {
+        return output;
+    }
+
+    @Override
+    public RecipeSerializer<@NotNull BasicStamperRecipe> getSerializer() {
         return MoreMachineRecipeSerializers.STAMPING.get();
     }
 
@@ -81,14 +83,14 @@ public class BasicStamperRecipe extends StamperRecipe {
             return false;
         }
         BasicStamperRecipe other = (BasicStamperRecipe) o;
-        return input.equals(other.input) && mold.equals(other.mold) && ItemStack.matches(output, other.output);
+        return input.equals(other.input) && mold.equals(other.mold) && ItemStackTemplateHelper.matches(output, other.output);
     }
 
     @Override
     public int hashCode() {
         int hash = Objects.hash(input, mold);
-        hash = 31 * hash + ItemStack.hashItemAndComponents(output);
-        hash = 31 * hash + output.getCount();
+        hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(output);
+        hash = 31 * hash + output.count();
         return hash;
     }
 }

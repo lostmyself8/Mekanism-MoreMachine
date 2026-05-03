@@ -426,9 +426,9 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableEnum.create(GasMode.BY_ID, GasMode.IDLE, () -> dumpLeft, value -> dumpLeft = value));
-        container.track(SyncableEnum.create(GasMode.BY_ID, GasMode.IDLE, () -> dumpRight, value -> dumpRight = value));
-        container.track(SyncableLong.create(this::getEnergyUsed, value -> clientEnergyUsed = value));
+        container.track(SyncableEnum.create(GasMode.BY_ID, GasMode.IDLE, () -> dumpLeft, v -> dumpLeft = v));
+        container.track(SyncableEnum.create(GasMode.BY_ID, GasMode.IDLE, () -> dumpRight, v -> dumpRight = v));
+        container.track(SyncableLong.create(this::getEnergyUsed, v -> clientEnergyUsed = v));
     }
 
     @Override
