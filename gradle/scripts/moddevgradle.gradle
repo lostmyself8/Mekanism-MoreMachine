@@ -6,11 +6,6 @@ neoForge {
     // Specify Forge version
     version = libs.versions.neoForge.get()
 
-    parchment {
-        minecraftVersion = "1.21.11"
-        mappingsVersion = libs.versions.parchment.get()
-    }
-
     // This line is optional. Access Transformers are automatically detected
     accessTransformers {
         var file = project.file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -62,7 +57,6 @@ neoForge {
 
         data {
             clientData()
-            serverData()
             sourceSet = sourceSets.main
             ideName = "Data Generation"
 
