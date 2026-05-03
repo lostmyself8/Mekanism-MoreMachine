@@ -39,8 +39,8 @@ license = "${mod_license}"
     ordering = "AFTER"
     side = "BOTH"
 
-[[dependencies.${mod_id}]]
-    modId = "evolvedmekanism"
-    type = "optional"
-    ordering = "AFTER"
-    side = "BOTH"
+#[[dependencies.${mod_id}]]
+#    modId = "evolvedmekanism"
+#    type = "optional"
+#    ordering = "AFTER"
+#    side = "BOTH"
