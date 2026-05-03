@@ -19,27 +19,27 @@ dependencies {
     compileOnly(forge.mekanism.generators)
     compileOnly(forge.mekanism.tools)
 
-    compileOnly(forge.mekanismcovers)
-    compileOnly(forge.evolvedmekanism)
+//    compileOnly(forge.mekanismcovers)
+//    compileOnly(forge.evolvedmekanism)
 
     // FTB
-    compileOnly(forge.architectury)
+//    compileOnly(forge.architectury)
 
-    compileOnly(forge.ftblibrary)
-    compileOnly(forge.ftbultimine)
+//    compileOnly(forge.ftblibrary)
+//    compileOnly(forge.ftbultimine)
 
     // Crt
-    compileOnly(forge.crt)
+//    compileOnly(forge.crt)
 
     // mysticalAgriculture
-    compileOnly(forge.mysticalagriculture)
+//    compileOnly(forge.mysticalagriculture)
 
     // immersiveengineering
-    compileOnly(forge.immersiveengineering)
+//    compileOnly(forge.immersiveengineering)
 
     // CC: Tweaked
-    compileOnly(forge.cc.tweaked.core.api)
-    compileOnly(forge.cc.tweaked.forge.api)
+//    compileOnly(forge.cc.tweaked.core.api)
+//    compileOnly(forge.cc.tweaked.forge.api)
 
     // WAILA-likes
     compileOnly(forge.jade)
@@ -55,24 +55,24 @@ dependencies {
     localRuntime(forge.mekanism.generators)
     localRuntime(forge.mekanism.tools)
 
-    localRuntime(forge.mekanismcovers)
-    localRuntime(forge.igleelibrary)
-    localRuntime(forge.evolvedmekanism)
+//    localRuntime(forge.mekanismcovers)
+//    localRuntime(forge.igleelibrary)
+//    localRuntime(forge.evolvedmekanism)
 
     // FTB //
-    localRuntime(forge.architectury)
-    localRuntime(forge.ftblibrary)
-    localRuntime(forge.ftbultimine)
+//    localRuntime(forge.architectury)
+//    localRuntime(forge.ftblibrary)
+//    localRuntime(forge.ftbultimine)
 
     // Crt
-    localRuntime(forge.crt)
+//    localRuntime(forge.crt)
 
     // mysticalAgriculture
-    localRuntime(forge.cucumber)
-    localRuntime(forge.mysticalagriculture)
+//    localRuntime(forge.cucumber)
+//    localRuntime(forge.mysticalagriculture)
 
     // immersiveengineering
-    localRuntime(forge.immersiveengineering)
+//    localRuntime(forge.immersiveengineering)
 
     // Runtime Recipe Viewers - uncomment whichever one you want to use //
 //    modLocalRuntime(forge.jer)

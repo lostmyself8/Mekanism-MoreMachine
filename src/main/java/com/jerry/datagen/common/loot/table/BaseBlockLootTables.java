@@ -3,18 +3,18 @@ package com.jerry.datagen.common.loot.table;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.Mekanism;
 import mekanism.common.attachments.containers.ContainerType;
-import mekanism.common.block.BlockRadioactiveWasteBarrel;
+import mekanism.common.block.BlockPersonalStorage;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.block.attribute.Attributes.AttributeInventory;
-import mekanism.common.item.block.ItemBlockPersonalStorage;
 import mekanism.common.lib.frequency.FrequencyType;
 import mekanism.common.lib.frequency.IFrequencyHandler;
 import mekanism.common.lib.frequency.IFrequencyItem;
+import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.resource.ore.OreBlockType;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.base.TileEntityUpdateable;
-import mekanism.common.util.RegistryUtils;
 
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -23,7 +23,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -31,13 +31,13 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.storage.loot.LootContext.BlockEntityTarget;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.*;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.ConditionUserBuilder;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -45,6 +45,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
@@ -86,28 +87,32 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
         }
     }
 
-    protected boolean skipBlock(Block block) {
+    protected boolean skipBlock(Holder<Block> holder) {
+        Block block = holder.value();
         // Skip any blocks that we already registered a table for or have marked to skip
         return knownBlocks.contains(block) || toSkip.contains(block);
     }
 
-    protected Builder createOreDrop(Block block, ItemLike item) {
-        return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.asItem())
+    protected void add(Holder<Block> block, Function<Block, LootTable.Builder> factory) {
+        add(block.value(), factory);
+    }
+
+    protected LootTable.Builder createOreDrop(Block block, Holder<Item> item) {
+        return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.value())
                 .apply(ApplyBonusCount.addOreBonusCount(this.registries.holderOrThrow(Enchantments.FORTUNE)))));
     }
 
-    protected Builder droppingWithFortuneOrRandomly(Block block, ItemLike item, UniformGenerator range) {
-        return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.asItem())
+    protected LootTable.Builder droppingWithFortuneOrRandomly(Block block, Holder<Item> item, UniformGenerator range) {
+        return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.value())
                 .apply(SetItemCountFunction.setCount(range))
                 .apply(ApplyBonusCount.addOreBonusCount(this.registries.holderOrThrow(Enchantments.FORTUNE)))));
     }
 
     // Holder<Block> versions of BlockLootTable methods, modified to support varargs
-    protected void dropSelf(Collection<? extends Holder<Block>> blockProviders) {
-        for (Holder<Block> blockProvider : blockProviders) {
-            Block block = blockProvider.value();
+    protected void dropSelf(Collection<? extends Holder<Block>> blocks) {
+        for (Holder<Block> block : blocks) {
             if (!skipBlock(block)) {
-                dropSelf(block);
+                dropSelf(block.value());
             }
         }
     }
@@ -118,7 +123,8 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
         }
     }
 
-    protected void add(Function<Block, Builder> factory, Holder<Block>... blockProviders) {
+    @SafeVarargs
+    protected final void add(Function<Block, Builder> factory, Holder<Block>... blockProviders) {
         for (Holder<Block> blockProvider : blockProviders) {
             add(blockProvider.value(), factory);
         }
@@ -126,23 +132,23 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
 
     protected void add(Function<Block, Builder> factory, OreBlockType... oreTypes) {
         for (OreBlockType oreType : oreTypes) {
-            add(oreType.stone().value(), factory);
-            add(oreType.deepslate().value(), factory);
+            add(oreType.stone(), factory);
+            add(oreType.deepslate(), factory);
         }
     }
 
-    protected void dropSelfWithContents(Collection<? extends Holder<Block>> blockProviders) {
+    protected void dropSelfWithContents(Collection<? extends DeferredHolder<Block, ?>> blockProviders) {
         // TODO: See if there is other stuff we want to be transferring which we currently do not
         // For example, when writing this we added dump mode for chemical tanks to getting transferred to the item
-        for (Holder<Block> blockProvider : blockProviders) {
-            Block block = blockProvider.value();
-            if (skipBlock(block)) {
+        for (DeferredHolder<Block, ?> blockProvider : blockProviders) {
+            if (skipBlock(blockProvider)) {
                 continue;
             }
+            Block block = blockProvider.value();
             boolean hasComponents = false;
-            CopyComponentsFunction.Builder componentsBuilder = CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY);
+            CopyComponentsFunction.Builder componentsBuilder = CopyComponentsFunction.copyComponentsFromBlockEntity(BlockEntityTarget.BLOCK_ENTITY.contextParam());
             boolean hasContents = false;
-            ItemStack stack = new ItemStack(block);
+            Item blockItem = block.asItem();
             LootItem.Builder<?> itemLootPool = LootItem.lootTableItem(block);
             // delayed items until after other copies are added, for cases like referencing the owner
             DelayedLootItemBuilder delayedPool = new DelayedLootItemBuilder();
@@ -153,10 +159,10 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
             }
             if (tile instanceof IFrequencyHandler frequencyHandler) {
                 Set<FrequencyType<?>> customFrequencies = frequencyHandler.getFrequencyComponent().getCustomFrequencies();
-                if (!customFrequencies.isEmpty() && stack.getItem() instanceof IFrequencyItem frequencyItem) {
+                if (!customFrequencies.isEmpty() && blockItem instanceof IFrequencyItem frequencyItem) {
                     FrequencyType<?> frequencyType = frequencyItem.getFrequencyType();
                     if (!customFrequencies.contains(frequencyType)) {
-                        Mekanism.logger.warn("Block missing frequency type '{}' expected by item: {}", frequencyType.getName(), RegistryUtils.getName(block.builtInRegistryHolder()));
+                        Mekanism.logger.warn("Block missing frequency type '{}' expected by item: {}", frequencyType.getName(), blockProvider.getId());
                     }
                 }
             }
@@ -178,11 +184,11 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
             }
             if (tile instanceof TileEntityMekanism tileEntity) {
                 if (tileEntity.isNameable()) {
-                    itemLootPool.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY));
+                    itemLootPool.apply(CopyNameFunction.copyName(BlockEntityTarget.BLOCK_ENTITY));
                 }
                 for (ContainerType<?, ?, ?> type : ContainerType.TYPES) {
                     List<?> containers = tileEntity.persists(type) ? type.getContainers(tileEntity) : Collections.emptyList();
-                    int attachmentContainers = type.getContainerCount(stack);
+                    int attachmentContainers = type.getContainerCount(blockItem);
                     if (containers.size() == attachmentContainers) {
                         if (!containers.isEmpty()) {
                             componentsBuilder.include(type.getComponentType().get());
@@ -193,23 +199,23 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                         }
                     } else if (attachmentContainers == 0) {
                         // TODO: Improve how we handle skipping warnings for known missing types
-                        if (type == ContainerType.ITEM && block.asItem() instanceof ItemBlockPersonalStorage) {
+                        if (type == ContainerType.ITEM && block instanceof BlockPersonalStorage<?, ?>) {
                             // We don't want explosions causing personal storage items to be directly destroyed. It is
                             // also known that the attachment is missing
                             hasContents = true;
-                        } else if (type != ContainerType.CHEMICAL || !(block instanceof BlockRadioactiveWasteBarrel)) {
-                            Mekanism.logger.warn("Container type: {}, item missing attachments: {}", type.getComponentName(), RegistryUtils.getName(block.builtInRegistryHolder()));
+                        } else if (type != ContainerType.CHEMICAL || !MekanismBlocks.RADIOACTIVE_WASTE_BARREL.keyMatches(blockProvider)) {
+                            Mekanism.logger.warn("Container type: {}, item missing attachments: {}", type.getComponentName(), blockProvider.getId());
                         }
                     } else if (containers.isEmpty()) {
-                        Mekanism.logger.warn("Container type: {}, item has attachments but block doesn't have containers: {}", type.getComponentName(), RegistryUtils.getName(block.builtInRegistryHolder()));
+                        Mekanism.logger.warn("Container type: {}, item has attachments but block doesn't have containers: {}", type.getComponentName(), blockProvider.getId());
                     } else {
                         Mekanism.logger.warn("Container type: {}, has {} item attachments and block has {} containers: {}", type.getComponentName(), attachmentContainers,
-                                containers.size(), RegistryUtils.getName(block.builtInRegistryHolder()));
+                                containers.size(), blockProvider.getId());
                     }
                 }
             }
             @SuppressWarnings("unchecked")
-            AttributeInventory<DelayedLootItemBuilder> attributeInventory = Attribute.get(block, AttributeInventory.class);
+            AttributeInventory<DelayedLootItemBuilder> attributeInventory = Attribute.get(blockProvider, AttributeInventory.class);
             if (attributeInventory != null) {
                 hasContents |= attributeInventory.applyLoot(delayedPool);
             }
@@ -310,7 +316,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     }
 
     @NothingNullByDefault
-    public static class DelayedLootItemBuilder implements ConditionUserBuilder<DelayedLootItemBuilder>, FunctionUserBuilder<DelayedLootItemBuilder> {
+    public static class DelayedLootItemBuilder implements ConditionUserBuilder<@NotNull DelayedLootItemBuilder>, FunctionUserBuilder<@NotNull DelayedLootItemBuilder> {
 
         private final List<LootItemFunction.Builder> functions = new ArrayList<>();
         private final List<LootItemCondition.Builder> conditions = new ArrayList<>();

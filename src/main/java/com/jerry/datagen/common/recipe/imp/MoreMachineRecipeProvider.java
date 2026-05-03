@@ -4,10 +4,6 @@ import com.jerry.datagen.common.recipe.BaseRecipeProvider;
 import com.jerry.datagen.common.recipe.ISubRecipeProvider;
 import com.jerry.datagen.common.recipe.builder.ExtendedShapedRecipeBuilder;
 import com.jerry.datagen.common.recipe.builder.MoreMachineDataShapedRecipeBuilder;
-import com.jerry.datagen.common.recipe.compat.EMAdvancedFactoryRecipeProvider;
-import com.jerry.datagen.common.recipe.compat.EMMoreMachineRecipeProvider;
-import com.jerry.datagen.common.recipe.compat.IERecipeProvider;
-import com.jerry.datagen.common.recipe.compat.MysticalRecipeProvider;
 import com.jerry.datagen.common.recipe.pattern.Pattern;
 import com.jerry.datagen.common.recipe.pattern.RecipePattern;
 
@@ -73,10 +69,10 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
         super(output, registries);
 
         // Mod Compat Recipe providers
-        checkCompat("mysticalagriculture", MysticalRecipeProvider::new);
-        checkCompat("immersiveengineering", IERecipeProvider::new);
-        checkCompat("evolvedmekanism", EMMoreMachineRecipeProvider::new);
-        checkCompat("evolvedmekanism", EMAdvancedFactoryRecipeProvider::new);
+        // checkCompat("mysticalagriculture", MysticalRecipeProvider::new);
+        // checkCompat("immersiveengineering", IERecipeProvider::new);
+        // checkCompat("evolvedmekanism", EMMoreMachineRecipeProvider::new);
+        // checkCompat("evolvedmekanism", EMAdvancedFactoryRecipeProvider::new);
     }
 
     private void checkCompat(String modid, Function<String, ISubRecipeProvider> providerCreator) {
@@ -104,8 +100,8 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
     @Override
     protected List<ISubRecipeProvider> getSubRecipeProviders() {
         return List.of(
-                new MMFactoryRecipeProvider(),
-                new AdvancedFactoryRecipeProvider(),
+                new MMFactoryRecipeProvider(items),
+                new AdvancedFactoryRecipeProvider(items),
                 new PlantingRecipeProvider());
     }
 
@@ -116,67 +112,67 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.ALLOY, 'E', Pattern.ALLOY),
                         RecipePattern.TripleLine.of('B', 'D', 'C'),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, 'E', Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_ULTIMATE))
-                .key('B', itemTag(MekanismTags.Items.DUSTS_LAPIS))
-                .key('C', itemTag(MekanismTags.Items.DUSTS_DIAMOND))
-                .key('D', itemTag(MekanismTags.Items.DUSTS_NETHERITE))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_ULTIMATE)
+                .key('B', items, MekanismTags.Items.DUSTS_LAPIS)
+                .key('C', items, MekanismTags.Items.DUSTS_DIAMOND)
+                .key('D', items, MekanismTags.Items.DUSTS_NETHERITE)
                 .key('E', MekanismItems.ELECTROLYTIC_CORE)
-                .build(consumer, Mekmm.rl("advanced_electrolysis_core"));
+                .save(consumer, Mekmm.rl("advanced_electrolysis_core"));
         // 回收机
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.RECYCLER)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.OSMIUM, Pattern.CONSTANT, Pattern.OSMIUM),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_ADVANCED))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ADVANCED))
-                .key(Pattern.OSMIUM, itemTag(osmiumIngot()))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_ADVANCED)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ADVANCED)
+                .key(Pattern.OSMIUM, items, osmiumIngot())
                 .key(Pattern.CONSTANT, MekanismBlocks.CRUSHER)
-                .build(consumer, Mekmm.rl("recycler"));
+                .save(consumer, Mekmm.rl("recycler"));
         // 种植机
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.PLANTING_STATION)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.CONSTANT, Pattern.STEEL_CASING, Pattern.CONSTANT),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_REINFORCED))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ELITE))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_REINFORCED)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ELITE)
                 .key(Pattern.CONSTANT, MekanismItems.BIO_FUEL)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("planting_station"));
+                .save(consumer, Mekmm.rl("planting_station"));
         // 压模机
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.CNC_STAMPER)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.CONSTANT, Pattern.STEEL_CASING, Pattern.CONSTANT),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_BASIC))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_BASIC))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_BASIC)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_BASIC)
                 .key(Pattern.CONSTANT, Ingredient.of(Items.PISTON, Items.STICKY_PISTON))
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("cnc_stamper"));
+                .save(consumer, Mekmm.rl("cnc_stamper"));
         // 车床
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.CNC_LATHE)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.CONSTANT, Pattern.STEEL_CASING, Pattern.CONSTANT),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_BASIC))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_BASIC))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_BASIC)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_BASIC)
                 .key(Pattern.CONSTANT, MekanismItems.ROBIT)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("cnc_lathe"));
+                .save(consumer, Mekmm.rl("cnc_lathe"));
         // 轧机
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.CNC_ROLLING_MILL)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.STEEL, Pattern.STEEL_CASING, Pattern.STEEL),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_BASIC))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_BASIC))
-                .key(Pattern.STEEL, itemTag(MekanismTags.Items.INGOTS_STEEL))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_BASIC)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_BASIC)
+                .key(Pattern.STEEL, items, MekanismTags.Items.INGOTS_STEEL)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("cnc_rolling_mill"));
+                .save(consumer, Mekmm.rl("cnc_rolling_mill"));
 
         // 大型回旋
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR)
@@ -184,12 +180,12 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, 'W'),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK)))
-                .key(Pattern.BLOCK, itemTag(MekanismTags.Items.STORAGE_BLOCKS_STEEL))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ULTIMATE))
+                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
                 .key('W', MekanismBlocks.ULTIMATE_FLUID_TANK)
-                .build(consumer, Mekmm.rl("large_rotary_condensentrator"));
+                .save(consumer, Mekmm.rl("large_rotary_condensentrator"));
 
         // 大灌注
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER)
@@ -197,11 +193,11 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK)))
-                .key(Pattern.BLOCK, itemTag(MekanismTags.Items.STORAGE_BLOCKS_STEEL))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ULTIMATE))
+                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
-                .build(consumer, Mekmm.rl("large_chemical_infuser"));
+                .save(consumer, Mekmm.rl("large_chemical_infuser"));
 
         // 大电解
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR)
@@ -209,12 +205,12 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, 'E', Pattern.BLOCK),
                         RecipePattern.TripleLine.of('W', Pattern.ROBIT, Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, 'E', Pattern.BLOCK)))
-                .key(Pattern.BLOCK, itemTag(MekanismTags.Items.STORAGE_BLOCKS_STEEL))
+                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
                 .key('E', MoreMachineItems.ADVANCED_ELECTROLYSIS_CORE)
                 .key('W', MekanismBlocks.ULTIMATE_FLUID_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
-                .build(consumer, Mekmm.rl("large_electrolytic_separator"));
+                .save(consumer, Mekmm.rl("large_electrolytic_separator"));
 
         // 大中子，需要加载MekanismGenerators
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR)
@@ -223,12 +219,12 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.ROBIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, 'L', Pattern.TANK)))
                 .key('S', GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR)
-                .key(Pattern.BLOCK, itemTag(MekanismTags.Items.STORAGE_BLOCKS_STEEL))
+                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key('L', MekanismBlocks.LASER)
                 .addCondition(new ModLoadedCondition("mekanismgenerators"))
-                .build(consumer, Mekmm.rl("large_solar_neutron_activator"));
+                .save(consumer, Mekmm.rl("large_solar_neutron_activator"));
 
         // 大热力
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
@@ -237,12 +233,12 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                             RecipePattern.TripleLine.of(Pattern.BLOCK, 'S', Pattern.BLOCK),
                             RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
                             RecipePattern.TripleLine.of(Pattern.BLOCK, 'S', Pattern.BLOCK)))
-                    .key(Pattern.BLOCK, itemTag(MekanismTags.Items.STORAGE_BLOCKS_STEEL))
+                    .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
                     .key('S', MekanismBlocks.SUPERHEATING_ELEMENT)
                     .key(Pattern.TANK, MekanismBlocks.ULTIMATE_FLUID_TANK)
                     .key(Pattern.ROBIT, MekanismItems.ROBIT)
                     .addCondition(new ModLoadedCondition("mekanismgenerators"))
-                    .build(consumer, Mekmm.rl("large_heat_generator"));
+                    .save(consumer, Mekmm.rl("large_heat_generator"));
 
             // 大燃气
             MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR)
@@ -252,10 +248,10 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                             RecipePattern.TripleLine.of(Pattern.TANK, 'E', Pattern.TANK)))
                     .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                     .key('E', MoreMachineItems.ADVANCED_ELECTROLYSIS_CORE)
-                    .key(Pattern.BLOCK, itemTag(MekanismTags.Items.STORAGE_BLOCKS_STEEL))
+                    .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
                     .key(Pattern.ROBIT, MekanismItems.ROBIT)
                     .addCondition(new ModLoadedCondition("mekanismgenerators"))
-                    .build(consumer, Mekmm.rl("large_gas_burning_generator"));
+                    .save(consumer, Mekmm.rl("large_gas_burning_generator"));
         }
     }
 
@@ -268,48 +264,48 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CONSTANT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.CIRCUIT, Pattern.STEEL_CASING, Pattern.CIRCUIT),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, 'S', Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_ATOMIC))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ULTIMATE))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_ATOMIC)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.CONSTANT, MoreMachineItems.UU_MATTER)
-                .key('S', itemTag(Tags.Items.CHESTS))
+                .key('S', items, Tags.Items.CHESTS)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("replicator"));
+                .save(consumer, Mekmm.rl("replicator"));
         // 流体复制机
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.FLUID_REPLICATOR)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CONSTANT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.CIRCUIT, Pattern.STEEL_CASING, Pattern.CIRCUIT),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.BUCKET, Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_ATOMIC))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ULTIMATE))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_ATOMIC)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.CONSTANT, MoreMachineItems.UU_MATTER)
                 .key(Pattern.BUCKET, Items.BUCKET)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("fluid_replicator"));
+                .save(consumer, Mekmm.rl("fluid_replicator"));
         // 化学品复制机
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.CHEMICAL_REPLICATOR)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CONSTANT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.CIRCUIT, Pattern.STEEL_CASING, Pattern.CIRCUIT),
                         RecipePattern.TripleLine.of(Pattern.ALLOY, 'T', Pattern.ALLOY)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_ATOMIC))
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ULTIMATE))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_ATOMIC)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.CONSTANT, MoreMachineItems.UU_MATTER)
                 .key('T', MekanismBlocks.BASIC_CHEMICAL_TANK)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .build(consumer, Mekmm.rl("chemical_replicator"));
+                .save(consumer, Mekmm.rl("chemical_replicator"));
         // 环境气体收集器
         ExtendedShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.AMBIENT_GAS_COLLECTOR)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CONSTANT, Pattern.ALLOY),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.STEEL_CASING, Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.OSMIUM, Pattern.OSMIUM, Pattern.OSMIUM)))
-                .key(Pattern.ALLOY, itemTag(MekanismTags.Items.ALLOYS_ATOMIC))
+                .key(Pattern.ALLOY, items, MekanismTags.Items.ALLOYS_ATOMIC)
                 .key(Pattern.CONSTANT, MekanismBlocks.ULTIMATE_PRESSURIZED_TUBE)
                 .key(Pattern.TANK, MekanismBlocks.ULTIMATE_CHEMICAL_TANK)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .key(Pattern.OSMIUM, MekanismTags.Items.PROCESSED_RESOURCE_BLOCKS.get(PrimaryResource.OSMIUM))
-                .build(consumer, Mekmm.rl("ambient_gas_collector"));
+                .key(Pattern.OSMIUM, items, MekanismTags.Items.PROCESSED_RESOURCE_BLOCKS.get(PrimaryResource.OSMIUM))
+                .save(consumer, Mekmm.rl("ambient_gas_collector"));
         // 无线充电站
         ExtendedShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.WIRELESS_CHARGING_STATION)
                 .pattern(RecipePattern.createPattern(
@@ -318,10 +314,10 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.CIRCUIT, 'E', Pattern.CIRCUIT)))
                 .key(Pattern.HDPE_CHAR, MekanismItems.HDPE_SHEET)
                 .key(Pattern.CONSTANT, MekanismItems.TELEPORTATION_CORE)
-                .key(Pattern.CIRCUIT, itemTag(MekanismTags.Items.CIRCUITS_ULTIMATE))
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
                 .key('E', MekanismBlocks.ULTIMATE_ENERGY_CUBE)
-                .build(consumer, Mekmm.rl("wireless_charging_station"));
+                .save(consumer, Mekmm.rl("wireless_charging_station"));
         // 无线传输站
         ExtendedShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.WIRELESS_TRANSMISSION_STATION)
                 .pattern(RecipePattern.createPattern(
@@ -330,9 +326,9 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.PLUTONIUM, 'Q', Pattern.PLUTONIUM)))
                 .key(Pattern.HDPE_CHAR, MekanismItems.HDPE_SHEET)
                 .key(Pattern.CONSTANT, MekanismBlocks.SUPERCHARGED_COIL)
-                .key(Pattern.PLUTONIUM, itemTag(MekanismTags.Items.PELLETS_PLUTONIUM))
+                .key(Pattern.PLUTONIUM, items, MekanismTags.Items.PELLETS_PLUTONIUM)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
                 .key('Q', MekanismBlocks.QUANTUM_ENTANGLOPORTER)
-                .build(consumer, Mekmm.rl("wireless_transmission_station"));
+                .save(consumer, Mekmm.rl("wireless_transmission_station"));
     }
 }

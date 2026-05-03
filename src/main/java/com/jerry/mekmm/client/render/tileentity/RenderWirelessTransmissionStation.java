@@ -15,40 +15,27 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
 @NothingNullByDefault
-public class RenderWirelessTransmissionStation extends MekanismTileEntityRenderer<TileEntityWirelessTransmissionStation, WirelessTransmissionStationRenderState> {
+public class RenderWirelessTransmissionStation extends MekanismTileEntityRenderer<@NotNull TileEntityWirelessTransmissionStation, WirelessTransmissionStationRenderState> {
 
     public RenderWirelessTransmissionStation(Context context) {
         super(context);
-    }
-
-    @Override
-    protected void render(TileEntityWirelessTransmissionStation tile, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int overlayLight, ProfilerFiller profiler) {
-        // 获取传输站的位置 (中心点)
-        BlockPos stationPos = tile.getBlockPos();
-        // 获取所有连接配置
-        Collection<ConnectionConfig> connections = tile.connectionManager.getAllConnections();
-        // 为每个连接绘制光束
-        for (ConnectionConfig config : connections) {
-            renderConnection(matrix, renderer, stationPos, config);
-        }
     }
 
     /**
@@ -89,8 +76,7 @@ public class RenderWirelessTransmissionStation extends MekanismTileEntityRendere
         // 根据传输类型选择颜色
         ColorRGB color = getColorForType(config.type());
         // 渲染光束
-        RenderLineHelper.renderLine(matrix, renderer, start, end, color.r, color.g, color.b, 0.15f);
-        submitNodeCollector.submitLeash(matrix, new EntityRenderState.LeashState());
+        // RenderLineHelper.renderLine(matrix, renderer, start, end, color.r, color.g, color.b, 0.15f);
     }
 
     /**
@@ -175,8 +161,12 @@ public class RenderWirelessTransmissionStation extends MekanismTileEntityRendere
     @Override
     public void submit(WirelessTransmissionStationRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
         // 为每个连接绘制光束
-        for (ConnectionConfig config : state.connections) {
-            renderConnection(poseStack, submitNodeCollector, state.stationPos, config);
+        if (state.connections != null) {
+            for (ConnectionConfig config : state.connections) {
+                if (state.stationPos != null) {
+                    renderConnection(poseStack, submitNodeCollector, state.stationPos, config);
+                }
+            }
         }
     }
 

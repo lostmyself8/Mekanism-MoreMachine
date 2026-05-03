@@ -129,7 +129,7 @@ public class BasicPlantingRecipe extends PlantingRecipe {
             return false;
         }
         BasicPlantingRecipe other = (BasicPlantingRecipe) o;
-        return secondaryChance == other.secondaryChance && itemInput.equals(other.itemInput) && chemicalInput.equals(other.chemicalInput) && ItemStack.matches(mainOutput, other.mainOutput) && ItemStack.matches(secondaryOutput, other.secondaryOutput);
+        return secondaryChance == other.secondaryChance && itemInput.equals(other.itemInput) && chemicalInput.equals(other.chemicalInput) && ItemStackTemplateHelper.matches(mainOutput, other.mainOutput) && ItemStackTemplateHelper.matches(secondaryOutput, other.secondaryOutput);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class BasicPlantingRecipe extends PlantingRecipe {
         hash = 31 * hash + Double.hashCode(secondaryChance);
         hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(mainOutput);
         hash = 31 * hash + mainOutput.count();
-        if (!secondaryOutput.isEmpty()) {
+        if (secondaryOutput != null) {
             hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(secondaryOutput);
             hash = 31 * hash + secondaryOutput.count();
         }

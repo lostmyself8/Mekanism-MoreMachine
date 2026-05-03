@@ -66,7 +66,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ItemStackMap;
 
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
@@ -161,7 +160,8 @@ public abstract class TileEntityMoreMachineFactory<RECIPE extends MekanismRecipe
 
     public boolean isEMLoadAndTierOrdinalAboveOverLocked() {
         if (Mekmm.hooks.evolvedMekanism.isLoaded()) {
-            return tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal();
+            // return tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal();
+            return true;
         }
         return false;
     }

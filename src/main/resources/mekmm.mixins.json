@@ -6,7 +6,7 @@
   "mixins": [
     "MixinItemConfigurator",
     "MixinMekanismBlocks",
-    "client.recipe_viewer.MixinMekanismEmi",
+    "client.render.MixinRenderTickHandler",
     "recipe.MixinMekanismRecipeType",
     "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
     "tile.MixinTileEntityChemicalCrystallizer",
