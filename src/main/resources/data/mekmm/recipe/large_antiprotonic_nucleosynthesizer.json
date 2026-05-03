@@ -1,21 +1,11 @@
 {
   "type": "mekanism:mek_data",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/steel"
-    },
-    "C": {
-      "tag": "c:pellets/antimatter"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    },
-    "T": {
-      "item": "mekmm:ultimate_max_chemical_tank"
-    },
-    "P": {
-      "tag": "mekanism:personal_storage"
-    }
+    "B": "#c:storage_blocks/steel",
+    "C": "#c:pellets/antimatter",
+    "R": "mekanism:robit",
+    "T": "mekmm:ultimate_max_chemical_tank",
+    "P": "#mekanism:personal_storage"
   },
   "pattern": [
     "BCB",
