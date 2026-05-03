@@ -1,7 +1,7 @@
 [versions]
 minecraft = "26.1.2"
 neoForge = "26.1.2.36-beta"
-loader = "11.0.13"
+loader = "4"
 parchment = "2025.12.20" # https://parchmentmc.org/docs/getting-started
 shadow = "9.4.1"
 spotless = "8.4.0"
