@@ -52,7 +52,7 @@ public class LargeGeneratorBlocks {
                             .addEnergy()
                             .build()));
 
-    public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>>> LARGE_WIND_GENERATOR = LG_BLOCKS.registerDetails("wind_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_WIND_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
+    public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>>> LARGE_WIND_GENERATOR = LG_BLOCKS.registerDetails("large_wind_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_WIND_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder().addEnergy().build()));
 
     private LargeGeneratorBlocks() {}

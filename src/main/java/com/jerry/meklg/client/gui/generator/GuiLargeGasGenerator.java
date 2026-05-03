@@ -36,7 +36,7 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
         super.addGuiElements();
         addRenderableWidget(new GuiEnergyTab(this, () -> {
             // 燃料消耗和发电量都受效率乘数影响
-            long productionAmount = MathUtils.clampToLong(tile.getGenerationRate() * tile.getUsed() * tile.getMaxBurnTicks());
+            long productionAmount = MathUtils.clampToLong(tile.getUsed());
             return List.of(
                     GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(productionAmount)),
                     MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())));

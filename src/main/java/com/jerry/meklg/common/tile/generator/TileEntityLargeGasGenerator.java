@@ -65,6 +65,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Nullable
     private ChemicalFuel cachedFuel = null;
     private double gasUsedLastTick;
+    private double efficiencyMultiplier = 1.0;
     private int numPowering;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFuelItem", docPlaceholder = "fuel item slot")
@@ -106,7 +107,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         fuelSlot.fillTank();
         gasUsedLastTick = 0;
 
-        updateEfficiency();
+//        updateEfficiency();
 
         if (!fuelTank.isEmpty() && canFunction() && cachedFuel != null) {
 
@@ -162,10 +163,10 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableLong.create(this::getGenerationRate, v -> generationRate = v));
-        container.track(SyncableLong.create(this::getUsed, v -> gasUsedLastTick = v));
-        container.track(SyncableInt.create(this::getMaxBurnTicks, v -> maxBurnTicks = v));
-        container.track(SyncableDouble.create(this::getEfficiencyMultiplier, v -> efficiencyMultiplier = v));
+//        container.track(SyncableLong.create(this::getGenerationRate, v -> generationRate = v));
+        container.track(SyncableDouble.create(this::getUsed, v -> gasUsedLastTick = v));
+//        container.track(SyncableInt.create(this::getMaxBurnTicks, v -> maxBurnTicks = v));
+//        container.track(SyncableDouble.create(this::getEfficiencyMultiplier, v -> efficiencyMultiplier = v));
     }
 
     @Nullable
