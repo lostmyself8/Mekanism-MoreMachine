@@ -1,5 +1,6 @@
 package com.jerry.meklg.common.registries;
 
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
@@ -21,13 +22,14 @@ import net.minecraft.world.level.material.MapColor;
 
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
+import org.jetbrains.annotations.NotNull;
 
 public class LargeGeneratorBlocks {
 
     public static final BlockDeferredRegister LG_BLOCKS = new BlockDeferredRegister(Mekmm.MOD_ID);
 
     // Generator
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeHeatGenerator, Generator<TileEntityLargeHeatGenerator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeHeatGenerator, Generator<TileEntityLargeHeatGenerator>>>> LARGE_HEAT_GENERATOR = LG_BLOCKS.registerDetails("large_heat_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_HEAT_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
+    public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntityLargeHeatGenerator, Generator<TileEntityLargeHeatGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntityLargeHeatGenerator, Generator<TileEntityLargeHeatGenerator>>>> LARGE_HEAT_GENERATOR = LG_BLOCKS.registerDetails("large_heat_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_HEAT_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
                             .addBasic(MoreMachineConfig.generators.largeHeatTankCapacity, fluid -> fluid.is(FluidTags.LAVA))
@@ -40,7 +42,7 @@ public class LargeGeneratorBlocks {
                             .addEnergy()
                             .build()));
 
-    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeGasGenerator, Generator<TileEntityLargeGasGenerator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeGasGenerator, Generator<TileEntityLargeGasGenerator>>>> LARGE_GAS_BURNING_GENERATOR = LG_BLOCKS.registerDetails("large_gas_burning_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_GAS_BURNING_GENERATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())))
+    public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntityLargeGasGenerator, Generator<TileEntityLargeGasGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntityLargeGasGenerator, Generator<TileEntityLargeGasGenerator>>>> LARGE_GAS_BURNING_GENERATOR = LG_BLOCKS.registerDetails("large_gas_burning_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_GAS_BURNING_GENERATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                             .addBasic(MoreMachineConfig.generators.LGBGTankCapacity, TileEntityLargeGasGenerator.HAS_FUEL)
@@ -49,6 +51,9 @@ public class LargeGeneratorBlocks {
                             .addChemicalFillSlot(0)
                             .addEnergy()
                             .build()));
+
+    public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>>> LARGE_WIND_GENERATOR = LG_BLOCKS.registerDetails("wind_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_WIND_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
+            .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder().addEnergy().build()));
 
     private LargeGeneratorBlocks() {}
 }

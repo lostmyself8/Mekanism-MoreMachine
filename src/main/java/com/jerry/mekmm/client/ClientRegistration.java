@@ -4,6 +4,7 @@ import com.jerry.mekaf.client.gui.machine.GuiAdvancedFactory;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 
+import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
 import com.jerry.meklm.client.gui.machine.*;
 import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
 import com.jerry.meklm.client.model.LargeMachineModelCache;
@@ -89,6 +90,7 @@ public class ClientRegistration {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
+            ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR, GuiLargeWindGenerator::new);
         }
     }
 

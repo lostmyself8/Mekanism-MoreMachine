@@ -46,9 +46,8 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
      * Generator -- a block that produces energy. It has a certain amount of fuel it can store as well as an output
      * rate.
      */
-    public TileEntityMoreMachineGenerator(Holder<Block> blockProvider, BlockPos pos, BlockState state, @NotNull LongSupplier maxOutput) {
+    public TileEntityMoreMachineGenerator(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
-        updateMaxOutputRaw(maxOutput.getAsLong());
     }
 
     protected RelativeSide[] getEnergySides() {
@@ -96,14 +95,6 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
     @ComputerMethod
     public long getMaxOutput() {
         return maxOutput;
-    }
-
-    protected void updateMaxOutputRaw(long maxOutput) {
-        this.maxOutput = MathUtils.multiplyClamped(maxOutput, 2);
-    }
-
-    protected ISyncableData syncableMaxOutput() {
-        return SyncableLong.create(this::getMaxOutput, v -> maxOutput = v);
     }
 
     @ComputerMethod(methodDescription = "Get the amount of energy produced by this generator in the last tick.")

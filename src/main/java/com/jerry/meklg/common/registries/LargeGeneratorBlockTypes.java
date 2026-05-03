@@ -1,5 +1,6 @@
 package com.jerry.meklg.common.registries;
 
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
@@ -8,6 +9,7 @@ import mekanism.common.block.attribute.*;
 import mekanism.common.lib.math.Pos3D;
 import mekanism.common.util.ChemicalUtil;
 import mekanism.generators.common.GeneratorsLang;
+import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.blocktype.Generator;
 import mekanism.generators.common.content.blocktype.Generator.GeneratorBuilder;
 import mekanism.generators.common.registries.GeneratorsSounds;
@@ -49,6 +51,19 @@ public class LargeGeneratorBlockTypes {
             .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeGasBurningGenerator")
             .replace(Attributes.ACTIVE_MELT_LIGHT)
+            .build();
+
+    // Wind Generator
+    public static final Generator<TileEntityLargeWindGenerator> LARGE_WIND_GENERATOR = GeneratorBuilder
+            .createGenerator(() -> LargeGeneratorTileEntityTypes.LARGE_WIND_GENERATOR, GeneratorsLang.DESCRIPTION_WIND_GENERATOR)
+            .withGui(() -> LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR)
+            .withEnergyConfig(MekanismGeneratorsConfig.storageConfig.windGenerator)
+            .withCustomShape(LargeGeneratorBlockShapes.LARGE_WIND_GENERATOR)
+            .with(AttributeCustomSelectionBox.JSON)
+            .withSound(GeneratorsSounds.WIND_GENERATOR)
+            .with(AttributeUpgradeSupport.MUFFLING_ONLY)
+            .with(MoreMachineBounding.LARGE_WIND_GENERATOR)
+            .withComputerSupport("largeWindGenerator")
             .build();
 
     private LargeGeneratorBlockTypes() {}

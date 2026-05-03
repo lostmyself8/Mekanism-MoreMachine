@@ -1,5 +1,6 @@
 package com.jerry.meklg.common.registries;
 
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
@@ -17,4 +18,5 @@ public class LargeGeneratorContainerTypes {
 
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeHeatGenerator>> LARGE_HEAT_GENERATOR = LG_CONTAINER_TYPES.custom(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, TileEntityLargeHeatGenerator.class).armorSideBar(-20, 11, 0).build();
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeGasGenerator>> LARGE_GAS_BURNING_GENERATOR = LG_CONTAINER_TYPES.custom(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR, TileEntityLargeGasGenerator.class).armorSideBar(-20, 11, 0).build();
+    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLargeWindGenerator>> LARGE_WIND_GENERATOR = LG_CONTAINER_TYPES.custom(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, TileEntityLargeWindGenerator.class).armorSideBar(-20, 11, 0).build();
 }

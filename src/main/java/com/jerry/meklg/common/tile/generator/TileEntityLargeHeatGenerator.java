@@ -88,7 +88,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     private int numPowering;
 
     public TileEntityLargeHeatGenerator(BlockPos pos, BlockState state) {
-        super(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, pos, state, MAX_PRODUCTION);
+        super(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, pos, state);
     }
 
     @NotNull
@@ -154,7 +154,6 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
         lastTransferLoss = loss.adjacentTransfer();
         lastEnvironmentLoss = loss.environmentTransfer();
         producingEnergy = getEnergyContainer().getEnergy() - prev;
-        updateMaxOutputRaw(producingEnergy + MAX_PRODUCTION.getAsLong());
         return sendUpdatePacket;
     }
 
@@ -271,9 +270,9 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        container.track(SyncableLong.create(this::getProductionRate, value -> producingEnergy = value));
-        container.track(SyncableDouble.create(this::getLastTransferLoss, value -> lastTransferLoss = value));
-        container.track(SyncableDouble.create(this::getLastEnvironmentLoss, value -> lastEnvironmentLoss = value));
+        container.track(SyncableLong.create(this::getProductionRate, v -> producingEnergy = v));
+        container.track(SyncableDouble.create(this::getLastTransferLoss, v -> lastTransferLoss = v));
+        container.track(SyncableDouble.create(this::getLastEnvironmentLoss, v -> lastEnvironmentLoss = v));
     }
 
     @Override
