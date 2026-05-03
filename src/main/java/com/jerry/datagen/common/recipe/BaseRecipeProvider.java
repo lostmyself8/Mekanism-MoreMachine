@@ -1,37 +1,49 @@
 package com.jerry.datagen.common.recipe;
 
+import mekanism.api.MekanismAPI;
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.api.chemical.Chemical;
 import mekanism.common.resource.PrimaryResource;
 import mekanism.common.resource.ResourceType;
 import mekanism.common.tags.MekanismTags;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.common.crafting.DifferenceIngredient;
+import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 
 import java.util.*;
 
 @NothingNullByDefault
 public abstract class BaseRecipeProvider extends RecipeProvider {
 
+    protected final HolderGetter<Fluid> fluids;
+    protected final HolderGetter<Chemical> chemicals;
+
     protected BaseRecipeProvider(RecipeOutput output, HolderLookup.Provider registries) {
         super(registries, output);
+        this.fluids = this.registries.lookupOrThrow(Registries.FLUID);
+        this.chemicals = this.registries.lookupOrThrow(MekanismAPI.CHEMICAL_REGISTRY_NAME);
     }
 
     @Override
     protected final void buildRecipes() {
-        addRecipes(output, registries);
+        addRecipes(registries);
         for (ISubRecipeProvider subRecipeProvider : getSubRecipeProviders()) {
             subRecipeProvider.addRecipes(output, registries);
         }
     }
 
-    protected abstract void addRecipes(RecipeOutput output, HolderLookup.Provider registries);
+    protected abstract void addRecipes(HolderLookup.Provider registries);
 
     /**
      * Gets all the sub/offloaded recipe providers that this recipe provider has.
@@ -42,36 +54,31 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
         return Collections.emptyList();
     }
 
-    public static Ingredient createIngredient(TagKey<Item> itemTag, ItemLike... items) {
-        return createIngredient(Collections.singleton(itemTag), items);
-    }
-
-    public static Ingredient createIngredient(Collection<TagKey<Item>> itemTags, ItemLike... items) {
-        return Ingredient.of(Arrays.stream(items));
+    public static Ingredient createIngredient(HolderGetter<Item> lookup, TagKey<Item> itemTag, Item... items) {
+        return Ingredient.of(new OrHolderSet<>(lookup.getOrThrow(itemTag), HolderSet.direct(Arrays.stream(items).map(Item::builtInRegistryHolder).toList())));
     }
 
     @SafeVarargs
-    public static Ingredient createIngredient(TagKey<Item>... tags) {
-        throw new UnsupportedOperationException("Tag ingredients require registry lookups in 26.1.2.");
+    public static Ingredient createIngredient(Holder<Item>... items) {
+        return Ingredient.of(HolderSet.direct(Arrays.stream(items).toList()));
     }
 
-    public static Ingredient difference(TagKey<Item> base, ItemLike subtracted) {
-        throw new UnsupportedOperationException("Tag ingredients require registry lookups in 26.1.2.");
+    public static Ingredient difference(HolderSet<Item> base, Holder<Item> subtracted) {
+        return DifferenceIngredient.of(Ingredient.of(base), Ingredient.of(subtracted.value()));
     }
 
-    protected HolderSet<Item> itemTag(TagKey<Item> tag) {
-        return items.getOrThrow(tag);
+    public static HolderSet<Item> osmiumIngot(HolderGetter<Item> lookup) {
+        TagKey<Item> tag = Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.OSMIUM));
+        return lookup.getOrThrow(tag);
     }
 
-    public static TagKey<Item> osmiumIngot() {
-        return Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.OSMIUM));
+    public static HolderSet<Item> leadIngot(HolderGetter<Item> lookup) {
+        TagKey<Item> tag = Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.LEAD));
+        return lookup.getOrThrow(tag);
     }
 
-    public static TagKey<Item> leadIngot() {
-        return Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.LEAD));
-    }
-
-    public static TagKey<Item> tinIngot() {
-        return Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.TIN));
+    public static HolderSet<Item> tinIngot(HolderGetter<Item> lookup) {
+        TagKey<Item> tag = Objects.requireNonNull(MekanismTags.Items.PROCESSED_RESOURCES.get(ResourceType.INGOT, PrimaryResource.TIN));
+        return lookup.getOrThrow(tag);
     }
 }

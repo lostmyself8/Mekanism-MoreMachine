@@ -9,7 +9,7 @@ import com.jerry.mekmm.Mekmm;
 import mekanism.common.Mekanism;
 import mekanism.common.lib.FieldReflectionHelper;
 
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -67,12 +67,13 @@ public class MekmmDataGenerator {
         bootstrapIMC();
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
         // Client side data generators
         // gen.addProvider(event.includeClient(), new MoreMachineLangProvider(output));
         // Server side data generators
         gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
-        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, MoreMachineRecipeProvider::new));
+        HashSet<String> disabledCompats = new HashSet<>();
+        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput, disabledCompats), Mekmm.MOD_ID));
         // Data generator to help with persisting data when porting across MC versions when optional deps aren't updated
         // yet
         // DO NOT ADD OTHERS AFTER THIS ONE

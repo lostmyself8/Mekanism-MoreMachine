@@ -88,7 +88,7 @@ public class WirelessConnectionManager {
     /**
      * 获取流体连接
      */
-    @SuppressWarnings({"unchecked", "removal"})
+    @SuppressWarnings({ "unchecked", "removal" })
     public Collection<BlockCapabilityCache<IFluidHandler, @Nullable Direction>> getFluidCaches() {
         if (cacheDirty) {
             rebuildAllCaches();
@@ -112,7 +112,7 @@ public class WirelessConnectionManager {
     /**
      * 获取物品连接
      */
-    @SuppressWarnings({"unchecked", "removal"})
+    @SuppressWarnings({ "unchecked", "removal" })
     public Collection<BlockCapabilityCache<IItemHandler, @Nullable Direction>> getItemCaches() {
         if (cacheDirty) {
             rebuildAllCaches();

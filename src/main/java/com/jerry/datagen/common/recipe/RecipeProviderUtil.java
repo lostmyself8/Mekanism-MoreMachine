@@ -18,7 +18,8 @@
 //
 // public class RecipeProviderUtil {
 //
-// private RecipeProviderUtil() {}
+// private RecipeProviderUtil() {
+// }
 //
 // public static void addPlantingStationTypeRecipes(RecipeOutput consumer, String basePath, ItemLike input, ItemLike
 // main, ItemLike second, ICondition condition) {
