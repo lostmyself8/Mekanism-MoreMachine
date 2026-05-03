@@ -30,8 +30,7 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     @Nullable
     private GuiDumpButton<?> dumpButton;
 
-    private static int calcHeight(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container) {
-        TileEntityMoreMachineFactory<?> tile = container.getTileEntity();
+    private static int getImageHeight(TileEntityMoreMachineFactory<?> tile) {
         int imageHeight = DEFAULT_IMAGE_HEIGHT;
         if (tile.hasSecondaryResourceBar()) {
             imageHeight += 11;
@@ -41,8 +40,7 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
         return imageHeight;
     }
 
-    private static int calcWidth(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container) {
-        TileEntityMoreMachineFactory<?> tile = container.getTileEntity();
+    private static int getImageWidth(TileEntityMoreMachineFactory<?> tile) {
         int imageWidth = DEFAULT_IMAGE_WIDTH;
         if (tile.tier == FactoryTier.ULTIMATE) {
             imageWidth += 34;
@@ -57,7 +55,7 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     }
 
     public GuiMoreMachineFactory(MekanismTileContainer<TileEntityMoreMachineFactory<?>> container, Inventory inv, Component title) {
-        super(container, inv, title, calcWidth(container), calcHeight(container));
+        super(container, inv, title, getImageWidth(container.getTileEntity()), getImageHeight(container.getTileEntity()));
         if (tile.hasSecondaryResourceBar()) {
             inventoryLabelY = 85;
             if (tile instanceof TileEntityPlantingFactory) {
