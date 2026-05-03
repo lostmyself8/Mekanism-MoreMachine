@@ -3,17 +3,17 @@ package com.jerry.datagen.common.recipe.builder;
 import com.jerry.datagen.common.recipe.pattern.RecipePattern;
 
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.common.registration.impl.BlockRegistryObject;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapedRecipePattern;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.*;
 
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
@@ -22,7 +22,6 @@ import it.unimi.dsi.fastutil.chars.CharSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @NothingNullByDefault
 public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShapedRecipeBuilder> {
@@ -31,15 +30,23 @@ public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShape
     private final List<String> pattern = new ArrayList<>();
     private boolean showNotification = true;
 
-    protected ExtendedShapedRecipeBuilder(ItemLike result, int count) {
+    protected ExtendedShapedRecipeBuilder(Holder<Item> result, int count) {
         super(result, count);
     }
 
-    public static ExtendedShapedRecipeBuilder shapedRecipe(ItemLike result) {
+    public static ExtendedShapedRecipeBuilder shapedRecipe(BlockRegistryObject<?, ?> result) {
         return shapedRecipe(result, 1);
     }
 
-    public static ExtendedShapedRecipeBuilder shapedRecipe(ItemLike result, int count) {
+    public static ExtendedShapedRecipeBuilder shapedRecipe(BlockRegistryObject<?, ?> result, int count) {
+        return shapedRecipe(result.getItemHolder(), count);
+    }
+
+    public static ExtendedShapedRecipeBuilder shapedRecipe(Holder<Item> result) {
+        return shapedRecipe(result, 1);
+    }
+
+    public static ExtendedShapedRecipeBuilder shapedRecipe(Holder<Item> result, int count) {
         return new ExtendedShapedRecipeBuilder(result, count);
     }
 
@@ -57,16 +64,24 @@ public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShape
         return this;
     }
 
-    public ExtendedShapedRecipeBuilder key(char symbol, TagKey<Item> tag) {
-        throw new UnsupportedOperationException("Tag ingredients require a HolderSet in 26.1.2; use key(char, Ingredient) from providers with registry lookups.");
+    public ExtendedShapedRecipeBuilder key(char symbol, HolderGetter<Item> lookup, TagKey<Item> tag) {
+        return key(symbol, lookup.getOrThrow(tag));
     }
 
     public ExtendedShapedRecipeBuilder key(char symbol, HolderSet<Item> tag) {
         return key(symbol, Ingredient.of(tag));
     }
 
-    public ExtendedShapedRecipeBuilder key(char symbol, ItemLike item) {
+    public ExtendedShapedRecipeBuilder key(char symbol, Item item) {
         return key(symbol, Ingredient.of(item));
+    }
+
+    public ExtendedShapedRecipeBuilder key(char symbol, BlockRegistryObject<?, ?> block) {
+        return key(symbol, block.getItemHolder());
+    }
+
+    public ExtendedShapedRecipeBuilder key(char symbol, Holder<Item> item) {
+        return key(symbol, Ingredient.of(item.value()));
     }
 
     public ExtendedShapedRecipeBuilder key(char symbol, Ingredient ingredient) {
@@ -109,14 +124,14 @@ public class ExtendedShapedRecipeBuilder extends BaseRecipeBuilder<ExtendedShape
 
     @Override
     protected Recipe<?> asRecipe() {
-        return wrapRecipe(new ShapedRecipe(
+        return wrapRecipe(
                 RecipeBuilder.createCraftingCommonInfo(this.showNotification),
-                RecipeBuilder.createCraftingBookInfo(this.category, Objects.requireNonNullElse(this.group, "")),
+                RecipeBuilder.createCraftingBookInfo(this.category, this.group),
                 ShapedRecipePattern.of(this.key, this.pattern),
-                resultStack()));
+                resultStack());
     }
 
-    protected Recipe<?> wrapRecipe(ShapedRecipe recipe) {
-        return recipe;
+    protected Recipe<?> wrapRecipe(Recipe.CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo bookInfo, ShapedRecipePattern pattern, ItemStackTemplate result) {
+        return new ShapedRecipe(commonInfo, bookInfo, pattern, result);
     }
 }

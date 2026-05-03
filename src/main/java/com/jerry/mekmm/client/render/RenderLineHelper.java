@@ -1,7 +1,7 @@
 package com.jerry.mekmm.client.render;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -23,7 +23,7 @@ public class RenderLineHelper {
         poseStack.translate(start.x(), start.y(), start.z());
 
         Matrix4f matrix = poseStack.last().pose();
-        VertexConsumer vc = buffers.getBuffer(RenderType.lightning());
+        VertexConsumer vc = buffers.getBuffer(RenderTypes.lightning());
 
         // 计算垂直于方向的两个正交向量 (用于构建圆柱体)
         Vector3f perpendicular1 = getPerpendicular(dir);
