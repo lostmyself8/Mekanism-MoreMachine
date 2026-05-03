@@ -5,6 +5,7 @@ import com.jerry.mekaf.common.capabilities.energy.AdvancedFactoryEnergyContainer
 import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.tile.IFactoryStyle;
 
+import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IContentsListener;
@@ -56,7 +57,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.Item;
@@ -64,13 +64,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
@@ -147,6 +148,13 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
             recheckAllRecipeErrors[i] = TileEntityRecipeMachine.shouldRecheckAllErrors(this);
         }
         errorTracker = new ErrorTracker(errorTypes, globalErrorTypes, tier.processes);
+    }
+
+    public boolean isEMLoadAndTierOrdinalAboveOverLocked() {
+        if (Mekmm.hooks.evolvedMekanism.isLoaded()) {
+            return tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal();
+        }
+        return false;
     }
 
     /**
@@ -427,9 +435,9 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         super.addContainerTrackers(container);
         container.trackArray(progress);
         errorTracker.track(container);
-        container.track(SyncableLong.create(this::getLastUsage, value -> lastUsage = value));
-        container.track(SyncableBoolean.create(this::isSorting, value -> sorting = value));
-        container.track(SyncableInt.create(this::getTicksRequired, value -> ticksRequired = value));
+        container.track(SyncableLong.create(this::getLastUsage, v -> lastUsage = v));
+        container.track(SyncableBoolean.create(this::isSorting, v -> sorting = v));
+        container.track(SyncableInt.create(this::getTicksRequired, v -> ticksRequired = v));
     }
 
     protected void readUpgradeComponents(HolderLookup.Provider provider, CompoundTag components) {

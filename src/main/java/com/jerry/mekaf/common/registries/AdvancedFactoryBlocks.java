@@ -29,6 +29,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -36,8 +37,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public class AdvancedFactoryBlocks {
 
@@ -45,7 +46,7 @@ public class AdvancedFactoryBlocks {
 
     public static final BlockDeferredRegister AF_BLOCKS = new BlockDeferredRegister(Mekmm.MOD_ID);
 
-    private static final Table<FactoryTier, AdvancedFactoryType, BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory>> AF_FACTORIES = HashBasedTable.create();
+    private static final Table<FactoryTier, AdvancedFactoryType, BlockRegistryObject<@NotNull BlockAdvancedFactory<?>, @NotNull ItemBlockAdvancedFactory>> AF_FACTORIES = HashBasedTable.create();
 
     static {
         // factories
@@ -56,9 +57,9 @@ public class AdvancedFactoryBlocks {
         }
     }
 
-    private static <TILE extends TileEntityAdvancedFactoryBase<?>> BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> registerAdvancedFactory(AdvancedFactory<TILE> type) {
+    private static <TILE extends TileEntityAdvancedFactoryBase<?>> BlockRegistryObject<@NotNull BlockAdvancedFactory<?>, @NotNull ItemBlockAdvancedFactory> registerAdvancedFactory(AdvancedFactory<TILE> type) {
         FactoryTier tier = (FactoryTier) Objects.requireNonNull(type.get(AttributeTier.class)).tier();
-        BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> factory = registerTieredBlock(tier, "_" + type.getAdvancedFactoryType().getRegistryNameComponent() + "_factory", () -> new BlockAdvancedFactory<>(type), ItemBlockAdvancedFactory::new);
+        BlockRegistryObject<@NotNull BlockAdvancedFactory<?>, @NotNull ItemBlockAdvancedFactory> factory = registerTieredBlock(tier, "_" + type.getAdvancedFactoryType().getRegistryNameComponent() + "_factory", properties -> new BlockAdvancedFactory<>(type, properties), ItemBlockAdvancedFactory::new);
         factory.forItemHolder(holder -> {
             int processes = tier.processes;
             Predicate<ItemStack> recipeItemInputPredicate = switch (type.getAdvancedFactoryType()) {
@@ -178,7 +179,7 @@ public class AdvancedFactoryBlocks {
     }
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(ITier tier, String suffix,
-                                                                                                                      Supplier<? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
+                                                                                                                      Function<BlockBehaviour.Properties, ? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
         return AF_BLOCKS.register(tier.getBaseTier().getLowerName() + suffix, blockSupplier, itemCreator);
     }
 
@@ -189,12 +190,12 @@ public class AdvancedFactoryBlocks {
      * @param type - recipe type to add to the Factory
      * @return factory with defined tier and recipe type
      */
-    public static BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory> getAdvancedFactory(@NotNull FactoryTier tier, @NotNull AdvancedFactoryType type) {
+    public static BlockRegistryObject<@NotNull BlockAdvancedFactory<?>, @NotNull ItemBlockAdvancedFactory> getAdvancedFactory(@NotNull FactoryTier tier, @NotNull AdvancedFactoryType type) {
         return AF_FACTORIES.get(tier, type);
     }
 
     @SuppressWarnings("unchecked")
-    public static BlockRegistryObject<BlockAdvancedFactory<?>, ItemBlockAdvancedFactory>[] getAdvancedFactoryBlocks() {
+    public static BlockRegistryObject<@NotNull BlockAdvancedFactory<?>, @NotNull ItemBlockAdvancedFactory>[] getAdvancedFactoryBlocks() {
         return AF_FACTORIES.values().toArray(new BlockRegistryObject[0]);
     }
 }

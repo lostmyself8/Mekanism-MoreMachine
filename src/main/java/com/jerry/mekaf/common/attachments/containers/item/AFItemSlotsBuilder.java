@@ -17,6 +17,7 @@ import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -97,7 +98,7 @@ public class AFItemSlotsBuilder {
 
     private boolean canChemicalFillOrConvertExtract(ItemStack attachedTo, int tankIndex, ItemStack stack) {
         // Copy of logic from ChemicalInventorySlot#getFillOrConvertExtractPredicate
-        IChemicalHandler handler = Capabilities.CHEMICAL.getCapability(stack);
+        IChemicalHandler handler = Capabilities.CHEMICAL.getCapability(ItemAccess.forStack(stack));
         IChemicalTank chemicalTank = null;
         if (handler != null) {
             int tanks = handler.getChemicalTanks();
@@ -129,7 +130,7 @@ public class AFItemSlotsBuilder {
         // Copy of logic from ChemicalInventorySlot#getFillOrConvertInsertPredicate
         IChemicalTank chemicalTank = null;
         {// Fill insert check logic, we want to avoid resolving the tank as long as possible
-            IChemicalHandler handler = Capabilities.CHEMICAL.getCapability(stack);
+            IChemicalHandler handler = Capabilities.CHEMICAL.getCapability(ItemAccess.forStack(stack));
             if (handler != null) {
                 for (int tank = 0; tank < handler.getChemicalTanks(); tank++) {
                     ChemicalStack chemicalInTank = handler.getChemicalInTank(tank);
@@ -137,7 +138,7 @@ public class AFItemSlotsBuilder {
                         if (chemicalTank == null) {
                             chemicalTank = ContainerType.CHEMICAL.createContainer(attachedTo, tankIndex);
                         }
-                        if (chemicalTank.insert(chemicalInTank, Action.SIMULATE, AutomationType.INTERNAL).getAmount() < chemicalInTank.getAmount()) {
+                        if (chemicalTank.insert(chemicalInTank, Action.SIMULATE, AutomationType.INTERNAL).amount() < chemicalInTank.amount()) {
                             // True if we can fill the tank with any of our contents
                             // Note: We need to recheck the fact the chemical is not empty in case the item has multiple
                             // tanks and only some of the chemicals are valid
@@ -156,7 +157,7 @@ public class AFItemSlotsBuilder {
             // If we haven't resolved the tank yet, we need to do it now
             chemicalTank = ContainerType.CHEMICAL.createContainer(attachedTo, tankIndex);
         }
-        if (chemicalTank.insert(conversion, Action.SIMULATE, AutomationType.INTERNAL).getAmount() < conversion.getAmount()) {
+        if (chemicalTank.insert(conversion, Action.SIMULATE, AutomationType.INTERNAL).amount() < conversion.amount()) {
             // If we can insert the converted substance into the tank allow insertion
             return true;
         }

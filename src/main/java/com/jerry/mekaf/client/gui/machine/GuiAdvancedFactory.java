@@ -7,8 +7,6 @@ import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToChemicalFact
 import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToItemFactory;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
 
-import com.jerry.mekmm.Mekmm;
-
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiConfigurableTile;
@@ -33,7 +31,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +55,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
             inventoryLabelX = 26;
         }
         // 想尝试使用Emek的gui布局，但似乎有点麻烦，还是采用原始布局吧
-        if (isEMLoadAndTierOrdinalAboveOverLocked()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
@@ -81,18 +78,11 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         if (tile.tier == FactoryTier.ULTIMATE) {
             width += 34;
         }
-        if (Mekmm.hooks.evolvedMekanism.isLoaded() && tile.tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             int index = tile.tier.ordinal() - 4;
             width += (36 * (index + 2)) + (2 * index);
         }
         return width;
-    }
-
-    private boolean isEMLoadAndTierOrdinalAboveOverLocked() {
-        if (Mekmm.hooks.evolvedMekanism.isLoaded()) {
-            return tile.tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal();
-        }
-        return false;
     }
 
     @Override
@@ -181,7 +171,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
     }
 
     private int getBarWidth() {
-        if (isEMLoadAndTierOrdinalAboveOverLocked()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
@@ -191,7 +181,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
     }
 
     private int getButtonX() {
-        if (isEMLoadAndTierOrdinalAboveOverLocked()) {
+        if (tile.isEMLoadAndTierOrdinalAboveOverLocked()) {
             // 这里采用mekE的布局公式，但要记得减去4，因为mekE是从0开始的
             // 这两个公式似乎并非完美，在index过大时可能会导致有细微的偏移，但未得到验证
             int index = tile.tier.ordinal() - 4;
