@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MixinItemConfigurator",
-    "PersistingMekanismDatagenCache",
     "recipe.MixinMekanismRecipeType",
     "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
     "tile.MixinTileEntityChemicalCrystallizer",
