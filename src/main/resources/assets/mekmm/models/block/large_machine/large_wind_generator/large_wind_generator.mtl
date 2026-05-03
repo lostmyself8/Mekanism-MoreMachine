@@ -1,42 +1,10 @@
-# Blender 5.0.1 MTL File: 'None'
-# www.blender.org
-
-newmtl Screen_hello
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
-map_Kd #Screen_hello
-
-newmtl Screen_cmd
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
-map_Kd #Screen_cmd
-
+# Made in Blockbench 5.0.7
 newmtl Base
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
 map_Kd #Base
-
+newmtl Screen_hello
+map_Kd #Screen_hello
 newmtl Screen_logo
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.500000
-d 1.000000
-illum 1
 map_Kd #Screen_logo
+newmtl Screen_cmd
+map_Kd #Screen_cmd
+newmtl none
