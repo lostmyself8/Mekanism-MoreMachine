@@ -5,8 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MixinItemConfigurator",
-    "MixinMekanismBlocks",
-    "client.render.MixinRenderTickHandler",
     "recipe.MixinMekanismRecipeType",
     "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
     "tile.MixinTileEntityChemicalCrystallizer",
