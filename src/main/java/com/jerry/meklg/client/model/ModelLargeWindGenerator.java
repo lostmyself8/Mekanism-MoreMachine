@@ -4,7 +4,6 @@ import com.jerry.mekmm.Mekmm;
 
 import mekanism.client.model.MekanismJavaModel;
 import mekanism.client.model.ModelPartData;
-import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
 
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
