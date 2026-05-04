@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:lathe",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/gold"
+    "ingredient": "#c:ingots/gold",
+    "count": 1
   },
   "output": {
     "count": 2,

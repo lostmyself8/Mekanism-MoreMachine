@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:silicon"
+    "ingredient": "#c:silicon",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "ae2:silicon_press"
+    "ingredient": "ae2:silicon_press",
+    "count": 1
   },
   "output": {
     "count": 1,

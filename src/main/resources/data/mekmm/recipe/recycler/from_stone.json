@@ -1,8 +1,8 @@
 {
   "type": "mekmm:recycler",
   "input": {
-    "count": 1,
-    "tag": "c:stones"
+    "ingredient": "#c:stones",
+    "count": 1
   },
   "chance": 0.17,
   "output": {

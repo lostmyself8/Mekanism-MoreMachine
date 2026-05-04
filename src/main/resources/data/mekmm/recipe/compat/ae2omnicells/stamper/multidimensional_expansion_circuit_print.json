@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "item": "ae2:singularity"
+    "ingredient": "ae2:singularity",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "ae2omnicells:multidimensional_expansion_print_press"
+    "ingredient": "ae2omnicells:multidimensional_expansion_print_press",
+    "count": 1
   },
   "output": {
     "count": 1,

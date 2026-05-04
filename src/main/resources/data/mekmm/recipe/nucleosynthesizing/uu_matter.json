@@ -6,8 +6,8 @@
   },
   "duration": 5000,
   "item_input": {
-    "count": 64,
-    "item": "mekmm:empty_crystal"
+    "ingredient": "mekmm:empty_crystal",
+    "count": 64
   },
   "output": {
     "count": 1,

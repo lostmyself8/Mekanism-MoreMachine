@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "item": "advanced_ae:quantum_alloy"
+    "ingredient": "advanced_ae:quantum_alloy",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "advanced_ae:quantum_processor_press"
+    "ingredient": "advanced_ae:quantum_processor_press",
+    "count": 1
   },
   "output": {
     "count": 1,

@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:planting",
   "item_input": {
-    "count": 1,
-    "item": "farmersdelight:cabbage_seeds"
+    "ingredient": "farmersdelight:cabbage_seeds",
+    "count": 1
   },
   "chemical_input": {
     "amount": 1,

@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:lathe",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/aluminum"
+    "ingredient": "#c:ingots/aluminum",
+    "count": 1
   },
   "output": {
     "count": 2,

@@ -10,12 +10,12 @@
   },
   "duration": 1500,
   "fluid_input": {
-    "amount": 10000,
-    "tag": "c:fusion_fuel"
+    "ingredient": "#c:fusion_fuel",
+    "amount": 10000
   },
   "item_input": {
-    "count": 64,
-    "item": "mekmm:scrap_box"
+    "ingredient": "mekmm:scrap_box",
+    "count": 64
   },
   "item_output": {
     "count": 1,

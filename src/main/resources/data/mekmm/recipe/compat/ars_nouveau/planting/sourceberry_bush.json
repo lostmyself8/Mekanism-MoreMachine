@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:planting",
   "item_input": {
-    "count": 1,
-    "item": "ars_nouveau:sourceberry_bush"
+    "ingredient": "ars_nouveau:sourceberry_bush",
+    "count": 1
   },
   "chemical_input": {
     "amount": 1,
@@ -18,5 +18,5 @@
     "count": 3,
     "id": "ars_nouveau:sourceberry_bush"
   },
-  "per_tick_usage":true
+  "per_tick_usage": true
 }

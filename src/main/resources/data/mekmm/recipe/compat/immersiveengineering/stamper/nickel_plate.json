@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/nickel"
+    "ingredient": "#c:ingots/nickel",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "immersiveengineering:mold_plate"
+    "ingredient": "immersiveengineering:mold_plate",
+    "count": 1
   },
   "output": {
     "count": 1,

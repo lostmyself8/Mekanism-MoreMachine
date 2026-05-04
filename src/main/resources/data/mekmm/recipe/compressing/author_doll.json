@@ -5,8 +5,8 @@
     "chemical": "mekanism:antimatter"
   },
   "item_input": {
-    "count": 64,
-    "item": "mekmm:uu_matter"
+    "ingredient": "mekmm:uu_matter",
+    "count": 64
   },
   "output": {
     "count": 1,

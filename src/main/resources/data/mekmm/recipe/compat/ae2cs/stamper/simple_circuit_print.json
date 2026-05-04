@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:gems/quartz"
+    "ingredient": "#c:gems/quartz",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "ae2cs:blank_print_press"
+    "ingredient": "ae2cs:blank_print_press",
+    "count": 1
   },
   "output": {
     "count": 1,

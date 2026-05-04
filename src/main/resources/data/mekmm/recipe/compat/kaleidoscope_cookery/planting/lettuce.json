@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:planting",
   "item_input": {
-    "count": 1,
-    "item": "kaleidoscope_cookery:lettuce_seed"
+    "ingredient": "kaleidoscope_cookery:lettuce_seed",
+    "count": 1
   },
   "chemical_input": {
     "amount": 1,

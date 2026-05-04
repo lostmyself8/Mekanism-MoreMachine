@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:gems/entro"
+    "ingredient": "#c:gems/entro",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "extendedae:concurrent_processor_press"
+    "ingredient": "extendedae:concurrent_processor_press",
+    "count": 1
   },
   "output": {
     "count": 1,

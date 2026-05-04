@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:gems/resonating"
+    "ingredient": "#c:gems/resonating",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "ae2cs:resonating_print_press"
+    "ingredient": "ae2cs:resonating_print_press",
+    "count": 1
   },
   "output": {
     "count": 1,

@@ -5,8 +5,8 @@
     "chemical": "mekmm:nutritional_paste"
   },
   "item_input": {
-    "count": 2,
-    "tag": "c:fuels/bio"
+    "ingredient": "#c:fuels/bio",
+    "count": 2
   },
   "output": {
     "amount": 100,

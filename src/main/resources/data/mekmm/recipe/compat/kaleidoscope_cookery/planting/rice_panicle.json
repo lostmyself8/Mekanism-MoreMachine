@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:planting",
   "item_input": {
-    "count": 1,
-    "item": "kaleidoscope_cookery:wild_rice"
+    "ingredient": "kaleidoscope_cookery:wild_rice",
+    "count": 1
   },
   "chemical_input": {
     "amount": 1,

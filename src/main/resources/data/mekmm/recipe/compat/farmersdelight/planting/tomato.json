@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:planting",
   "item_input": {
-    "count": 1,
-    "item": "farmersdelight:tomato_seeds"
+    "ingredient": "farmersdelight:tomato_seeds",
+    "count": 1
   },
   "chemical_input": {
     "amount": 1,

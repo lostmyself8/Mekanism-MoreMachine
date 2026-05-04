@@ -11,8 +11,8 @@
     "chemical": "mekmm:nutrient_solution"
   },
   "item_input": {
-    "count": 1,
-    "item": "mysticalagriculture:nitro_crystal_seeds"
+    "ingredient": "mysticalagriculture:nitro_crystal_seeds",
+    "count": 1
   },
   "per_tick_usage": true,
   "main_output": {

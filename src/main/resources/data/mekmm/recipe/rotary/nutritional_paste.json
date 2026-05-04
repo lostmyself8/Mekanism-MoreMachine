@@ -9,8 +9,8 @@
     "id": "mekmm:nutritional_paste"
   },
   "fluid_input": {
-    "amount": 1,
-    "tag": "c:nutritional_paste"
+    "ingredient": "#c:nutritional_paste",
+    "amount": 1
   },
   "fluid_output": {
     "amount": 1,

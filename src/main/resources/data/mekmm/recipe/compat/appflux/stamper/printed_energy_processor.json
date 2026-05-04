@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:gems/charged_redstone"
+    "ingredient": "#c:gems/charged_redstone",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "appflux:energy_processor_press"
+    "ingredient": "appflux:energy_processor_press",
+    "count": 1
   },
   "output": {
     "count": 1,

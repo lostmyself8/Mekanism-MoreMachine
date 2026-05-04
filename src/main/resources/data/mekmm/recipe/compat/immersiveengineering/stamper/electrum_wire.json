@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/electrum"
+    "ingredient": "#c:ingots/electrum",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "immersiveengineering:mold_wire"
+    "ingredient": "immersiveengineering:mold_wire",
+    "count": 1
   },
   "output": {
     "count": 2,

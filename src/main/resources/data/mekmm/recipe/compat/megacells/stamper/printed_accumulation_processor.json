@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/sky_steel"
+    "ingredient": "#c:ingots/sky_steel",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "megacells:accumulation_processor_press"
+    "ingredient": "megacells:accumulation_processor_press",
+    "count": 1
   },
   "output": {
     "count": 1,

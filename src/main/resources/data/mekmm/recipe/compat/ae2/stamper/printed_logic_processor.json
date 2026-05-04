@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/gold"
+    "ingredient": "#c:ingots/gold",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "ae2:logic_processor_press"
+    "ingredient": "ae2:logic_processor_press",
+    "count": 1
   },
   "output": {
     "count": 1,

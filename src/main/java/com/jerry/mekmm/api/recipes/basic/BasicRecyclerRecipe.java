@@ -3,10 +3,12 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 
+import mekanism.api.ItemStackTemplateHelper;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import org.jetbrains.annotations.Contract;
@@ -19,18 +21,20 @@ import java.util.Objects;
 public class BasicRecyclerRecipe extends RecyclerRecipe {
 
     private final ItemStackIngredient input;
-    private final ItemStack chanceOutput;
+    private final ItemStackTemplate chanceOutput;
     private final double chance;
 
     public BasicRecyclerRecipe(ItemStackIngredient input, ItemStack chanceOutput, double chance) {
+        this(input, ItemStackTemplate.fromNonEmptyStack(chanceOutput), chance);
+    }
+
+    public BasicRecyclerRecipe(ItemStackIngredient input, ItemStackTemplate chanceOutput, double chance) {
         this.input = Objects.requireNonNull(input, "Input cannot be null.");
         Objects.requireNonNull(chanceOutput, "Output cannot be null.");
-        if (chanceOutput.isEmpty()) {
-            throw new IllegalArgumentException("Output cannot be null.");
-        } else if (chance < 0 || chance > 1) {
+        if (chance < 0 || chance > 1) {
             throw new IllegalArgumentException("Output chance must be at least zero and at most one.");
         }
-        this.chanceOutput = chanceOutput.copy();
+        this.chanceOutput = chanceOutput;
         this.chance = chance;
     }
 
@@ -50,13 +54,13 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
      *
      * @return the uncopied basic output
      */
-    public ItemStack getChanceOutputRaw() {
+    public ItemStackTemplate getChanceOutputRaw() {
         return this.chanceOutput;
     }
 
     @Override
     public List<ItemStack> getChanceOutputDefinition() {
-        return chanceOutput.isEmpty() ? Collections.emptyList() : Collections.singletonList(chanceOutput);
+        return Collections.singletonList(chanceOutput.create());
     }
 
     @Override
@@ -82,14 +86,14 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
             return false;
         }
         BasicRecyclerRecipe other = (BasicRecyclerRecipe) o;
-        return input.equals(other.input) && ItemStack.matches(chanceOutput, other.chanceOutput) && chance == other.chance;
+        return input.equals(other.input) && ItemStackTemplateHelper.matches(chanceOutput, other.chanceOutput) && chance == other.chance;
     }
 
     @Override
     public int hashCode() {
         int hash = input.hashCode();
-        hash = 31 * hash + ItemStack.hashItemAndComponents(chanceOutput);
-        hash = 31 * hash + chanceOutput.getCount();
+        hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(chanceOutput);
+        hash = 31 * hash + chanceOutput.count();
         hash = 31 * hash + Double.hashCode(chance);
         return hash;
     }
@@ -108,12 +112,12 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
         }
 
         public ItemStack getMaxChanceOutput() {
-            return chance > 0 ? chanceOutput.copy() : ItemStack.EMPTY;
+            return chance > 0 ? chanceOutput.create() : ItemStack.EMPTY;
         }
 
         public ItemStack getChanceOutput() {
             if (rand <= chance) {
-                return chanceOutput.copy();
+                return chanceOutput.create();
             }
             return ItemStack.EMPTY;
         }
@@ -122,7 +126,7 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
             if (chance > 0) {
                 double rand = RANDOM.nextDouble();
                 if (rand <= chance) {
-                    return chanceOutput.copy();
+                    return chanceOutput.create();
                 }
             }
             return ItemStack.EMPTY;

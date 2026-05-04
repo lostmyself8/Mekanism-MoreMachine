@@ -5,8 +5,8 @@
     "chemical": "mekanism:osmium"
   },
   "item_input": {
-    "count": 64,
-    "item": "mekmm:scrap"
+    "ingredient": "mekmm:scrap",
+    "count": 64
   },
   "output": {
     "count": 1,

@@ -1,16 +1,14 @@
 {
   "type": "mekmm:recycler",
   "input": {
-    "count": 1,
-    "type": "neoforge:compound",
-    "children": [
-      {
-        "item": "minecraft:dirt"
-      },
-      {
-        "item": "minecraft:grass_block"
-      }
-    ]
+    "ingredient": {
+      "neoforge:ingredient_type": "neoforge:compound",
+      "children": [
+        "minecraft:dirt",
+        "minecraft:grass_block"
+      ]
+    },
+    "count": 1
   },
   "chance": 0.17,
   "output": {

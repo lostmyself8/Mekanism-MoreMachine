@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/aluminum"
+    "ingredient": "#c:ingots/aluminum",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "immersiveengineering:mold_rod"
+    "ingredient": "immersiveengineering:mold_rod",
+    "count": 1
   },
   "output": {
     "count": 2,

@@ -7,8 +7,8 @@
   ],
   "type": "mekmm:rolling_mill",
   "input": {
-    "count": 1,
-    "tag": "c:ingots/lead"
+    "ingredient": "#c:ingots/lead",
+    "count": 1
   },
   "output": {
     "count": 2,

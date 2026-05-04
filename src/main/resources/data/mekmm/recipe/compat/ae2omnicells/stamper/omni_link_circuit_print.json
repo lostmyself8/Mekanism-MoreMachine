@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "item": "ae2omnicells:ender_ingot"
+    "ingredient": "ae2omnicells:ender_ingot",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "ae2omnicells:omni_link_print_press"
+    "ingredient": "ae2omnicells:omni_link_print_press",
+    "count": 1
   },
   "output": {
     "count": 1,

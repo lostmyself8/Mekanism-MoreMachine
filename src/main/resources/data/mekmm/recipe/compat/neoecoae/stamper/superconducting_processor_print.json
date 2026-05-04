@@ -7,12 +7,12 @@
   ],
   "type": "mekmm:stamper",
   "input": {
-    "count": 1,
-    "item": "neoecoae:energized_superconductive_ingot"
+    "ingredient": "neoecoae:energized_superconductive_ingot",
+    "count": 1
   },
   "mold": {
-    "count": 1,
-    "item": "neoecoae:superconducting_processor_press"
+    "ingredient": "neoecoae:superconducting_processor_press",
+    "count": 1
   },
   "output": {
     "count": 1,
