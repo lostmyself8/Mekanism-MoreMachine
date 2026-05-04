@@ -1,17 +1,12 @@
 package com.jerry.meklg.client.render;
 
-import com.jerry.meklg.client.model.ModelLargeWindGenerator;
-import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
-import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.tileentity.IWireFrameRenderer;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
-import com.jerry.meklg.client.render.RenderLargeWindGenerator.LargeWindGeneratorRenderState;
+
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
@@ -22,6 +17,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
+import com.jerry.meklg.client.render.RenderLargeWindGenerator.LargeWindGeneratorRenderState;
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,11 +85,11 @@ public class RenderLargeWindGenerator extends MekanismTileEntityRenderer<@NotNul
                     state.rotation,
                     poseStack,
                     nodeCollector,
-                    //TODO - 26.1: Do we need to do something for the light level similar to what double chests do of calculating the max of all the positions?
+                    // TODO - 26.1: Do we need to do something for the light level similar to what double chests do of
+                    // calculating the max of all the positions?
                     state.lightCoords,
                     OverlayTexture.NO_OVERLAY,
-                    false
-            );
+                    false);
             poseStack.popPose();
         }
     }

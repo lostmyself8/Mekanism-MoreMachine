@@ -9,26 +9,26 @@ import net.minecraft.data.PackOutput;
 
 public class MoreMachineLangProvider extends BaseLanguageProvider {
 
-    private static final String[] BASE_TIERS = {"basic", "advanced", "elite", "ultimate"};
-    private static final String[] EXTRA_TIERS = {"overclocked", "quantum", "dense", "multiversal", "creative"};
+    private static final String[] BASE_TIERS = { "basic", "advanced", "elite", "ultimate" };
+    private static final String[] EXTRA_TIERS = { "overclocked", "quantum", "dense", "multiversal", "creative" };
     private static final String[] ALL_TIERS = concat(BASE_TIERS, EXTRA_TIERS);
 
     private static final String[][] FACTORIES = {
-            {"oxidizing", "Oxidizing"},
-            {"dissolving", "Dissolving"},
-            {"washing", "Washing"},
-            {"crystallizing", "Crystallizing"},
-            {"pressurised_reacting", "Pressurised Reacting"},
-            {"centrifuging", "Centrifuging"},
-            {"liquifying", "Liquifying"},
-            {"pigment_extracting", "Pigment Extracting"},
-            {"painting", "Painting"},
-            {"recycling", "Recycling"},
-            {"planting", "Planting"},
-            {"stamping", "Stamping"},
-            {"lathing", "Lathe"},
-            {"rolling_mill", "Rolling Mill"},
-            {"replicating", "Replicating"}
+            { "oxidizing", "Oxidizing" },
+            { "dissolving", "Dissolving" },
+            { "washing", "Washing" },
+            { "crystallizing", "Crystallizing" },
+            { "pressurised_reacting", "Pressurised Reacting" },
+            { "centrifuging", "Centrifuging" },
+            { "liquifying", "Liquifying" },
+            { "pigment_extracting", "Pigment Extracting" },
+            { "painting", "Painting" },
+            { "recycling", "Recycling" },
+            { "planting", "Planting" },
+            { "stamping", "Stamping" },
+            { "lathing", "Lathe" },
+            { "rolling_mill", "Rolling Mill" },
+            { "replicating", "Replicating" }
     };
 
     public MoreMachineLangProvider(PackOutput output) {

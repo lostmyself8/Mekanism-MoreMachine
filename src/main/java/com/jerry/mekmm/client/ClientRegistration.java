@@ -4,9 +4,6 @@ import com.jerry.mekaf.client.gui.machine.GuiAdvancedFactory;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 
-import com.jerry.meklg.client.model.ModelLargeWindGenerator;
-import com.jerry.meklg.client.render.RenderLargeWindGenerator;
-import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
 import com.jerry.meklm.client.gui.machine.*;
 import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
 import com.jerry.meklm.client.model.LargeMachineModelCache;
@@ -21,6 +18,7 @@ import com.jerry.mekmm.client.gui.GuiWirelessChargingStation;
 import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStation;
 import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStationConfig;
 import com.jerry.mekmm.client.gui.machine.*;
+import com.jerry.mekmm.client.model.TranslatedBlockStateModel;
 import com.jerry.mekmm.client.render.RenderTickHandler;
 import com.jerry.mekmm.client.render.tileentity.RenderWirelessTransmissionStation;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -29,14 +27,16 @@ import com.jerry.mekmm.common.registries.MoreMachineTileEntityTypes;
 
 import mekanism.client.ClientRegistrationUtil;
 
+import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
+import net.neoforged.neoforge.client.event.ModelEvent.ModifyBakingResult;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterStandalone;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -45,8 +45,14 @@ import net.neoforged.neoforge.common.NeoForge;
 import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
+import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.render.RenderLargeWindGenerator;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
+import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @EventBusSubscriber(modid = Mekmm.MOD_ID, value = Dist.CLIENT)
 public class ClientRegistration {
@@ -76,8 +82,8 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
-        //TOD 26.1 models
-        //event.addListener(RenderWindGeneratorItem.RENDERER);
+        // TOD 26.1 models
+        // event.addListener(RenderWindGeneratorItem.RENDERER);
     }
 
     @SubscribeEvent
@@ -126,6 +132,12 @@ public class ClientRegistration {
     }
 
     @SubscribeEvent
+    public static void onModifyBakingResult(ModifyBakingResult event) {
+        Set<Block> translatedBlocks = translatedLargeJsonBlocks();
+        event.getBakingResult().blockStateModels().replaceAll((state, model) -> translatedBlocks.contains(state.getBlock()) ? new TranslatedBlockStateModel(model, 0, 1, 0) : model);
+    }
+
+    @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         ClientRegistrationUtil.registerBlockExtensions(event, MoreMachineBlocks.MM_BLOCKS);
         ClientRegistrationUtil.registerBlockExtensions(event, AdvancedFactoryBlocks.AF_BLOCKS);
@@ -133,5 +145,24 @@ public class ClientRegistration {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             ClientRegistrationUtil.registerBlockExtensions(event, LargeGeneratorBlocks.LG_BLOCKS);
         }
+    }
+
+    private static Set<Block> translatedLargeJsonBlocks() {
+        Set<Block> blocks = new HashSet<>();
+        blocks.add(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK.value());
+        blocks.add(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK.value());
+        blocks.add(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK.value());
+        blocks.add(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK.value());
+        blocks.add(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR.value());
+        blocks.add(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER.value());
+        blocks.add(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR.value());
+        blocks.add(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR.value());
+        blocks.add(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER.value());
+        blocks.add(LargeMachineBlocks.LARGE_PIGMENT_MIXER.value());
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            blocks.add(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR.value());
+            blocks.add(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR.value());
+        }
+        return blocks;
     }
 }
