@@ -1,5 +1,6 @@
 package com.jerry.meklm.client.render.tileentity;
 
+import com.jerry.meklm.client.render.tileentity.RenderLargeAntiprotonicNucleosynthesizer.LargeAntiprotonicNucleosynthesizerRenderState;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeAntiprotonicNucleosynthesizer;
 
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
@@ -22,10 +23,11 @@ import net.minecraft.world.phys.Vec3;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
-public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntityRenderer<TileEntityLargeAntiprotonicNucleosynthesizer, RenderLargeAntiprotonicNucleosynthesizer.LargeAntiprotonicNucleosynthesizerRenderState> {
+public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntityRenderer<@NotNull TileEntityLargeAntiprotonicNucleosynthesizer, LargeAntiprotonicNucleosynthesizerRenderState> {
 
     private final ModelEnergyCore core;
 

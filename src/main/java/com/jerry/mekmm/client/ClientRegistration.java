@@ -4,6 +4,9 @@ import com.jerry.mekaf.client.gui.machine.GuiAdvancedFactory;
 import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 
+import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.render.RenderLargeWindGenerator;
+import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
 import com.jerry.meklm.client.gui.machine.*;
 import com.jerry.meklm.client.gui.machine.base.GuiLargeChemicalTank;
 import com.jerry.meklm.client.model.LargeMachineModelCache;
@@ -30,7 +33,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions;
 import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterStandalone;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -53,10 +58,26 @@ public class ClientRegistration {
     }
 
     @SubscribeEvent
-    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    public static void registerRenderers(RegisterRenderers event) {
         event.registerBlockEntityRenderer(MoreMachineTileEntityTypes.WIRELESS_TRANSMISSION_STATION.get(), RenderWirelessTransmissionStation::new);
         event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER.get(), RenderLargeAntiprotonicNucleosynthesizer::new);
         event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER.get(), RenderLargePigmentMixer::new);
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.registerBlockEntityRenderer(LargeGeneratorTileEntityTypes.LARGE_WIND_GENERATOR.get(), RenderLargeWindGenerator::new);
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerLayer(RegisterLayerDefinitions event) {
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
+        //TOD 26.1 models
+        //event.addListener(RenderWindGeneratorItem.RENDERER);
     }
 
     @SubscribeEvent
