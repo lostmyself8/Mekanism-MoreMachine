@@ -1,0 +1,14 @@
+{
+  "loader": "neoforge:obj",
+  "parent": "block/block",
+  "model": "mekmm:models/block/large_machine/large_wind_generator/large_wind_generator_base.obj",
+  "flip_v": true,
+  "render_type": "cutout",
+  "textures": {
+    "particle": "mekanism:block/base/base_bottom",
+    "Base": "mekmm:block/large_machine/large_wind_generator/base",
+    "Screen_cmd": "mekmm:block/large_machine/screen_off",
+    "Screen_logo": "mekmm:block/large_machine/screen_off",
+    "Screen_hello": "mekmm:block/large_machine/screen_off"
+  }
+}
