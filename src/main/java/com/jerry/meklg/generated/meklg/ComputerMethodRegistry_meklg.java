@@ -9,10 +9,7 @@ import mekanism.common.tile.base.CapabilityTileEntity;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.base.TileEntityUpdateable;
 
-import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
-import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator$ComputerHandler;
-import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
-import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator$ComputerHandler;
+import com.jerry.meklg.common.tile.generator.*;
 
 public class ComputerMethodRegistry_meklg implements IComputerMethodRegistry {
 
@@ -21,6 +18,7 @@ public class ComputerMethodRegistry_meklg implements IComputerMethodRegistry {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             FactoryRegistry.register(TileEntityLargeGasGenerator.class, TileEntityLargeGasGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
             FactoryRegistry.register(TileEntityLargeHeatGenerator.class, TileEntityLargeHeatGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
+            FactoryRegistry.register(TileEntityLargeWindGenerator.class, TileEntityLargeWindGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
         }
     }
 }

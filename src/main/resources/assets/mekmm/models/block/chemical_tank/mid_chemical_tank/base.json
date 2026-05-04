@@ -5,8 +5,8 @@
 	"render_type": "cutout",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "mekmm:block/large_machine/chemical_tank_mid",
-		"particle": "mekmm:block/large_machine/chemical_tank_mid"
+		"0": "mekmm:block/chemical_tank/chemical_tank_mid",
+		"particle": "mekmm:block/chemical_tank/chemical_tank_mid"
 	},
 	"elements": [
 		{

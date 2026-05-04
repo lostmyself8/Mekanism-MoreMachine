@@ -421,32 +421,6 @@ public class ModelLargeWindGenerator extends MekanismJavaModel {
     private static final ModelPartData PORTS = new ModelPartData("ports", CubeListBuilder.create(),
             PartPose.offset(0.0F, 0.0F, 0.0F), ports_1, ports_2, ports_3, ports_4);
 
-    private static final ModelPartData ports_led_1 = new ModelPartData("ports_led_1", CubeListBuilder.create()
-            .texOffs(420, 499).addBox(-5.0F, -13.0F, -56.0F, 10.0F, 10.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(-20.0F, -12.0F, -56.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(12.0F, -12.0F, -56.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)),
-            PartPose.offset(0.0F, 0.0F, 0.0F));
-
-    private static final ModelPartData ports_led_2 = new ModelPartData("ports_led_2", CubeListBuilder.create()
-            .texOffs(420, 499).addBox(-5.0F, -13.0F, 56.02F, 10.0F, 10.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(-20.0F, -12.0F, 56.02F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(12.0F, -12.0F, 56.02F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)),
-            PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
-
-    private static final ModelPartData ports_led_3 = new ModelPartData("ports_led_3", CubeListBuilder.create()
-            .texOffs(420, 499).addBox(-5.0F, -13.0F, 56.02F, 10.0F, 10.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(-20.0F, -12.0F, 56.02F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(12.0F, -12.0F, 56.02F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)),
-            PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
-
-    private static final ModelPartData ports_led_4 = new ModelPartData("ports_led_4", CubeListBuilder.create()
-            .texOffs(440, 499).addBox(-20.0F, -12.0F, -56.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F))
-            .texOffs(440, 499).addBox(12.0F, -12.0F, -56.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)),
-            PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -3.1416F, 0.0F));
-
-    private static final ModelPartData PORT_LEDS = new ModelPartData("port_leds", CubeListBuilder.create(),
-            PartPose.offset(0.0F, 0.0F, 0.0F), ports_led_1, ports_led_2, ports_led_3, ports_led_4);
-
     private static final ModelPartData screen3_r1 = new ModelPartData("screen3_r1", CubeListBuilder.create()
             .texOffs(456, 484).addBox(0.5F, -10.0F, 1.0F, 14.0F, 10.0F, 2.0F, new CubeDeformation(0.0F))
             .texOffs(448, 335).addBox(0.0F, -7.0F, 0.0F, 12.0F, 4.0F, 1.0F, new CubeDeformation(0.0F)),
@@ -481,7 +455,7 @@ public class ModelLargeWindGenerator extends MekanismJavaModel {
     private static final ModelPartData BASE = new ModelPartData("base", CubeListBuilder.create()
             .texOffs(128, 0).addBox(-48.0F, -8.0F, -48.0F, 96.0F, 8.0F, 96.0F, new CubeDeformation(0.0F))
             .texOffs(128, 246).addBox(-40.0F, -24.0F, -40.0F, 80.0F, 16.0F, 80.0F, new CubeDeformation(0.0F)),
-            PartPose.offset(0.0F, 24.0F, 0.0F), BASE_CONNECTOR_3, BASE_CONNECTOR_2, BASE_CONNECTOR, PORTS, PORT_LEDS, CONTROLLER);
+            PartPose.offset(0.0F, 24.0F, 0.0F), BASE_CONNECTOR_3, BASE_CONNECTOR_2, BASE_CONNECTOR, PORTS, CONTROLLER);
 
     public static LayerDefinition createLayerDefinition() {
         return createLayerDefinition(1024, 1024, FAN, BODY, TOP, BASE);

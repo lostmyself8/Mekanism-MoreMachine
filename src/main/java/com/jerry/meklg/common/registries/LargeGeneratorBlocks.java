@@ -20,6 +20,7 @@ import net.minecraft.world.level.material.MapColor;
 
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
+import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
 
 public class LargeGeneratorBlocks {
 
@@ -48,6 +49,9 @@ public class LargeGeneratorBlocks {
                             .addChemicalFillSlot(0)
                             .addEnergy()
                             .build()));
+
+    public static final BlockRegistryObject<BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>>> LARGE_WIND_GENERATOR = LG_BLOCKS.registerDetails("large_wind_generator", () -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_WIND_GENERATOR, properties -> properties.mapColor(MapColor.METAL)))
+            .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder().addEnergy().build()));
 
     private LargeGeneratorBlocks() {}
 }
