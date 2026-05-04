@@ -18,8 +18,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class MoreMachineAssetProvider implements DataProvider {
 
-    private static final String[] BASE_TIERS = {"basic", "advanced", "elite", "ultimate"};
-    private static final String[] EXTRA_TIERS = {"overclocked", "quantum", "dense", "multiversal", "creative"};
+    private static final String[] BASE_TIERS = { "basic", "advanced", "elite", "ultimate" };
+    private static final String[] EXTRA_TIERS = { "overclocked", "quantum", "dense", "multiversal", "creative" };
     private static final String[] ALL_TIERS = concat(BASE_TIERS, EXTRA_TIERS);
 
     private static final String[] MORE_MACHINE_FACTORIES = {
@@ -417,7 +417,7 @@ public class MoreMachineAssetProvider implements DataProvider {
     }
 
     private static String[] texture(String key, String value) {
-        return new String[] {key, value};
+        return new String[] { key, value };
     }
 
     private static JsonObject face(int u1, int v1, int u2, int v2, String texture, String cullface) {

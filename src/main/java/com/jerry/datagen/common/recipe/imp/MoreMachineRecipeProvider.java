@@ -14,15 +14,15 @@ import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineItems;
 
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.registries.MekanismItems;
-import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.resource.PrimaryResource;
 import mekanism.common.tags.MekanismTags;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.HolderSet;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
