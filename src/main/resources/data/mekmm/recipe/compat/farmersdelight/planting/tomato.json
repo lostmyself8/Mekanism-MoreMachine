@@ -1,27 +1,27 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "farmersdelight"
-    }
-  ],
-  "type": "mekmm:planting",
-  "item_input": {
-    "ingredient": "farmersdelight:tomato_seeds",
-    "count": 1
-  },
-  "chemical_input": {
-    "amount": 1,
-    "chemical": "mekmm:nutrient_solution"
-  },
-  "main_output": {
-    "count": 3,
-    "id": "farmersdelight:tomato"
-  },
-  "secondary_output": {
-    "count": 1,
-    "id": "farmersdelight:tomato_seeds"
-  },
-  "secondary_chance": 0.95,
-  "per_tick_usage": true
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "farmersdelight"
+		}
+	],
+	"type": "mekmm:planting",
+	"item_input": {
+		"ingredient": "farmersdelight:tomato_seeds",
+		"count": 1
+	},
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:nutrient_solution"
+	},
+	"main_output": {
+		"count": 3,
+		"id": "farmersdelight:tomato"
+	},
+	"secondary_output": {
+		"count": 1,
+		"id": "farmersdelight:tomato_seeds"
+	},
+	"secondary_chance": 0.95,
+	"per_tick_usage": true
 }

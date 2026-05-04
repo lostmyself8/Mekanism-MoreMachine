@@ -1,22 +1,22 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "ars_nouveau"
-    }
-  ],
-  "type": "mekmm:planting",
-  "chemical_input": {
-    "amount": 1,
-    "chemical": "mekmm:nutrient_solution"
-  },
-  "item_input": {
-    "ingredient": "ars_nouveau:purple_archwood_sapling",
-    "count": 1
-  },
-  "per_tick_usage": true,
-  "main_output": {
-    "count": 6,
-    "id": "ars_nouveau:purple_archwood_log"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "ars_nouveau"
+		}
+	],
+	"type": "mekmm:planting",
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:nutrient_solution"
+	},
+	"item_input": {
+		"ingredient": "ars_nouveau:purple_archwood_sapling",
+		"count": 1
+	},
+	"per_tick_usage": true,
+	"main_output": {
+		"count": 6,
+		"id": "ars_nouveau:purple_archwood_log"
+	}
 }

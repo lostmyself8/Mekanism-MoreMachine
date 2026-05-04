@@ -1,27 +1,27 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "com.jerry.mekmm.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "MixinItemConfigurator",
-    "recipe.MixinMekanismRecipeType",
-    "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
-    "tile.MixinTileEntityChemicalCrystallizer",
-    "tile.MixinTileEntityChemicalDissolutionChamber",
-    "tile.MixinTileEntityChemicalOxidizer",
-    "tile.MixinTileEntityChemicalWasher",
-    "tile.MixinTileEntityIsotopicCentrifuge",
-    "tile.MixinTileEntityNutritionalLiquifier",
-    "tile.MixinTileEntityPaintingMachine",
-    "tile.MixinTileEntityPigmentExtractor",
-    "tile.MixinTileEntityPressurizedReactionChamber"
-  ],
-  "client": [
-    "client.MixinRecipeViewerRecipeType",
-    "client.recipe_viewer.type.MixinRotaryRVRecipeType"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.jerry.mekmm.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"MixinItemConfigurator",
+		"recipe.MixinMekanismRecipeType",
+		"recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
+		"tile.MixinTileEntityChemicalCrystallizer",
+		"tile.MixinTileEntityChemicalDissolutionChamber",
+		"tile.MixinTileEntityChemicalOxidizer",
+		"tile.MixinTileEntityChemicalWasher",
+		"tile.MixinTileEntityIsotopicCentrifuge",
+		"tile.MixinTileEntityNutritionalLiquifier",
+		"tile.MixinTileEntityPaintingMachine",
+		"tile.MixinTileEntityPigmentExtractor",
+		"tile.MixinTileEntityPressurizedReactionChamber"
+	],
+	"client": [
+		"client.MixinRecipeViewerRecipeType",
+		"client.recipe_viewer.type.MixinRotaryRVRecipeType"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

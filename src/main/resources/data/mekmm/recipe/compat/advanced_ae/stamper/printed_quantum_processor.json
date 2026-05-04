@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "advanced_ae"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "advanced_ae:quantum_alloy",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "advanced_ae:quantum_processor_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "advanced_ae:printed_quantum_processor"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "advanced_ae"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "advanced_ae:quantum_alloy",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "advanced_ae:quantum_processor_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "advanced_ae:printed_quantum_processor"
+	}
 }

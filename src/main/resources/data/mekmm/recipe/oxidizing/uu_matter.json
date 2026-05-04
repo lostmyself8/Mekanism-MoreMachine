@@ -1,11 +1,11 @@
 {
-  "type": "mekanism:oxidizing",
-  "input": {
-    "ingredient": "mekmm:uu_matter",
-    "count": 1
-  },
-  "output": {
-    "amount": 500,
-    "id": "mekmm:uu_matter"
-  }
+	"type": "mekanism:oxidizing",
+	"input": {
+		"ingredient": "mekmm:uu_matter",
+		"count": 1
+	},
+	"output": {
+		"amount": 500,
+		"id": "mekmm:uu_matter"
+	}
 }

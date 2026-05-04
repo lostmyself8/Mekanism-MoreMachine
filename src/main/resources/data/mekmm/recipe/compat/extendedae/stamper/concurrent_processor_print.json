@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "extendedae"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "#c:gems/entro",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "extendedae:concurrent_processor_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "extendedae:concurrent_processor_print"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "extendedae"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "#c:gems/entro",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "extendedae:concurrent_processor_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "extendedae:concurrent_processor_print"
+	}
 }

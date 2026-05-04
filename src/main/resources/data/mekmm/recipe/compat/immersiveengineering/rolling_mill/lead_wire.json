@@ -1,17 +1,17 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "immersiveengineering"
-    }
-  ],
-  "type": "mekmm:rolling_mill",
-  "input": {
-    "ingredient": "#c:ingots/lead",
-    "count": 1
-  },
-  "output": {
-    "count": 2,
-    "id": "immersiveengineering:wire_lead"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "immersiveengineering"
+		}
+	],
+	"type": "mekmm:rolling_mill",
+	"input": {
+		"ingredient": "#c:ingots/lead",
+		"count": 1
+	},
+	"output": {
+		"count": 2,
+		"id": "immersiveengineering:wire_lead"
+	}
 }

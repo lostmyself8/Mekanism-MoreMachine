@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "megacells"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "#c:ingots/sky_steel",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "megacells:accumulation_processor_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "megacells:printed_accumulation_processor"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "megacells"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "#c:ingots/sky_steel",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "megacells:accumulation_processor_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "megacells:printed_accumulation_processor"
+	}
 }

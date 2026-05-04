@@ -1,22 +1,22 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "ars_nouveau"
-    }
-  ],
-  "type": "mekmm:planting",
-  "item_input": {
-    "ingredient": "ars_nouveau:bombegranate_pod",
-    "count": 1
-  },
-  "chemical_input": {
-    "amount": 1,
-    "chemical": "mekmm:nutrient_solution"
-  },
-  "main_output": {
-    "count": 3,
-    "id": "ars_nouveau:bombegranate_pod"
-  },
-  "per_tick_usage": true
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "ars_nouveau"
+		}
+	],
+	"type": "mekmm:planting",
+	"item_input": {
+		"ingredient": "ars_nouveau:bombegranate_pod",
+		"count": 1
+	},
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:nutrient_solution"
+	},
+	"main_output": {
+		"count": 3,
+		"id": "ars_nouveau:bombegranate_pod"
+	},
+	"per_tick_usage": true
 }

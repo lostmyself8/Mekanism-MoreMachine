@@ -1,16 +1,16 @@
 {
-  "type": "mekanism:dissolution",
-  "chemical_input": {
-    "amount": 9,
-    "chemical": "mekmm:nutritional_paste"
-  },
-  "item_input": {
-    "ingredient": "#c:fuels/block/bio",
-    "count": 2
-  },
-  "output": {
-    "amount": 900,
-    "id": "mekmm:nutrient_solution"
-  },
-  "per_tick_usage": true
+	"type": "mekanism:dissolution",
+	"chemical_input": {
+		"amount": 9,
+		"chemical": "mekmm:nutritional_paste"
+	},
+	"item_input": {
+		"ingredient": "#c:fuels/block/bio",
+		"count": 2
+	},
+	"output": {
+		"amount": 900,
+		"id": "mekmm:nutrient_solution"
+	},
+	"per_tick_usage": true
 }

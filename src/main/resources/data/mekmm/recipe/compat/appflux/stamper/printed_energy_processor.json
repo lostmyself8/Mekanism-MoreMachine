@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "appflux"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "#c:gems/charged_redstone",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "appflux:energy_processor_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "appflux:printed_energy_processor"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "appflux"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "#c:gems/charged_redstone",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "appflux:energy_processor_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "appflux:printed_energy_processor"
+	}
 }

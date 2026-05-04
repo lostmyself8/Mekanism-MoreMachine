@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "ae2cs"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "#c:gems/resonating",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "ae2cs:resonating_print_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "ae2cs:resonating_circuit_print"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "ae2cs"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "#c:gems/resonating",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "ae2cs:resonating_print_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "ae2cs:resonating_circuit_print"
+	}
 }

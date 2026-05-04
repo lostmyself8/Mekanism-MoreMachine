@@ -1,27 +1,27 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "kaleidoscope_cookery"
-    }
-  ],
-  "type": "mekmm:planting",
-  "item_input": {
-    "ingredient": "kaleidoscope_cookery:chili_seed",
-    "count": 1
-  },
-  "chemical_input": {
-    "amount": 1,
-    "chemical": "mekmm:nutrient_solution"
-  },
-  "main_output": {
-    "count": 5,
-    "id": "kaleidoscope_cookery:red_chili"
-  },
-  "secondary_output": {
-    "count": 1,
-    "id": "kaleidoscope_cookery:green_chili"
-  },
-  "secondary_chance": 0.95,
-  "per_tick_usage": true
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "kaleidoscope_cookery"
+		}
+	],
+	"type": "mekmm:planting",
+	"item_input": {
+		"ingredient": "kaleidoscope_cookery:chili_seed",
+		"count": 1
+	},
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:nutrient_solution"
+	},
+	"main_output": {
+		"count": 5,
+		"id": "kaleidoscope_cookery:red_chili"
+	},
+	"secondary_output": {
+		"count": 1,
+		"id": "kaleidoscope_cookery:green_chili"
+	},
+	"secondary_chance": 0.95,
+	"per_tick_usage": true
 }

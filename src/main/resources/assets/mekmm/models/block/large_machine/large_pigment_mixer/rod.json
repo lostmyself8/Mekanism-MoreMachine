@@ -1,20 +1,20 @@
 {
-  "format_version": "1.9.0",
-  "credit": "Made with Blockbench",
-  "textures": {
-    "0": "mekmm:block/large_machine/large_pigment_mixer/rod",
-    "particle": "mekmm:block/large_machine/large_pigment_mixer/rod"
-  },
-  "elements": [
-    {
-      "from": [-2, 17, -2],
-      "to": [2, 21, 2],
-      "faces": {
-        "north": {"uv": [0, 4, 4, 8], "texture": "#0"},
-        "east": {"uv": [0, 4, 4, 8], "texture": "#0"},
-        "south": {"uv": [0, 4, 4, 8], "texture": "#0"},
-        "west": {"uv": [0, 4, 4, 8], "texture": "#0"}
-      }
-    }
-  ]
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "mekmm:block/large_machine/large_pigment_mixer/rod",
+		"particle": "mekmm:block/large_machine/large_pigment_mixer/rod"
+	},
+	"elements": [
+		{
+			"from": [-2, 17, -2],
+			"to": [2, 21, 2],
+			"faces": {
+				"north": { "uv": [0, 4, 4, 8], "texture": "#0" },
+				"east": { "uv": [0, 4, 4, 8], "texture": "#0" },
+				"south": { "uv": [0, 4, 4, 8], "texture": "#0" },
+				"west": { "uv": [0, 4, 4, 8], "texture": "#0" }
+			}
+		}
+	]
 }

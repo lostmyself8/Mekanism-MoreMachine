@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "ae2omnicells"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "ae2:singularity",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "ae2omnicells:multidimensional_expansion_print_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "ae2omnicells:multidimensional_expansion_circuit_print"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "ae2omnicells"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "ae2:singularity",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "ae2omnicells:multidimensional_expansion_print_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "ae2omnicells:multidimensional_expansion_circuit_print"
+	}
 }

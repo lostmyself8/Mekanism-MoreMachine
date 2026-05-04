@@ -1,19 +1,19 @@
 {
-  "type": "mekanism:rotary",
-  "chemical_input": {
-    "amount": 1,
-    "chemical": "mekmm:nutritional_paste"
-  },
-  "chemical_output": {
-    "amount": 1,
-    "id": "mekmm:nutritional_paste"
-  },
-  "fluid_input": {
-    "ingredient": "#c:nutritional_paste",
-    "amount": 1
-  },
-  "fluid_output": {
-    "amount": 1,
-    "id": "mekanism:nutritional_paste"
-  }
+	"type": "mekanism:rotary",
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:nutritional_paste"
+	},
+	"chemical_output": {
+		"amount": 1,
+		"id": "mekmm:nutritional_paste"
+	},
+	"fluid_input": {
+		"ingredient": "#c:nutritional_paste",
+		"amount": 1
+	},
+	"fluid_output": {
+		"amount": 1,
+		"id": "mekanism:nutritional_paste"
+	}
 }

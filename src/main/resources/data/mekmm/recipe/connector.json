@@ -1,19 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "key": {
-    "A": "#c:ingots/osmium",
-    "I": "#c:ingots/iron",
-    "V": "mekanism:teleportation_core",
-    "S": "#c:ingots/steel"
-  },
-  "pattern": [
-    "IV",
-    " A",
-    " S"
-  ],
-  "result": {
-    "count": 1,
-    "id": "mekmm:connector"
-  }
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"A": "#c:ingots/osmium",
+		"I": "#c:ingots/iron",
+		"V": "mekanism:teleportation_core",
+		"S": "#c:ingots/steel"
+	},
+	"pattern": ["IV", " A", " S"],
+	"result": {
+		"count": 1,
+		"id": "mekmm:connector"
+	}
 }

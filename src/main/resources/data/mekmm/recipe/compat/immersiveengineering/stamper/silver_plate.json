@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "immersiveengineering"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "#c:ingots/silver",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "immersiveengineering:mold_plate",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "immersiveengineering:plate_silver"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "immersiveengineering"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "#c:ingots/silver",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "immersiveengineering:mold_plate",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "immersiveengineering:plate_silver"
+	}
 }

@@ -1,25 +1,31 @@
 {
-  "values": [
-    "mekmm:basic_pressurised_reacting_factory",
-    "mekmm:advanced_pressurised_reacting_factory",
-    "mekmm:elite_pressurised_reacting_factory",
-    "mekmm:ultimate_pressurised_reacting_factory",
-    {"id": "mekmm:overclocked_pressurised_reacting_factory", "required": false},
-    {"id": "mekmm:quantum_pressurised_reacting_factory", "required": false},
-    {"id": "mekmm:dense_pressurised_reacting_factory", "required": false},
-    {"id": "mekmm:multiversal_pressurised_reacting_factory", "required": false},
-    {"id": "mekmm:creative_pressurised_reacting_factory", "required": false},
+	"values": [
+		"mekmm:basic_pressurised_reacting_factory",
+		"mekmm:advanced_pressurised_reacting_factory",
+		"mekmm:elite_pressurised_reacting_factory",
+		"mekmm:ultimate_pressurised_reacting_factory",
+		{
+			"id": "mekmm:overclocked_pressurised_reacting_factory",
+			"required": false
+		},
+		{ "id": "mekmm:quantum_pressurised_reacting_factory", "required": false },
+		{ "id": "mekmm:dense_pressurised_reacting_factory", "required": false },
+		{
+			"id": "mekmm:multiversal_pressurised_reacting_factory",
+			"required": false
+		},
+		{ "id": "mekmm:creative_pressurised_reacting_factory", "required": false },
 
-    "mekmm:basic_centrifuging_factory",
-    "mekmm:advanced_centrifuging_factory",
-    "mekmm:elite_centrifuging_factory",
-    "mekmm:ultimate_centrifuging_factory",
-    {"id": "mekmm:overclocked_centrifuging_factory", "required": false},
-    {"id": "mekmm:quantum_centrifuging_factory", "required": false},
-    {"id": "mekmm:dense_centrifuging_factory", "required": false},
-    {"id": "mekmm:multiversal_centrifuging_factory", "required": false},
-    {"id": "mekmm:creative_centrifuging_factory", "required": false},
+		"mekmm:basic_centrifuging_factory",
+		"mekmm:advanced_centrifuging_factory",
+		"mekmm:elite_centrifuging_factory",
+		"mekmm:ultimate_centrifuging_factory",
+		{ "id": "mekmm:overclocked_centrifuging_factory", "required": false },
+		{ "id": "mekmm:quantum_centrifuging_factory", "required": false },
+		{ "id": "mekmm:dense_centrifuging_factory", "required": false },
+		{ "id": "mekmm:multiversal_centrifuging_factory", "required": false },
+		{ "id": "mekmm:creative_centrifuging_factory", "required": false },
 
-    "mekmm:wireless_transmission_station"
-  ]
+		"mekmm:wireless_transmission_station"
+	]
 }

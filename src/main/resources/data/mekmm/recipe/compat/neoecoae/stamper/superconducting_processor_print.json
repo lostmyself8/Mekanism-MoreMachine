@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "neoecoae"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "neoecoae:energized_superconductive_ingot",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "neoecoae:superconducting_processor_press",
-    "count": 1
-  },
-  "output": {
-    "count": 1,
-    "id": "neoecoae:superconducting_processor_print"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "neoecoae"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "neoecoae:energized_superconductive_ingot",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "neoecoae:superconducting_processor_press",
+		"count": 1
+	},
+	"output": {
+		"count": 1,
+		"id": "neoecoae:superconducting_processor_print"
+	}
 }

@@ -1,21 +1,21 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "immersiveengineering"
-    }
-  ],
-  "type": "mekmm:stamper",
-  "input": {
-    "ingredient": "#c:ingots/steel",
-    "count": 1
-  },
-  "mold": {
-    "ingredient": "immersiveengineering:mold_wire",
-    "count": 1
-  },
-  "output": {
-    "count": 2,
-    "id": "immersiveengineering:wire_steel"
-  }
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "immersiveengineering"
+		}
+	],
+	"type": "mekmm:stamper",
+	"input": {
+		"ingredient": "#c:ingots/steel",
+		"count": 1
+	},
+	"mold": {
+		"ingredient": "immersiveengineering:mold_wire",
+		"count": 1
+	},
+	"output": {
+		"count": 2,
+		"id": "immersiveengineering:wire_steel"
+	}
 }

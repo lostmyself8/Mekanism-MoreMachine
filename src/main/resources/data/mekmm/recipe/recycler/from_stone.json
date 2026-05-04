@@ -1,12 +1,12 @@
 {
-  "type": "mekmm:recycler",
-  "input": {
-    "ingredient": "#c:stones",
-    "count": 1
-  },
-  "chance": 0.17,
-  "output": {
-    "count": 1,
-    "id": "mekmm:scrap"
-  }
+	"type": "mekmm:recycler",
+	"input": {
+		"ingredient": "#c:stones",
+		"count": 1
+	},
+	"chance": 0.17,
+	"output": {
+		"count": 1,
+		"id": "mekmm:scrap"
+	}
 }

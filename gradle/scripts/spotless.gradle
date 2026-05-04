@@ -19,4 +19,12 @@ spotless {
         endWithNewline()
         eclipse('4.36').configFile(formatFile)
     }
+    json {
+        target('src/*/resources/**/*.json', 'src/*/resources/**/*.mcmeta')
+        targetExclude 'src/generated/resources/**'
+        biome()
+        trimTrailingWhitespace()
+        leadingSpacesToTabs()
+        endWithNewline()
+    }
 }

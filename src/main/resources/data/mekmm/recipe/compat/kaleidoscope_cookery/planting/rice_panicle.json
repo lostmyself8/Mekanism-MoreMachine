@@ -1,27 +1,27 @@
 {
-  "neoforge:conditions": [
-    {
-      "type": "neoforge:mod_loaded",
-      "modid": "kaleidoscope_cookery"
-    }
-  ],
-  "type": "mekmm:planting",
-  "item_input": {
-    "ingredient": "kaleidoscope_cookery:wild_rice",
-    "count": 1
-  },
-  "chemical_input": {
-    "amount": 1,
-    "chemical": "mekmm:nutrient_solution"
-  },
-  "main_output": {
-    "count": 5,
-    "id": "kaleidoscope_cookery:rice_panicle"
-  },
-  "secondary_output": {
-    "count": 2,
-    "id": "kaleidoscope_cookery:wild_rice"
-  },
-  "secondary_chance": 0.65,
-  "per_tick_usage": true
+	"neoforge:conditions": [
+		{
+			"type": "neoforge:mod_loaded",
+			"modid": "kaleidoscope_cookery"
+		}
+	],
+	"type": "mekmm:planting",
+	"item_input": {
+		"ingredient": "kaleidoscope_cookery:wild_rice",
+		"count": 1
+	},
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:nutrient_solution"
+	},
+	"main_output": {
+		"count": 5,
+		"id": "kaleidoscope_cookery:rice_panicle"
+	},
+	"secondary_output": {
+		"count": 2,
+		"id": "kaleidoscope_cookery:wild_rice"
+	},
+	"secondary_chance": 0.65,
+	"per_tick_usage": true
 }
