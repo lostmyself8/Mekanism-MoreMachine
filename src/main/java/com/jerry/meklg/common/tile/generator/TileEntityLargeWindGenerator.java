@@ -29,15 +29,16 @@ import org.jetbrains.annotations.NotNull;
 public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
     private static final float SPEED = 32.0F;
+    public static final int TOP_Y = 36;
 
-    private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[] { RelativeSide.FRONT, RelativeSide.BOTTOM };
+    private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[]{RelativeSide.FRONT, RelativeSide.BOTTOM};
 
     @Getter
     private float angle;
     @Getter
     private double currentMultiplier = 0.0F;
     private boolean isBlacklistDimension;
-    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = { "getEnergyItem" }, docPlaceholder = "energy item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = {"getEnergyItem"}, docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
@@ -105,7 +106,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
      **/
     private double getMultiplier() {
         if (level != null) {
-            BlockPos top = getBlockPos().above(4);
+            BlockPos top = getBlockPos().above(TOP_Y);
             // Validate it isn't fluid logged to help try and prevent https://github.com/mekanism/Mekanism/issues/7344
             // Clamp the height limits as the logical bounds of the world
             if (level.getFluidState(top).isEmpty() && level.canSeeSky(top)) {
@@ -150,7 +151,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
 
     @Override
     public BlockPos getSoundPos() {
-        return super.getSoundPos().above(4);
+        return super.getSoundPos().above(TOP_Y - 2);
     }
 
     @Override

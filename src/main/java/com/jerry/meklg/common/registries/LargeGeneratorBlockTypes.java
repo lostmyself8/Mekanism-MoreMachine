@@ -59,7 +59,7 @@ public class LargeGeneratorBlockTypes {
             .withGui(() -> LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR)
             .withEnergyConfig(MekanismGeneratorsConfig.storageConfig.windGenerator)
             .withCustomShape(LargeGeneratorBlockShapes.LARGE_WIND_GENERATOR)
-            .with(AttributeCustomSelectionBox.JAVA)
+            .with(AttributeCustomSelectionBox.JSON)
             .withSound(GeneratorsSounds.WIND_GENERATOR)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
             .with(MoreMachineBounding.LARGE_WIND_GENERATOR)
