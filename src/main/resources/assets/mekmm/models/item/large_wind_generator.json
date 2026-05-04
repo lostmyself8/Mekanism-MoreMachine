@@ -1,45 +1,45 @@
 {
-  "parent":"mekmm:block/large_machine/large_wind_generator/off",
-  "display":{
-    "gui":{
-      "rotation":[30,225,0],
-      "translation":[0,-6.5,0],
-      "scale":[0.0216,0.0216,0.0216]
+  "parent": "builtin/entity",
+  "display": {
+    "gui": {
+      "rotation": [30,225,0],
+      "translation": [0,-6.5,0],
+      "scale": [0.0216,0.0216,0.0216]
     },
-    "ground":{
-      "rotation":[0,0,0],
-      "translation":[0,0.5,0],
-      "scale":[0.0196,0.0196,0.0196]
+    "ground": {
+      "rotation": [0,0,0],
+      "translation": [0,0.5,0],
+      "scale": [0.0196,0.0196,0.0196]
     },
-    "thirdperson_righthand":{
-      "rotation":[25,45,0],
-      "translation":[0,-1,-1],
-      "scale":[0.0296,0.0296,0.0296]
+    "thirdperson_righthand": {
+      "rotation": [25,45,0],
+      "translation": [0,-1,-1],
+      "scale": [0.0296,0.0296,0.0296]
     },
-    "firstperson_righthand":{
-      "rotation":[0,45,0],
-      "translation":[0,-3.5,0],
-      "scale":[0.0158,0.0158,0.0158]
+    "firstperson_righthand": {
+      "rotation": [0,45,0],
+      "translation": [0,-3.5,0],
+      "scale": [0.0158,0.0158,0.0158]
     },
-    "thirdperson_lefthand":{
-      "rotation":[25,45,0],
-      "translation":[0,-1,-1],
-      "scale":[0.0296,0.0296,0.0296]
+    "thirdperson_lefthand": {
+      "rotation": [25,45,0],
+      "translation": [0,-1,-1],
+      "scale": [0.0296,0.0296,0.0296]
     },
-    "firstperson_lefthand":{
-      "rotation":[0,45,0],
-      "translation":[0,-3.5,0],
-      "scale":[0.0158,0.0158,0.0158]
+    "firstperson_lefthand": {
+      "rotation": [0,45,0],
+      "translation": [0,-3.5,0],
+      "scale": [0.0158,0.0158,0.0158]
     },
-    "head":{
-      "rotation":[0,0,0],
-      "translation":[0,0,0],
-      "scale":[0.0394,0.0394,0.0394]
+    "head": {
+      "rotation": [0,0,0],
+      "translation": [0,0,0],
+      "scale": [0.0394,0.0394,0.0394]
     },
-    "fixed":{
-      "rotation":[0,0,0],
-      "translation":[0,-9,0],
-      "scale":[0.0344,0.0344,0.0344]
+    "fixed": {
+      "rotation": [0,0,0],
+      "translation": [0,-9,0],
+      "scale": [0.0344,0.0344,0.0344]
     }
   }
 }

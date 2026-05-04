@@ -30,15 +30,18 @@ import com.jerry.mekmm.common.registries.MoreMachineTileEntityTypes;
 
 import mekanism.client.ClientRegistrationUtil;
 import mekanism.client.model.baked.ExtensionBakedModel.TransformedBakedModel;
+import mekanism.client.render.RenderPropertiesProvider.MekRenderProperties;
 import mekanism.client.render.lib.QuadTransformation;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -46,10 +49,14 @@ import net.neoforged.neoforge.common.NeoForge;
 import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
+import com.jerry.meklg.client.model.ModelLargeWindGenerator;
 import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
 import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
+import com.jerry.meklg.client.render.RenderLargeWindGenerator;
+import com.jerry.meklg.client.render.item.RenderLargeWindGeneratorItem;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
+import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
 
 import static mekanism.client.ClientRegistration.addCustomModel;
 
@@ -99,10 +106,27 @@ public class ClientRegistration {
     }
 
     @SubscribeEvent
-    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    public static void registerRenderers(RegisterRenderers event) {
         event.registerBlockEntityRenderer(MoreMachineTileEntityTypes.WIRELESS_TRANSMISSION_STATION.get(), RenderWirelessTransmissionStation::new);
         event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER.get(), RenderLargeAntiprotonicNucleosynthesizer::new);
         event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER.get(), RenderLargePigmentMixer::new);
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.registerBlockEntityRenderer(LargeGeneratorTileEntityTypes.LARGE_WIND_GENERATOR.get(), RenderLargeWindGenerator::new);
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerLayer(RegisterLayerDefinitions event) {
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.registerReloadListener(RenderLargeWindGeneratorItem.RENDERER);
+        }
     }
 
     @SubscribeEvent
@@ -156,6 +180,7 @@ public class ClientRegistration {
         ClientRegistrationUtil.registerBlockExtensions(event, AdvancedFactoryBlocks.AF_BLOCKS);
         ClientRegistrationUtil.registerBlockExtensions(event, LargeMachineBlocks.LM_BLOCKS);
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.registerItem(new MekRenderProperties(RenderLargeWindGeneratorItem.RENDERER), LargeGeneratorBlocks.LARGE_WIND_GENERATOR.getItemHolder());
             ClientRegistrationUtil.registerBlockExtensions(event, LargeGeneratorBlocks.LG_BLOCKS);
         }
     }

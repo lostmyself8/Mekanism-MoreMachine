@@ -6,7 +6,6 @@
   "render_type": "cutout",
   "textures": {
     "particle": "mekanism:block/base/base_bottom",
-    "Base": "mekmm:block/large_machine/large_wind_generator/base",
     "Screen_cmd": "mekmm:block/large_machine/screen_off",
     "Screen_logo": "mekmm:block/large_machine/screen_off",
     "Screen_hello": "mekanism:block/large_machine/screen_off"
