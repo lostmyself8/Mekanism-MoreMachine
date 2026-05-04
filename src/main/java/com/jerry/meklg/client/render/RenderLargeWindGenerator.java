@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
@@ -100,8 +101,16 @@ public class RenderLargeWindGenerator extends MekanismTileEntityRenderer<@NotNul
     }
 
     @Override
-    public AABB getRenderBoundingBox(TileEntityLargeWindGenerator blockEntity) {
-        return super.getRenderBoundingBox(blockEntity);
+    public AABB getRenderBoundingBox(TileEntityLargeWindGenerator tile) {
+        // Mek采用不区分朝向的方法，但大风电叶片较大，因此还是需要区分一下朝向的
+        BlockPos pos = tile.getBlockPos();
+        Direction facing = tile.getDirection();
+        // 如果是东西朝向就是Y轴
+        if (facing == Direction.EAST || facing == Direction.WEST) {
+            return AABB.encapsulatingFullBlocks(pos.offset(-5, 0, -16), pos.offset(5, 50, 16));
+        }
+        // 如果是南北朝向就是X轴，虽然这会包括上下，但是发电机没有上下的朝向
+        return AABB.encapsulatingFullBlocks(pos.offset(-16, 0, -5), pos.offset(16, 50, 5));
     }
 
     public static class LargeWindGeneratorRenderState extends BlockEntityRenderState {

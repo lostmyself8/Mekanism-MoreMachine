@@ -21,6 +21,7 @@ import net.minecraft.resources.Identifier;
 import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -486,21 +487,21 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
         fans.setRotation(0F, 0F, getAbsoluteRotation(state.angle));
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle) {
+    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, float angle) {
         setupAnim(new LargeWindGeneratorRotationRenderState(angle));
         renderPartsAsWireFrame(parts, matrix, vertexBuilder);
     }
 
-    private float getAbsoluteRotation(double angle) {
-        return (float) Math.toRadians(angle % 360);
+    private float getAbsoluteRotation(float angle) {
+        return (angle % 360) * Mth.DEG_TO_RAD;
     }
 
     public static class LargeWindGeneratorRotationRenderState {
 
-        public LargeWindGeneratorRotationRenderState(double angle) {
+        public float angle;
+
+        public LargeWindGeneratorRotationRenderState(float angle) {
             this.angle = angle;
         }
-
-        public double angle;
     }
 }
