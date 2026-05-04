@@ -1,10 +1,11 @@
-# Made in Blockbench 5.0.7
-newmtl Base
-map_Kd #Base
+# Blender 5.0.7 MTL File: 'None'
+# www.blender.org
+
 newmtl Screen_hello
 map_Kd #Screen_hello
+
 newmtl Screen_logo
 map_Kd #Screen_logo
+
 newmtl Screen_cmd
 map_Kd #Screen_cmd
-newmtl none
