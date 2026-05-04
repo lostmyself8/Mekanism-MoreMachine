@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "mekmm:block/large_wind_generator"
+    "model": "mekmm:block/large_machine/large_wind_generator/off"
   }
 }
