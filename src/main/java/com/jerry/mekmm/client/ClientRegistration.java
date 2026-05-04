@@ -159,7 +159,6 @@ public class ClientRegistration {
         blocks.add(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK.value());
         blocks.add(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR.value());
         blocks.add(LargeMachineBlocks.LARGE_CHEMICAL_INFUSER.value());
-        blocks.add(LargeMachineBlocks.LARGE_ELECTROLYTIC_SEPARATOR.value());
         blocks.add(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR.value());
         blocks.add(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER.value());
         blocks.add(LargeMachineBlocks.LARGE_PIGMENT_MIXER.value());

@@ -157,11 +157,6 @@ public class MoreMachineAssetProvider implements DataProvider {
             save(output, futures, blockStatePathProvider.json(id(machine)), facingBlockState("mekmm:block/" + machine));
         }
         for (String machine : LARGE_MACHINES) {
-            if (machine.equals("large_wind_generator")) {
-                save(output, futures, blockStatePathProvider.json(id(machine)),
-                        activeFacingBlockState("mekmm:block/large_machine/" + machine + "/base_off", "mekmm:block/large_machine/" + machine + "/base_on"));
-                continue;
-            }
             save(output, futures, blockStatePathProvider.json(id(machine)),
                     activeFacingBlockState("mekmm:block/large_machine/" + machine + "/off", "mekmm:block/large_machine/" + machine + "/on"));
         }
