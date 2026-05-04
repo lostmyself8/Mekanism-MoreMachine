@@ -31,14 +31,14 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     private static final float SPEED = 32.0F;
     public static final int TOP_Y = 36;
 
-    private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[]{RelativeSide.FRONT, RelativeSide.BOTTOM};
+    private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[] { RelativeSide.FRONT, RelativeSide.BOTTOM };
 
     @Getter
     private float angle;
     @Getter
     private double currentMultiplier = 0.0F;
     private boolean isBlacklistDimension;
-    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = {"getEnergyItem"}, docPlaceholder = "energy item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = { "getEnergyItem" }, docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
