@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:orange_tulip"
+    "ingredient": "minecraft:orange_tulip"
   },
   "main_output": {
     "count": 3,

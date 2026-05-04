@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:moss_block"
+    "ingredient": "minecraft:moss_block"
   },
   "main_output": {
     "count": 4,

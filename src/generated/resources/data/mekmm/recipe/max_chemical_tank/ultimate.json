@@ -1,0 +1,17 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": "#mekanism:alloys/atomic",
+    "O": "#c:gems/diamond",
+    "P": "mekmm:elite_max_chemical_tank"
+  },
+  "pattern": [
+    "AOA",
+    "OPO",
+    "AOA"
+  ],
+  "result": {
+    "id": "mekmm:ultimate_max_chemical_tank"
+  }
+}

@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:white_tulip"
+    "ingredient": "minecraft:white_tulip"
   },
   "main_output": {
     "count": 3,

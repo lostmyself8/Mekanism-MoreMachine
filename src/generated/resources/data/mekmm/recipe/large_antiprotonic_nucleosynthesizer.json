@@ -1,0 +1,19 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "B": "#c:storage_blocks/steel",
+    "C": "#c:pellets/antimatter",
+    "P": "#mekanism:personal_storage",
+    "R": "mekanism:robit",
+    "T": "mekmm:ultimate_max_chemical_tank"
+  },
+  "pattern": [
+    "BCB",
+    "TRP",
+    "BCB"
+  ],
+  "result": {
+    "id": "mekmm:large_antiprotonic_nucleosynthesizer"
+  }
+}

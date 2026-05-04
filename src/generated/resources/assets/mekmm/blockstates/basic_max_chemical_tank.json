@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mekmm:block/chemical_tank/max_chemical_tank/basic",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mekmm:block/chemical_tank/max_chemical_tank/basic"
+    },
+    "facing=south": {
+      "model": "mekmm:block/chemical_tank/max_chemical_tank/basic",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mekmm:block/chemical_tank/max_chemical_tank/basic",
+      "y": -90
+    }
+  }
+}

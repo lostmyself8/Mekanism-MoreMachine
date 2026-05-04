@@ -10,6 +10,7 @@ import mekanism.api.recipes.ingredients.creator.IngredientCreatorAccess;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
@@ -194,5 +195,44 @@ public class PlantingRecipeProvider implements ISubRecipeProvider {
                 IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.NUTRIENT_SOLUTION.asStack(1)),
                 new ItemStackTemplate(Items.MOSS_BLOCK, 4),
                 true).save(consumer, Mekmm.rl(basePath + "flower/moss_block"));
+
+        addPlanting(consumer, basePath + "bamboo", Items.BAMBOO, Items.BAMBOO, 9);
+        addPlanting(consumer, basePath + "brown_mushroom", Items.BROWN_MUSHROOM, Items.BROWN_MUSHROOM, 6);
+        addPlanting(consumer, basePath + "cactus", Items.CACTUS, Items.CACTUS, 5);
+        addPlanting(consumer, basePath + "carrot_from_carrot", Items.CARROT, Items.CARROT, 5);
+        addPlanting(consumer, basePath + "chorus_fruit_from_chorus_flower", Items.CHORUS_FLOWER, Items.CHORUS_FRUIT, 3);
+        addPlanting(consumer, basePath + "cocoa_beans", Items.COCOA_BEANS, Items.COCOA_BEANS, 4);
+        addPlanting(consumer, basePath + "crimson_fungus", Items.CRIMSON_FUNGUS, Items.CRIMSON_FUNGUS, 3);
+        addPlanting(consumer, basePath + "glow_berries", Items.GLOW_BERRIES, Items.GLOW_BERRIES, 5);
+        addPlanting(consumer, basePath + "kelp", Items.KELP, Items.KELP, 9);
+        addPlanting(consumer, basePath + "melon_from_melon_seeds", Items.MELON_SEEDS, Items.MELON, 2);
+        addPlanting(consumer, basePath + "nether_wart", Items.NETHER_WART, Items.NETHER_WART, 5);
+        addPlanting(consumer, basePath + "pumpkin_from_pumpkin_seeds", Items.PUMPKIN_SEEDS, Items.PUMPKIN, 2);
+        addPlanting(consumer, basePath + "red_mushroom", Items.RED_MUSHROOM, Items.RED_MUSHROOM, 6);
+        addPlanting(consumer, basePath + "sea_pickle", Items.SEA_PICKLE, Items.SEA_PICKLE, 4);
+        addPlanting(consumer, basePath + "sugar_cane", Items.SUGAR_CANE, Items.SUGAR_CANE, 9);
+        addPlanting(consumer, basePath + "sweet_berries", Items.SWEET_BERRIES, Items.SWEET_BERRIES, 5);
+        addPlanting(consumer, basePath + "warped_fungus", Items.WARPED_FUNGUS, Items.WARPED_FUNGUS, 3);
+        addPlanting(consumer, basePath + "wheat_from_wheat_seeds", Items.WHEAT_SEEDS, Items.WHEAT, 3);
+        addPlantingWithSecondary(consumer, basePath + "beetroot_from_beetroot_seeds", Items.BEETROOT_SEEDS, Items.BEETROOT, 4);
+        addPlantingWithSecondary(consumer, basePath + "potato_from_potato", Items.POTATO, Items.POTATO, 9);
+    }
+
+    private static void addPlanting(RecipeOutput consumer, String path, Item input, Item output, int count) {
+        PlantingStationRecipeBuilder.planting(
+                IngredientCreatorAccess.item().from(input),
+                IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.NUTRIENT_SOLUTION.asStack(1)),
+                new ItemStackTemplate(output, count),
+                true).save(consumer, Mekmm.rl(path));
+    }
+
+    private static void addPlantingWithSecondary(RecipeOutput consumer, String path, Item input, Item output, int count) {
+        PlantingStationRecipeBuilder.planting(
+                IngredientCreatorAccess.item().from(input),
+                IngredientCreatorAccess.chemicalStack().from(MoreMachineChemicals.NUTRIENT_SOLUTION.asStack(1)),
+                new ItemStackTemplate(output, count),
+                new ItemStackTemplate(Items.POISONOUS_POTATO),
+                0.27,
+                true).save(consumer, Mekmm.rl(path));
     }
 }

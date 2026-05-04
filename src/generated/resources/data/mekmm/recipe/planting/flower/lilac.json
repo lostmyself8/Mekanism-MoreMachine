@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:lilac"
+    "ingredient": "minecraft:lilac"
   },
   "main_output": {
     "count": 2,

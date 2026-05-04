@@ -6,10 +6,9 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:torchflower_seeds"
+    "ingredient": "minecraft:torchflower_seeds"
   },
   "main_output": {
-    "count": 1,
     "id": "minecraft:torchflower"
   },
   "per_tick_usage": true

@@ -2,21 +2,11 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/steel"
-    },
-    "E": {
-      "item": "mekmm:advanced_electrolysis_core"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    },
-    "T": {
-      "item": "mekmm:ultimate_max_chemical_tank"
-    },
-    "W": {
-      "item": "mekanism:ultimate_fluid_tank"
-    }
+    "B": "#c:storage_blocks/steel",
+    "E": "mekmm:advanced_electrolysis_core",
+    "R": "mekanism:robit",
+    "T": "mekmm:ultimate_max_chemical_tank",
+    "W": "mekanism:ultimate_fluid_tank"
   },
   "pattern": [
     "BEB",
@@ -24,7 +14,6 @@
     "BEB"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:large_electrolytic_separator"
   }
 }

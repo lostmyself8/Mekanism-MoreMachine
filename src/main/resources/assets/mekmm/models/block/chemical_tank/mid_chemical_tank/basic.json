@@ -1,7 +1,0 @@
-{
-  "parent": "mekmm:block/chemical_tank/mid_chemical_tank/base",
-  "texture_size": [64, 64],
-  "textures": {
-    "1": "mekmm:block/chemical_tank/basic_valve"
-  }
-}

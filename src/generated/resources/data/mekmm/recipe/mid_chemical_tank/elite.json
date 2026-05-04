@@ -1,0 +1,17 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": "#mekanism:alloys/reinforced",
+    "O": "#c:ingots/gold",
+    "P": "mekmm:advanced_mid_chemical_tank"
+  },
+  "pattern": [
+    "AOA",
+    "OPO",
+    "AOA"
+  ],
+  "result": {
+    "id": "mekmm:elite_mid_chemical_tank"
+  }
+}

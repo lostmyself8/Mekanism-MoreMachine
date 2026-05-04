@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mekanism:teleportation_core"
-    },
-    "C": {
-      "tag": "c:circuits/ultimate"
-    },
-    "E": {
-      "item": "mekanism:ultimate_energy_cube"
-    },
-    "H": {
-      "item": "mekanism:hdpe_sheet"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    }
+    "#": "mekanism:teleportation_core",
+    "C": "#c:circuits/ultimate",
+    "E": "mekanism:ultimate_energy_cube",
+    "H": "mekanism:hdpe_sheet",
+    "R": "mekanism:robit"
   },
   "pattern": [
     "H#H",
@@ -24,7 +14,6 @@
     "CEC"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:wireless_charging_station"
   }
 }

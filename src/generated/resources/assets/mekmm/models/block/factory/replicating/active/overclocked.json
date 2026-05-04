@@ -1,0 +1,15 @@
+{
+  "parent": "block/block",
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/replicating/base"
+    },
+    "front_led": {
+      "parent": "mekanism:block/factory/front_led/active/overclocked"
+    }
+  },
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  }
+}

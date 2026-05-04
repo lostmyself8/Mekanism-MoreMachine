@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mekmm:block/replicator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mekmm:block/replicator"
+    },
+    "facing=south": {
+      "model": "mekmm:block/replicator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mekmm:block/replicator",
+      "y": -90
+    }
+  }
+}

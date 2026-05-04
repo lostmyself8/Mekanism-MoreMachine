@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:jungle_sapling"
+    "ingredient": "minecraft:jungle_sapling"
   },
   "main_output": {
     "count": 6,

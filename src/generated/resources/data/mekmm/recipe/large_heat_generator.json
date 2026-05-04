@@ -8,18 +8,10 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/steel"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    },
-    "S": {
-      "item": "mekanism:superheating_element"
-    },
-    "T": {
-      "item": "mekanism:ultimate_fluid_tank"
-    }
+    "B": "#c:storage_blocks/steel",
+    "R": "mekanism:robit",
+    "S": "mekanism:superheating_element",
+    "T": "mekanism:ultimate_fluid_tank"
   },
   "pattern": [
     "BSB",
@@ -27,7 +19,6 @@
     "BSB"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:large_heat_generator"
   }
 }

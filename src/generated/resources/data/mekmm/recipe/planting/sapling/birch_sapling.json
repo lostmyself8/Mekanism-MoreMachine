@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:birch_sapling"
+    "ingredient": "minecraft:birch_sapling"
   },
   "main_output": {
     "count": 6,

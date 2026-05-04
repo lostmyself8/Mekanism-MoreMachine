@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,active=false": {
+      "model": "mekmm:block/factory/replicating/elite",
+      "y": 90
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/factory/replicating/active/elite",
+      "y": 90
+    },
+    "facing=north,active=false": {
+      "model": "mekmm:block/factory/replicating/elite"
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/factory/replicating/active/elite"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/factory/replicating/elite",
+      "y": 180
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/factory/replicating/active/elite",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/factory/replicating/elite",
+      "y": -90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/factory/replicating/active/elite",
+      "y": -90
+    }
+  }
+}
