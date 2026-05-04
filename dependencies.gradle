@@ -66,6 +66,9 @@ dependencies {
 //    localRuntime(forge.ftblibrary)
 //    localRuntime(forge.ftbultimine)
 
+    // Curios
+    localRuntime(files("gradle/libs/curios-neoforge-15.0.0-beta.2+26.1.2.jar"))
+
     // Crt
 //    localRuntime(forge.crt)
 

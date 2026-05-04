@@ -133,8 +133,12 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void onModifyBakingResult(ModifyBakingResult event) {
-        Set<Block> translatedBlocks = translatedLargeJsonBlocks();
-        event.getBakingResult().blockStateModels().replaceAll((state, model) -> translatedBlocks.contains(state.getBlock()) ? new TranslatedBlockStateModel(model, 0, 1, 0) : model);
+        var blockStateModels = event.getBakingResult().blockStateModels();
+        for (Block block : translatedLargeJsonBlocks()) {
+            for (var state : block.getStateDefinition().getPossibleStates()) {
+                blockStateModels.computeIfPresent(state, (ignored, model) -> new TranslatedBlockStateModel(model, 0, 1, 0));
+            }
+        }
     }
 
     @SubscribeEvent
