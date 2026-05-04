@@ -8,21 +8,11 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/steel"
-    },
-    "L": {
-      "item": "mekanism:laser"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    },
-    "S": {
-      "item": "mekanismgenerators:advanced_solar_generator"
-    },
-    "T": {
-      "item": "mekmm:ultimate_max_chemical_tank"
-    }
+    "B": "#c:storage_blocks/steel",
+    "L": "mekanism:laser",
+    "R": "mekanism:robit",
+    "S": "mekanismgenerators:advanced_solar_generator",
+    "T": "mekmm:ultimate_max_chemical_tank"
   },
   "pattern": [
     "SSS",
@@ -30,7 +20,6 @@
     "TLT"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:large_solar_neutron_activator"
   }
 }

@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:dark_oak_sapling"
+    "ingredient": "minecraft:dark_oak_sapling"
   },
   "main_output": {
     "count": 6,

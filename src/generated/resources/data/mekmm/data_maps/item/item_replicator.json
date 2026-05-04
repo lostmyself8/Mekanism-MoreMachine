@@ -1,0 +1,19 @@
+{
+  "values": {
+    "#c:ingots": {
+      "uu_amount": 5
+    },
+    "#c:ores": {
+      "uu_amount": 1
+    },
+    "#c:stones": {
+      "uu_amount": 1
+    },
+    "#minecraft:logs": {
+      "uu_amount": 4
+    },
+    "#minecraft:planks": {
+      "uu_amount": 1
+    }
+  }
+}

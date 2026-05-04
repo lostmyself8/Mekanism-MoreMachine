@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:wither_rose"
+    "ingredient": "minecraft:wither_rose"
   },
   "main_output": {
     "count": 3,

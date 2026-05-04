@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:spruce_sapling"
+    "ingredient": "minecraft:spruce_sapling"
   },
   "main_output": {
     "count": 6,

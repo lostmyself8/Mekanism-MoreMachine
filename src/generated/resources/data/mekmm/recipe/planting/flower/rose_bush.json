@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:rose_bush"
+    "ingredient": "minecraft:rose_bush"
   },
   "main_output": {
     "count": 2,

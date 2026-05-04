@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,active=false": {
+      "model": "mekmm:block/factory/rolling_mill/basic",
+      "y": 90
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/factory/rolling_mill/active/basic",
+      "y": 90
+    },
+    "facing=north,active=false": {
+      "model": "mekmm:block/factory/rolling_mill/basic"
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/factory/rolling_mill/active/basic"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/factory/rolling_mill/basic",
+      "y": 180
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/factory/rolling_mill/active/basic",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/factory/rolling_mill/basic",
+      "y": -90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/factory/rolling_mill/active/basic",
+      "y": -90
+    }
+  }
+}

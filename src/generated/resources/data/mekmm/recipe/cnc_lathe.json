@@ -2,18 +2,10 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mekanism:robit"
-    },
-    "A": {
-      "tag": "mekanism:alloys/basic"
-    },
-    "C": {
-      "tag": "c:circuits/basic"
-    },
-    "X": {
-      "item": "mekanism:steel_casing"
-    }
+    "#": "mekanism:robit",
+    "A": "#mekanism:alloys/basic",
+    "C": "#c:circuits/basic",
+    "X": "mekanism:steel_casing"
   },
   "pattern": [
     "ACA",
@@ -21,7 +13,6 @@
     "ACA"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:cnc_lathe"
   }
 }

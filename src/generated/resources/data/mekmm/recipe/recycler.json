@@ -2,18 +2,10 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mekanism:crusher"
-    },
-    "A": {
-      "tag": "c:alloys/advanced"
-    },
-    "C": {
-      "tag": "c:circuits/advanced"
-    },
-    "O": {
-      "tag": "c:ingots/osmium"
-    }
+    "#": "mekanism:crusher",
+    "A": "#c:alloys/advanced",
+    "C": "#c:circuits/advanced",
+    "O": "#c:ingots/osmium"
   },
   "pattern": [
     "ACA",
@@ -21,7 +13,6 @@
     "ACA"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:recycler"
   }
 }

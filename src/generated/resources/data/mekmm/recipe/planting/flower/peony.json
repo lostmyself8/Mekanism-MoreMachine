@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:peony"
+    "ingredient": "minecraft:peony"
   },
   "main_output": {
     "count": 2,

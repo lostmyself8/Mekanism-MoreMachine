@@ -2,21 +2,11 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/steel"
-    },
-    "C": {
-      "tag": "c:circuits/ultimate"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    },
-    "T": {
-      "item": "mekmm:ultimate_max_chemical_tank"
-    },
-    "W": {
-      "item": "mekanism:ultimate_fluid_tank"
-    }
+    "B": "#c:storage_blocks/steel",
+    "C": "#c:circuits/ultimate",
+    "R": "mekanism:robit",
+    "T": "mekmm:ultimate_max_chemical_tank",
+    "W": "mekanism:ultimate_fluid_tank"
   },
   "pattern": [
     "BCB",
@@ -24,7 +14,6 @@
     "BCB"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:large_rotary_condensentrator"
   }
 }

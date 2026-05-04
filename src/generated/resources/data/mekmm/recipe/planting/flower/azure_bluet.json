@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:azure_bluet"
+    "ingredient": "minecraft:azure_bluet"
   },
   "main_output": {
     "count": 3,

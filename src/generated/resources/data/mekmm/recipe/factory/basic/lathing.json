@@ -2,18 +2,10 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "mekanism:alloys/basic"
-    },
-    "C": {
-      "tag": "c:circuits/basic"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "P": {
-      "item": "mekmm:cnc_lathe"
-    }
+    "A": "#mekanism:alloys/basic",
+    "C": "#c:circuits/basic",
+    "I": "#c:ingots/iron",
+    "P": "mekmm:cnc_lathe"
   },
   "pattern": [
     "ACA",
@@ -21,7 +13,6 @@
     "ACA"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:basic_lathing_factory"
   }
 }

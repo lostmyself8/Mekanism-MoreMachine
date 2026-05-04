@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,active=false": {
+      "model": "mekmm:block/factory/planting/multiversal",
+      "y": 90
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/factory/planting/active/multiversal",
+      "y": 90
+    },
+    "facing=north,active=false": {
+      "model": "mekmm:block/factory/planting/multiversal"
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/factory/planting/active/multiversal"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/factory/planting/multiversal",
+      "y": 180
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/factory/planting/active/multiversal",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/factory/planting/multiversal",
+      "y": -90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/factory/planting/active/multiversal",
+      "y": -90
+    }
+  }
+}

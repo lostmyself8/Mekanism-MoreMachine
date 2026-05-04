@@ -37,8 +37,6 @@ public class BasicPlantingRecipe extends PlantingRecipe {
     public BasicPlantingRecipe(ItemStackIngredient itemInput, ChemicalStackIngredient chemicalInput, ItemStackTemplate mainOutput, ItemStackTemplate secondaryOutput, double secondaryChance, boolean perTickUsage) {
         this.itemInput = Objects.requireNonNull(itemInput, "Input cannot be null.");
         this.chemicalInput = Objects.requireNonNull(chemicalInput, "Chemical input cannot be null.");
-        Objects.requireNonNull(mainOutput, "Main output cannot be null.");
-        Objects.requireNonNull(secondaryOutput, "Secondary output cannot be null.");
         if (mainOutput == null && secondaryOutput == null) {
             throw new IllegalArgumentException("At least one output must not be empty.");
         } else if (secondaryChance < 0 || secondaryChance > 1) {
@@ -98,7 +96,7 @@ public class BasicPlantingRecipe extends PlantingRecipe {
      * @return the uncopied basic output, or empty if the value is ItemStack.EMPTY
      */
     public Optional<ItemStackTemplate> getMainOutputRaw() {
-        return Optional.of(mainOutput);
+        return Optional.ofNullable(mainOutput);
     }
 
     /**
@@ -107,7 +105,7 @@ public class BasicPlantingRecipe extends PlantingRecipe {
      * @return the uncopied basic output
      */
     public Optional<ItemStackTemplate> getSecondaryOutputRaw() {
-        return Optional.of(secondaryOutput);
+        return Optional.ofNullable(secondaryOutput);
     }
 
     @Override

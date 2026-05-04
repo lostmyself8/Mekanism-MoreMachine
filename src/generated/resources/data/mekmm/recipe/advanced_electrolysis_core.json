@@ -2,21 +2,11 @@
   "type": "mekanism:mek_data",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:alloys/ultimate"
-    },
-    "B": {
-      "tag": "c:dusts/lapis"
-    },
-    "C": {
-      "tag": "c:dusts/diamond"
-    },
-    "D": {
-      "tag": "c:dusts/netherite"
-    },
-    "E": {
-      "item": "mekanism:electrolytic_core"
-    }
+    "A": "#c:alloys/ultimate",
+    "B": "#c:dusts/lapis",
+    "C": "#c:dusts/diamond",
+    "D": "#c:dusts/netherite",
+    "E": "mekanism:electrolytic_core"
   },
   "pattern": [
     "AEA",
@@ -24,7 +14,6 @@
     "AEA"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:advanced_electrolysis_core"
   }
 }

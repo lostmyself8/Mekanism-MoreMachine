@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,active=false": {
+      "model": "mekmm:block/factory/planting/quantum",
+      "y": 90
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/factory/planting/active/quantum",
+      "y": 90
+    },
+    "facing=north,active=false": {
+      "model": "mekmm:block/factory/planting/quantum"
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/factory/planting/active/quantum"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/factory/planting/quantum",
+      "y": 180
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/factory/planting/active/quantum",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/factory/planting/quantum",
+      "y": -90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/factory/planting/active/quantum",
+      "y": -90
+    }
+  }
+}

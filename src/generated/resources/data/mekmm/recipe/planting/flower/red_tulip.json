@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:red_tulip"
+    "ingredient": "minecraft:red_tulip"
   },
   "main_output": {
     "count": 3,

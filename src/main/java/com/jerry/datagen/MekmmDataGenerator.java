@@ -1,11 +1,15 @@
 package com.jerry.datagen;
 
+import com.jerry.datagen.client.lang.MoreMachineLangProvider;
+import com.jerry.datagen.client.model.MoreMachineAssetProvider;
+import com.jerry.datagen.common.MoreMachineDataMapsProvider;
 import com.jerry.datagen.common.loot.MoreMachineLootProvider;
 import com.jerry.datagen.common.recipe.MekmmRecipeRunner;
 import com.jerry.datagen.common.recipe.imp.MoreMachineRecipeProvider;
 
 import com.jerry.mekmm.Mekmm;
 
+import mekanism.common.Mekanism;
 import mekanism.common.lib.FieldReflectionHelper;
 
 import net.minecraft.core.HolderLookup.Provider;
@@ -61,16 +65,21 @@ public class MekmmDataGenerator {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event) {
-        // bootstrapConfigs(Mekanism.MODID);
+        bootstrapConfigs(Mekanism.MODID);
+        bootstrapConfigs("mekanismadditions");
+        bootstrapConfigs("mekanismgenerators");
+        bootstrapConfigs("mekanismtools");
         bootstrapConfigs(Mekmm.MOD_ID);
         bootstrapIMC();
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
         // Client side data generators
-        // gen.addProvider(event.includeClient(), new MoreMachineLangProvider(output));
+        gen.addProvider(true, new MoreMachineLangProvider(output));
+        gen.addProvider(true, new MoreMachineAssetProvider(output));
         // Server side data generators
         gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
+        gen.addProvider(true, new MoreMachineDataMapsProvider(output, lookupProvider));
         HashSet<String> disabledCompats = new HashSet<>();
         gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput, disabledCompats), Mekmm.MOD_ID));
         // Data generator to help with persisting data when porting across MC versions when optional deps aren't updated

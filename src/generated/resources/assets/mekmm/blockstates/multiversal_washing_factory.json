@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,active=false": {
+      "model": "mekmm:block/factory/washing/multiversal",
+      "y": 90
+    },
+    "facing=east,active=true": {
+      "model": "mekmm:block/factory/washing/active/multiversal",
+      "y": 90
+    },
+    "facing=north,active=false": {
+      "model": "mekmm:block/factory/washing/multiversal"
+    },
+    "facing=north,active=true": {
+      "model": "mekmm:block/factory/washing/active/multiversal"
+    },
+    "facing=south,active=false": {
+      "model": "mekmm:block/factory/washing/multiversal",
+      "y": 180
+    },
+    "facing=south,active=true": {
+      "model": "mekmm:block/factory/washing/active/multiversal",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "mekmm:block/factory/washing/multiversal",
+      "y": -90
+    },
+    "facing=west,active=true": {
+      "model": "mekmm:block/factory/washing/active/multiversal",
+      "y": -90
+    }
+  }
+}

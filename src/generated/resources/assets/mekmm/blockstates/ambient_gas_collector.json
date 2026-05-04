@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "mekmm:block/ambient_gas_collector",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "mekmm:block/ambient_gas_collector"
+    },
+    "facing=south": {
+      "model": "mekmm:block/ambient_gas_collector",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mekmm:block/ambient_gas_collector",
+      "y": -90
+    }
+  }
+}

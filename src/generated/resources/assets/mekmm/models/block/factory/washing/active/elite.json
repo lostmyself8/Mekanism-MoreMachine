@@ -1,0 +1,15 @@
+{
+  "parent": "block/block",
+  "children": {
+    "base": {
+      "parent": "mekmm:block/factory/washing/base"
+    },
+    "front_led": {
+      "parent": "mekanism:block/factory/front_led/active/elite"
+    }
+  },
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "mekanism:block/factory/factory_front_back"
+  }
+}

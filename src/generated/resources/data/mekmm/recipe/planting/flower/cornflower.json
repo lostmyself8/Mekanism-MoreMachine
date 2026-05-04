@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:cornflower"
+    "ingredient": "minecraft:cornflower"
   },
   "main_output": {
     "count": 3,

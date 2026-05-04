@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "mekanism:supercharged_coil"
-    },
-    "H": {
-      "item": "mekanism:hdpe_sheet"
-    },
-    "P": {
-      "tag": "c:pellets/plutonium"
-    },
-    "Q": {
-      "item": "mekanism:quantum_entangloporter"
-    },
-    "R": {
-      "item": "mekanism:robit"
-    }
+    "#": "mekanism:supercharged_coil",
+    "H": "mekanism:hdpe_sheet",
+    "P": "#c:pellets/plutonium",
+    "Q": "mekanism:quantum_entangloporter",
+    "R": "mekanism:robit"
   },
   "pattern": [
     "H#H",
@@ -24,7 +14,6 @@
     "PQP"
   ],
   "result": {
-    "count": 1,
     "id": "mekmm:wireless_transmission_station"
   }
 }

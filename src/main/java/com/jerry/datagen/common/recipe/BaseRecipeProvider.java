@@ -1,8 +1,6 @@
 package com.jerry.datagen.common.recipe;
 
-import mekanism.api.MekanismAPI;
 import mekanism.api.annotations.NothingNullByDefault;
-import mekanism.api.chemical.Chemical;
 import mekanism.common.resource.PrimaryResource;
 import mekanism.common.resource.ResourceType;
 import mekanism.common.tags.MekanismTags;
@@ -11,13 +9,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.crafting.DifferenceIngredient;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 
@@ -26,13 +22,8 @@ import java.util.*;
 @NothingNullByDefault
 public abstract class BaseRecipeProvider extends RecipeProvider {
 
-    protected final HolderGetter<Fluid> fluids;
-    protected final HolderGetter<Chemical> chemicals;
-
     protected BaseRecipeProvider(RecipeOutput output, HolderLookup.Provider registries) {
         super(registries, output);
-        this.fluids = this.registries.lookupOrThrow(Registries.FLUID);
-        this.chemicals = this.registries.lookupOrThrow(MekanismAPI.CHEMICAL_REGISTRY_NAME);
     }
 
     @Override

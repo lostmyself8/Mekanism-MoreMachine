@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:sunflower"
+    "ingredient": "minecraft:sunflower"
   },
   "main_output": {
     "count": 2,

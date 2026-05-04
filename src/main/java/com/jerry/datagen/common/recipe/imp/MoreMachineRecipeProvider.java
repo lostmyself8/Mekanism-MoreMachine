@@ -16,12 +16,16 @@ import com.jerry.mekmm.common.registries.MoreMachineItems;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.registries.MekanismItems;
+import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.resource.PrimaryResource;
 import mekanism.common.tags.MekanismTags;
 import mekanism.generators.common.registries.GeneratorsBlocks;
 
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.fml.ModList;
@@ -91,6 +95,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
     @Override
     protected void addRecipes(Provider registries) {
         addMiscRecipes();
+        addChemicalTankRecipes();
         addGearModuleRecipes();
         addLateGameRecipes();
         for (ISubRecipeProvider compatProvider : compatProviders) {
@@ -219,6 +224,27 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 // .save(consumer, Mekmm.rl("large_electrolytic_separator"));
                 .save(output);
         // 大中子，需要加载MekanismGenerators
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+                .pattern(RecipePattern.createPattern(
+                        RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
+                        RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.PREVIOUS),
+                        RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK)))
+                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.CIRCUIT, items, MekanismTags.Items.PELLETS_ANTIMATTER)
+                .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
+                .key(Pattern.ROBIT, MekanismItems.ROBIT)
+                .key(Pattern.PREVIOUS, items, MekanismTags.Items.PERSONAL_STORAGE)
+                .save(output);
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_PIGMENT_MIXER)
+                .pattern(RecipePattern.createPattern(
+                        RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
+                        RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
+                        RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.TANK, Pattern.BLOCK)))
+                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.CIRCUIT, MekanismItems.HDPE_ROD)
+                .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
+                .key(Pattern.ROBIT, MekanismItems.ROBIT)
+                .save(output);
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_SOLAR_NEUTRON_ACTIVATOR)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of('S', 'S', 'S'),
@@ -260,6 +286,54 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                     // .save(consumer, Mekmm.rl("large_gas_burning_generator"));
                     .save(output);
         }
+    }
+
+    private void addChemicalTankRecipes() {
+        addChemicalTankRecipe(LargeMachineBlocks.BASIC_MID_CHEMICAL_TANK, MekanismBlocks.BASIC_CHEMICAL_TANK, "mid_chemical_tank/use_tank/basic");
+        addChemicalTankRecipe(LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK, MekanismBlocks.ADVANCED_CHEMICAL_TANK, "mid_chemical_tank/use_tank/advanced");
+        addChemicalTankRecipe(LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK, MekanismBlocks.ELITE_CHEMICAL_TANK, "mid_chemical_tank/use_tank/elite");
+        addChemicalTankRecipe(LargeMachineBlocks.ULTIMATE_MID_CHEMICAL_TANK, MekanismBlocks.ULTIMATE_CHEMICAL_TANK, "mid_chemical_tank/use_tank/ultimate");
+
+        addChemicalTankRecipe(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK, LargeMachineBlocks.BASIC_MID_CHEMICAL_TANK, "max_chemical_tank/use_tank/basic");
+        addChemicalTankRecipe(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK, "max_chemical_tank/use_tank/advanced");
+        addChemicalTankRecipe(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK, "max_chemical_tank/use_tank/elite");
+        addChemicalTankRecipe(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, LargeMachineBlocks.ULTIMATE_MID_CHEMICAL_TANK, "max_chemical_tank/use_tank/ultimate");
+
+        addChemicalTankUpgradeRecipe(LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK, LargeMachineBlocks.BASIC_MID_CHEMICAL_TANK,
+                MekanismTags.Items.ALLOYS_INFUSED, osmiumIngot(items), "mid_chemical_tank/advanced");
+        addChemicalTankUpgradeRecipe(LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK, LargeMachineBlocks.ADVANCED_MID_CHEMICAL_TANK,
+                MekanismTags.Items.ALLOYS_REINFORCED, items.getOrThrow(Tags.Items.INGOTS_GOLD), "mid_chemical_tank/elite");
+        addChemicalTankUpgradeRecipe(LargeMachineBlocks.ULTIMATE_MID_CHEMICAL_TANK, LargeMachineBlocks.ELITE_MID_CHEMICAL_TANK,
+                MekanismTags.Items.ALLOYS_ATOMIC, items.getOrThrow(Tags.Items.GEMS_DIAMOND), "mid_chemical_tank/ultimate");
+        addChemicalTankUpgradeRecipe(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK, LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK,
+                MekanismTags.Items.ALLOYS_INFUSED, osmiumIngot(items), "max_chemical_tank/advanced");
+        addChemicalTankUpgradeRecipe(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK, LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK,
+                MekanismTags.Items.ALLOYS_REINFORCED, items.getOrThrow(Tags.Items.INGOTS_GOLD), "max_chemical_tank/elite");
+        addChemicalTankUpgradeRecipe(LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK, LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK,
+                MekanismTags.Items.ALLOYS_ATOMIC, items.getOrThrow(Tags.Items.GEMS_DIAMOND), "max_chemical_tank/ultimate");
+    }
+
+    private void addChemicalTankRecipe(BlockRegistryObject<?, ?> result, BlockRegistryObject<?, ?> chemicalTank, String path) {
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(result)
+                .pattern(RecipePattern.createPattern(
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.ALLOY, Pattern.ALLOY),
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY),
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CIRCUIT, Pattern.ALLOY)))
+                .key(Pattern.ALLOY, MekanismBlocks.DYNAMIC_TANK)
+                .key(Pattern.CIRCUIT, chemicalTank)
+                .save(output, Mekmm.rl(path));
+    }
+
+    private void addChemicalTankUpgradeRecipe(BlockRegistryObject<?, ?> result, BlockRegistryObject<?, ?> previous, TagKey<Item> alloyTag, HolderSet<Item> ingot, String path) {
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(result)
+                .pattern(RecipePattern.createPattern(
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.OSMIUM, Pattern.ALLOY),
+                        RecipePattern.TripleLine.of(Pattern.OSMIUM, Pattern.PREVIOUS, Pattern.OSMIUM),
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.OSMIUM, Pattern.ALLOY)))
+                .key(Pattern.PREVIOUS, previous)
+                .key(Pattern.OSMIUM, ingot)
+                .key(Pattern.ALLOY, items, alloyTag)
+                .save(output, Mekmm.rl(path));
     }
 
     private void addGearModuleRecipes() {}

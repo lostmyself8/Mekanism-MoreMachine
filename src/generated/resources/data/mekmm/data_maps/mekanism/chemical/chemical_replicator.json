@@ -1,0 +1,14 @@
+{
+  "values": {
+    "mekanism:antimatter": {
+      "input_amount": 1,
+      "output_amount": 1,
+      "uu_amount": 249
+    },
+    "mekanism:fissile_fuel": {
+      "input_amount": 1,
+      "output_amount": 100,
+      "uu_amount": 1
+    }
+  }
+}

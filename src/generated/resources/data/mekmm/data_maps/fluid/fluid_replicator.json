@@ -1,0 +1,14 @@
+{
+  "values": {
+    "#c:lava": {
+      "input_amount": 1000,
+      "output_amount": 500,
+      "uu_amount": 1
+    },
+    "#c:water": {
+      "input_amount": 1000,
+      "output_amount": 500,
+      "uu_amount": 1
+    }
+  }
+}

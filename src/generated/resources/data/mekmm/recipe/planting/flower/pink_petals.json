@@ -6,7 +6,7 @@
   },
   "item_input": {
     "count": 1,
-    "item": "minecraft:pink_petals"
+    "ingredient": "minecraft:pink_petals"
   },
   "main_output": {
     "count": 3,
