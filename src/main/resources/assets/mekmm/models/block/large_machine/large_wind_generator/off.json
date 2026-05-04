@@ -1,8 +1,7 @@
 {
   "loader": "neoforge:obj",
   "parent": "block/block",
-  "model": "mekmm:block/large_machine/large_wind_generator/large_wind_generator.obj",
-  "mtl_override": "mekmm:block/large_machine/large_wind_generator.mtl",
+  "model": "mekmm:models/block/large_machine/large_wind_generator/large_wind_generator.obj",
   "flip_v": true,
   "render_type": "cutout",
   "textures": {
