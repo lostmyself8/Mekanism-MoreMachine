@@ -153,6 +153,8 @@ public class ClientRegistration {
 
     private static Set<Block> translatedLargeJsonBlocks() {
         Set<Block> blocks = new HashSet<>();
+        blocks.add(MoreMachineBlocks.WIRELESS_CHARGING_STATION.value());
+        blocks.add(MoreMachineBlocks.WIRELESS_TRANSMISSION_STATION.value());
         blocks.add(LargeMachineBlocks.BASIC_MAX_CHEMICAL_TANK.value());
         blocks.add(LargeMachineBlocks.ADVANCED_MAX_CHEMICAL_TANK.value());
         blocks.add(LargeMachineBlocks.ELITE_MAX_CHEMICAL_TANK.value());
