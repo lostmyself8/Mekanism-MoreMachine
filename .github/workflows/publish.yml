@@ -7,7 +7,7 @@ on:
         required: false
         type: boolean
       branch:
-        description: 'Branch to checkout; 1.20.1 or 1.21'
+        description: 'Branch to checkout; 26.1, 1.21.1, or 1.20.1'
         required: true
         type: string
       tag-name:
@@ -94,9 +94,9 @@ jobs:
           name: build-artifacts-${{ inputs.branch }}
       - name: Publish Mod
         env:
-          MC_VERSION: ${{ inputs.branch }}
-          LOADER: ${{ inputs.branch == '1.21.1' && 'neoforge' || 'forge' }}
-          JAVA: ${{ inputs.branch == '1.21.1' && '21' || '17' }}
+          MC_VERSION: ${{ inputs.branch == '26.1' && '26.1.2' || inputs.branch }}
+          LOADER: ${{ inputs.branch == '1.20.1' && 'forge' || 'neoforge' }}
+          JAVA: ${{ inputs.branch == '26.1' && '25' || inputs.branch == '1.21.1' && '21' || '17' }}
           VERSION_TYPE: 'release'
         uses: Kir-Antipov/mc-publish@v3.3.0
         with:
@@ -127,9 +127,9 @@ jobs:
           name: build-artifacts-${{ inputs.branch }}
       - name: Publish Mod
         env:
-          MC_VERSION: ${{ inputs.branch }}
-          LOADER: ${{ inputs.branch == '1.21.1' && 'neoforge' || 'forge' }}
-          JAVA: ${{ inputs.branch == '1.21.1' && '21' || '17' }}
+          MC_VERSION: ${{ inputs.branch == '26.1' && '26.1.2' || inputs.branch }}
+          LOADER: ${{ inputs.branch == '1.20.1' && 'forge' || 'neoforge' }}
+          JAVA: ${{ inputs.branch == '26.1' && '25' || inputs.branch == '1.21.1' && '21' || '17' }}
           VERSION_TYPE: 'release'
         uses: Kir-Antipov/mc-publish@v3.3.0
         with:
