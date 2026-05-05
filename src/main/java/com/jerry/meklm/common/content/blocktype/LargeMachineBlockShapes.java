@@ -22,15 +22,16 @@ public class LargeMachineBlockShapes {
 
     static {
         VoxelShapeUtils.setShape(box(1, 0, 1, 15, 32, 15), MID_CHEMICAL_TANK);
-        VoxelShapeUtils.setShape(box(0, -15, 0, 16, 33, 16), MAX_CHEMICAL_TANK);
+        VoxelShapeUtils.setShape(box(0, 0, 0, 16, 48, 16), MAX_CHEMICAL_TANK);
 
-        VoxelShape largeMachine = box(-16, -15, -16, 32, 33, 32);
-        VoxelShapeUtils.setShape(largeMachine, LARGE_ROTARY_CONDENSENTRATOR);
-        VoxelShapeUtils.setShape(largeMachine, LARGE_CHEMICAL_INFUSER);
-        VoxelShapeUtils.setShape(largeMachine, LARGE_ELECTROLYTIC_SEPARATOR);
-        VoxelShapeUtils.setShape(largeMachine, LARGE_SOLAR_NEUTRON_ACTIVATOR);
-        VoxelShapeUtils.setShape(largeMachine, LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
-        VoxelShapeUtils.setShape(largeMachine, LARGE_PIGMENT_MIXER);
+        VoxelShape twoHighLargeMachine = box(-16, 0, -16, 32, 32, 32);
+        VoxelShape threeHighLargeMachine = box(-16, 0, -16, 32, 48, 32);
+        VoxelShapeUtils.setShape(threeHighLargeMachine, LARGE_ROTARY_CONDENSENTRATOR);
+        VoxelShapeUtils.setShape(threeHighLargeMachine, LARGE_CHEMICAL_INFUSER);
+        VoxelShapeUtils.setShape(twoHighLargeMachine, LARGE_ELECTROLYTIC_SEPARATOR);
+        VoxelShapeUtils.setShape(threeHighLargeMachine, LARGE_SOLAR_NEUTRON_ACTIVATOR);
+        VoxelShapeUtils.setShape(threeHighLargeMachine, LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
+        VoxelShapeUtils.setShape(threeHighLargeMachine, LARGE_PIGMENT_MIXER);
     }
 
     public static VoxelShape[] getLargeChemicalTank(ILargeChemicalTankTier tier) {
