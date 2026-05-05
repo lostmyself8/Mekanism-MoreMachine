@@ -147,8 +147,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     }
 
     @Override
-    protected BlockPos offSetOutput(BlockPos from, Direction side) {
-        return from.offset(new Vec3i(0, 2, 0)).relative(side);
+    protected BlockPos[] offSetOutput(BlockPos from, Direction side) {
+        return new BlockPos[] { from.offset(new Vec3i(0, 2, 0)).relative(side) };
     }
 
     private void reset() {

@@ -4,40 +4,48 @@ import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
 import mekanism.api.*;
 import mekanism.api.math.MathUtils;
+import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.container.sync.SyncableDouble;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
+import mekanism.common.util.WorldUtils;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
     private static final float SPEED = 32F;
     public static final int TOP_Y = 36;
-    private static final RelativeSide[] ENERGY_SIDES = { RelativeSide.FRONT, RelativeSide.BOTTOM };
 
     @Getter
     private float angle;
     @Getter
     private double currentMultiplier = 0;
     private boolean isBlacklistDimension;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
@@ -54,7 +62,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
 
     @Override
     protected RelativeSide[] getEnergySides() {
-        return ENERGY_SIDES;
+        return new RelativeSide[] { RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.RIGHT, RelativeSide.BACK };
     }
 
     @Override
@@ -74,6 +82,36 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
             getEnergyContainer().insert(getCurrentGeneration(), Action.EXECUTE, AutomationType.INTERNAL);
         }
         return sendUpdatePacket;
+    }
+
+    @Override
+    protected int portCount(int input) {
+        return 11;
+    }
+
+    @Override
+    protected BlockPos[] offSetOutput(BlockPos from, Direction side) {
+        Direction front = getDirection();
+        Direction back = getOppositeDirection();
+        Direction left = getLeftSide();
+        Direction right = getRightSide();
+        return new BlockPos[] {
+                // 前
+                from.offset(new Vec3i(front.getStepX() * 3, 0, front.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(left.getStepX(), 0, left.getStepZ())).offset(new Vec3i(front.getStepX() * 3, 0, front.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(right.getStepX(), 0, right.getStepZ())).offset(new Vec3i(front.getStepX() * 3, 0, front.getStepZ() * 3)).relative(side),
+                // 左
+                from.offset(new Vec3i(left.getStepX() * 3, 0, left.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(front.getStepX(), 0, front.getStepZ())).offset(new Vec3i(left.getStepX() * 3, 0, left.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(back.getStepX(), 0, back.getStepZ())).offset(new Vec3i(left.getStepX() * 3, 0, left.getStepZ() * 3)).relative(side),
+                // 右
+                from.offset(new Vec3i(right.getStepX() * 3, 0, right.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(front.getStepX(), 0, front.getStepZ())).offset(new Vec3i(right.getStepX() * 3, 0, right.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(back.getStepX(), 0, back.getStepZ())).offset(new Vec3i(right.getStepX() * 3, 0, right.getStepZ() * 3)).relative(side),
+                // 后
+                from.offset(new Vec3i(left.getStepX(), 0, left.getStepZ())).offset(new Vec3i(back.getStepX() * 3, 0, back.getStepZ() * 3)).relative(side),
+                from.offset(new Vec3i(right.getStepX(), 0, right.getStepZ())).offset(new Vec3i(back.getStepX() * 3, 0, back.getStepZ() * 3)).relative(side),
+        };
     }
 
     public long getCurrentGeneration() {
@@ -158,6 +196,74 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         super.addContainerTrackers(container);
         container.track(SyncableDouble.create(this::getCurrentMultiplier, value -> currentMultiplier = value));
         container.track(SyncableBoolean.create(this::isBlacklistDimension, value -> isBlacklistDimension = value));
+    }
+
+    @Override
+    public <T> @Nullable T getOffsetCapabilityIfEnabled(@NotNull BlockCapability<T, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
+        if (capability == Capabilities.ENERGY.block()) {
+            return Objects.requireNonNull(energyHandlerManager, "Expected to have energy handler").resolve(capability, side);
+        } else if (capability == Capabilities.ITEM.block()) {
+            return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
+        }
+        return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);
+    }
+
+    @Override
+    public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
+        if (EnergyCompatUtils.isEnergyCapability(capability)) {
+            return notEnergyPort(side, offset);
+        } else if (capability == Capabilities.ITEM.block()) {
+            return notItemPort(side, offset);
+        }
+        return notEnergyPort(side, offset);
+    }
+
+    private boolean notItemPort(Direction side, Vec3i offset) {
+        return notEnergyPort(side, offset);
+    }
+
+    private boolean notEnergyPort(Direction side, Vec3i offset) {
+        Direction front = getDirection();
+        Direction back = getOppositeDirection();
+        Direction left = getLeftSide();
+        Direction right = getRightSide();
+        switch (front) {
+            case NORTH, SOUTH -> {
+                if (offset.equals(new Vec3i(left.getStepX(), 0, back.getStepZ() * 3))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(right.getStepX(), 0, back.getStepZ() * 3))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(left.getStepX() * 3, 0, 0)) || offset.equals(new Vec3i(left.getStepX() * 3, 0, back.getStepZ())) || offset.equals(new Vec3i(left.getStepX() * 3, 0, front.getStepZ()))) {
+                    return side != left;
+                }
+                if (offset.equals(new Vec3i(right.getStepX() * 3, 0, 0)) || offset.equals(new Vec3i(right.getStepX() * 3, 0, back.getStepZ())) || offset.equals(new Vec3i(right.getStepX() * 3, 0, front.getStepZ()))) {
+                    return side != right;
+                }
+                if (offset.equals(new Vec3i(0, 0, front.getStepZ() * 3)) || offset.equals(new Vec3i(left.getStepX(), 0, front.getStepZ() * 3)) || offset.equals(new Vec3i(right.getStepX(), 0, front.getStepZ() * 3))) {
+                    return side != front;
+                }
+            }
+            case WEST, EAST -> {
+                if (offset.equals(new Vec3i(back.getStepX() * 3, 0, left.getStepZ()))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(back.getStepX() * 3, 0, right.getStepZ()))) {
+                    return side != back;
+                }
+                if (offset.equals(new Vec3i(0, 0, left.getStepZ() * 3)) || offset.equals(new Vec3i(back.getStepX(), 0, left.getStepZ() * 3)) || offset.equals(new Vec3i(front.getStepX(), 0, left.getStepZ() * 3))) {
+                    return side != left;
+                }
+                if (offset.equals(new Vec3i(0, 0, right.getStepZ() * 3)) || offset.equals(new Vec3i(back.getStepX(), 0, right.getStepZ() * 3)) || offset.equals(new Vec3i(front.getStepX(), 0, right.getStepZ() * 3))) {
+                    return side != right;
+                }
+                if (offset.equals(new Vec3i(front.getStepX() * 3, 0, 0)) || offset.equals(new Vec3i(front.getStepX() * 3, 0, left.getStepZ())) || offset.equals(new Vec3i(front.getStepX() * 3, 0, right.getStepZ()))) {
+                    return side != front;
+                }
+            }
+        }
+        return true;
     }
 
     // Methods relating to IComputerTile
