@@ -22,11 +22,11 @@ runs:
         REF: ${{ inputs.ref || github.ref }}
       with:
         distribution: temurin
-        java-version: ${{ contains(env.REF, '1.21.1') && '21' || '17' }}
+        java-version: ${{ contains(env.REF, '26.1') && '25' || contains(env.REF, '1.21.1') && '21' || '17' }}
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
         cache-write-only: ${{ inputs.update-cache }}
-        cache-read-only: ${{ github.ref != 'refs/heads/1.21.1' && github.ref != 'refs/heads/1.20.1' }}
+        cache-read-only: ${{ github.ref != 'refs/heads/26.1' && github.ref != 'refs/heads/1.21.1' && github.ref != 'refs/heads/1.20.1' }}
         add-job-summary: 'on-failure'
