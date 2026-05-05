@@ -47,7 +47,7 @@ dependencies {
     compileOnly(forge.jade)
 
     // Standard runtime mods //
-    localRuntime(forge.jade)
+//    localRuntime(forge.jade)
     localRuntime(forge.modernfix)
     localRuntime(forge.ferritecore)
 
