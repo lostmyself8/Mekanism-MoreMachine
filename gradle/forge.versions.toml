@@ -2,7 +2,7 @@
 jei = "29.5.0.28"
 emi = "1.1.22"
 crt = "21.0.38"
-mekanism = ":26.1-SNAPSHOT"
+mekanism = "26.1-SNAPSHOT"
 ccTweaked = "1.116.1"
 cucumber = "1.21.1-8.0.9"
 mysticalagriculture = "1.21.1-8.0.9"
