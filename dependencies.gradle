@@ -53,7 +53,7 @@ dependencies {
 
     // Mekanism
     localRuntime(forge.mekanism)
-    localRuntime(forge.mekanism.additions)
+//    localRuntime(forge.mekanism.additions)
     localRuntime(forge.mekanism.generators)
     localRuntime(forge.mekanism.tools)
 
