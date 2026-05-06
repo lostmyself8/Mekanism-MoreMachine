@@ -2,7 +2,6 @@
 minecraft = "26.1.2"
 neoForge = "26.1.2.36-beta"
 loader = "4"
-shadow = "9.4.1"
 spotless = "8.4.0"
 modDevGradle = "2.0.141"
 lombok = "9.5.0"
@@ -16,6 +15,5 @@ jetbrains-annotations   = { module = "org.jetbrains:annotations", version.ref = 
 
 [plugins]
 modDevGradle            = { id = "net.neoforged.moddev", version.ref = "modDevGradle" }
-shadow                  = { id = "com.gradleup.shadow", version.ref = "shadow" }
 spotless                = { id = "com.diffplug.spotless", version.ref = "spotless" }
 lombok                  = { id = "io.freefair.lombok", version.ref = "lombok" }
