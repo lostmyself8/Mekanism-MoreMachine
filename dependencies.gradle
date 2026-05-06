@@ -9,15 +9,15 @@ dependencies {
 //    modCompileOnly(forge.jer)
 
     // Mekanism (jarjar embedded)
-    jarJar(forge.mekanism)
+//    jarJar(forge.mekanism)
 //    jarJar(forge.mekanism.additions)
-    jarJar(forge.mekanism.generators)
-    jarJar(forge.mekanism.tools)
+//    jarJar(forge.mekanism.generators)
+//    jarJar(forge.mekanism.tools)
 
     compileOnly(forge.mekanism)
-//    compileOnly(forge.mekanism.additions)
-    compileOnly(forge.mekanism.generators)
-    compileOnly(forge.mekanism.tools)
+    compileOnly(variantOf(forge.mekanism) { classifier("additions") })
+    compileOnly(variantOf(forge.mekanism) { classifier("generators") })
+    compileOnly(variantOf(forge.mekanism) { classifier("tools") })
 
 //    compileOnly(forge.mekanismcovers)
 //    compileOnly(forge.evolvedmekanism)
@@ -53,9 +53,9 @@ dependencies {
 
     // Mekanism
     localRuntime(forge.mekanism)
-//    localRuntime(forge.mekanism.additions)
-    localRuntime(forge.mekanism.generators)
-    localRuntime(forge.mekanism.tools)
+    localRuntime(variantOf(forge.mekanism) { classifier("additions") })
+    localRuntime(variantOf(forge.mekanism) { classifier("generators") })
+    localRuntime(variantOf(forge.mekanism) { classifier("tools") })
 
 //    localRuntime(forge.mekanismcovers)
 //    localRuntime(forge.igleelibrary)
