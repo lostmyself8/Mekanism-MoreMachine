@@ -9,10 +9,10 @@ dependencies {
 //    modCompileOnly(forge.jer)
 
     // Mekanism (jarjar embedded)
-//    jarJar(forge.mekanism)
-//    jarJar(forge.mekanism.additions)
-//    jarJar(forge.mekanism.generators)
-//    jarJar(forge.mekanism.tools)
+    jarJar(forge.mekanism)
+    jarJar(variantOf(forge.mekanism) { classifier("additions") })
+    jarJar(variantOf(forge.mekanism) { classifier("generators") })
+    jarJar(variantOf(forge.mekanism) { classifier("tools") })
 
     compileOnly(forge.mekanism)
     compileOnly(variantOf(forge.mekanism) { classifier("additions") })
