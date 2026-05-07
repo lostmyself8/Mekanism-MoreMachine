@@ -253,7 +253,7 @@ public class LargeGeneratorBlockShapes {
                 box(-11, 416, -11, 27, 480, 27),
                 box(-9, 480, -9, 25, 510, 25),
                 box(-16, 510, 58, 32, 567, 72),
-                box(-15, 8, -40, 31, 19, -32),
+                box(-15, 8, -40, 31, 20, -32),
                 box(-8, 515, 71, 24, 557, 88),
                 box(6, 556, 64, 10, 582, 79),
                 box(-8, 569, -16, 24, 575, 0),
@@ -272,8 +272,8 @@ public class LargeGeneratorBlockShapes {
                 box(63, 3, 3, 64, 13, 13),
                 box(-12, 4, 63, -4, 12, 64),
                 box(20, 4, 63, 28, 12, 64),
-                box(-40, 8, -15, -32, 19, 31),
-                box(48, 8, -15, 56, 19, 31)), LARGE_WIND_GENERATOR);
+                box(-40, 8, -15, -32, 20, 31),
+                box(48, 8, -15, 56, 20, 31)), LARGE_WIND_GENERATOR);
     }
 
     private LargeGeneratorBlockShapes() {}
