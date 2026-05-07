@@ -20,6 +20,9 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
 
     public final CachedLongValue LGBGTankCapacity;
 
+    public final CachedLongValue largeWindGenerationMin;
+    public final CachedLongValue largeWindGenerationMax;
+
     MoreMachineGeneratorsConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
@@ -36,9 +39,15 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
                 .define("largeHeatGenerationFluidRate", 10, value -> value instanceof Integer i && i > 0 && i <= largeHeatTankCapacity.getOrDefault() / 100));
         builder.pop();
 
-        MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS.applyToBuilder(builder).push("gas_generator");
+        MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS.applyToBuilder(builder).push("large_gas_generator");
         LGBGTankCapacity = CachedLongValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY.applyToBuilder(builder)
                 .defineInRange("tankCapacity", 180L * FluidType.BUCKET_VOLUME, 1, Long.MAX_VALUE));
+        builder.pop();
+
+        MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND.applyToBuilder(builder).push("large_wind_generator");
+        largeWindGenerationMin = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND_GEN_MIN, "generationMin", 2_250_000L);
+        // TODO: Should this be capped by the min generator?
+        largeWindGenerationMax = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND_GEN_MAX, "generationMax", 3_750_000L);
         builder.pop();
 
         configSpec = builder.build();

@@ -52,6 +52,7 @@ import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
 import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
 import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
+import com.jerry.meklg.client.model.bake.LargeWindGeneratorBakedModel;
 import com.jerry.meklg.client.render.RenderLargeWindGenerator;
 import com.jerry.meklg.client.render.item.RenderLargeWindGeneratorItem;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
@@ -91,6 +92,7 @@ public class ClientRegistration {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             addCustomModel(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR, (orig, evt) -> new LargeHeatGeneratorBakedModel(orig));
             addCustomModel(LargeGeneratorBlocks.LARGE_GAS_BURNING_GENERATOR, (orig, evt) -> new LargeGasGeneratorBakedModel(orig));
+            addCustomModel(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, (orig, evt) -> new LargeWindGeneratorBakedModel(orig));
         }
 
         ClientRegistrationUtil.setPropertyOverride(MoreMachineItems.CONNECTOR, Mekmm.rl("mode"), (stack, world, entity, seed) -> {

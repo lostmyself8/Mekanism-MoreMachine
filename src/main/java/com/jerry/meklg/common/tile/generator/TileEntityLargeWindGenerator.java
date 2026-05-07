@@ -1,5 +1,6 @@
 package com.jerry.meklg.common.tile.generator;
 
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
 import mekanism.api.*;
@@ -39,17 +40,25 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
 
     private static final float SPEED = 32F;
     public static final int TOP_Y = 36;
+    public static final int CHUNK_RADIUS = 2;
+    // 检测冷却，从1s逐渐提升到10s
+    private static final int DETECTION_COOLDOWN_MIN = 20;
+    private static final int DETECTION_COOLDOWN_MAX = 200;
+    private static final int DETECTION_COOLDOWN_STEP = 20;
 
     @Getter
     private float angle;
     @Getter
     private double currentMultiplier = 0;
     private boolean isBlacklistDimension;
+    private boolean hasSameBlockNearby;
+    private int detectionCooldown = DETECTION_COOLDOWN_MIN;
+    private int detectionTicker = 0;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
-        super(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, pos, state, MekanismGeneratorsConfig.generators.windGenerationMax);
+        super(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, pos, state, MoreMachineConfig.generators.largeWindGenerationMax);
     }
 
     @NotNull
@@ -73,11 +82,19 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         if (isBlacklistDimension) {
             return sendUpdatePacket;
         }
+        // 先更新hasSameBlockNearby的值，方便后续使用
+        detectionTicker = Math.min(detectionTicker + 1, detectionCooldown);
+        if (detectionTicker >= detectionCooldown && canFunction()) {
+            detectionTicker = 0;
+            hasSameBlockNearby = checkSameBlockNearby();
+            detectionCooldown = hasSameBlockNearby ? DETECTION_COOLDOWN_MIN : Math.min(detectionCooldown + DETECTION_COOLDOWN_STEP, DETECTION_COOLDOWN_MAX);
+        }
         if (ticker % SharedConstants.TICKS_PER_SECOND == 0) {
             // Recalculate the current multiplier once a second
             currentMultiplier = getMultiplier();
-            setActive(canFunction() && currentMultiplier != 0L);
         }
+        setActive(canFunction() && currentMultiplier != 0L && !hasSameBlockNearby);
+        // 这里不需要判断hasSameBlockNearby，currentMultiplier为0已经包括了这种情况
         if (currentMultiplier != 0L && canFunction() && getEnergyContainer().getNeeded() > 0L) {
             getEnergyContainer().insert(getCurrentGeneration(), Action.EXECUTE, AutomationType.INTERNAL);
         }
@@ -115,7 +132,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     public long getCurrentGeneration() {
-        return MathUtils.clampToLong(MekanismGeneratorsConfig.generators.windGenerationMin.get() * currentMultiplier);
+        return MathUtils.clampToLong(MoreMachineConfig.generators.largeWindGenerationMin.get() * currentMultiplier);
     }
 
     @Override
@@ -127,7 +144,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     public float getHeightSpeedRatio() {
-        int height = getBlockPos().getY() + 4;
+        int height = getBlockPos().getY() + TOP_Y;
         if (level == null) {
             // Fallback to default values, but in general this is not going to happen
             return SPEED * height / 384F;
@@ -146,7 +163,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
             BlockPos top = getBlockPos().above(TOP_Y);
             // Validate it isn't fluid logged to help try and prevent https://github.com/mekanism/Mekanism/issues/7344
             // Clamp the height limits as the logical bounds of the world
-            if (level.getFluidState(top).isEmpty() && level.canSeeSky(top)) {
+            if (canSeeSky(top) && !hasSameBlockNearby) {
                 int minBuildHeight = level.getMinBuildHeight();
                 // Based off of how PortalForcer#createPortal calculates
                 // The minus one is to handle that the max level height is treated as exclusive
@@ -154,14 +171,64 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
                 int minY = Math.max(MekanismGeneratorsConfig.generators.windGenerationMinY.get(), minBuildHeight);
                 int maxY = Math.min(MekanismGeneratorsConfig.generators.windGenerationMaxY.get(), maxLevelHeight);
                 int clampedY = Math.min(maxY, Math.max(minY, top.getY()));
-                long minG = MekanismGeneratorsConfig.generators.windGenerationMin.get();
-                long maxG = MekanismGeneratorsConfig.generators.windGenerationMax.get();
+                long minG = MoreMachineConfig.generators.largeWindGenerationMin.get();
+                long maxG = MoreMachineConfig.generators.largeWindGenerationMax.get();
                 double slope = ((double) (maxG - minG)) / (maxY - minY);
                 double toGen = minG + (slope * (clampedY - minY));
                 return (toGen / minG);
             }
         }
         return 0L;
+    }
+
+    /**
+     * Checks if there is another Large Wind Generator of the same block type
+     * within a 5x5 chunk area (CHUNK_RADIUS chunks in each horizontal direction).
+     */
+    private boolean checkSameBlockNearby() {
+        if (level == null) {
+            return false;
+        }
+        // 5x5 chunks: center chunk +-2 chunks in X and Z
+        // 使用移位运算更快
+        int selfChunkX = getBlockPos().getX() >> 4;
+        int selfChunkZ = getBlockPos().getZ() >> 4;
+        int minY = level.getMinBuildHeight();
+        int maxY = level.getMaxBuildHeight();
+
+        BlockPos.MutableBlockPos candidate = new BlockPos.MutableBlockPos();
+        for (int cx = selfChunkX - CHUNK_RADIUS; cx <= selfChunkX + CHUNK_RADIUS; cx++) {
+            for (int cz = selfChunkZ - CHUNK_RADIUS; cz <= selfChunkZ + CHUNK_RADIUS; cz++) {
+                // 跳过没加载的区块
+                if (!level.isLoaded(candidate.set(cx << 4, getBlockPos().getY(), cz << 4))) {
+                    continue;
+                }
+                int startX = cx << 4;
+                int startZ = cz << 4;
+                for (int x = startX; x < startX + 16; x++) {
+                    for (int z = startZ; z < startZ + 16; z++) {
+                        for (int y = minY; y < maxY; y++) {
+                            candidate.set(x, y, z);
+                            // Skip self
+                            if (candidate.equals(getBlockPos())) {
+                                continue;
+                            }
+                            if (level.getBlockState(candidate).getBlock() == getBlockState().getBlock()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean canSeeSky(BlockPos pos) {
+        if (level != null) {
+            return level.getFluidState(pos).isEmpty() && level.canSeeSky(pos);
+        }
+        return false;
     }
 
     @Override
@@ -181,6 +248,11 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         return isBlacklistDimension;
     }
 
+    @ComputerMethod(nameOverride = "hasSameGeneratorNearby")
+    public boolean hasSameGeneratorNearby() {
+        return hasSameBlockNearby;
+    }
+
     @Override
     public SoundSource getSoundCategory() {
         return SoundSource.WEATHER;
@@ -196,6 +268,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         super.addContainerTrackers(container);
         container.track(SyncableDouble.create(this::getCurrentMultiplier, value -> currentMultiplier = value));
         container.track(SyncableBoolean.create(this::isBlacklistDimension, value -> isBlacklistDimension = value));
+        container.track(SyncableBoolean.create(this::hasSameGeneratorNearby, value -> hasSameBlockNearby = value));
     }
 
     @Override

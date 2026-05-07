@@ -1,5 +1,7 @@
 package com.jerry.meklg.client.gui.generator;
 
+import com.jerry.mekmm.common.MoreMachineLang;
+
 import mekanism.api.text.EnumColor;
 import mekanism.api.text.ILangEntry;
 import mekanism.client.SpecialColors;
@@ -45,7 +47,15 @@ public class GuiLargeWindGenerator extends GuiMekanismTile<TileEntityLargeWindGe
             list.add(GeneratorsLang.POWER.translate(MekanismUtils.getEnergyDisplayShort(amount)));
             list.add(GeneratorsLang.OUTPUT_RATE_SHORT.translate(EnergyDisplay.of(tile.getMaxOutput())));
             if (!tile.getActive()) {
-                ILangEntry reason = tile.isBlacklistDimension() ? GeneratorsLang.NO_WIND : GeneratorsLang.SKY_BLOCKED;
+                // 默认为未激活(mek这里统一为被方块遮挡，但我觉得应当做出区分)
+                ILangEntry reason = MoreMachineLang.INACTIVE;
+                if (tile.isBlacklistDimension()) {
+                    reason = GeneratorsLang.NO_WIND;
+                } else if (tile.hasSameGeneratorNearby()) {
+                    reason = MoreMachineLang.SAME_BLOCK_NEARBY;
+                } else if (!tile.canSeeSky(tile.getBlockPos().above(TileEntityLargeWindGenerator.TOP_Y))) {
+                    reason = GeneratorsLang.SKY_BLOCKED;
+                }
                 list.add(reason.translateColored(EnumColor.DARK_RED));
             }
             return list;

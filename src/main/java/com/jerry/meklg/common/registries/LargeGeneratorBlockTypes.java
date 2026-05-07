@@ -8,7 +8,6 @@ import mekanism.common.block.attribute.*;
 import mekanism.common.lib.math.Pos3D;
 import mekanism.common.util.ChemicalUtil;
 import mekanism.generators.common.GeneratorsLang;
-import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.blocktype.Generator;
 import mekanism.generators.common.content.blocktype.Generator.GeneratorBuilder;
 import mekanism.generators.common.registries.GeneratorsSounds;
@@ -57,7 +56,7 @@ public class LargeGeneratorBlockTypes {
     public static final Generator<TileEntityLargeWindGenerator> LARGE_WIND_GENERATOR = GeneratorBuilder
             .createGenerator(() -> LargeGeneratorTileEntityTypes.LARGE_WIND_GENERATOR, GeneratorsLang.DESCRIPTION_WIND_GENERATOR)
             .withGui(() -> LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR)
-            .withEnergyConfig(MekanismGeneratorsConfig.storageConfig.windGenerator)
+            .withEnergyConfig(MoreMachineConfig.storage.largeWindGenerator)
             .withCustomShape(LargeGeneratorBlockShapes.LARGE_WIND_GENERATOR)
             .with(AttributeCustomSelectionBox.JAVA)
             .withSound(GeneratorsSounds.WIND_GENERATOR)

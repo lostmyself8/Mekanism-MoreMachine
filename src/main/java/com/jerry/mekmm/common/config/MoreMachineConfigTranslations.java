@@ -47,9 +47,10 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     ENERGY_STORAGE_LARGE_ROTARY_CONDENSENTRATOR(TranslationPreset.ENERGY_STORAGE, "Large Rotary Condensentrator"),
     ENERGY_STORAGE_LARGE_CHEMICAL_INFUSER(TranslationPreset.ENERGY_STORAGE, "Large Chemical Infuser"),
     ENERGY_STORAGE_LARGE_ELECTROLYTIC_SEPARATOR(TranslationPreset.ENERGY_STORAGE, "Large Electrolytic Separator"),
-    ENERGY_STORAGE_LARGE_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Heat Generator"),
     ENERGY_STORAGE_LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER(TranslationPreset.ENERGY_STORAGE, "Large Antiprotonic Nucleosynthesizer"),
     ENERGY_STORAGE_LARGE_PIGMENT_MIXER(TranslationPreset.ENERGY_STORAGE, "Large Pigment Mixer"),
+    ENERGY_STORAGE_LARGE_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Heat Generator"),
+    ENERGY_STORAGE_LARGE_WIND_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Wind Generator"),
 
     // Usage Config
     ENERGY_USAGE_RECYCLER(TranslationPreset.ENERGY_USAGE, "Recycler"),
@@ -85,7 +86,11 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
             "The amount of lava in mB that gets consumed to transfer largeHeatGeneration Joules to the Large Heat Generator."),
 
     SERVER_GENERATOR_LARGE_GAS("server.generator.gas", "Large Gas-Burning Generator", "Settings for configuring Large Gas-Burning Generators", true),
-    SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY("server.generator.gas.tank_capacity", "Tank Capacity", "The capacity in mB of the chemical tank in the Large Gas-Burning Generator.");
+    SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY("server.generator.gas.tank_capacity", "Tank Capacity", "The capacity in mB of the chemical tank in the Large Gas-Burning Generator."),
+
+    SERVER_GENERATOR_LARGE_WIND("server.generator.wind", "Large Wind Generator", "Settings for configuring Large Wind Generators", true),
+    SERVER_GENERATOR_LARGE_WIND_GEN_MIN("server.generator.wind.gen.min", "Min Energy Generation", "Minimum energy generation in Joules/t that the Large Wind Generator can produce."),
+    SERVER_GENERATOR_LARGE_WIND_GEN_MAX("server.generator.wind.gen.max", "Max Energy Generation", "Maximum energy generation in Joules/t that the Large Wind Generator can produce.");
 
     private final String key;
     private final String title;
