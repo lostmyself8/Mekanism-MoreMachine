@@ -3,7 +3,7 @@ package com.jerry.meklm.client.gui.machine;
 import com.jerry.meklm.common.tile.machine.TileEntityLargeAntiprotonicNucleosynthesizer;
 
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.client.gui.GuiConfigurableTile;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.bar.GuiBar;
 import mekanism.client.gui.element.bar.GuiDynamicHorizontalRateBar;
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public class GuiLargeAntiprotonicNucleosynthesizer extends GuiConfigurableTile<TileEntityLargeAntiprotonicNucleosynthesizer, MekanismTileContainer<TileEntityLargeAntiprotonicNucleosynthesizer>> {
+public class GuiLargeAntiprotonicNucleosynthesizer extends GuiMekanismTile<TileEntityLargeAntiprotonicNucleosynthesizer, MekanismTileContainer<TileEntityLargeAntiprotonicNucleosynthesizer>> {
 
     private static final Vec3 from = new Vec3(47, 50, 0), to = new Vec3(147, 50, 0);
     private static final BoltEffect.BoltRenderInfo boltRenderInfo = new BoltEffect.BoltRenderInfo().color(Color.rgbad(0.45F, 0.45F, 0.5F, 1));
