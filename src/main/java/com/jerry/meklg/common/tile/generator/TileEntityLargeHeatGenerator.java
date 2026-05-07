@@ -158,9 +158,9 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected BlockPos offSetOutput(BlockPos from, Direction side) {
+    protected BlockPos[] offSetOutput(BlockPos from, Direction side) {
         Direction back = getOppositeDirection();
-        return from.offset(new Vec3i(back.getStepX(), 1, back.getStepZ())).relative(side);
+        return new BlockPos[] { from.offset(new Vec3i(back.getStepX(), 1, back.getStepZ())).relative(side) };
     }
 
     private double getBoost() {

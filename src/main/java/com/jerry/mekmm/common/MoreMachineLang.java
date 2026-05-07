@@ -45,6 +45,9 @@ public enum MoreMachineLang implements ILangEntry {
     CONNECTOR_CLEARED("connector", "cleared"),
     CONNECTOR_LOSE("connector", "lose"),
     CONNECTOR_DETAIL("connector", "detail"),
+    // Generator
+    INACTIVE("large_wind_generator", "inactive"),
+    SAME_BLOCK_NEARBY("large_wind_generator", "same_block_nearby"),
     // Descriptions
     DESCRIPTION_RECYCLER("description", "recycler"),
     DESCRIPTION_PLANTING_STATION("description", "planting_station"),

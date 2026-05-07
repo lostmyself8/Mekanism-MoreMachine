@@ -72,10 +72,12 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
             if (outputCaches == null) {
                 Direction direction = getDirection();
                 RelativeSide[] energySides = getEnergySides();
-                outputCaches = new ArrayList<>(energySides.length);
+                outputCaches = new ArrayList<>(portCount(energySides.length));
                 for (RelativeSide energySide : energySides) {
                     Direction side = energySide.getDirection(direction);
-                    outputCaches.add(BlockEnergyCapabilityCache.create((ServerLevel) level, offSetOutput(worldPosition, side), side.getOpposite()));
+                    for (BlockPos ejectPos : offSetOutput(worldPosition, side)) {
+                        outputCaches.add(BlockEnergyCapabilityCache.create((ServerLevel) level, ejectPos, side.getOpposite()));
+                    }
                 }
             }
             CableUtils.emit(outputCaches, energyContainer, getMaxOutput());
@@ -83,8 +85,27 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
         return sendUpdatePacket;
     }
 
-    protected BlockPos offSetOutput(BlockPos from, Direction side) {
-        return from.relative(side);
+    /**
+     * 能量端口数量，默认返回开启了能量能力的方向数量
+     *
+     * @param input 开启了能量能力的方向数量
+     *
+     * @return 能量端口数量
+     */
+    protected int portCount(int input) {
+        return input;
+    }
+
+    /**
+     * 对自动弹出位置进行偏移，默认不偏移
+     *
+     * @param from 主方块位置
+     * @param side 弹出方向
+     *
+     * @return 偏移后的位置集合
+     */
+    protected BlockPos[] offSetOutput(BlockPos from, Direction side) {
+        return new BlockPos[] { from.relative(side) };
     }
 
     @Override
