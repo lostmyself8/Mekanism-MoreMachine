@@ -11,6 +11,7 @@ public class TileEntityLargeWindGenerator$ComputerHandler extends ComputerMethod
     public TileEntityLargeWindGenerator$ComputerHandler() {
         register(MethodData.builder("getEnergyItem", TileEntityLargeWindGenerator$ComputerHandler::energySlot$getEnergyItem).returnType(ItemStack.class).methodDescription("Get the contents of the energy item slot."));
         register(MethodData.builder("isBlacklistedDimension", TileEntityLargeWindGenerator$ComputerHandler::isBlacklistedDimension_0).returnType(boolean.class));
+        register(MethodData.builder("hasSameBlockNearby", TileEntityLargeWindGenerator$ComputerHandler::hasSameBlockNearby_0).returnType(boolean.class));
     }
 
     public static Object energySlot$getEnergyItem(TileEntityLargeWindGenerator subject, BaseComputerHelper helper) throws ComputerException {
@@ -19,5 +20,9 @@ public class TileEntityLargeWindGenerator$ComputerHandler extends ComputerMethod
 
     public static Object isBlacklistedDimension_0(TileEntityLargeWindGenerator subject, BaseComputerHelper helper) throws ComputerException {
         return helper.convert(subject.isBlacklistDimension());
+    }
+
+    public static Object hasSameBlockNearby_0(TileEntityLargeWindGenerator subject, BaseComputerHelper helper) throws ComputerException {
+        return helper.convert(subject.hasSameGeneratorNearby());
     }
 }
