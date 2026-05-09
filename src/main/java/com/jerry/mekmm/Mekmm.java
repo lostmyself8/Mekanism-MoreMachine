@@ -37,6 +37,7 @@ public class Mekmm implements IModModule {
 
     public static final String MOD_ID = "mekmm";
     public static final String MOD_NAME = "MekanismMoreMachine";
+
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
     /**
