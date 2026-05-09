@@ -214,7 +214,7 @@ public class PlantingRecipeProvider implements ISubRecipeProvider {
         addPlanting(consumer, basePath + "sweet_berries", Items.SWEET_BERRIES, Items.SWEET_BERRIES, 5);
         addPlanting(consumer, basePath + "warped_fungus", Items.WARPED_FUNGUS, Items.WARPED_FUNGUS, 3);
         addPlanting(consumer, basePath + "wheat_from_wheat_seeds", Items.WHEAT_SEEDS, Items.WHEAT, 3);
-        addPlantingWithSecondary(consumer, basePath + "beetroot_from_beetroot_seeds", Items.BEETROOT_SEEDS, Items.BEETROOT, 4);
+        addPlanting(consumer, basePath + "beetroot_from_beetroot_seeds", Items.BEETROOT_SEEDS, Items.BEETROOT, 4);
         addPlantingWithSecondary(consumer, basePath + "potato_from_potato", Items.POTATO, Items.POTATO, 9);
     }
 

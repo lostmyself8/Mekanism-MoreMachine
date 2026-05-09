@@ -12,9 +12,5 @@
     "count": 4,
     "id": "minecraft:beetroot"
   },
-  "per_tick_usage": true,
-  "secondary_chance": 0.27,
-  "secondary_output": {
-    "id": "minecraft:poisonous_potato"
-  }
+  "per_tick_usage": true
 }
