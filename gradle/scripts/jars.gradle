@@ -1,3 +1,10 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
+import java.nio.charset.StandardCharsets
+import java.nio.file.FileSystems
+import java.nio.file.Files
+
 tasks.register('slimJar', Jar) {
     dependsOn("classes")
     archiveClassifier = "slim"
@@ -33,5 +40,45 @@ afterEvaluate {
                 'Implementation-Version': version,
                 'Implementation-Vendor': 'Mekanism: More Machine Team',
         ])
+    }
+}
+
+def remapMekanismJarJarMetadata = { File jarFile ->
+    def jarUri = URI.create("jar:${jarFile.toURI()}")
+    try (def zipfs = FileSystems.newFileSystem(jarUri, [create: 'false'])) {
+        def metadataPath = zipfs.getPath('/META-INF/jarjar/metadata.json')
+        if (!Files.exists(metadataPath)) {
+            return
+        }
+        def metadata
+        Files.newBufferedReader(metadataPath, StandardCharsets.UTF_8).withCloseable { reader ->
+            metadata = new JsonSlurper().parse(reader)
+        }
+        def artifactByPathSuffix = [
+                '-additions.jar' : 'MekanismAdditions',
+                '-generators.jar': 'MekanismGenerators',
+                '-tools.jar'     : 'MekanismTools',
+        ]
+        boolean changed = false
+        metadata.jars.each { jar ->
+            def identifier = jar.identifier
+            if (identifier?.group == 'com.github.QiuYe-123' && identifier?.artifact == 'Mekanism') {
+                def artifact = artifactByPathSuffix.find { suffix, ignored -> jar.path.endsWith(suffix) }?.value
+                if (artifact != null) {
+                    identifier.artifact = artifact
+                    changed = true
+                }
+            }
+        }
+        if (changed) {
+            def json = JsonOutput.prettyPrint(JsonOutput.toJson(metadata)) + System.lineSeparator()
+            Files.writeString(metadataPath, json, StandardCharsets.UTF_8)
+        }
+    }
+}
+
+tasks.named('jar', Jar) {
+    doLast {
+        remapMekanismJarJarMetadata(archiveFile.get().asFile)
     }
 }
