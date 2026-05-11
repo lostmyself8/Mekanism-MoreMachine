@@ -1,17 +1,19 @@
 package com.jerry.meklg.client.render.item;
 
-import com.jerry.meklg.client.model.ModelLargeWindGenerator;
-import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import mekanism.api.MekanismAPITags;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.item.MekanismISTER;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.item.ItemStack;
+
+import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import org.joml.Vector3fc;
 import org.jspecify.annotations.Nullable;
 
@@ -20,7 +22,7 @@ import java.util.function.Consumer;
 @NothingNullByDefault
 public class RenderLargeWindGeneratorItem extends MekanismISTER<LargeWindGeneratorRotationRenderState> {
 
-//    public static final RenderLargeWindGeneratorItem RENDERER = new RenderLargeWindGeneratorItem();
+    // public static final RenderLargeWindGeneratorItem RENDERER = new RenderLargeWindGeneratorItem();
     private static final int SPEED = 16;
     private static int lastTicksUpdated = 0;
     private static int angle = 0;
@@ -55,9 +57,9 @@ public class RenderLargeWindGeneratorItem extends MekanismISTER<LargeWindGenerat
         Minecraft minecraft = Minecraft.getInstance();
         boolean tickingNormally = MekanismRenderer.isRunningNormally();
         if (tickingNormally && minecraft.level != null) {
-            //Only update the angle if we are in a world and that world is not blacklisted
+            // Only update the angle if we are in a world and that world is not blacklisted
             if (minecraft.level.dimensionTypeRegistration().is(MekanismAPITags.DimensionTypes.NO_WIND)) {
-                //If the dimension is blacklisted, don't try to tick it at all
+                // If the dimension is blacklisted, don't try to tick it at all
                 tickingNormally = false;
             } else {
                 int ticks = Minecraft.getInstance().levelRenderer.getTicks();
