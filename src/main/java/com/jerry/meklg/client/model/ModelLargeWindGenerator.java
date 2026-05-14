@@ -23,8 +23,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGeneratorRotationRenderState> {
 
     public static final ModelLayerLocation LARGE_WIND_GENERATOR_LAYER = new ModelLayerLocation(Mekmm.rl("large_wind_generator"), "main");
