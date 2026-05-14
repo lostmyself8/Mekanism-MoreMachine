@@ -465,19 +465,17 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
     }
 
     private final RenderType RENDER_TYPE = RenderTypes.entitySolid(LARGE_WIND_GENERATOR_TEXTURE);
-    private final List<ModelPart> parts;
     private final ModelPart fans;
 
     public ModelLargeWindGenerator(EntityModelSet entityModelSet) {
         super(entityModelSet.bakeLayer(LARGE_WIND_GENERATOR_LAYER));
-        parts = getRenderableParts(root, FAN, BODY, TOP, BASE);
         fans = FAN.getFromRoot(root);
     }
 
     @Override
     public void collect(LargeWindGeneratorRotationRenderState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
         setupAnim(state);
-        collectParts(parts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, 0xFFFFFFFF, null, hasEffect);
+        collectParts(allParts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, 0xFFFFFFFF, null, hasEffect);
     }
 
     @Override
@@ -488,7 +486,7 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
 
     public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, float angle) {
         setupAnim(new LargeWindGeneratorRotationRenderState(angle));
-        renderPartsAsWireFrame(parts, matrix, vertexBuilder);
+        renderPartsAsWireFrame(root().getAllParts(), matrix, vertexBuilder);
     }
 
     private float getAbsoluteRotation(float angle) {

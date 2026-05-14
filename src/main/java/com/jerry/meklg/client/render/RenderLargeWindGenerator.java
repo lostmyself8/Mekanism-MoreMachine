@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @NothingNullByDefault
-public class RenderLargeWindGenerator extends MekanismTileEntityRenderer<@NotNull TileEntityLargeWindGenerator, LargeWindGeneratorRenderState> implements IWireFrameRenderer {
+public class RenderLargeWindGenerator extends MekanismTileEntityRenderer<TileEntityLargeWindGenerator, LargeWindGeneratorRenderState> implements IWireFrameRenderer {
 
     private final ModelLargeWindGenerator model;
 
@@ -66,7 +66,7 @@ public class RenderLargeWindGenerator extends MekanismTileEntityRenderer<@NotNul
     }
 
     @Override
-    public void extractRenderState(@NotNull TileEntityLargeWindGenerator tile, LargeWindGeneratorRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@org.jspecify.annotations.Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(TileEntityLargeWindGenerator tile, LargeWindGeneratorRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@org.jspecify.annotations.Nullable CrumblingOverlay breakProgress) {
         super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
         state.direction = tile.getDirection();
         state.rotation.angle = tile.getAngle();

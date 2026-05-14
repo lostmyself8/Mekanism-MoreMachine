@@ -6,7 +6,7 @@ import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.RenderTickHandler;
-import mekanism.client.render.lib.Outlines;
+import mekanism.client.render.lib.Outlines.Line;
 import mekanism.client.render.tileentity.IWireFrameRenderer;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.common.block.attribute.Attribute;
@@ -35,7 +35,7 @@ public class RenderLargePigmentMixer extends MekanismTileEntityRenderer<TileEnti
 
     private static final float SHAFT_SPEED = 5F;
     @Nullable
-    private static List<Outlines.Line> lines;
+    private static List<Line> lines;
 
     public static void resetCached() {
         lines = null;
