@@ -8,7 +8,7 @@ public class LargeMachineModelCache extends BaseModelCache {
 
     public static final LargeMachineModelCache INSTANCE = new LargeMachineModelCache();
 
-    public final JSONModelData LARGE_PIGMENT_MIXER_ROD = registerJSON("block/large_machine/large_pigment_mixer/rod");
+    public final BlockStateModelPartHelper LARGE_PIGMENT_MIXER_ROD = registerJSON("block/large_machine/large_pigment_mixer/rod");
 
     private LargeMachineModelCache() {
         super(Mekmm.MOD_ID);

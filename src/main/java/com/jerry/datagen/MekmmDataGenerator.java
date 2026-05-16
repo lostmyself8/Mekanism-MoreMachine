@@ -89,11 +89,6 @@ public class MekmmDataGenerator {
         // recipeProvider.getDisabledCompats());
     }
 
-    /**
-     * Used to bootstrap configs to their default values so that if we are querying if things exist we don't have issues
-     * with it happening to early or in cases we have
-     * fake tiles.
-     */
     @SuppressWarnings("UnstableApiUsage")
     public static void bootstrapConfigs(String modid) {
         for (Set<ModConfig> configs : CONFIG_SETS.getValue(ConfigTracker.INSTANCE).values()) {
