@@ -68,12 +68,12 @@ public class RenderLargePigmentMixer extends MekanismTileEntityRenderer<TileEnti
     }
 
     @Override
-    public void renderWireFrame(BlockEntity tile, float partialTick, PoseStack matrix, VertexConsumer buffer) {
+    public void renderWireFrame(BlockEntity tile, BlockState blockState, float partialTick, PoseStack poseStack, VertexConsumer buffer, boolean isHighContrast) {
         if (tile instanceof TileEntityLargePigmentMixer mixer) {
-            setupRenderer(mixer.getDirection(), (tile.getLevel().getGameTime() + partialTick) * SHAFT_SPEED % 360, matrix);
-            Pose pose = matrix.last();
-            RenderTickHandler.renderVertexWireFrame(lines, buffer, pose.pose(), pose.normal());
-            matrix.popPose();
+            setupRenderer(mixer.getDirection(), (tile.getLevel().getGameTime() + partialTick) * SHAFT_SPEED % 360, poseStack);
+            Pose pose = poseStack.last();
+            RenderTickHandler.renderVertexWireFrame(lines, buffer, pose.pose(), pose.normal(), isHighContrast);
+            poseStack.popPose();
         }
     }
 

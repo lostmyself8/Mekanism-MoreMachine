@@ -23,6 +23,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGeneratorRotationRenderState> {
 
     public static final ModelLayerLocation LARGE_WIND_GENERATOR_LAYER = new ModelLayerLocation(Mekmm.rl("large_wind_generator"), "main");
@@ -463,17 +465,20 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
     }
 
     private final RenderType RENDER_TYPE = RenderTypes.entitySolid(LARGE_WIND_GENERATOR_TEXTURE);
+    private final List<ModelPart> parts;
     private final ModelPart fans;
 
     public ModelLargeWindGenerator(EntityModelSet entityModelSet) {
         super(entityModelSet.bakeLayer(LARGE_WIND_GENERATOR_LAYER));
+        parts = getRenderableParts(root, FAN, BODY, TOP, BASE);
         fans = FAN.getFromRoot(root);
     }
 
     @Override
     public void collect(LargeWindGeneratorRotationRenderState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
         setupAnim(state);
-        collectParts(allParts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, 0xFFFFFFFF, null, hasEffect);
+        // 不直接使用allParts，会导致多渲染一份子模块
+        collectParts(parts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, hasEffect);
     }
 
     @Override
@@ -482,9 +487,10 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
         fans.setRotation(0F, 0F, getAbsoluteRotation(state.angle));
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, float angle) {
-        setupAnim(new LargeWindGeneratorRotationRenderState(angle));
-        renderPartsAsWireFrame(root().getAllParts(), matrix, vertexBuilder);
+    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, LargeWindGeneratorRotationRenderState state, boolean isHighContrast) {
+        setupAnim(state);
+        // 不直接使用root().getAllParts()，会导致多渲染一份子模块
+        renderPartsAsWireFrame(parts, matrix, vertexBuilder, isHighContrast);
     }
 
     private float getAbsoluteRotation(float angle) {
