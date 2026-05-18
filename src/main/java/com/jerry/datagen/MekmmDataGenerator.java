@@ -82,11 +82,6 @@ public class MekmmDataGenerator {
         gen.addProvider(true, new MoreMachineDataMapsProvider(output, lookupProvider));
         HashSet<String> disabledCompats = new HashSet<>();
         gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput, disabledCompats), Mekmm.MOD_ID));
-        // Data generator to help with persisting data when porting across MC versions when optional deps aren't updated
-        // yet
-        // DO NOT ADD OTHERS AFTER THIS ONE
-        // PersistingDisabledProvidersProvider.addDisableableProviders(event, lookupProvider,
-        // recipeProvider.getDisabledCompats());
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -94,13 +89,6 @@ public class MekmmDataGenerator {
         for (Set<ModConfig> configs : CONFIG_SETS.getValue(ConfigTracker.INSTANCE).values()) {
             for (ModConfig config : configs) {
                 if (config.getModId().equals(modid)) {
-                    // Similar to how ConfigTracker#loadDefaultServerConfigs works for loading default server configs on
-                    // the client
-                    // except we don't bother firing an event as it is private, and we are already at defaults if we had
-                    // called earlier,
-                    // and we also don't fully initialize the mod config as the spec is what we care about, and we can
-                    // do so without having
-                    // to reflect into package private methods
                     CommentedConfig commentedConfig = new SynchronizedConfig(InMemoryCommentedFormat.defaultInstance(), LinkedHashMap::new);
                     config.getSpec().correct(commentedConfig);
                     try {
