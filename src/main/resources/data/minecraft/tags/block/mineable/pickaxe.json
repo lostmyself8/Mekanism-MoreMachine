@@ -165,6 +165,7 @@
     "mekmm:large_antiprotonic_nucleosynthesizer",
     "mekmm:large_pigment_mixer",
     {"id": "mekmm:large_heat_generator","required": false},
-    {"id": "mekmm:large_gas_burning_generator","required": false}
+    {"id": "mekmm:large_gas_burning_generator","required": false},
+    {"id": "mekmm:solar_heat_generator","required": false}
   ]
 }

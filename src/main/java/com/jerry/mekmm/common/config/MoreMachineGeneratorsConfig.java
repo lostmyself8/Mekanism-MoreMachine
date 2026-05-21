@@ -22,6 +22,7 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
 
     public final CachedLongValue largeWindGenerationMin;
     public final CachedLongValue largeWindGenerationMax;
+    public final CachedLongValue solarHeatGeneration;
 
     MoreMachineGeneratorsConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -48,6 +49,10 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
         largeWindGenerationMin = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND_GEN_MIN, "generationMin", 2_250_000L);
         // TODO: Should this be capped by the min generator?
         largeWindGenerationMax = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND_GEN_MAX, "generationMax", 3_750_000L);
+        builder.pop();
+
+        MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT.applyToBuilder(builder).push("solar_heat_generator");
+        solarHeatGeneration = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_GENERATION, "generation", 1L);
         builder.pop();
 
         configSpec = builder.build();
