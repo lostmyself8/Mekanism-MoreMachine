@@ -15,6 +15,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -278,14 +279,22 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
 
     private final RenderType RENDER_TYPE = renderType(SOLAR_HEAT_GENERATOR_TEXTURE);
     private final List<ModelPart> parts;
+    private final ModelPart top;
 
     public ModelSolarHeatGenerator(EntityModelSet entityModelSet) {
         super(RenderType::entitySolid);
         ModelPart root = entityModelSet.bakeLayer(SOLAR_HEAT_GENERATOR_LAYER);
         parts = getRenderableParts(root, BASE, MIDDLE, TOP);
+        top = TOP.getFromRoot(root);
     }
 
-    public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, int light, int overlayLight, boolean hasEffect) {
+    public void renderBlock(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
+        float baseRotation = getAbsoluteRotation(angle);
+        setRotation(top, baseRotation, 0F, 0F);
+        renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
+    }
+
+    public void renderItem(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, int light, int overlayLight, boolean hasEffect) {
         renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
     }
 
@@ -294,7 +303,13 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
         renderPartsToBuffer(parts, poseStack, vertexConsumer, light, overlayLight, color);
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder) {
+    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle) {
+        float baseRotation = getAbsoluteRotation(angle);
+        setRotation(top, baseRotation, 0F, 0F);
         renderPartsAsWireFrame(parts, matrix, vertexBuilder);
+    }
+
+    private float getAbsoluteRotation(double angle) {
+        return (float) ((angle % 360) * Mth.DEG_TO_RAD);
     }
 }

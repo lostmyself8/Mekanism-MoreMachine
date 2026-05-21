@@ -22,12 +22,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
+
+    private static final float SPEED = 32F;
+
+    @Getter
+    private float angle;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
@@ -55,6 +61,24 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         energySlot.drainContainer();
         setActive(false);
         return sendUpdatePacket;
+    }
+
+    @Override
+    protected void onUpdateClient() {
+        super.onUpdateClient();
+        angle = (angle + getHeightSpeedRatio()) % 360;
+    }
+
+    public float getHeightSpeedRatio() {
+        int height = getBlockPos().getY() + 4;
+        if (level == null) {
+            // Fallback to default values, but in general this is not going to happen
+            return SPEED * height / 384F;
+        }
+        // Shift so that a wind generator at the min build height acts as if it was at a height of zero
+        int minBuildHeight = level.getMinBuildHeight();
+        height -= minBuildHeight;
+        return SPEED * height / (level.getMaxBuildHeight() - minBuildHeight);
     }
 
     @Override

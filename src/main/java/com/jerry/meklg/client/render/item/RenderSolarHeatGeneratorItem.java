@@ -61,7 +61,7 @@ public class RenderSolarHeatGeneratorItem extends MekanismISTER {
         matrix.pushPose();
         matrix.translate(0.5, 0.5, 0.5);
         matrix.mulPose(Axis.ZP.rotationDegrees(180));
-        solarHeatGenerator.render(matrix, renderer, light, overlayLight, stack.hasFoil());
+        solarHeatGenerator.renderItem(matrix, renderer, light, overlayLight, stack.hasFoil());
         matrix.popPose();
     }
 

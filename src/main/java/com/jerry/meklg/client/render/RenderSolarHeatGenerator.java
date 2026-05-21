@@ -33,16 +33,16 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     @Override
     public void renderWireFrame(BlockEntity tile, float partialTick, PoseStack matrix, VertexConsumer buffer) {
         if (tile instanceof TileEntitySolarHeatGenerator solarHeatGenerator) {
-            setupRenderer(solarHeatGenerator, matrix);
-            model.renderWireFrame(matrix, buffer);
+            float angle = setupRenderer(solarHeatGenerator, partialTick, matrix);
+            model.renderWireFrame(matrix, buffer, angle);
             matrix.popPose();
         }
     }
 
     @Override
     protected void render(TileEntitySolarHeatGenerator tile, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int overlayLight, ProfilerFiller profiler) {
-        setupRenderer(tile, matrix);
-        model.render(matrix, renderer, light, overlayLight, false);
+        float angle = setupRenderer(tile, partialTick, matrix);
+        model.renderBlock(matrix, renderer, angle, light, overlayLight, false);
         matrix.popPose();
     }
 
@@ -62,10 +62,15 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
         return AABB.encapsulatingFullBlocks(pos.offset(-3, 0, -3), pos.offset(3, 7, 3));
     }
 
-    private void setupRenderer(TileEntitySolarHeatGenerator tile, PoseStack matrix) {
+    private float setupRenderer(TileEntitySolarHeatGenerator tile, float partialTick, PoseStack matrix) {
         matrix.pushPose();
         matrix.translate(0.5, 1.5, 0.5);
         MekanismRenderer.rotate(matrix, tile.getDirection(), 0, 180, 90, 270);
         matrix.mulPose(Axis.ZP.rotationDegrees(180));
+        float angle = tile.getAngle();
+        if (tile.getActive() && partialTick > 0) {
+            angle = (angle + tile.getHeightSpeedRatio() * partialTick) % 360;
+        }
+        return angle;
     }
 }
