@@ -49,12 +49,16 @@ import net.neoforged.neoforge.common.NeoForge;
 import com.jerry.meklg.client.gui.generator.GuiLargeGasGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
+import com.jerry.meklg.client.gui.generator.GuiSolarHeatGenerator;
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
+import com.jerry.meklg.client.model.ModelSolarHeatGenerator;
 import com.jerry.meklg.client.model.bake.LargeGasGeneratorBakedModel;
 import com.jerry.meklg.client.model.bake.LargeHeatGeneratorBakedModel;
 import com.jerry.meklg.client.model.bake.LargeWindGeneratorBakedModel;
 import com.jerry.meklg.client.render.RenderLargeWindGenerator;
+import com.jerry.meklg.client.render.RenderSolarHeatGenerator;
 import com.jerry.meklg.client.render.item.RenderLargeWindGeneratorItem;
+import com.jerry.meklg.client.render.item.RenderSolarHeatGeneratorItem;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
 import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
@@ -114,6 +118,7 @@ public class ClientRegistration {
         event.registerBlockEntityRenderer(LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER.get(), RenderLargePigmentMixer::new);
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             event.registerBlockEntityRenderer(LargeGeneratorTileEntityTypes.LARGE_WIND_GENERATOR.get(), RenderLargeWindGenerator::new);
+            event.registerBlockEntityRenderer(LargeGeneratorTileEntityTypes.SOLAR_HEAT_GENERATOR.get(), RenderSolarHeatGenerator::new);
         }
     }
 
@@ -121,6 +126,7 @@ public class ClientRegistration {
     public static void registerLayer(RegisterLayerDefinitions event) {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+            event.registerLayerDefinition(ModelSolarHeatGenerator.SOLAR_HEAT_GENERATOR_LAYER, ModelSolarHeatGenerator::createLayerDefinition);
         }
     }
 
@@ -128,6 +134,7 @@ public class ClientRegistration {
     public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             event.registerReloadListener(RenderLargeWindGeneratorItem.RENDERER);
+            event.registerReloadListener(RenderSolarHeatGeneratorItem.RENDERER);
         }
     }
 
@@ -163,6 +170,7 @@ public class ClientRegistration {
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_HEAT_GENERATOR, GuiLargeHeatGenerator::new);
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_GAS_BURNING_GENERATOR, GuiLargeGasGenerator::new);
             ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR, GuiLargeWindGenerator::new);
+            ClientRegistrationUtil.registerScreen(event, LargeGeneratorContainerTypes.SOLAR_HEAT_GENERATOR, GuiSolarHeatGenerator::new);
         }
     }
 
@@ -183,6 +191,7 @@ public class ClientRegistration {
         ClientRegistrationUtil.registerBlockExtensions(event, LargeMachineBlocks.LM_BLOCKS);
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             event.registerItem(new MekRenderProperties(RenderLargeWindGeneratorItem.RENDERER), LargeGeneratorBlocks.LARGE_WIND_GENERATOR.getItemHolder());
+            event.registerItem(new MekRenderProperties(RenderSolarHeatGeneratorItem.RENDERER), LargeGeneratorBlocks.SOLAR_HEAT_GENERATOR.getItemHolder());
             ClientRegistrationUtil.registerBlockExtensions(event, LargeGeneratorBlocks.LG_BLOCKS);
         }
     }

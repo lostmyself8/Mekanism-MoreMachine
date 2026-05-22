@@ -19,6 +19,7 @@ public class ComputerMethodRegistry_meklg implements IComputerMethodRegistry {
             FactoryRegistry.register(TileEntityLargeGasGenerator.class, TileEntityLargeGasGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
             FactoryRegistry.register(TileEntityLargeHeatGenerator.class, TileEntityLargeHeatGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
             FactoryRegistry.register(TileEntityLargeWindGenerator.class, TileEntityLargeWindGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
+            FactoryRegistry.register(TileEntitySolarHeatGenerator.class, TileEntitySolarHeatGenerator$ComputerHandler::new, TileEntityUpdateable.class, CapabilityTileEntity.class, TileEntityMekanism.class, TileEntityMoreMachineGenerator.class);
         }
     }
 }

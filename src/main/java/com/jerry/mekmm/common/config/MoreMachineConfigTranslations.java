@@ -51,6 +51,7 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     ENERGY_STORAGE_LARGE_PIGMENT_MIXER(TranslationPreset.ENERGY_STORAGE, "Large Pigment Mixer"),
     ENERGY_STORAGE_LARGE_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Heat Generator"),
     ENERGY_STORAGE_LARGE_WIND_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Wind Generator"),
+    ENERGY_STORAGE_SOLAR_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Solar Heat Generator"),
 
     // Usage Config
     ENERGY_USAGE_RECYCLER(TranslationPreset.ENERGY_USAGE, "Recycler"),
@@ -90,7 +91,10 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
 
     SERVER_GENERATOR_LARGE_WIND("server.generator.wind", "Large Wind Generator", "Settings for configuring Large Wind Generators", true),
     SERVER_GENERATOR_LARGE_WIND_GEN_MIN("server.generator.wind.gen.min", "Min Energy Generation", "Minimum energy generation in Joules/t that the Large Wind Generator can produce."),
-    SERVER_GENERATOR_LARGE_WIND_GEN_MAX("server.generator.wind.gen.max", "Max Energy Generation", "Maximum energy generation in Joules/t that the Large Wind Generator can produce.");
+    SERVER_GENERATOR_LARGE_WIND_GEN_MAX("server.generator.wind.gen.max", "Max Energy Generation", "Maximum energy generation in Joules/t that the Large Wind Generator can produce."),
+
+    SERVER_GENERATOR_SOLAR_HEAT("server.generator.solar_heat", "Solar Heat Generator", "Settings for configuring Solar Heat Generators", true),
+    SERVER_GENERATOR_SOLAR_HEAT_GENERATION("server.generator.solar_heat.gen", "Energy Generation", "Amount of energy in Joules/t that the Solar Heat Generator can produce. Currently reserved for future implementation.");
 
     private final String key;
     private final String title;

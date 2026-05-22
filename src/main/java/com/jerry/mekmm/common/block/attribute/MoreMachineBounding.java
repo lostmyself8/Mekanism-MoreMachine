@@ -150,7 +150,7 @@ public class MoreMachineBounding {
                     }
                 }
             }
-            // 柱子一层
+            // 屏幕上面的板子
             for (int i = -1; i <= 1; i++) {
                 mutable.setWithOffset(pos, front.getX() * 3 + axis.getX() * i, 2, front.getZ() * 3 + axis.getZ() * i);
                 if (!predicate.accept(level, mutable, data)) {
@@ -232,4 +232,82 @@ public class MoreMachineBounding {
             return predicate.accept(level, mutable, data);
         }
     });
+
+    public static final AttributeHasBounding SOLAR_HEAT_GENERATOR = new AttributeHasBounding(new HandleBoundingBlock() {
+
+        @Override
+        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+            Direction facing = Attribute.getFacing(state);
+            if (facing == null) return false;
+            Direction left = facing.getClockWise();
+            Direction right = facing.getCounterClockWise();
+            // 获取垂直于朝向的水平轴
+            Vec3i axis = facing.getClockWise().getNormal();
+            // 朝向的前方
+            Vec3i front = facing.getOpposite().getNormal();
+            // 底座
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    if (x != 0 || z != 0) {
+                        mutable.setWithOffset(pos, x, 0, z);
+                        if (!predicate.accept(level, mutable, data)) {
+                            return false;
+                        }
+                    }
+                }
+
+            }
+            // 底座上一层
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    if (x == -3 || x == 3 || z == -3 || z == 3) {
+                        if ((x == -3 || x == -2 || x == 2 || x == 3) &&
+                                (z == -3 || z == -2 || z == 2 || z == 3)) {
+                            continue;
+                        }
+                    }
+                    mutable.setWithOffset(pos, x, 1, z);
+                    if (!predicate.accept(level, mutable, data)) {
+                        return false;
+                    }
+                }
+            }
+            // 屏幕上面的板子
+            for (int i = -1; i <= 1; i++) {
+                mutable.setWithOffset(pos, getX(facing.getNormal(), facing.getClockWise().getNormal(), i), 2, getZ(facing.getNormal(), facing.getClockWise().getNormal(), i));
+                if (!predicate.accept(level, mutable, data)) {
+                    return false;
+                }
+                mutable.setWithOffset(pos, getX(left.getNormal(), left.getClockWise().getNormal(), i), 2, getZ(left.getNormal(), left.getClockWise().getNormal(), i));
+                if (!predicate.accept(level, mutable, data)) {
+                    return false;
+                }
+                mutable.setWithOffset(pos, getX(right.getNormal(), right.getClockWise().getNormal(), i), 2, getZ(right.getNormal(), right.getClockWise().getNormal(), i));
+                if (!predicate.accept(level, mutable, data)) {
+                    return false;
+                }
+            }
+            for (int x = -3; x <= 3; x++) {
+                for (int y = 3; y <= 6; y++) {
+                    for (int z = -3; z <= 3; z++) {
+                        mutable.setWithOffset(pos, x, y, z);
+                        if (!predicate.accept(level, mutable, data)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            mutable.setWithOffset(pos, 0, 3, 0);
+            return predicate.accept(level, mutable, data);
+        }
+    });
+
+    private static int getX(Vec3i side, Vec3i axis, int i) {
+        return side.getX() * 3 + axis.getX() * i;
+    }
+
+    private static int getZ(Vec3i side, Vec3i axis, int i) {
+        return side.getZ() * 3 + axis.getZ() * i;
+    }
 }
