@@ -29,20 +29,19 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
 @NothingNullByDefault
 public class MoreMachineJEI implements IModPlugin {
 
     @Override
-    public @NotNull Identifier getPluginUid() {
+    public Identifier getPluginUid() {
         // 不能使用Mekmm.rl()，原因见MekanismJEI.class
         return Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "jei_plugin");
     }
 
     @Override
-    public void registerCategories(@NotNull IRecipeCategoryRegistration registry) {
+    public void registerCategories(IRecipeCategoryRegistration registry) {
         if (!MekanismJEI.shouldLoad()) {
             return;
         }

@@ -17,6 +17,7 @@ import mekanism.client.recipe_viewer.jei.BaseRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
+import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -92,7 +93,7 @@ public class FluidReplicatorRecipeCategory extends BaseRecipeCategory<BasicFluid
         if (representations.size() == 1) {
             Identifier fluidId = BuiltInRegistries.FLUID.getKeyOrNull(representations.getFirst().getFluid());
             if (fluidId != null) {
-                return RecipeViewerUtils.synthetic(fluidId, "replicator", Mekmm.MOD_ID);
+                return RegistryUtils.synthetic(fluidId, "replicator", Mekmm.MOD_ID);
             }
         }
         return null;

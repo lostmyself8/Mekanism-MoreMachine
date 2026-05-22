@@ -12,7 +12,7 @@ import com.jerry.mekmm.common.tile.machine.TileEntityReplicator;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.client.recipe_viewer.RecipeViewerUtils;
+import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -38,7 +38,7 @@ public class MMRecipeViewerUtils {
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
             MMBasicItemStackChemicalToItemStackRecipe recipe = TileEntityReplicator.getRecipe(entry.getValue().getDefaultInstance(), MoreMachineChemicals.UU_MATTER.asStack(1));
             if (recipe != null) {
-                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
+                replicator.put(RegistryUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
         }
         return replicator;
@@ -49,7 +49,7 @@ public class MMRecipeViewerUtils {
         for (Map.Entry<ResourceKey<Fluid>, Fluid> entry : BuiltInRegistries.FLUID.entrySet()) {
             BasicFluidChemicalToFluidRecipe recipe = TileEntityFluidReplicator.getRecipe(new FluidStack(entry.getValue(), 1), MoreMachineChemicals.UU_MATTER.asStack(1));
             if (recipe != null) {
-                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
+                replicator.put(RegistryUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
         }
         return replicator;
@@ -61,7 +61,7 @@ public class MMRecipeViewerUtils {
             // mek将很多方法弃用了，所以只能使用这个办法。
             MMBasicChemicalChemicalToChemicalRecipe recipe = TileEntityChemicalReplicator.getRecipe(new ChemicalStack(MekanismAPI.CHEMICAL_REGISTRY.wrapAsHolder(entry.getValue()), 1), MoreMachineChemicals.UU_MATTER.asStack(1));
             if (recipe != null) {
-                replicator.put(RecipeViewerUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
+                replicator.put(RegistryUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
         }
         return replicator;

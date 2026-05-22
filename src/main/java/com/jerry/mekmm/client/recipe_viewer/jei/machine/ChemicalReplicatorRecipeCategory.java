@@ -22,6 +22,7 @@ import mekanism.client.recipe_viewer.jei.BaseRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
+import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
@@ -94,7 +95,7 @@ public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasic
         List<@NotNull ChemicalStack> representations = recipe.getLeftInput().getRepresentations(getSlotDisplayContext());
         if (representations.size() == 1) {
             Identifier chemicalId = MekanismAPI.CHEMICAL_REGISTRY.getKey(representations.getFirst().getChemical());
-            return RecipeViewerUtils.synthetic(chemicalId, "replicator", Mekmm.MOD_ID);
+            return RegistryUtils.synthetic(chemicalId, "replicator", Mekmm.MOD_ID);
         }
         return null;
     }

@@ -20,6 +20,7 @@ import mekanism.client.recipe_viewer.jei.BaseRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
+import mekanism.common.util.RegistryUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -92,7 +93,7 @@ public class ReplicatorRecipeCategory extends BaseRecipeCategory<MMBasicItemStac
         if (representations.size() == 1) {
             Identifier itemId = BuiltInRegistries.ITEM.getKeyOrNull(representations.getFirst().getItem());
             if (itemId != null) {
-                return RecipeViewerUtils.synthetic(itemId, "replicator", Mekmm.MOD_ID);
+                return RegistryUtils.synthetic(itemId, "replicator", Mekmm.MOD_ID);
             }
         }
         return null;
