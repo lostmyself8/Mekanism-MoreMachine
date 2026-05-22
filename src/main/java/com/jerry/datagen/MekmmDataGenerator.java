@@ -74,10 +74,8 @@ public class MekmmDataGenerator {
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
-        // Client side data generators
         gen.addProvider(true, new MoreMachineLangProvider(output));
         gen.addProvider(true, new MoreMachineAssetProvider(output));
-        // Server side data generators
         gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
         gen.addProvider(true, new MoreMachineDataMapsProvider(output, lookupProvider));
         HashSet<String> disabledCompats = new HashSet<>();
