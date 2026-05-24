@@ -23,6 +23,7 @@ public enum MoreMachineLang implements ILangEntry {
     STAMPING("factory", "stamping"),
     LATHING("factory", "lathing"),
     ROLLING_MILL("factory", "rolling_mill"),
+    PRESSING("factory", "pressing"),
     REPLICATING("factory", "replicating"),
     // Advanced Factory Type
     OXIDIZING("factory", "oxidizing"),
@@ -54,6 +55,7 @@ public enum MoreMachineLang implements ILangEntry {
     DESCRIPTION_CNC_STAMPER("description", "cnc_stamper"),
     DESCRIPTION_CNC_LATHE("description", "cnc_lathe"),
     DESCRIPTION_CNC_ROLLING_MILL("description", "cnc_rolling_mill"),
+    DESCRIPTION_PRESSER("description", "presser"),
     DESCRIPTION_REPLICATOR("description", "replicator"),
     DESCRIPTION_FLUID_REPLICATOR("description", "fluid_replicator"),
     DESCRIPTION_CHEMicAL_REPLICATOR("description", "chemical_replicator"),

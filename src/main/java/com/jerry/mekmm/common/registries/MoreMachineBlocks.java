@@ -12,6 +12,7 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFa
 import com.jerry.mekmm.common.item.block.*;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
+import com.jerry.mekmm.common.recipe.lookup.cache.MoreMachineInputRecipeCache.TripleItem;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.factory.TileEntityReplicatingFactory;
 import com.jerry.mekmm.common.tile.machine.*;
@@ -32,8 +33,8 @@ import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.item.block.ItemBlockTooltip;
-import mekanism.common.recipe.MekanismRecipeType;
-import mekanism.common.recipe.lookup.cache.InputRecipeCache;
+import mekanism.common.recipe.lookup.cache.InputRecipeCache.DoubleItem;
+import mekanism.common.recipe.lookup.cache.InputRecipeCache.ItemChemical;
 import mekanism.common.recipe.lookup.cache.SingleInputRecipeCache;
 import mekanism.common.registration.impl.BlockDeferredRegister;
 import mekanism.common.registration.impl.BlockRegistryObject;
@@ -89,9 +90,9 @@ public class MoreMachineBlocks {
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ADVANCED_MACHINE_INPUT_ONLY)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
-                    .addBasic(TileEntityPlantingStation.MAX_GAS, MoreMachineRecipeType.PLANTING_STATION, InputRecipeCache.ItemChemical::containsInputB)
+                    .addBasic(TileEntityPlantingStation.MAX_GAS, MoreMachineRecipeType.PLANTING_STATION, ItemChemical::containsInputB)
                     .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
-                            .addInput(MoreMachineRecipeType.PLANTING_STATION, InputRecipeCache.ItemChemical::containsInputA)
+                            .addInput(MoreMachineRecipeType.PLANTING_STATION, ItemChemical::containsInputA)
                             .addChemicalFillOrConvertSlot(1)
                             .addOutput()
                             .addOutput()// Secondary output
@@ -103,8 +104,8 @@ public class MoreMachineBlocks {
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.EXTRA_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
-                    .addInput(MoreMachineRecipeType.STAMPING, InputRecipeCache.DoubleItem::containsInputA)
-                    .addInput(MoreMachineRecipeType.STAMPING, InputRecipeCache.DoubleItem::containsInputB)
+                    .addInput(MoreMachineRecipeType.STAMPING, DoubleItem::containsInputA)
+                    .addInput(MoreMachineRecipeType.STAMPING, DoubleItem::containsInputB)
                     .addOutput()
                     .addEnergy()
                     .build()));
@@ -125,6 +126,18 @@ public class MoreMachineBlocks {
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ELECTRIC_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                     .addInput(MoreMachineRecipeType.ROLLING_MILL, SingleInputRecipeCache::containsInput)
+                    .addOutput()
+                    .addEnergy()
+                    .build()));
+
+    public static final BlockRegistryObject<BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>, ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>>> PRESSER = MM_BLOCKS.register("presser", () -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.PRESSER, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor())),
+            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+                    .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
+                    .component(MekanismDataComponents.SIDE_CONFIG, MoreMachineAttachedSideConfig.PRESSER)))
+            .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                    .addInput(MoreMachineRecipeType.PRESSING, TripleItem::containsInputA)
+                    .addInput(MoreMachineRecipeType.PRESSING, TripleItem::containsInputB)
+                    .addInput(MoreMachineRecipeType.PRESSING, TripleItem::containsInputC)
                     .addOutput()
                     .addEnergy()
                     .build()));
@@ -193,12 +206,13 @@ public class MoreMachineBlocks {
                 case CNC_STAMPING -> s -> MoreMachineRecipeType.STAMPING.getInputCache().containsInputA(null, s);
                 case CNC_LATHING -> s -> MoreMachineRecipeType.LATHING.getInputCache().containsInput(null, s);
                 case CNC_ROLLING_MILL -> s -> MoreMachineRecipeType.ROLLING_MILL.getInputCache().containsInput(null, s);
+                case PRESSING -> s -> MoreMachineRecipeType.PRESSING.getInputCache().containsInputA(null, s);
                 case REPLICATING -> TileEntityReplicator::isValidItemInput;
             };
             switch (type.getMoreMachineFactoryType()) {
                 case CNC_STAMPING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                         .addBasicFactorySlots(processes, recipeInputPredicate)
-                        .addInput(MekanismRecipeType.COMBINING, InputRecipeCache.DoubleItem::containsInputB)
+                        .addInput(MoreMachineRecipeType.STAMPING, DoubleItem::containsInputB)
                         .addEnergy()
                         .build());
                 case CNC_LATHING, CNC_ROLLING_MILL, RECYCLING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -210,13 +224,19 @@ public class MoreMachineBlocks {
                                 .addBasic(TileEntityPlantingStation.MAX_GAS * processes, switch (type.getMoreMachineFactoryType()) {
                                     case PLANTING_STATION -> MoreMachineRecipeType.PLANTING_STATION;
                                     default -> throw new IllegalStateException("Factory type doesn't have a known gas recipe.");
-                                }, InputRecipeCache.ItemChemical::containsInputB)
+                                }, ItemChemical::containsInputB)
                                 .build())
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 .addBasicFactorySlots(processes, recipeInputPredicate, true)
                                 .addChemicalFillOrConvertSlot(1)
                                 .addEnergy()
                                 .build());
+                case PRESSING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                        .addBasicFactorySlots(processes, recipeInputPredicate)
+                        .addInput(MoreMachineRecipeType.PRESSING, TripleItem::containsInputB)
+                        .addInput(MoreMachineRecipeType.PRESSING, TripleItem::containsInputC)
+                        .addEnergy()
+                        .build());
                 case REPLICATING -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                         .addBasic(TileEntityReplicatingFactory.MAX_GAS * processes, TileEntityReplicatingFactory::isValidChemicalInput)
                         .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()

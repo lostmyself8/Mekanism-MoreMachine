@@ -42,7 +42,7 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     @Override
     protected void render(TileEntitySolarHeatGenerator tile, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int overlayLight, ProfilerFiller profiler) {
         float angle = setupRenderer(tile, partialTick, matrix);
-        model.renderBlock(matrix, renderer, angle, light, overlayLight, false);
+        model.render(matrix, renderer, angle, light, overlayLight, false);
         matrix.popPose();
     }
 

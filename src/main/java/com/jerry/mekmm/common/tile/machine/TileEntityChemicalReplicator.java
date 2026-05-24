@@ -4,7 +4,7 @@ import com.jerry.mekmm.api.datamaps.ChemicalReplicatorRecipe;
 import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.recipe.impl.ChemicalReplicatorIRecipeSingle;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -213,7 +213,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
 
     @Override
     public @Nullable IRecipeViewerRecipeType<MMBasicChemicalChemicalToChemicalRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR;
+        return MoreMachineRecipeViewerRecipeType.CHEMICAL_REPLICATOR;
     }
 
     public static MMBasicChemicalChemicalToChemicalRecipe getRecipe(ChemicalStack chemicalStack, ChemicalStack UUStack) {

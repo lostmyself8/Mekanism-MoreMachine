@@ -3,7 +3,7 @@ package com.jerry.mekmm.common.tile.factory;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.cache.PlantingCachedRecipe;
 import com.jerry.mekmm.api.recipes.cache.PlantingNoPerTickUsageCacheRecipe;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlot;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.tile.machine.TileEntityPlantingStation;
@@ -27,6 +27,7 @@ import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
+import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.Mekanism;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
@@ -184,13 +185,13 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     }
 
     @Override
-    public @NotNull IMekanismRecipeTypeProvider<?, PlantingRecipe, ItemChemical<PlantingRecipe>> getRecipeType() {
+    public @NotNull IMekanismRecipeTypeProvider<SingleItemChemicalRecipeInput, PlantingRecipe, ItemChemical<PlantingRecipe>> getRecipeType() {
         return MoreMachineRecipeType.PLANTING_STATION;
     }
 
     @Override
     public @Nullable IRecipeViewerRecipeType<PlantingRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.PLANTING_STATION;
+        return MoreMachineRecipeViewerRecipeType.PLANTING_STATION;
     }
 
     @Override

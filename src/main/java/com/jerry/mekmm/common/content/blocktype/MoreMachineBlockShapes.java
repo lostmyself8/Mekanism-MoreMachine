@@ -23,6 +23,7 @@ public class MoreMachineBlockShapes {
     public static final VoxelShape[] STAMPING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] LATHING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] ROLLING_MILL_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
+    public static final VoxelShape[] PRESSING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] REPLICATOR_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] AMBIENT_GAS_COLLECTOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] WIRELESS_CHARGING_STATION = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
@@ -209,6 +210,22 @@ public class MoreMachineBlockShapes {
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 16, 12, 12, 16),
                 box(4, 4, 15, 12, 12, 16),
+                box(4, 3, 14, 12, 9, 15),
+                box(2, 3, 4, 14, 12, 14),
+                box(3, 0, 13, 13, 3, 16),
+                box(1, 0, 4, 15, 3, 13),
+                box(13, 0, 13, 16, 12, 16),
+                box(0, 0, 13, 3, 12, 16),
+                box(0, 12, 4, 16, 16, 16),
+                box(0, 0, 0, 16, 16, 4),
+                box(1, 3, 6, 2, 7, 10),
+                box(1, 8, 6, 2, 12, 10),
+                box(14, 3, 6, 15, 7, 10),
+                box(14, 8, 6, 15, 12, 10)), PRESSING_FACTORY);
+
+        VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
+                box(4, 4, 16, 12, 12, 16),
+                box(4, 4, 15, 12, 12, 16),
                 box(0, 0, 0, 16, 16, 4),
                 box(0, 0, 4, 16, 4, 16),
                 box(0, 10, 10, 16, 16, 16),
@@ -354,6 +371,7 @@ public class MoreMachineBlockShapes {
             case CNC_STAMPING -> STAMPING_FACTORY;
             case CNC_LATHING -> LATHING_FACTORY;
             case CNC_ROLLING_MILL -> ROLLING_MILL_FACTORY;
+            case PRESSING -> PRESSING_FACTORY;
             case REPLICATING -> REPLICATOR_FACTORY;
         };
     }

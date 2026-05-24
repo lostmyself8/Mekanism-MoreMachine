@@ -14,6 +14,9 @@ public class MoreMachineSerializationConstants {
     public static final String HEAT_RATE = "heat_rate";
 
     // Recipe
+    public static final String PRIMARY_INPUT = "primary_input";
+    public static final String SECONDARY_INPUT = "secondary_input";
+    public static final String TERTIARY_INPUT = "tertiary_input";
     public static final String MOLD = "mold";
 
     public static final String INPUT_AMOUNT = "input_amount";

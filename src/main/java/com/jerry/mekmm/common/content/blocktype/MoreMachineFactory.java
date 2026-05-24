@@ -60,7 +60,7 @@ public class MoreMachineFactory<TILE extends TileEntityMoreMachineFactory<?>> ex
             builder.withComputerSupport(tier, type.getRegistryNameComponentCapitalized() + "Factory");
             builder.withCustomShape(MoreMachineBlockShapes.getShape(type));
             builder.with(switch (type) {
-                case RECYCLING, CNC_STAMPING, CNC_LATHING, CNC_ROLLING_MILL -> AttributeSideConfig.ELECTRIC_MACHINE;
+                case RECYCLING, CNC_STAMPING, CNC_LATHING, CNC_ROLLING_MILL, PRESSING -> AttributeSideConfig.ELECTRIC_MACHINE;
                 case PLANTING_STATION, REPLICATING -> AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE;
             });
             // 如果有Bounding属性就添加，但或许会有更复杂的形状

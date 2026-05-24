@@ -6,7 +6,8 @@ import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.inventory.IInventorySlot;
-import mekanism.api.recipes.cache.CachedRecipe;
+import mekanism.api.recipes.cache.CachedRecipe.OperationTracker;
+import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +19,7 @@ public class MoreMachineOutputHelper {
 
     private MoreMachineOutputHelper() {}
 
-    public static IOutputHandler<ChanceOutput> getOutputHandler(IInventorySlot chanceSlot, CachedRecipe.OperationTracker.RecipeError chanceSlotNotEnoughSpaceError) {
+    public static IOutputHandler<ChanceOutput> getOutputHandler(IInventorySlot chanceSlot, RecipeError chanceSlotNotEnoughSpaceError) {
         Objects.requireNonNull(chanceSlot, "Chance slot cannot be null.");
         Objects.requireNonNull(chanceSlotNotEnoughSpaceError, "Chance slot not enough space error cannot be null.");
 
@@ -36,7 +37,7 @@ public class MoreMachineOutputHelper {
             }
 
             @Override
-            public void calculateOperationsCanSupport(CachedRecipe.OperationTracker tracker, ChanceOutput toOutput) {
+            public void calculateOperationsCanSupport(OperationTracker tracker, ChanceOutput toOutput) {
                 MoreMachineOutputHelper.calculateOperationsCanSupport(tracker, chanceSlotNotEnoughSpaceError, chanceSlot, toOutput.getMaxChanceOutput());
             }
         };
@@ -55,7 +56,7 @@ public class MoreMachineOutputHelper {
         inventorySlot.insertItem(output, Action.EXECUTE, AutomationType.INTERNAL);
     }
 
-    private static void calculateOperationsCanSupport(CachedRecipe.OperationTracker tracker, CachedRecipe.OperationTracker.RecipeError notEnoughSpace, IInventorySlot slot, ItemStack toOutput) {
+    private static void calculateOperationsCanSupport(OperationTracker tracker, RecipeError notEnoughSpace, IInventorySlot slot, ItemStack toOutput) {
         // If our output is empty, we have nothing to add, so we treat it as being able to fit all
         if (!toOutput.isEmpty()) {
             // Make a copy of the stack we are outputting with its maximum size
@@ -68,7 +69,7 @@ public class MoreMachineOutputHelper {
             tracker.updateOperations(operations);
             if (operations == 0) {
                 if (amountUsed == 0 && slot.getLimit(slot.getStack()) - slot.getCount() > 0) {
-                    tracker.addError(CachedRecipe.OperationTracker.RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
+                    tracker.addError(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
                 } else {
                     tracker.addError(notEnoughSpace);
                 }

@@ -3,8 +3,8 @@ package com.jerry.mekmm.client.recipe_viewer.jei;
 import com.jerry.mekaf.client.recipe_viewer.jei.AFCatalystRegistryHelper;
 
 import com.jerry.mekmm.Mekmm;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerUtils;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.client.recipe_viewer.jei.machine.*;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
@@ -29,34 +29,34 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
 @NothingNullByDefault
 public class MoreMachineJEI implements IModPlugin {
 
     @Override
-    public @NotNull ResourceLocation getPluginUid() {
+    public ResourceLocation getPluginUid() {
         // 不能使用Mekmm.rl()，原因见MekanismJEI.class
         return ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "jei_plugin");
     }
 
     @Override
-    public void registerCategories(@NotNull IRecipeCategoryRegistration registry) {
+    public void registerCategories(IRecipeCategoryRegistration registry) {
         if (!MekanismJEI.shouldLoad()) {
             return;
         }
         IGuiHelper guiHelper = registry.getJeiHelpers().getGuiHelper();
-        registry.addRecipeCategories(new RecyclerRecipeCategory(guiHelper, MMRecipeViewerRecipeType.RECYCLER));
-        registry.addRecipeCategories(new PlantingRecipeCategory(guiHelper, MMRecipeViewerRecipeType.PLANTING_STATION));
+        registry.addRecipeCategories(new RecyclerRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.RECYCLER));
+        registry.addRecipeCategories(new PlantingRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.PLANTING_STATION));
 
-        registry.addRecipeCategories(new ReplicatorRecipeCategory(guiHelper, MMRecipeViewerRecipeType.REPLICATOR));
-        registry.addRecipeCategories(new FluidReplicatorRecipeCategory(guiHelper, MMRecipeViewerRecipeType.FLUID_REPLICATOR));
-        registry.addRecipeCategories(new ChemicalReplicatorRecipeCategory(guiHelper, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR));
+        registry.addRecipeCategories(new ReplicatorRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.REPLICATOR));
+        registry.addRecipeCategories(new FluidReplicatorRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.FLUID_REPLICATOR));
+        registry.addRecipeCategories(new ChemicalReplicatorRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.CHEMICAL_REPLICATOR));
 
-        registry.addRecipeCategories(new StamperRecipeCategory(guiHelper, MMRecipeViewerRecipeType.STAMPING));
-        registry.addRecipeCategories(new ItemStackToItemStackRecipeCategory(guiHelper, MMRecipeViewerRecipeType.LATHE));
-        registry.addRecipeCategories(new ItemStackToItemStackRecipeCategory(guiHelper, MMRecipeViewerRecipeType.ROLLING_MILL));
+        registry.addRecipeCategories(new StamperRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.STAMPING));
+        registry.addRecipeCategories(new ItemStackToItemStackRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.LATHE));
+        registry.addRecipeCategories(new ItemStackToItemStackRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.ROLLING_MILL));
+        registry.addRecipeCategories(new PresserRecipeCategory(guiHelper, MoreMachineRecipeViewerRecipeType.PRESSING));
     }
 
     @Override
@@ -72,16 +72,17 @@ public class MoreMachineJEI implements IModPlugin {
         if (!MekanismJEI.shouldLoad()) {
             return;
         }
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.RECYCLER, MoreMachineRecipeType.RECYCLING);
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.PLANTING_STATION, MoreMachineRecipeType.PLANTING_STATION);
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.RECYCLER, MoreMachineRecipeType.RECYCLING);
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.PLANTING_STATION, MoreMachineRecipeType.PLANTING_STATION);
 
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.REPLICATOR, MMRecipeViewerUtils.getItemReplicatorRecipes());
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.FLUID_REPLICATOR, MMRecipeViewerUtils.getFluidReplicatorRecipes());
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MMRecipeViewerUtils.getChemicalReplicatorRecipes());
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.REPLICATOR, MMRecipeViewerUtils.getItemReplicatorRecipes());
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.FLUID_REPLICATOR, MMRecipeViewerUtils.getFluidReplicatorRecipes());
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MMRecipeViewerUtils.getChemicalReplicatorRecipes());
 
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.STAMPING, MoreMachineRecipeType.STAMPING);
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.LATHE, MoreMachineRecipeType.LATHING);
-        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.ROLLING_MILL, MoreMachineRecipeType.ROLLING_MILL);
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.STAMPING, MoreMachineRecipeType.STAMPING);
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.LATHE, MoreMachineRecipeType.LATHING);
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.ROLLING_MILL, MoreMachineRecipeType.ROLLING_MILL);
+        RecipeRegistryHelper.register(registry, MoreMachineRecipeViewerRecipeType.PRESSING, MoreMachineRecipeType.PRESSING);
 
         registry.addIngredientInfo(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS.asStack(FluidType.BUCKET_VOLUME), MekanismJEI.TYPE_CHEMICAL,
                 MoreMachineLang.RECIPE_VIEWER_INFO_UNSTABLE_DIMENSIONAL_GAS.translate(MoreMachineConfig.general.gasCollectAmount.get()));
@@ -92,8 +93,9 @@ public class MoreMachineJEI implements IModPlugin {
         if (!MekanismJEI.shouldLoad()) {
             return;
         }
-        MMCatalystRegistryHelper.register(registry, true, MMRecipeViewerRecipeType.RECYCLER, MMRecipeViewerRecipeType.PLANTING_STATION, MMRecipeViewerRecipeType.REPLICATOR,
-                MMRecipeViewerRecipeType.FLUID_REPLICATOR, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MMRecipeViewerRecipeType.STAMPING, MMRecipeViewerRecipeType.LATHE, MMRecipeViewerRecipeType.ROLLING_MILL);
+        MMCatalystRegistryHelper.register(registry, true, MoreMachineRecipeViewerRecipeType.RECYCLER, MoreMachineRecipeViewerRecipeType.PLANTING_STATION, MoreMachineRecipeViewerRecipeType.REPLICATOR,
+                MoreMachineRecipeViewerRecipeType.FLUID_REPLICATOR, MoreMachineRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MoreMachineRecipeViewerRecipeType.STAMPING, MoreMachineRecipeViewerRecipeType.LATHE,
+                MoreMachineRecipeViewerRecipeType.ROLLING_MILL, MoreMachineRecipeViewerRecipeType.PRESSING);
         AFCatalystRegistryHelper.register(registry);
 
         /*

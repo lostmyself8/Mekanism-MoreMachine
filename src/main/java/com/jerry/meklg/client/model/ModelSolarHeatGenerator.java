@@ -288,13 +288,9 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
         top = TOP.getFromRoot(root);
     }
 
-    public void renderBlock(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
+    public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
         float baseRotation = getAbsoluteRotation(angle);
         setRotation(top, baseRotation, 0F, 0F);
-        renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
-    }
-
-    public void renderItem(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, int light, int overlayLight, boolean hasEffect) {
         renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
     }
 

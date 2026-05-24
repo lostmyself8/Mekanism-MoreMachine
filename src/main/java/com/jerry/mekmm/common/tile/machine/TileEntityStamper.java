@@ -2,7 +2,7 @@ package com.jerry.mekmm.common.tile.machine;
 
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.api.recipes.cache.StamperCachedRecipe;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.upgrade.StamperUpgradeData;
@@ -32,7 +32,7 @@ import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
-import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler;
+import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.DoubleItemRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.DoubleItem;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
@@ -41,6 +41,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -50,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> implements IDoubleRecipeLookupHandler.DoubleItemRecipeLookupHandler<StamperRecipe> {
+public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> implements DoubleItemRecipeLookupHandler<StamperRecipe> {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
@@ -120,13 +121,13 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
     }
 
     @Override
-    public @NotNull IMekanismRecipeTypeProvider<?, StamperRecipe, DoubleItem<StamperRecipe>> getRecipeType() {
+    public @NotNull IMekanismRecipeTypeProvider<RecipeInput, StamperRecipe, DoubleItem<StamperRecipe>> getRecipeType() {
         return MoreMachineRecipeType.STAMPING;
     }
 
     @Override
     public @Nullable IRecipeViewerRecipeType<StamperRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.STAMPING;
+        return MoreMachineRecipeViewerRecipeType.STAMPING;
     }
 
     @Nullable

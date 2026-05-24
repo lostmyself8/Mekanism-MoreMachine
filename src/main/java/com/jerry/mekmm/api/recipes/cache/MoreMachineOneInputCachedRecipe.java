@@ -1,6 +1,7 @@
 package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
+import com.jerry.mekmm.api.recipes.RecyclerRecipe.ChanceOutput;
 
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.functions.ConstantPredicates;
@@ -51,9 +52,9 @@ public class MoreMachineOneInputCachedRecipe<INPUT, OUTPUT, RECIPE extends Mekan
      * @param inputHandler     Input handler.
      * @param outputHandler    Output handler.
      */
-    public static MoreMachineOneInputCachedRecipe<@NotNull ItemStack, RecyclerRecipe.@NotNull ChanceOutput, RecyclerRecipe> recycler(RecyclerRecipe recipe, BooleanSupplier recheckAllErrors,
-                                                                                                                                     IInputHandler<@NotNull ItemStack> inputHandler,
-                                                                                                                                     IOutputHandler<RecyclerRecipe.@NotNull ChanceOutput> outputHandler) {
+    public static MoreMachineOneInputCachedRecipe<@NotNull ItemStack, @NotNull ChanceOutput, RecyclerRecipe> recycler(RecyclerRecipe recipe, BooleanSupplier recheckAllErrors,
+                                                                                                                      IInputHandler<@NotNull ItemStack> inputHandler,
+                                                                                                                      IOutputHandler<@NotNull ChanceOutput> outputHandler) {
         return new MoreMachineOneInputCachedRecipe<>(recipe, recheckAllErrors, inputHandler, outputHandler, recipe::getInput, recipe::getOutput, ConstantPredicates.ITEM_EMPTY,
                 ConstantPredicates.alwaysFalse());
     }

@@ -71,7 +71,7 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
 
     @Override
     public RecipeSerializer<BasicRecyclerRecipe> getSerializer() {
-        return MoreMachineRecipeSerializers.RECYCLER.get();
+        return MoreMachineRecipeSerializers.RECYCLING.get();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
-import mekanism.client.gui.element.GuiUpArrow;
+import mekanism.client.gui.element.GuiDownArrow;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
@@ -29,7 +29,7 @@ public class StamperRecipeCategory extends HolderRecipeCategory<StamperRecipe> {
 
     public StamperRecipeCategory(IGuiHelper helper, IRecipeViewerRecipeType<StamperRecipe> recipeType) {
         super(helper, recipeType);
-        addElement(new GuiUpArrow(this, 68, 38));
+        addElement(new GuiDownArrow(this, 68, 38));
         input = addSlot(SlotType.INPUT, 64, 17);
         extra = addSlot(SlotType.EXTRA, 64, 53);
         output = addSlot(SlotType.OUTPUT, 116, 35);

@@ -23,6 +23,7 @@ public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTra
     CNC_STAMPING("stamping", MoreMachineLang.STAMPING, () -> MoreMachineBlockTypes.CNC_STAMPER, () -> MoreMachineBlocks.CNC_STAMPER),
     CNC_LATHING("lathing", MoreMachineLang.LATHING, () -> MoreMachineBlockTypes.CNC_LATHE, () -> MoreMachineBlocks.CNC_LATHE),
     CNC_ROLLING_MILL("rolling_mill", MoreMachineLang.ROLLING_MILL, () -> MoreMachineBlockTypes.CNC_ROLLING_MILL, () -> MoreMachineBlocks.CNC_ROLLING_MILL),
+    PRESSING("pressing", MoreMachineLang.PRESSING, () -> MoreMachineBlockTypes.PRESSER, () -> MoreMachineBlocks.PRESSER),
     REPLICATING("replicating", MoreMachineLang.REPLICATING, () -> MoreMachineBlockTypes.REPLICATOR, () -> MoreMachineBlocks.REPLICATOR);
 
     @Getter
