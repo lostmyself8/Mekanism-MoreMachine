@@ -152,7 +152,7 @@ public class ThreeInputCachedRecipe<INPUT_A, INPUT_B, INPUT_C, OUTPUT, RECIPE ex
                                                                                                                                                       IInputHandler<@NotNull ItemStack> secondaryInputHandler, IInputHandler<@NotNull ItemStack> tertiaryInputHandler,
                                                                                                                                                       IOutputHandler<@NotNull ItemStack> outputHandler) {
         return new ThreeInputCachedRecipe<>(recipe, recheckAllErrors, primaryInputHandler, secondaryInputHandler, tertiaryInputHandler, outputHandler, recipe::getFirstInput,
-                recipe::getSecondInput, recipe::getSecondInput, recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY,
+                recipe::getSecondInput, recipe::getThirdInput, recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY,
                 ConstantPredicates.ITEM_EMPTY);
     }
 }

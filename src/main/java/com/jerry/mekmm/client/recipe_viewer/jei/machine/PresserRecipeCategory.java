@@ -44,7 +44,7 @@ public class PresserRecipeCategory extends HolderRecipeCategory<TripleItemToItem
         TripleItemToItemRecipe recipe = recipeHolder.value();
         initItem(builder, RecipeIngredientRole.INPUT, first, recipe.getFirstInput().getRepresentations());
         initItem(builder, RecipeIngredientRole.INPUT, second, recipe.getSecondInput().getRepresentations());
-        initItem(builder, RecipeIngredientRole.INPUT, third, recipe.getSecondInput().getRepresentations());
+        initItem(builder, RecipeIngredientRole.INPUT, third, recipe.getThirdInput().getRepresentations());
         initItem(builder, RecipeIngredientRole.OUTPUT, output, recipe.getOutputDefinition());
     }
 }
