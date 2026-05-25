@@ -3,14 +3,24 @@ package com.jerry.meklg.common.content.blocktype;
 import mekanism.common.util.EnumUtils;
 import mekanism.common.util.VoxelShapeUtils;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LargeGeneratorBlockShapes {
 
     public static final VoxelShape[] LARGE_HEAT_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] LARGE_GAS_BURNING_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] LARGE_WIND_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
+    private static final Map<BlockPos, VoxelShape>[] LARGE_WIND_GENERATOR_PARTS = new Map[EnumUtils.HORIZONTAL_DIRECTIONS.length];
 
     static {
         VoxelShape largeGenerator = box(-16, 0, -16, 32, 48, 32);
@@ -34,7 +44,72 @@ public class LargeGeneratorBlockShapes {
         // box(-8, 569, -16, 24, 575, 20),
         // box(6, 556, 64, 10, 582, 79)), LARGE_WIND_GENERATOR);
 
-        VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
+        VoxelShape largeWindGenerator = VoxelShapeUtils.combine(
+                largeWindGeneratorBoxes());
+        VoxelShapeUtils.setShape(largeWindGenerator, LARGE_WIND_GENERATOR);
+        setSplitShapes(largeWindGenerator, LARGE_WIND_GENERATOR_PARTS);
+    }
+
+    private LargeGeneratorBlockShapes() {}
+
+    public static @Nullable VoxelShape getLargeWindGeneratorPartShape(Direction facing, BlockPos offset) {
+        if (!facing.getAxis().isHorizontal()) {
+            return null;
+        }
+        return LARGE_WIND_GENERATOR_PARTS[facing.ordinal() - 2].get(offset);
+    }
+
+    private static void setSplitShapes(VoxelShape shape, Map<BlockPos, VoxelShape>[] dest) {
+        for (Direction side : EnumUtils.HORIZONTAL_DIRECTIONS) {
+            dest[side.ordinal() - 2] = splitShape(VoxelShapeUtils.rotateHorizontal(shape, side));
+        }
+    }
+
+    private static Map<BlockPos, VoxelShape> splitShape(VoxelShape shape) {
+        Map<BlockPos, VoxelShape> parts = new HashMap<>();
+        for (AABB box : shape.toAabbs()) {
+            int minX = blockMin(box.minX);
+            int minY = blockMin(box.minY);
+            int minZ = blockMin(box.minZ);
+            int maxX = blockMax(box.maxX);
+            int maxY = blockMax(box.maxY);
+            int maxZ = blockMax(box.maxZ);
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
+                        AABB local = clipToBlock(box, x, y, z);
+                        if (local != null) {
+                            BlockPos offset = new BlockPos(x, y, z);
+                            parts.merge(offset, Shapes.create(local), VoxelShapeUtils::combine);
+                        }
+                    }
+                }
+            }
+        }
+        parts.replaceAll((offset, partShape) -> partShape.optimize());
+        return Map.copyOf(parts);
+    }
+
+    private static int blockMin(double min) {
+        return (int) Math.floor(min);
+    }
+
+    private static int blockMax(double max) {
+        return (int) Math.ceil(max) - 1;
+    }
+
+    private static @Nullable AABB clipToBlock(AABB box, int x, int y, int z) {
+        double minX = Math.max(box.minX - x, 0);
+        double minY = Math.max(box.minY - y, 0);
+        double minZ = Math.max(box.minZ - z, 0);
+        double maxX = Math.min(box.maxX - x, 1);
+        double maxY = Math.min(box.maxY - y, 1);
+        double maxZ = Math.min(box.maxZ - z, 1);
+        return minX < maxX && minY < maxY && minZ < maxZ ? new AABB(minX, minY, minZ, maxX, maxY, maxZ) : null;
+    }
+
+    private static VoxelShape[] largeWindGeneratorBoxes() {
+        return new VoxelShape[] {
                 box(-29, 24, -29, 45, 32, 45),
                 box(0, 32, -22, 16, 64, -20),
                 box(1, 43, -23, 2, 53, -22),
@@ -97,10 +172,9 @@ public class LargeGeneratorBlockShapes {
                 box(-12, 4, 63, -4, 12, 64),
                 box(20, 4, 63, 28, 12, 64),
                 box(-40, 8, -15, -32, 20, 31),
-                box(48, 8, -15, 56, 20, 31)), LARGE_WIND_GENERATOR);
+                box(48, 8, -15, 56, 20, 31)
+        };
     }
-
-    private LargeGeneratorBlockShapes() {}
 
     private static VoxelShape box(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
         return Block.box(minX, minY, minZ, maxX, maxY, maxZ);

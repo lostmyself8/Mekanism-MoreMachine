@@ -4,6 +4,7 @@
 	"package": "com.jerry.mekmm.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"MixinBlockBounding",
 		"MixinItemConfigurator",
 		"recipe.MixinMekanismRecipeType",
 		"recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
