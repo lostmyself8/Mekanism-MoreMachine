@@ -50,7 +50,7 @@ import java.util.function.Predicate;
 
 public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
-    public static final Predicate<ChemicalStack> HAS_FUEL = chemical -> chemical.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null;
+    public static final Predicate<ChemicalStack> HAS_FUEL = chemical -> chemical.typeHolder().getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null;
     /**
      * The tank this block is storing fuel in.
      */
@@ -291,7 +291,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
         private void recheckOutput(@NotNull ChemicalStack stack, Holder<Chemical> oldChemical) {
             if (!isTypeEqual(oldChemical) && !stack.isEmpty()) {
-                cachedFuel = isEmpty() ? null : getStack().getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
+                cachedFuel = isEmpty() ? null : getStack().typeHolder().getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
             }
         }
     }
