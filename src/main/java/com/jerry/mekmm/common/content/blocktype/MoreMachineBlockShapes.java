@@ -210,18 +210,15 @@ public class MoreMachineBlockShapes {
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 16, 12, 12, 16),
                 box(4, 4, 15, 12, 12, 16),
-                box(4, 3, 14, 12, 9, 15),
-                box(2, 3, 4, 14, 12, 14),
-                box(3, 0, 13, 13, 3, 16),
-                box(1, 0, 4, 15, 3, 13),
-                box(13, 0, 13, 16, 12, 16),
-                box(0, 0, 13, 3, 12, 16),
-                box(0, 12, 4, 16, 16, 16),
                 box(0, 0, 0, 16, 16, 4),
-                box(1, 3, 6, 2, 7, 10),
-                box(1, 8, 6, 2, 12, 10),
-                box(14, 3, 6, 15, 7, 10),
-                box(14, 8, 6, 15, 12, 10)), PRESSING_FACTORY);
+                box(0, 12, 4, 16, 16, 16),
+                box(0, 0, 4, 16, 4, 16),
+                box(1, 4, 4, 4, 12, 7),
+                box(1, 4, 12, 4, 12, 15),
+                box(12, 4, 12, 15, 12, 15),
+                box(12, 4, 4, 15, 12, 7),
+                box(2, 4, 7, 4, 12, 12),
+                box(12, 4, 7, 14, 12, 12)), PRESSING_FACTORY);
 
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
                 box(4, 4, 16, 12, 12, 16),

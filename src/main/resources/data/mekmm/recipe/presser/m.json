@@ -1,0 +1,19 @@
+{
+  "type": "mekmm:pressing",
+  "primary_input": {
+    "count": 1,
+    "tag": "c:storage_blocks/gold"
+  },
+  "secondary_input": {
+    "count": 1,
+    "tag": "c:storage_blocks/steel"
+  },
+  "tertiary_input": {
+    "count": 1,
+    "tag": "c:storage_blocks/iron"
+  },
+  "output": {
+    "count": 1,
+    "id": "mekmm:scrap"
+  }
+}
