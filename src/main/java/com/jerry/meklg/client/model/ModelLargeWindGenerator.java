@@ -477,7 +477,6 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
     @Override
     public void collect(LargeWindGeneratorRotationRenderState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
         setupAnim(state);
-        // 不直接使用allParts，会导致多渲染一份子模块
         collectParts(parts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, hasEffect);
     }
 
