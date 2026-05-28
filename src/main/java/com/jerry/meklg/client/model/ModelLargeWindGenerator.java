@@ -488,7 +488,6 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
 
     public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, LargeWindGeneratorRotationRenderState state, boolean isHighContrast) {
         setupAnim(state);
-        // 不直接使用root().getAllParts()，会导致多渲染一份子模块
         renderPartsAsWireFrame(parts, matrix, vertexBuilder, isHighContrast);
     }
 
