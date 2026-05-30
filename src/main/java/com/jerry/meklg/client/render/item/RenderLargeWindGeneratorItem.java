@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.renderer.special.SpecialModelRenderer.BakingContext;
 import net.minecraft.world.item.ItemStack;
 
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
@@ -24,14 +23,11 @@ import java.util.function.Consumer;
 @NothingNullByDefault
 public class RenderLargeWindGeneratorItem implements SpecialModelRenderer<LargeWindGeneratorRotationRenderState> {
 
-    public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked.INSTANCE);
-
-    // public static final RenderLargeWindGeneratorItem RENDERER = new RenderLargeWindGeneratorItem();
     private static final int SPEED = 16;
     private static int lastTicksUpdated = 0;
     private static int angle = 0;
-    private ModelLargeWindGenerator windGenerator;
-    private static LargeWindGeneratorRotationRenderState ZERO_ANGLE = new LargeWindGeneratorRotationRenderState(0);
+    private final ModelLargeWindGenerator windGenerator;
+    private static final LargeWindGeneratorRotationRenderState ZERO_ANGLE = new LargeWindGeneratorRotationRenderState(0);
 
     public RenderLargeWindGeneratorItem(EntityModelSet entityModelSet) {
         windGenerator = new ModelLargeWindGenerator(entityModelSet);
@@ -80,12 +76,13 @@ public class RenderLargeWindGeneratorItem implements SpecialModelRenderer<LargeW
         return state;
     }
 
-    public enum Unbaked implements SpecialModelRenderer.Unbaked<LargeWindGeneratorRotationRenderState> {
+    public static class Unbaked implements SpecialModelRenderer.Unbaked<LargeWindGeneratorRotationRenderState> {
 
-        INSTANCE;
+        public static final Unbaked INSTANCE = new Unbaked();
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(INSTANCE);
 
         @Override
-        public @Nullable SpecialModelRenderer<LargeWindGeneratorRotationRenderState> bake(BakingContext context) {
+        public SpecialModelRenderer<LargeWindGeneratorRotationRenderState> bake(BakingContext context) {
             return new RenderLargeWindGeneratorItem(context.entityModelSet());
         }
 

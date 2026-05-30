@@ -32,7 +32,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
@@ -83,16 +82,10 @@ public class ClientRegistration {
     }
 
     @SubscribeEvent
-    public static void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+    public static void specialItemRenderers(RegisterSpecialModelRendererEvent event) {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
-            event.register(Mekmm.rl("large_wind_generator"), RenderLargeWindGeneratorItem.MAP_CODEC);
+            event.register(Mekmm.rl("large_wind_generator"), RenderLargeWindGeneratorItem.Unbaked.MAP_CODEC);
         }
-    }
-
-    @SubscribeEvent
-    public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
-        // TOD 26.1 models
-        // event.addListener(RenderWindGeneratorItem.RENDERER);
     }
 
     @SubscribeEvent
