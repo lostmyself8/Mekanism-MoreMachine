@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "evolvedmekanism"
+    }
+  ],
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:alloys/overclocked"
+    },
+    "C": {
+      "tag": "c:circuits/overclocked"
+    },
+    "I": {
+      "tag": "c:ingots/uranium"
+    },
+    "P": {
+      "item": "mekmm:ultimate_pressing_factory"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "IPI",
+    "ACA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mekmm:overclocked_pressing_factory"
+  }
+}

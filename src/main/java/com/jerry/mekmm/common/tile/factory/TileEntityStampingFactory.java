@@ -2,7 +2,7 @@ package com.jerry.mekmm.common.tile.factory;
 
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.api.recipes.cache.StamperCachedRecipe;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.upgrade.StamperUpgradeData;
 
@@ -115,7 +115,7 @@ public class TileEntityStampingFactory extends TileEntityMoreMachineItemToItemFa
 
     @Override
     public IRecipeViewerRecipeType<StamperRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.STAMPING;
+        return MoreMachineRecipeViewerRecipeType.STAMPING;
     }
 
     @Nullable

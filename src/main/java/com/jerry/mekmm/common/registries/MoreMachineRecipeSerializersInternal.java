@@ -20,10 +20,11 @@ public class MoreMachineRecipeSerializersInternal {
     public static final DeferredRegister<RecipeSerializer<?>> MM_RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, Mekmm.MOD_ID);
 
     static {
-        MoreMachineRecipeSerializers.RECYCLER = MM_RECIPE_SERIALIZERS.register("recycler", () -> new RecyclerRecipeSerializer(BasicRecyclerRecipe::new));
+        MoreMachineRecipeSerializers.RECYCLING = MM_RECIPE_SERIALIZERS.register("recycler", () -> new RecyclerRecipeSerializer(BasicRecyclerRecipe::new));
         MoreMachineRecipeSerializers.PLANTING = MM_RECIPE_SERIALIZERS.register("planting", () -> new PlantingRecipeSerializer(BasicPlantingRecipe::new));
         MoreMachineRecipeSerializers.STAMPING = MM_RECIPE_SERIALIZERS.register("stamper", () -> MoreMachineRecipeSerializer.stamping(BasicStamperRecipe::new));
         MoreMachineRecipeSerializers.LATHING = MM_RECIPE_SERIALIZERS.register("lathe", () -> MekanismRecipeSerializer.itemToItem(BasicLatheRecipe::new));
         MoreMachineRecipeSerializers.ROLLING_MILL = MM_RECIPE_SERIALIZERS.register("rolling_mill", () -> MekanismRecipeSerializer.itemToItem(BasicRollingMillRecipe::new));
+        MoreMachineRecipeSerializers.PRESSING = MM_RECIPE_SERIALIZERS.register("pressing", () -> MoreMachineRecipeSerializer.tripleItemToItem(BasicPresserRecipe::new));
     }
 }

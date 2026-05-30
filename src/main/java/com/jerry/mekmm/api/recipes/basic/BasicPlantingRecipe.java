@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +54,7 @@ public class BasicPlantingRecipe extends PlantingRecipe {
     }
 
     @Override
-    public boolean test(@NotNull ItemStack itemStack, ChemicalStack chemicalStack) {
+    public boolean test(ItemStack itemStack, ChemicalStack chemicalStack) {
         return this.itemInput.test(itemStack) && this.chemicalInput.test(chemicalStack);
     }
 

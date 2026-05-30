@@ -39,9 +39,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -99,10 +99,9 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         chargeSlot.drainContainer();
         dischargeSlot.fillContainerOrConvert();
         if (!energyContainer.isEmpty() && canFunction()) {
-            Level level = getLevel();
             UUID uuid = getOwnerUUID();
-            if (level != null && uuid != null) {
-                Player player = level.getPlayerByUUID(uuid);
+            if (getLevel() instanceof ServerLevel serverLevel && uuid != null) {
+                Player player = serverLevel.getServer().getPlayerList().getPlayer(uuid);
                 if (player == null) {
                     return sendUpdatePacket;
                 }

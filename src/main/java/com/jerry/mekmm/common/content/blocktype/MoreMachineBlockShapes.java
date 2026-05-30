@@ -23,6 +23,7 @@ public class MoreMachineBlockShapes {
     public static final VoxelShape[] STAMPING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] LATHING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] ROLLING_MILL_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
+    public static final VoxelShape[] PRESSING_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] REPLICATOR_FACTORY = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] AMBIENT_GAS_COLLECTOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] WIRELESS_CHARGING_STATION = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
@@ -210,6 +211,19 @@ public class MoreMachineBlockShapes {
                 box(4, 4, 16, 12, 12, 16),
                 box(4, 4, 15, 12, 12, 16),
                 box(0, 0, 0, 16, 16, 4),
+                box(0, 12, 4, 16, 16, 16),
+                box(0, 0, 4, 16, 4, 16),
+                box(1, 4, 4, 4, 12, 7),
+                box(1, 4, 12, 4, 12, 15),
+                box(12, 4, 12, 15, 12, 15),
+                box(12, 4, 4, 15, 12, 7),
+                box(2, 4, 7, 4, 12, 12),
+                box(12, 4, 7, 14, 12, 12)), PRESSING_FACTORY);
+
+        VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
+                box(4, 4, 16, 12, 12, 16),
+                box(4, 4, 15, 12, 12, 16),
+                box(0, 0, 0, 16, 16, 4),
                 box(0, 0, 4, 16, 4, 16),
                 box(0, 10, 10, 16, 16, 16),
                 box(1, 4, 4, 15, 5, 14),
@@ -354,6 +368,7 @@ public class MoreMachineBlockShapes {
             case CNC_STAMPING -> STAMPING_FACTORY;
             case CNC_LATHING -> LATHING_FACTORY;
             case CNC_ROLLING_MILL -> ROLLING_MILL_FACTORY;
+            case PRESSING -> PRESSING_FACTORY;
             case REPLICATING -> REPLICATOR_FACTORY;
         };
     }

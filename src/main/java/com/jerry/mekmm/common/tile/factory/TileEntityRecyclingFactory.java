@@ -3,7 +3,7 @@ package com.jerry.mekmm.common.tile.factory;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.api.recipes.cache.MoreMachineOneInputCachedRecipe;
 import com.jerry.mekmm.api.recipes.outputs.MoreMachineOutputHelper;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.inventory.slot.MoreMachineFactoryInputInventorySlot;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 
@@ -121,7 +121,7 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
 
     @Override
     public IRecipeViewerRecipeType<RecyclerRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.RECYCLER;
+        return MoreMachineRecipeViewerRecipeType.RECYCLER;
     }
 
     @Override

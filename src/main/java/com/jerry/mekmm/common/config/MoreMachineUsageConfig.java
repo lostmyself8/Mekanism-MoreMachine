@@ -15,6 +15,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
     public final CachedLongValue cnc_stamper;
     public final CachedLongValue cnc_lathe;
     public final CachedLongValue cnc_rollingMill;
+    public final CachedLongValue presser;
     public final CachedLongValue itemReplicator;
     public final CachedLongValue fluidReplicator;
     public final CachedLongValue chemicalReplicator;
@@ -32,6 +33,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
         cnc_stamper = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_CNC_STAMPER, "cnc_stamper", 50L);
         cnc_lathe = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_CNC_LATHE, "cnc_lathe", 50L);
         cnc_rollingMill = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_ROLLING_MILL, "cnc_rollingMill", 50L);
+        presser = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_PRESSER, "presser", 50L);
         ambientGasCollector = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_AMBIENT_GAS_COLLECTOR, "ambientGasCollector", 100L);
 
         MoreMachineConfigTranslations.ENERGY_USAGE_REPLICATOR.applyToBuilder(builder).push("replicator");

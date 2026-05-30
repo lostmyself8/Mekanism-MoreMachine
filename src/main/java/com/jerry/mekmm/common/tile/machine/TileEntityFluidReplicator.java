@@ -4,7 +4,7 @@ import com.jerry.mekmm.api.datamaps.FluidReplicatorRecipe;
 import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.recipe.impl.FluidReplicatorIRecipeSingle;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -240,7 +240,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
 
     @Override
     public @Nullable IRecipeViewerRecipeType<BasicFluidChemicalToFluidRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.FLUID_REPLICATOR;
+        return MoreMachineRecipeViewerRecipeType.FLUID_REPLICATOR;
     }
 
     public static BasicFluidChemicalToFluidRecipe getRecipe(FluidStack fluidStack, ChemicalStack chemicalStack) {

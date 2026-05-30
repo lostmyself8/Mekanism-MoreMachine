@@ -2,7 +2,6 @@ package com.jerry.meklg.client.gui.generator;
 
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiMekanismTile;
-import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.GuiSideHolder;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
@@ -31,10 +30,10 @@ public class GuiSolarHeatGenerator extends GuiMekanismTile<TileEntitySolarHeatGe
     protected void addGuiElements() {
         addRenderableWidget(GuiSideHolder.create(this, -26, 6, 98, true, true, SpecialColors.TAB_ARMOR_SLOTS));
         super.addGuiElements();
-        addRenderableWidget(new GuiInnerScreen(this, 48, 21, 80, 44, () -> List.of(
-                EnergyDisplay.of(tile.getEnergyContainer()).getTextComponent(),
-                GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.ZERO),
-                MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())))));
+        // addRenderableWidget(new GuiInnerScreen(this, 48, 21, 80, 44, () -> List.of(
+        // EnergyDisplay.of(tile.getEnergyContainer()).getTextComponent(),
+        // GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.ZERO),
+        // MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())))));
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(
                 GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.ZERO),
                 MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())))));

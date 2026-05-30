@@ -181,6 +181,18 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
                 .build(consumer, Mekmm.rl("cnc_rolling_mill"));
 
+        // 压制机
+        MoreMachineDataShapedRecipeBuilder.shapedRecipe(MoreMachineBlocks.PRESSER)
+                .pattern(RecipePattern.createPattern(
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CONSTANT, Pattern.ALLOY),
+                        RecipePattern.TripleLine.of(Pattern.CIRCUIT, Pattern.MACHINE, Pattern.CIRCUIT),
+                        RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.CONSTANT, Pattern.ALLOY)))
+                .key(Pattern.ALLOY, MekanismTags.Items.ALLOYS_ELITE)
+                .key(Pattern.CIRCUIT, MekanismTags.Items.CIRCUITS_ELITE)
+                .key(Pattern.CONSTANT, Ingredient.of(Items.PISTON, Items.STICKY_PISTON))
+                .key(Pattern.MACHINE, MoreMachineBlocks.CNC_STAMPER)
+                .build(consumer, Mekmm.rl("presser"));
+
         // 大型回旋
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_ROTARY_CONDENSENTRATOR)
                 .pattern(RecipePattern.createPattern(

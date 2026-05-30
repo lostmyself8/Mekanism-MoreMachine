@@ -1,8 +1,8 @@
 package com.jerry.mekmm.client.recipe_viewer.emi;
 
 import com.jerry.mekmm.Mekmm;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
 import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerUtils;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.client.recipe_viewer.emi.recipe.*;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.block.attribute.MoreMachineAttributeFactoryType;
@@ -54,16 +54,16 @@ public class MoreMachineEMI implements EmiPlugin {
     }
 
     private void addCategories(EmiRegistry registry) {
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.RECYCLER, RecyclerEmiRecipe::new);
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.PLANTING_STATION, PlantingEmiRecipe::new);
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.RECYCLER, RecyclerEmiRecipe::new);
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.PLANTING_STATION, PlantingEmiRecipe::new);
 
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.REPLICATOR, ReplicatorEmiRecipe::new, MMRecipeViewerUtils.getItemReplicatorRecipes());
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.FLUID_REPLICATOR, FluidReplicatorEmiRecipe::new, MMRecipeViewerUtils.getFluidReplicatorRecipes());
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR, ChemicalReplicatorEmiRecipe::new, MMRecipeViewerUtils.getChemicalReplicatorRecipes());
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.REPLICATOR, ReplicatorEmiRecipe::new, MMRecipeViewerUtils.getItemReplicatorRecipes());
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.FLUID_REPLICATOR, FluidReplicatorEmiRecipe::new, MMRecipeViewerUtils.getFluidReplicatorRecipes());
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.CHEMICAL_REPLICATOR, ChemicalReplicatorEmiRecipe::new, MMRecipeViewerUtils.getChemicalReplicatorRecipes());
 
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.STAMPING, StamperEmiRecipe::new);
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.LATHE, ItemStackToItemStackEmiRecipe::new);
-        addCategoryAndRecipes(registry, MMRecipeViewerRecipeType.ROLLING_MILL, ItemStackToItemStackEmiRecipe::new);
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.STAMPING, StamperEmiRecipe::new);
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.LATHE, ItemStackToItemStackEmiRecipe::new);
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.ROLLING_MILL, ItemStackToItemStackEmiRecipe::new);
 
         registry.addRecipe(new EmiInfoRecipe(List.of(new ChemicalEmiStack(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS.asStack(FluidType.BUCKET_VOLUME))), List.of(
                 MoreMachineLang.RECIPE_VIEWER_INFO_UNSTABLE_DIMENSIONAL_GAS.translate()), Mekmm.rl("info/unstable_dimensional_gas")));

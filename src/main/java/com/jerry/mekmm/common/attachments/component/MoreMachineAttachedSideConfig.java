@@ -37,4 +37,20 @@ public class MoreMachineAttachedSideConfig {
         sideConfig.put(RelativeSide.FRONT, DataType.OUTPUT);
         return new LightConfigInfo(sideConfig, true);
     });
+
+    public static final LightConfigInfo THREE_INPUT_AND_OUT = Util.make(() -> {
+        Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
+        sideConfig.put(RelativeSide.RIGHT, DataType.INPUT_1);
+        sideConfig.put(RelativeSide.LEFT, DataType.INPUT_2);
+        sideConfig.put(RelativeSide.BACK, DataType.EXTRA);
+        sideConfig.put(RelativeSide.FRONT, DataType.OUTPUT);
+        return new LightConfigInfo(sideConfig, true);
+    });
+
+    public static final AttachedSideConfig PRESSER = Util.make(() -> {
+        Map<TransmissionType, LightConfigInfo> configInfo = new EnumMap<>(TransmissionType.class);
+        configInfo.put(TransmissionType.ITEM, THREE_INPUT_AND_OUT);
+        configInfo.put(TransmissionType.ENERGY, LightConfigInfo.INPUT_ONLY);
+        return new AttachedSideConfig(configInfo);
+    });
 }

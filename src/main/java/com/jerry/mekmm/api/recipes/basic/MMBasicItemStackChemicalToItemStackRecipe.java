@@ -60,9 +60,8 @@ public abstract class MMBasicItemStackChemicalToItemStackRecipe extends ItemStac
         return true;
     }
 
-    @NotNull
     @Override
-    public ItemStack getResultItem(@NotNull HolderLookup.Provider provider) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return output.copy();
     }
 

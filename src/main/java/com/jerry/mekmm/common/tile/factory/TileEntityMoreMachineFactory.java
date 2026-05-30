@@ -130,7 +130,9 @@ public abstract class TileEntityMoreMachineFactory<RECIPE extends MekanismRecipe
                 outputSlots.add(info.secondaryOutputSlot());
             }
         }
-        configComponent.setupItemIOConfig(inputSlots, outputSlots, energySlot, false);
+        if (defaultsIOConfig()) {
+            configComponent.setupItemIOConfig(inputSlots, outputSlots, energySlot, false);
+        }
         IInventorySlot extraSlot = getExtraSlot();
         if (extraSlot != null) {
             ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
@@ -214,6 +216,10 @@ public abstract class TileEntityMoreMachineFactory<RECIPE extends MekanismRecipe
     @Nullable
     protected IInventorySlot getExtraSlot() {
         return null;
+    }
+
+    protected boolean defaultsIOConfig() {
+        return true;
     }
 
     public MoreMachineFactoryType getMMFactoryType() {

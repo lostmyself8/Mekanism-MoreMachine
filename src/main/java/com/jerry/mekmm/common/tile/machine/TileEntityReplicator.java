@@ -4,7 +4,7 @@ import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.api.datamaps.ItemReplicatorRecipe;
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
 import com.jerry.mekmm.api.recipes.cache.ReplicatorCachedRecipe;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.recipe.impl.ReplicatorIRecipeSingle;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -24,6 +24,7 @@ import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
+import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.Mekanism;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
@@ -46,6 +47,7 @@ import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
+import mekanism.common.recipe.lookup.cache.IInputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
@@ -174,7 +176,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
 
     @Override
-    public @NotNull IMekanismRecipeTypeProvider<?, MMBasicItemStackChemicalToItemStackRecipe, ?> getRecipeType() {
+    public @NotNull IMekanismRecipeTypeProvider<SingleItemChemicalRecipeInput, MMBasicItemStackChemicalToItemStackRecipe, IInputRecipeCache> getRecipeType() {
         return null;
     }
 
@@ -198,7 +200,7 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
 
     @Override
     public @Nullable IRecipeViewerRecipeType<MMBasicItemStackChemicalToItemStackRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.REPLICATOR;
+        return MoreMachineRecipeViewerRecipeType.REPLICATOR;
     }
 
     // public static MMBasicItemStackChemicalToItemStackRecipe getRecipe(ItemStack itemStack, ChemicalStack

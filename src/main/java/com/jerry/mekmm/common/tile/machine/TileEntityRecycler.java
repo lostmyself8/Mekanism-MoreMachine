@@ -4,7 +4,7 @@ import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe.ChanceOutput;
 import com.jerry.mekmm.api.recipes.cache.MoreMachineOneInputCachedRecipe;
 import com.jerry.mekmm.api.recipes.outputs.MoreMachineOutputHelper;
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
@@ -124,7 +124,7 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
 
     @Override
     public IRecipeViewerRecipeType<RecyclerRecipe> recipeViewerType() {
-        return MMRecipeViewerRecipeType.RECYCLER;
+        return MoreMachineRecipeViewerRecipeType.RECYCLER;
     }
 
     @Override

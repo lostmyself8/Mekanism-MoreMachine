@@ -1,6 +1,6 @@
 package com.jerry.mekmm.common.tile.factory;
 
-import com.jerry.mekmm.client.recipe_viewer.MMRecipeViewerRecipeType;
+import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 
 import mekanism.api.inventory.IInventorySlot;
@@ -87,9 +87,9 @@ public class TileEntityMoreMachineItemStackToItemStackFactory extends TileEntity
     @Override
     public IRecipeViewerRecipeType<ItemStackToItemStackRecipe> recipeViewerType() {
         return switch (type) {
-            case CNC_LATHING -> MMRecipeViewerRecipeType.LATHE;
+            case CNC_LATHING -> MoreMachineRecipeViewerRecipeType.LATHE;
             // TODO: Make it so that it throws an error if it is not one of the three types
-            default -> MMRecipeViewerRecipeType.ROLLING_MILL;
+            default -> MoreMachineRecipeViewerRecipeType.ROLLING_MILL;
         };
     }
 

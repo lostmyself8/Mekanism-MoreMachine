@@ -53,19 +53,20 @@ public class RenderSolarHeatGeneratorItem extends MekanismISTER {
     @Override
     public void renderByItem(@NotNull ItemStack stack, @NotNull ItemDisplayContext displayContext, @NotNull PoseStack matrix, @NotNull MultiBufferSource renderer,
                              int light, int overlayLight) {
+        // 渲染屏幕
         matrix.pushPose();
         matrix.translate(0, -1, 0);
-        renderBase(matrix, renderer, RANDOM, light, overlayLight);
+        renderScreen(matrix, renderer, RANDOM, light, overlayLight);
         matrix.popPose();
 
         matrix.pushPose();
         matrix.translate(0.5, 0.5, 0.5);
         matrix.mulPose(Axis.ZP.rotationDegrees(180));
-        solarHeatGenerator.renderItem(matrix, renderer, light, overlayLight, stack.hasFoil());
+        solarHeatGenerator.renderItem(matrix, renderer, 0, light, overlayLight, stack.hasFoil());
         matrix.popPose();
     }
 
-    public static void renderBase(PoseStack matrix, MultiBufferSource renderer, RandomSource random, int light, int overlayLight) {
+    public static void renderScreen(PoseStack matrix, MultiBufferSource renderer, RandomSource random, int light, int overlayLight) {
         PoseStack.Pose entry = matrix.last();
         VertexConsumer buffer = renderer.getBuffer(Sheets.solidBlockSheet());
         for (BakedQuad quad : getBaseModel().getQuads(null, null, random, ModelData.EMPTY, null)) {

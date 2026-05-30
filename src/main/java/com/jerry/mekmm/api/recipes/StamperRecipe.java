@@ -29,7 +29,7 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
     private static final Holder<Item> STAMPER = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "stamper"));
 
     @Override
-    public abstract boolean test(ItemStack input, ItemStack extra);
+    public abstract boolean test(ItemStack input, ItemStack mold);
 
     /**
      * Gets the main input ingredient.
@@ -41,7 +41,6 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
      */
     public abstract ItemStackIngredient getMold();
 
-    @NotNull
     @Override
     public ItemStack assemble(RecipeInput input, HolderLookup.Provider provider) {
         if (!isIncomplete() && input.size() == 2) {
@@ -79,11 +78,10 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
      * @implNote The passed in inputs should <strong>NOT</strong> be modified.
      */
     @Contract(value = "_, _ -> new", pure = true)
-    public abstract ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack extra);
+    public abstract ItemStack getOutput(ItemStack input, ItemStack extra);
 
-    @NotNull
     @Override
-    public abstract ItemStack getResultItem(@NotNull HolderLookup.Provider provider);
+    public abstract ItemStack getResultItem(HolderLookup.Provider provider);
 
     /**
      * For JEI, gets the output representations to display.

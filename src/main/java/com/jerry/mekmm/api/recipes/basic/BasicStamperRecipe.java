@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,8 +39,8 @@ public class BasicStamperRecipe extends StamperRecipe {
     }
 
     @Override
-    public boolean test(ItemStack input, ItemStack extra) {
-        return this.input.test(input) && mold.test(extra);
+    public boolean test(ItemStack input, ItemStack mold) {
+        return this.input.test(input) && this.mold.test(mold);
     }
 
     @Override
@@ -56,13 +55,12 @@ public class BasicStamperRecipe extends StamperRecipe {
 
     @Override
     @Contract(value = "_, _ -> new", pure = true)
-    public ItemStack getOutput(@NotNull ItemStack input, @NotNull ItemStack extra) {
+    public ItemStack getOutput(ItemStack input, ItemStack extra) {
         return output.copy();
     }
 
-    @NotNull
     @Override
-    public ItemStack getResultItem(@NotNull HolderLookup.Provider provider) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return output.copy();
     }
 
