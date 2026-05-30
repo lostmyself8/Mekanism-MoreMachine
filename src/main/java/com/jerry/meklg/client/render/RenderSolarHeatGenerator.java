@@ -33,16 +33,18 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     @Override
     public void renderWireFrame(BlockEntity tile, float partialTick, PoseStack matrix, VertexConsumer buffer) {
         if (tile instanceof TileEntitySolarHeatGenerator solarHeatGenerator) {
-            float angle = setupRenderer(solarHeatGenerator, partialTick, matrix);
-            model.renderWireFrame(matrix, buffer, angle);
+            float angle = setupRenderer(solarHeatGenerator, matrix);
+            model.renderWireFrame(matrix, buffer, angle,
+                  hasPanel(solarHeatGenerator, 0), hasPanel(solarHeatGenerator, 1), hasPanel(solarHeatGenerator, 2), hasPanel(solarHeatGenerator, 3));
             matrix.popPose();
         }
     }
 
     @Override
     protected void render(TileEntitySolarHeatGenerator tile, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int overlayLight, ProfilerFiller profiler) {
-        float angle = setupRenderer(tile, partialTick, matrix);
-        model.render(matrix, renderer, angle, light, overlayLight, false);
+        float angle = setupRenderer(tile, matrix);
+        model.renderBlock(matrix, renderer, angle, light, overlayLight, false,
+              hasPanel(tile, 0), hasPanel(tile, 1), hasPanel(tile, 2), hasPanel(tile, 3));
         matrix.popPose();
     }
 
@@ -62,11 +64,15 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
         return AABB.encapsulatingFullBlocks(pos.offset(-3, 0, -3), pos.offset(3, 7, 3));
     }
 
-    private float setupRenderer(TileEntitySolarHeatGenerator tile, float partialTick, PoseStack matrix) {
+    private float setupRenderer(TileEntitySolarHeatGenerator tile, PoseStack matrix) {
         matrix.pushPose();
         matrix.translate(0.5, 1.5, 0.5);
         MekanismRenderer.rotate(matrix, tile.getDirection(), 0, 180, 90, 270);
         matrix.mulPose(Axis.ZP.rotationDegrees(180));
         return tile.getAngle();
+    }
+
+    private boolean hasPanel(TileEntitySolarHeatGenerator tile, int slot) {
+        return !tile.getItemStack(slot).isEmpty();
     }
 }

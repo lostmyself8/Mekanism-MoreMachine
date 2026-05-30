@@ -286,25 +286,32 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
     private final RenderType RENDER_TYPE = renderType(SOLAR_HEAT_GENERATOR_TEXTURE);
     private final List<ModelPart> parts;
     private final ModelPart top;
-    // private final ModelPart panelA;
-    // private final ModelPart panelB;
-    // private final ModelPart panelC;
-    // private final ModelPart panelD;
+    private final ModelPart panelA;
+    private final ModelPart panelB;
+    private final ModelPart panelC;
+    private final ModelPart panelD;
 
     public ModelSolarHeatGenerator(EntityModelSet entityModelSet) {
         super(RenderType::entitySolid);
         ModelPart root = entityModelSet.bakeLayer(SOLAR_HEAT_GENERATOR_LAYER);
         parts = getRenderableParts(root, BASE, MIDDLE, TOP);
         top = TOP.getFromRoot(root);
-        // panelA = top.getChild("panel").getChild("panel_a_r1");
-        // panelB = top.getChild("panel").getChild("panel_b_r1");
-        // panelC = top.getChild("panel").getChild("panel_c_r1");
-        // panelD = top.getChild("panel").getChild("panel_d_r1");
+
+        ModelPart panelPart = top.getChild(panel.name());
+        panelA = panelPart.getChild(panel_a_r1.name());
+        panelB = panelPart.getChild(panel_b_r1.name());
+        panelC = panelPart.getChild(panel_c_r1.name());
+        panelD = panelPart.getChild(panel_d_r1.name());
     }
 
-    public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
+    public void renderItem(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
+        renderBlock(matrix, renderer, angle, light, overlayLight, hasEffect, true, true, true, true);
+    }
+
+    public void renderBlock(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect, boolean renderPanelA, boolean renderPanelB, boolean renderPanelC, boolean renderPanelD) {
         float baseRotation = getAbsoluteRotation(angle);
         setRotation(top, baseRotation, 0F, 0F);
+        setPanelVisibility(renderPanelA, renderPanelB, renderPanelC, renderPanelD);
         renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
     }
 
@@ -313,10 +320,18 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
         renderPartsToBuffer(parts, poseStack, vertexConsumer, light, overlayLight, color);
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle) {
+    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle, boolean renderPanelA, boolean renderPanelB, boolean renderPanelC, boolean renderPanelD) {
         float baseRotation = getAbsoluteRotation(angle);
         setRotation(top, baseRotation, 0F, 0F);
+        setPanelVisibility(renderPanelA, renderPanelB, renderPanelC, renderPanelD);
         renderPartsAsWireFrame(parts, matrix, vertexBuilder);
+    }
+
+    private void setPanelVisibility(boolean renderPanelA, boolean renderPanelB, boolean renderPanelC, boolean renderPanelD) {
+        panelA.visible = renderPanelA;
+        panelB.visible = renderPanelB;
+        panelC.visible = renderPanelC;
+        panelD.visible = renderPanelD;
     }
 
     private float getAbsoluteRotation(double angle) {
