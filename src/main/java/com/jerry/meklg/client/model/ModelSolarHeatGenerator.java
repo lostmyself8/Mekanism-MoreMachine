@@ -28,6 +28,9 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
     public static final ModelLayerLocation SOLAR_HEAT_GENERATOR_LAYER = new ModelLayerLocation(Mekmm.rl("solar_heat_generator"), "main");
     private static final ResourceLocation SOLAR_HEAT_GENERATOR_TEXTURE = Mekmm.rl("render/solar_heat_generator.png");
 
+    public static final int PANEL_COUNT = 4;
+    private static final boolean[] ALL_PANELS = { true, true, true, true };
+
     private static final ModelPartData ports_1 = new ModelPartData("ports_1", CubeListBuilder.create()
             .texOffs(46, 371).addBox(-5.0F, -29.0F, 55.0F, 10.0F, 10.0F, 1.0F, new CubeDeformation(0.0F))
             .texOffs(334, 374).addBox(-20.0F, -28.0F, 55.0F, 8.0F, 8.0F, 1.0F, new CubeDeformation(0.0F))
@@ -286,10 +289,7 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
     private final RenderType RENDER_TYPE = renderType(SOLAR_HEAT_GENERATOR_TEXTURE);
     private final List<ModelPart> parts;
     private final ModelPart top;
-    private final ModelPart panelA;
-    private final ModelPart panelB;
-    private final ModelPart panelC;
-    private final ModelPart panelD;
+    private final ModelPart[] panels = new ModelPart[PANEL_COUNT];
 
     public ModelSolarHeatGenerator(EntityModelSet entityModelSet) {
         super(RenderType::entitySolid);
@@ -298,20 +298,22 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
         top = TOP.getFromRoot(root);
 
         ModelPart panelPart = top.getChild(panel.name());
-        panelA = panelPart.getChild(panel_a_r1.name());
-        panelB = panelPart.getChild(panel_b_r1.name());
-        panelC = panelPart.getChild(panel_c_r1.name());
-        panelD = panelPart.getChild(panel_d_r1.name());
+        panels[0] = panelPart.getChild(panel_a_r1.name());
+        panels[1] = panelPart.getChild(panel_b_r1.name());
+        panels[2] = panelPart.getChild(panel_c_r1.name());
+        panels[3] = panelPart.getChild(panel_d_r1.name());
     }
 
     public void renderItem(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
-        renderBlock(matrix, renderer, angle, light, overlayLight, hasEffect, true, true, true, true);
+        renderBlock(matrix, renderer, angle, light, overlayLight, hasEffect, ALL_PANELS);
     }
 
-    public void renderBlock(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect, boolean renderPanelA, boolean renderPanelB, boolean renderPanelC, boolean renderPanelD) {
+    public void renderBlock(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect, boolean[] renderPanels) {
+        setPanelVisibility(renderPanels);
+
         float baseRotation = getAbsoluteRotation(angle);
         setRotation(top, baseRotation, 0F, 0F);
-        setPanelVisibility(renderPanelA, renderPanelB, renderPanelC, renderPanelD);
+
         renderToBuffer(matrix, getVertexConsumer(renderer, RENDER_TYPE, hasEffect), light, overlayLight, 0xFFFFFFFF);
     }
 
@@ -320,18 +322,19 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel {
         renderPartsToBuffer(parts, poseStack, vertexConsumer, light, overlayLight, color);
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle, boolean renderPanelA, boolean renderPanelB, boolean renderPanelC, boolean renderPanelD) {
+    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle, boolean[] renderPanels) {
+        setPanelVisibility(renderPanels);
+
         float baseRotation = getAbsoluteRotation(angle);
         setRotation(top, baseRotation, 0F, 0F);
-        setPanelVisibility(renderPanelA, renderPanelB, renderPanelC, renderPanelD);
+
         renderPartsAsWireFrame(parts, matrix, vertexBuilder);
     }
 
-    private void setPanelVisibility(boolean renderPanelA, boolean renderPanelB, boolean renderPanelC, boolean renderPanelD) {
-        panelA.visible = renderPanelA;
-        panelB.visible = renderPanelB;
-        panelC.visible = renderPanelC;
-        panelD.visible = renderPanelD;
+    private void setPanelVisibility(boolean[] renderPanels) {
+        for (int panel = 0; panel < panels.length; panel++) {
+            panels[panel].visible = renderPanels[panel];
+        }
     }
 
     private float getAbsoluteRotation(double angle) {

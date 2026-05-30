@@ -34,8 +34,8 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     public void renderWireFrame(BlockEntity tile, float partialTick, PoseStack matrix, VertexConsumer buffer) {
         if (tile instanceof TileEntitySolarHeatGenerator solarHeatGenerator) {
             float angle = setupRenderer(solarHeatGenerator, matrix);
-            model.renderWireFrame(matrix, buffer, angle,
-                  hasPanel(solarHeatGenerator, 0), hasPanel(solarHeatGenerator, 1), hasPanel(solarHeatGenerator, 2), hasPanel(solarHeatGenerator, 3));
+            boolean[] panels = getPanelVisibility(solarHeatGenerator);
+            model.renderWireFrame(matrix, buffer, angle, panels);
             matrix.popPose();
         }
     }
@@ -43,8 +43,8 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     @Override
     protected void render(TileEntitySolarHeatGenerator tile, float partialTick, PoseStack matrix, MultiBufferSource renderer, int light, int overlayLight, ProfilerFiller profiler) {
         float angle = setupRenderer(tile, matrix);
-        model.renderBlock(matrix, renderer, angle, light, overlayLight, false,
-              hasPanel(tile, 0), hasPanel(tile, 1), hasPanel(tile, 2), hasPanel(tile, 3));
+        boolean[] panels = getPanelVisibility(tile);
+        model.renderBlock(matrix, renderer, angle, light, overlayLight, false, panels);
         matrix.popPose();
     }
 
@@ -72,7 +72,11 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
         return tile.getAngle();
     }
 
-    private boolean hasPanel(TileEntitySolarHeatGenerator tile, int slot) {
-        return !tile.getItemStack(slot).isEmpty();
+    private boolean[] getPanelVisibility(TileEntitySolarHeatGenerator tile) {
+        boolean[] panels = new boolean[ModelSolarHeatGenerator.PANEL_COUNT];
+        for (int slot = 0; slot < panels.length; slot++) {
+            panels[slot] = tile.shouldRenderPanel(slot);
+        }
+        return panels;
     }
 }

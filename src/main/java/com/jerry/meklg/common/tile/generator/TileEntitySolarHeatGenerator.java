@@ -22,7 +22,9 @@ import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -41,8 +43,11 @@ import java.util.Objects;
 
 public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
+    private static final int SLOT_COUNT = 4;
     private static final float MIN_ANGLE = -30F;
     private static final float MAX_ANGLE = 30F;
+    private final boolean[] renderPanels = new boolean[SLOT_COUNT];
+    private static final String RENDER_PANEL_PREFIX = "renderPanel";
 
     @Getter
     private float angle;
@@ -62,7 +67,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
         slots = new ArrayList<>();
         InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier);
-        for (int slotX = 0; slotX < 4; slotX++) {
+        for (int slotX = 0; slotX < SLOT_COUNT; slotX++) {
             BasicInventorySlot slot = BasicInventorySlot.at(ConstantPredicates.alwaysTrueBi(), (stack, automationType) -> automationType != AutomationType.EXTERNAL && canInsert(stack), listener, 8 + slotX * 18, 35);
             builder.addSlot(slot, RelativeSide.BACK, RelativeSide.TOP);
             slots.add(slot);
@@ -85,40 +90,39 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         boolean sendUpdatePacket = super.onUpdateServer();
         energySlot.drainContainer();
         if (canFunction() && level instanceof ServerLevel serverLevel) {
-            sendUpdatePacket |= damageReflectors(serverLevel);
+            damageReflectors(serverLevel);
         }
-        updateReflectorAngle();
-        setActive(false);
+        if (updateRenderPanels()) {
+            sendUpdatePacket = true;
+        }
         return sendUpdatePacket;
     }
 
-    private boolean damageReflectors(ServerLevel level) {
-        boolean damaged = false;
+    private void damageReflectors(ServerLevel level) {
         for (IInventorySlot slot : slots) {
             ItemStack stack = slot.getStack();
             if (stack.getItem() instanceof ItemReflector) {
                 ItemStack damagedStack = stack.copy();
                 damagedStack.hurtAndBreak(1, level, null, item -> {});
                 slot.setStack(damagedStack);
-                damaged = true;
             }
         }
-        return damaged;
     }
 
     @Override
     protected void onUpdateClient() {
         super.onUpdateClient();
-        updateReflectorAngle();
+        updateAngle();
     }
 
-    private void updateReflectorAngle() {
+    private void updateAngle() {
         sunRayGroundAngle = calculateSunRayGroundAngle(getBlockPos().above(3));
         if (sunRayGroundAngle > 0F) {
             angle = calculateSunTrackingReflectorAngle();
         }
     }
 
+    //计算太阳到目标方块的直线与地面的夹角度数
     private float calculateSunRayGroundAngle(BlockPos targetPos) {
         if (level == null || !level.dimensionType().hasSkyLight()) {
             return 0F;
@@ -136,6 +140,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return Mth.clamp(angle, MIN_ANGLE, MAX_ANGLE);
     }
 
+    //让反射镜对着太阳
     private float calculateSunTrackingReflectorAngle() {
         if (level == null) {
             return angle;
@@ -147,6 +152,47 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             case WEST -> -eastTrackingAngle;
             default -> 0F;
         };
+    }
+
+    private boolean updateRenderPanels() {
+        boolean changed = false;
+        for (int slot = 0; slot < renderPanels.length; slot++) {
+            boolean hasPanel = hasReflectorInSlot(slot);
+            if (renderPanels[slot] != hasPanel) {
+                renderPanels[slot] = hasPanel;
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    //槽位中是否有物品
+    private boolean hasReflectorInSlot(int slot) {
+        return slots != null && slot >= 0 && slot < slots.size() && slots.get(slot).getStack().getItem() instanceof ItemReflector;
+    }
+
+    @Override
+    public @NotNull CompoundTag getReducedUpdateTag(HolderLookup.@NotNull Provider provider) {
+        CompoundTag updateTag = super.getReducedUpdateTag(provider);
+        for (int slot = 0; slot < renderPanels.length; slot++) {
+            updateTag.putBoolean(RENDER_PANEL_PREFIX + slot, hasReflectorInSlot(slot));
+        }
+        return updateTag;
+    }
+
+    @Override
+    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+        super.handleUpdateTag(tag, provider);
+        for (int slot = 0; slot < renderPanels.length; slot++) {
+            String key = RENDER_PANEL_PREFIX + slot;
+            if (tag.contains(key)) {
+                renderPanels[slot] = tag.getBoolean(key);
+            }
+        }
+    }
+
+    public boolean shouldRenderPanel(int slot) {
+        return slot >= 0 && slot < renderPanels.length && renderPanels[slot];
     }
 
     @Override
@@ -172,9 +218,5 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected long getProductionRate() {
         return 0L;
-    }
-
-    public ItemStack getItemStack(int slot) {
-        return slots.get(slot).getStack();
     }
 }
