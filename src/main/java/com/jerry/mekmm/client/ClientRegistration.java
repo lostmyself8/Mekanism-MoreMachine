@@ -39,6 +39,7 @@ import net.neoforged.neoforge.client.event.ModelEvent.BakingCompleted;
 import net.neoforged.neoforge.client.event.ModelEvent.ModifyBakingResult;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterStandalone;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -47,6 +48,7 @@ import com.jerry.meklg.client.gui.generator.GuiLargeHeatGenerator;
 import com.jerry.meklg.client.gui.generator.GuiLargeWindGenerator;
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
 import com.jerry.meklg.client.render.RenderLargeWindGenerator;
+import com.jerry.meklg.client.render.item.RenderLargeWindGeneratorItem;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
 import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
@@ -77,6 +79,13 @@ public class ClientRegistration {
     public static void registerLayer(RegisterLayerDefinitions event) {
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
             event.registerLayerDefinition(ModelLargeWindGenerator.LARGE_WIND_GENERATOR_LAYER, ModelLargeWindGenerator::createLayerDefinition);
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+        if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            event.register(Mekmm.rl("large_wind_generator"), RenderLargeWindGeneratorItem.MAP_CODEC);
         }
     }
 

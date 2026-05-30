@@ -3,24 +3,28 @@ package com.jerry.meklg.client.render.item;
 import mekanism.api.MekanismAPITags;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.MekanismRenderer;
-import mekanism.client.render.item.MekanismISTER;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.renderer.special.SpecialModelRenderer.BakingContext;
 import net.minecraft.world.item.ItemStack;
 
 import com.jerry.meklg.client.model.ModelLargeWindGenerator;
 import com.jerry.meklg.client.model.ModelLargeWindGenerator.LargeWindGeneratorRotationRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.serialization.MapCodec;
 import org.joml.Vector3fc;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 @NothingNullByDefault
-public class RenderLargeWindGeneratorItem extends MekanismISTER<LargeWindGeneratorRotationRenderState> {
+public class RenderLargeWindGeneratorItem implements SpecialModelRenderer<LargeWindGeneratorRotationRenderState> {
+
+    public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked.INSTANCE);
 
     // public static final RenderLargeWindGeneratorItem RENDERER = new RenderLargeWindGeneratorItem();
     private static final int SPEED = 16;
@@ -74,5 +78,20 @@ public class RenderLargeWindGeneratorItem extends MekanismISTER<LargeWindGenerat
             state.angle = (state.angle + SPEED * MekanismRenderer.getPartialTick()) % 360;
         }
         return state;
+    }
+
+    public enum Unbaked implements SpecialModelRenderer.Unbaked<LargeWindGeneratorRotationRenderState> {
+
+        INSTANCE;
+
+        @Override
+        public @Nullable SpecialModelRenderer<LargeWindGeneratorRotationRenderState> bake(BakingContext context) {
+            return new RenderLargeWindGeneratorItem(context.entityModelSet());
+        }
+
+        @Override
+        public MapCodec<Unbaked> type() {
+            return MAP_CODEC;
+        }
     }
 }

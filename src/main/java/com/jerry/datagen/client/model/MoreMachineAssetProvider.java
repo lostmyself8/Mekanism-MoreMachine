@@ -73,7 +73,8 @@ public class MoreMachineAssetProvider implements DataProvider {
 
     private void generateItemDefinitions(CachedOutput output, List<CompletableFuture<?>> futures) {
         for (String item : allItemNames()) {
-            save(output, futures, itemDefinitionPathProvider.json(id(item)), itemDefinition("mekmm:item/" + item));
+            JsonObject definition = item.equals("large_wind_generator") ? specialItemDefinition("mekmm:item/large_wind_generator", "mekmm:large_wind_generator") : itemDefinition("mekmm:item/" + item);
+            save(output, futures, itemDefinitionPathProvider.json(id(item)), definition);
         }
     }
 
@@ -188,6 +189,18 @@ public class MoreMachineAssetProvider implements DataProvider {
         return root;
     }
 
+    private static JsonObject specialItemDefinition(String base, String rendererType) {
+        JsonObject root = new JsonObject();
+        JsonObject modelJson = new JsonObject();
+        modelJson.addProperty("type", "minecraft:special");
+        modelJson.addProperty("base", base);
+        JsonObject specialModel = new JsonObject();
+        specialModel.addProperty("type", rendererType);
+        modelJson.add("model", specialModel);
+        root.add("model", modelJson);
+        return root;
+    }
+
     private static JsonObject flatItemModel(String parent, String layer0) {
         return flatItemModel(parent, layer0, false);
     }
@@ -225,7 +238,7 @@ public class MoreMachineAssetProvider implements DataProvider {
     }
 
     private static JsonObject largeMachineItemModel(String machine) {
-        JsonObject root = blockItemModel("mekmm:block/large_machine/" + machine + "/off");
+        JsonObject root = machine.equals("large_wind_generator") ? new JsonObject() : blockItemModel("mekmm:block/large_machine/" + machine + "/off");
         root.add("display", switch (machine) {
             case "large_chemical_infuser", "large_electrolytic_separator" -> tallLargeMachineDisplay();
             case "large_wind_generator" -> largeWindGeneratorDisplay();
