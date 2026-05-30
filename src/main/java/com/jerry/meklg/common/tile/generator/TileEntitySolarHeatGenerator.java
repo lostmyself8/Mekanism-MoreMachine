@@ -122,7 +122,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         }
     }
 
-    //计算太阳到目标方块的直线与地面的夹角度数
+    // 计算太阳到目标方块的直线与地面的夹角度数
     private float calculateSunRayGroundAngle(BlockPos targetPos) {
         if (level == null || !level.dimensionType().hasSkyLight()) {
             return 0F;
@@ -140,7 +140,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return Mth.clamp(angle, MIN_ANGLE, MAX_ANGLE);
     }
 
-    //让反射镜对着太阳
+    // 让反射镜对着太阳
     private float calculateSunTrackingReflectorAngle() {
         if (level == null) {
             return angle;
@@ -166,7 +166,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return changed;
     }
 
-    //槽位中是否有物品
+    // 槽位中是否有物品
     private boolean hasReflectorInSlot(int slot) {
         return slots != null && slot >= 0 && slot < slots.size() && slots.get(slot).getStack().getItem() instanceof ItemReflector;
     }
