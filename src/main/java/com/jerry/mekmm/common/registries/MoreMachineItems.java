@@ -2,6 +2,7 @@ package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.item.ItemConnector;
+import com.jerry.mekmm.common.item.ItemReflector;
 
 import mekanism.api.Upgrade;
 import mekanism.common.item.ItemUpgrade;
@@ -27,6 +28,7 @@ public class MoreMachineItems {
     public static final ItemRegistryObject<Item> UU_MATTER = MM_ITEMS.register("uu_matter", Rarity.EPIC);
     public static final ItemRegistryObject<Item> CONNECTOR = MM_ITEMS.registerItem("connector", ItemConnector::new);
     public static final ItemRegistryObject<Item> ADVANCED_ELECTROLYSIS_CORE = MM_ITEMS.register("advanced_electrolysis_core");
+    public static final ItemRegistryObject<Item> REFLECTOR = MM_ITEMS.registerItem("reflector", ItemReflector::new);
 
     private static ItemRegistryObject<ItemUpgrade> registerUpgrade(Upgrade type, Rarity rarity) {
         return MM_ITEMS.registerItem("upgrade_" + type.getSerializedName(), properties -> new ItemUpgrade(type, properties.rarity(rarity)));

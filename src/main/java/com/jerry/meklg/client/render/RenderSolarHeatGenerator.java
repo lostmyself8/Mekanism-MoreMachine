@@ -67,10 +67,6 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
         matrix.translate(0.5, 1.5, 0.5);
         MekanismRenderer.rotate(matrix, tile.getDirection(), 0, 180, 90, 270);
         matrix.mulPose(Axis.ZP.rotationDegrees(180));
-        float angle = tile.getAngle();
-        if (tile.getActive() && partialTick > 0) {
-            angle = (angle + tile.getHeightSpeedRatio() * partialTick) % 360;
-        }
-        return angle;
+        return tile.getAngle();
     }
 }
