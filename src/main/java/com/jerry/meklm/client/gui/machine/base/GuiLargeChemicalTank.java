@@ -32,7 +32,6 @@ public class GuiLargeChemicalTank extends GuiMekanismTile<TileEntityLargeChemica
 
     @Override
     protected void addGuiElements() {
-        // Add the side holder before the slots, as it holds a couple of the slots
         addRenderableWidget(GuiSideHolder.armorHolder(this));
         super.addGuiElements();
         addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.getChemicalTank(), tile.getChemicalTanks(null)), 42, 16, 116, 10, true));
