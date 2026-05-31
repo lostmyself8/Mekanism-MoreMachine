@@ -30,7 +30,6 @@ public class PersistingDisabledProvidersProvider implements DataProvider {
 
     private static HashCache globalCache;
 
-    // Called by a core mod
     public static void captureGlobalCache(HashCache cache) {
         globalCache = cache;
     }
