@@ -23,9 +23,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-/**
- * Used for helping to persist specific integrations we have that aren't updated yet.
- */
 public class PersistingDisabledProvidersProvider implements DataProvider {
 
     private static HashCache globalCache;
