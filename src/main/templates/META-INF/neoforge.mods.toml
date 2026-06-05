@@ -35,7 +35,7 @@ license = "${mod_license}"
 [[dependencies.${mod_id}]]
     modId = "mekanism"
     type = "required"
-    versionRange = "[10.7.19]"
+    versionRange = "[10.7.19,)"
     ordering = "AFTER"
     side = "BOTH"
 

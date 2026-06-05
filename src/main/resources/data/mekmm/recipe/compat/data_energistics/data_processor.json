@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "data_energistics"
+    }
+  ],
+  "type": "mekmm:pressing",
+  "primary_input": {
+    "count": 1,
+    "item": "data_energistics:data_circuit_board"
+  },
+  "secondary_input": {
+    "count": 1,
+    "tag": "c:dusts/redstone"
+  },
+  "tertiary_input": {
+    "count": 1,
+    "item": "ae2:printed_silicon"
+  },
+  "output": {
+    "count": 1,
+    "id": "data_energistics:data_processor"
+  }
+}

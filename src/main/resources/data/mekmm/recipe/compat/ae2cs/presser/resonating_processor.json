@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2cs"
+    }
+  ],
+  "type": "mekmm:pressing",
+  "primary_input": {
+    "count": 1,
+    "item": "ae2cs:resonating_circuit_print"
+  },
+  "secondary_input": {
+    "count": 1,
+    "tag": "c:dusts/redstone"
+  },
+  "tertiary_input": {
+    "count": 1,
+    "item": "ae2:printed_silicon"
+  },
+  "output": {
+    "count": 1,
+    "id": "ae2cs:resonating_processor"
+  }
+}
