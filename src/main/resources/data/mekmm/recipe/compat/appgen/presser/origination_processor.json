@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "appgen"
+    }
+  ],
+  "type": "mekmm:pressing",
+  "primary_input": {
+    "count": 1,
+    "item": "appgen:printed_origination_processor"
+  },
+  "secondary_input": {
+    "count": 1,
+    "tag": "c:dusts/redstone"
+  },
+  "tertiary_input": {
+    "count": 1,
+    "item": "ae2:printed_silicon"
+  },
+  "output": {
+    "count": 1,
+    "id": "appgen:origination_processor"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "appliedcreate"
+    }
+  ],
+  "type": "mekmm:pressing",
+  "primary_input": {
+    "count": 1,
+    "item": "appliedcreate:stress_circuit_board"
+  },
+  "secondary_input": {
+    "count": 1,
+    "item": "create:cinder_flour"
+  },
+  "tertiary_input": {
+    "count": 1,
+    "item": "ae2:printed_silicon"
+  },
+  "output": {
+    "count": 1,
+    "id": "appliedcreate:stress_processor"
+  }
+}
