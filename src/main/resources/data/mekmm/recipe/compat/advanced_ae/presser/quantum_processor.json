@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "advanced_ae"
+    }
+  ],
+  "type": "mekmm:pressing",
+  "primary_input": {
+    "count": 1,
+    "item": "advanced_ae:printed_quantum_processor"
+  },
+  "secondary_input": {
+    "count": 1,
+    "tag": "c:dusts/redstone"
+  },
+  "tertiary_input": {
+    "count": 1,
+    "item": "ae2:printed_silicon"
+  },
+  "output": {
+    "count": 1,
+    "id": "advanced_ae:quantum_processor"
+  }
+}
