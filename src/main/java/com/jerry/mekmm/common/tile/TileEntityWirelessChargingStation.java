@@ -2,6 +2,7 @@ package com.jerry.mekmm.common.tile;
 
 import com.jerry.mekmm.api.MoreMachineSerializationConstants;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
+import com.jerry.mekmm.common.integration.computer.ComputerEnergyContainerWrapper;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
 import mekanism.api.*;
@@ -14,6 +15,10 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.ComputerException;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.integration.curios.CuriosIntegration;
 import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
@@ -49,13 +54,18 @@ import java.util.UUID;
 public class TileEntityWirelessChargingStation extends TileEntityConfigurableMachine implements ISustainedData, IBoundingBlock {
 
     @Getter
+    @WrappingComputerMethod(wrapper = ComputerEnergyContainerWrapper.class,
+                            methodNames = { "getEnergy", "getEnergyCapacity", "getEnergyNeeded", "getEnergyFilledPercentage" },
+                            docPlaceholder = "energy container")
     private MachineEnergyContainer<TileEntityWirelessChargingStation> energyContainer;
 
     private boolean chargeEquipment = false;
     private boolean chargeInventory = false;
     private boolean chargeCurios = false;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChargeItem", docPlaceholder = "charge slot")
     EnergyInventorySlot chargeSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getDischargeItem", docPlaceholder = "discharge slot")
     EnergyInventorySlot dischargeSlot;
 
     public TileEntityWirelessChargingStation(BlockPos pos, BlockState state) {
@@ -229,6 +239,33 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
 
     public boolean getChargeCurios() {
         return chargeCurios;
+    }
+
+    @ComputerMethod(requiresPublicSecurity = true, methodDescription = "Set whether to charge equipment")
+    void setChargeEquipment(boolean charge) throws ComputerException {
+        validateSecurityIsPublic();
+        if (chargeEquipment != charge) {
+            chargeEquipment = charge;
+            markForSave();
+        }
+    }
+
+    @ComputerMethod(requiresPublicSecurity = true, methodDescription = "Set whether to charge inventory")
+    void setChargeInventory(boolean charge) throws ComputerException {
+        validateSecurityIsPublic();
+        if (chargeInventory != charge) {
+            chargeInventory = charge;
+            markForSave();
+        }
+    }
+
+    @ComputerMethod(requiresPublicSecurity = true, methodDescription = "Set whether to charge curios")
+    void setChargeCurios(boolean charge) throws ComputerException {
+        validateSecurityIsPublic();
+        if (chargeCurios != charge) {
+            chargeCurios = charge;
+            markForSave();
+        }
     }
 
     public FloatingLong getOutput() {

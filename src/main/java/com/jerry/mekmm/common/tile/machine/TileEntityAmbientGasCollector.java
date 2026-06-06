@@ -18,6 +18,9 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
@@ -59,6 +62,9 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
     private static final int BASE_OUTPUT_RATE = 256;
 
     // 化学品存储槽
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" },
+                            docPlaceholder = "chemical tank")
     public IGasTank chemicalTank;
 
     public int ticksRequired = BASE_TICKS_REQUIRED;
@@ -73,7 +79,9 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
 
     @Getter
     private MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItem", docPlaceholder = "chemical slot")
     GasInventorySlot chemicalSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityAmbientGasCollector(BlockPos pos, BlockState state) {

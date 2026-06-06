@@ -30,6 +30,9 @@ import mekanism.common.Mekanism;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.slot.chemical.GasInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
@@ -79,9 +82,13 @@ public class TileEntityPlantingFactory extends TileEntityMoreMachineFactory<Plan
     private final ILongInputHandler<@NotNull GasStack> gasInputHandler;
     private IOutputHandler<PlantingStationRecipeOutput>[] outputHandlers;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItem", docPlaceholder = "chemical item (extra) slot")
     GasInventorySlot gasSlot;
 
     @Getter
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" },
+                            docPlaceholder = "chemical tank")
     IGasTank gasTank;
 
     private final ChemicalUsageMultiplier chemicalUsageMultiplier;

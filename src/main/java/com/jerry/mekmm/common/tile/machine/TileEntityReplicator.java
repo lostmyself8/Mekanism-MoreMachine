@@ -13,6 +13,7 @@ import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.chemical.gas.IGasTank;
+import mekanism.api.math.FloatingLong;
 import mekanism.api.recipes.ItemStackGasToItemStackRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
@@ -29,6 +30,11 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
@@ -74,6 +80,9 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
     public static HashMap<String, Integer> customRecipeMap = ValidatorUtils.getRecipeFromConfig(MoreMachineConfig.general.itemReplicatorRecipe.get());
 
     // 化学品存储槽
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" },
+                            docPlaceholder = "chemical tank")
     public IGasTank gasTank;
 
     private MachineEnergyContainer<TileEntityReplicator> energyContainer;
@@ -82,10 +91,14 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
     private final IOutputHandler<ItemStack> outputHandler;
     private final ILongInputHandler<GasStack> gasInputHandler;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getItemInput", docPlaceholder = "item input slot")
     InputInventorySlot inputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutput", docPlaceholder = "output slot")
     OutputInventorySlot outputSlot;
     // 气罐槽
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalInput", docPlaceholder = "chemical input slot")
     GasInventorySlot gasSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityReplicator(BlockPos pos, BlockState state) {
@@ -156,6 +169,11 @@ public class TileEntityReplicator extends TileEntityProgressMachine<ItemStackGas
 
     public @Nullable MachineEnergyContainer<TileEntityReplicator> getEnergyContainer() {
         return energyContainer;
+    }
+
+    @ComputerMethod(methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
+    FloatingLong getEnergyUsage() {
+        return getActive() ? energyContainer.getEnergyPerTick() : FloatingLong.ZERO;
     }
 
     @Override

@@ -13,6 +13,7 @@ import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.chemical.gas.IGasTank;
+import mekanism.api.math.FloatingLong;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.ingredients.creator.IngredientCreatorAccess;
@@ -31,6 +32,12 @@ import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.FluidInventorySlot;
@@ -77,9 +84,18 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
 
     public static HashMap<String, Integer> customRecipeMap = ValidatorUtils.getRecipeFromConfig(MoreMachineConfig.general.fluidReplicatorRecipe.get());
 
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class,
+                            methodNames = { "getInputFluid", "getInputFluidCapacity", "getInputFluidNeeded", "getInputFluidFilledPercentage" },
+                            docPlaceholder = "input fluid tank")
     public BasicFluidTank fluidInputTank;
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class,
+                            methodNames = { "getOutputFluid", "getOutputFluidCapacity", "getOutputFluidNeeded", "getOutputFluidFilledPercentage" },
+                            docPlaceholder = "output fluid tank")
     public BasicFluidTank fluidOutputTank;
     // 化学品存储槽
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" },
+                            docPlaceholder = "chemical tank")
     public IGasTank gasTank;
 
     private MachineEnergyContainer<TileEntityFluidReplicator> energyContainer;
@@ -88,13 +104,19 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
     private final IOutputHandler<@NotNull FluidStack> fluidOutputHandler;
     private final ILongInputHandler<GasStack> chemicalInputHandler;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputTankOutputSlot", docPlaceholder = "input tank output slot")
     FluidInventorySlot lFluidInputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutputTankOutputSlot", docPlaceholder = "output tank output slot")
     FluidInventorySlot rFluidInputSlot;
     // 流体储罐输入输出物品槽
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputSlot", docPlaceholder = "input slot")
     FluidInventorySlot fluidInputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutputSlot", docPlaceholder = "output slot")
     OutputInventorySlot fluidOutputSlot;
     // 气罐槽
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getUUSlot", docPlaceholder = "uu slot")
     GasInventorySlot chemicalSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityFluidReplicator(BlockPos pos, BlockState state) {
@@ -189,6 +211,11 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<FluidSt
 
     public @Nullable MachineEnergyContainer<TileEntityFluidReplicator> getEnergyContainer() {
         return energyContainer;
+    }
+
+    @ComputerMethod(methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
+    FloatingLong getEnergyUsage() {
+        return getActive() ? energyContainer.getEnergyPerTick() : FloatingLong.ZERO;
     }
 
     @Override

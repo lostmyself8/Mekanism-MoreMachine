@@ -24,6 +24,8 @@ import mekanism.common.Mekanism;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.slot.chemical.GasInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -68,8 +70,12 @@ public class TileEntityReplicatingFactory extends TileEntityItemToItemMoreMachin
 
     private final ILongInputHandler<GasStack> chemicalInputHandler;
     // 化学品存储槽
+    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" },
+                            docPlaceholder = "chemical tank")
     public IGasTank gasTank;
     // 气罐槽
+    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItem", docPlaceholder = "chemical item slot")
     GasInventorySlot gasSlot;
 
     public TileEntityReplicatingFactory(IBlockProvider blockProvider, BlockPos pos, BlockState state) {

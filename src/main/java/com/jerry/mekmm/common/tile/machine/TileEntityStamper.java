@@ -8,6 +8,7 @@ import com.jerry.mekmm.common.upgrade.StamperUpgradeData;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IContentsListener;
+import mekanism.api.math.FloatingLong;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.inputs.IInputHandler;
@@ -19,8 +20,10 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.slot.ContainerSlotType;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
@@ -61,13 +64,13 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
     private final IInputHandler<@NotNull ItemStack> moldHandler;
 
     private MachineEnergyContainer<TileEntityStamper> energyContainer;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getMainInput", docPlaceholder = "main input slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getItemInput", docPlaceholder = "item input slot")
     InputInventorySlot inputSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getSecondaryInput", docPlaceholder = "secondary input slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getMoldInput", docPlaceholder = "mold input slot")
     InputInventorySlot moldSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getOutput", docPlaceholder = "output slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutput", docPlaceholder = "output slot")
     OutputInventorySlot outputSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityStamper(BlockPos pos, BlockState state) {
@@ -136,6 +139,11 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
 
     public MachineEnergyContainer<TileEntityStamper> getEnergyContainer() {
         return energyContainer;
+    }
+
+    @ComputerMethod(methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
+    FloatingLong getEnergyUsage() {
+        return getActive() ? energyContainer.getEnergyPerTick() : FloatingLong.ZERO;
     }
 
     @Override

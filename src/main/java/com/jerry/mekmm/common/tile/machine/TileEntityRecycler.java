@@ -8,6 +8,7 @@ import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IContentsListener;
+import mekanism.api.math.FloatingLong;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
@@ -17,6 +18,10 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
@@ -58,8 +63,11 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
 
     private MachineEnergyContainer<TileEntityRecycler> energyContainer;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInput", docPlaceholder = "input slot")
     InputInventorySlot inputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutput", docPlaceholder = "output slot")
     OutputInventorySlot chanceOutputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityRecycler(BlockPos pos, BlockState state) {
@@ -129,6 +137,11 @@ public class TileEntityRecycler extends TileEntityProgressMachine<RecyclerRecipe
 
     public MachineEnergyContainer<TileEntityRecycler> getEnergyContainer() {
         return energyContainer;
+    }
+
+    @ComputerMethod(methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
+    FloatingLong getEnergyUsage() {
+        return getActive() ? energyContainer.getEnergyPerTick() : FloatingLong.ZERO;
     }
 
     @Override

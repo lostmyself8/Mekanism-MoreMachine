@@ -18,6 +18,7 @@ import mekanism.api.chemical.ChemicalTankBuilder;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.chemical.gas.IGasTank;
+import mekanism.api.math.FloatingLong;
 import mekanism.api.math.MathUtils;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
@@ -34,6 +35,11 @@ import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
 import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
+import mekanism.common.integration.computer.annotation.ComputerMethod;
+import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
@@ -87,6 +93,9 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     private long baseTotalUsage;
     private long usedSoFar;
 
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
+                            methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded", "getChemicalFilledPercentage" },
+                            docPlaceholder = "chemical tank")
     public IGasTank gasTank;
 
     protected final IOutputHandler<PlantingStationRecipeOutput> outputHandler;
@@ -96,11 +105,16 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     @Getter
     private MachineEnergyContainer<TileEntityPlantingStation> energyContainer;
 
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInput", docPlaceholder = "input slot")
     InputInventorySlot inputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutput", docPlaceholder = "output slot")
     OutputInventorySlot mainOutputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getSecondaryOutput", docPlaceholder = "secondary output slot")
     OutputInventorySlot secondaryOutputSlot;
     // 气罐槽
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItem", docPlaceholder = "chemical input slot")
     GasInventorySlot gasSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityPlantingStation(BlockPos pos, BlockState state) {
@@ -278,5 +292,10 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             return side != Direction.UP;
         }
         return true;
+    }
+
+    @ComputerMethod(methodDescription = ComputerConstants.DESCRIPTION_GET_ENERGY_USAGE)
+    FloatingLong getEnergyUsage() {
+        return getActive() ? energyContainer.getEnergyPerTick() : FloatingLong.ZERO;
     }
 }

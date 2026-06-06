@@ -236,6 +236,10 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         return WorldUtils.canSeeSun(level, worldPosition.above());
     }
 
+    public float getProductionRate() {
+        return productionRate;
+    }
+
     /**
      * 根据可以看见太阳的太阳能板数获取减少效率的乘数
      *
