@@ -161,6 +161,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreGenerator implem
         lastTransferLoss = loss.adjacentTransfer();
         lastEnvironmentLoss = loss.environmentTransfer();
         producingEnergy = getEnergyContainer().getEnergy().subtract(prev);
+        updateMaxOutputRaw(producingEnergy.add(MAX_PRODUCTION.get()));
     }
 
     protected List<BlockEntity> getEjectEntity(RelativeSide side, Direction direction) {

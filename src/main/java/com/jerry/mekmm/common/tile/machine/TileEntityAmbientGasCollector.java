@@ -42,11 +42,14 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class TileEntityAmbientGasCollector extends TileEntityMekanism implements IConfigurable {
+
+    // 会按这个顺序进行自动弹出（顺时针）
+    private static final Direction[] OUTPUT_SIDES = { Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST };
 
     /**
      * How many ticks it takes to run an operation.
@@ -126,7 +129,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
         }
         usedEnergy = !clientEnergyUsed.isZero();
         if (!chemicalTank.isEmpty()) {
-            ChemicalUtil.emit(Collections.singleton(Direction.UP), chemicalTank, this, outputRate);
+            ChemicalUtil.emit(Set.of(OUTPUT_SIDES), chemicalTank, this, outputRate);
         }
     }
 
