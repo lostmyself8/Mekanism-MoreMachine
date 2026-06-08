@@ -31,6 +31,8 @@ import java.util.List;
 public abstract class MixinTileEntityIsotopicCentrifuge extends TileEntityRecipeMachine<ChemicalToChemicalRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<ChemicalToChemicalRecipe> {
 
     @Shadow
+    private MachineEnergyContainer<TileEntityIsotopicCentrifuge> energyContainer;
+    @Shadow
     public IChemicalTank inputTank;
     @Shadow
     public IChemicalTank outputTank;
@@ -41,9 +43,6 @@ public abstract class MixinTileEntityIsotopicCentrifuge extends TileEntityRecipe
         super(blockProvider, pos, state, errorTypes);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityIsotopicCentrifuge> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -52,7 +51,7 @@ public abstract class MixinTileEntityIsotopicCentrifuge extends TileEntityRecipe
 
     @Override
     public @Nullable ChemicalToChemicalUpgradeData getUpgradeData(Provider provider) {
-        return new ChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
+        return new ChemicalToChemicalUpgradeData(provider, redstone, getControlType(), energyContainer,
                 0, energySlot, inputTank, outputTank, getComponents(), problemPath());
     }
 }

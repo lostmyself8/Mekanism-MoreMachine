@@ -10,8 +10,6 @@ import mekanism.api.text.IHasTranslationKey;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
 
-import lombok.Getter;
-
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -25,7 +23,6 @@ public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTra
     CNC_ROLLING_MILL("rolling_mill", MoreMachineLang.ROLLING_MILL, () -> MoreMachineBlockTypes.CNC_ROLLING_MILL, () -> MoreMachineBlocks.CNC_ROLLING_MILL),
     REPLICATING("replicating", MoreMachineLang.REPLICATING, () -> MoreMachineBlockTypes.REPLICATOR, () -> MoreMachineBlocks.REPLICATOR);
 
-    @Getter
     private final String registryNameComponent;
     private final ILangEntry langEntry;
     private final Supplier<MoreMachineFactoryMachine<?>> baseMachine;
@@ -36,6 +33,10 @@ public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTra
         this.langEntry = langEntry;
         this.baseMachine = baseMachine;
         this.baseBlock = baseBlock;
+    }
+
+    public String getRegistryNameComponent() {
+        return registryNameComponent;
     }
 
     public String getRegistryNameComponentCapitalized() {

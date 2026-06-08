@@ -17,7 +17,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -37,6 +37,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.TriPredicate;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +47,7 @@ import java.util.Set;
 
 public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<RecyclerRecipe> implements ItemRecipeLookupHandler<RecyclerRecipe> {
 
-    private static final TriPredicate<RecyclerRecipe, ItemStack, ItemStack> OUTPUT_CHECK = (recipe, input, output) -> InventoryUtils.areItemsStackable(recipe.getOutput(input).getMaxChanceOutput(), output);
+    private static final TriPredicate<RecyclerRecipe, ItemResource, ItemResource> OUTPUT_CHECK = (recipe, input, output) -> output.isEmpty() || InventoryUtils.areItemsStackable(recipe.getOutput(input.toStack()).getMaxChanceOutput(), output);
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
@@ -64,7 +65,7 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
     }
 
     @Override
-    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
+    protected void addSlots(MekContainerHelper<IInventorySlot> builder, IContentsListener listener, IContentsListener updateSortingListener) {
         inputHandlers = new IInputHandler[tier.processes];
         outputHandlers = new IOutputHandler[tier.processes];
         processInfoSlots = new ProcessInfo[tier.processes];
@@ -82,8 +83,8 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
             // listener directly
             MoreMachineFactoryInputInventorySlot inputSlot = MoreMachineFactoryInputInventorySlot.create(this, i, outputSlot, lookupMonitor, xPos, 13);
             int index = i;
-            builder.addSlot(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));
-            builder.addSlot(outputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index)));
+            builder.addContainer(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));
+            builder.addContainer(outputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE, index)));
 
             inputHandlers[i] = InputHelper.getInputHandler(inputSlot, RecipeError.NOT_ENOUGH_INPUT);
             outputHandlers[i] = MoreMachineOutputHelper.getOutputHandler(outputSlot, RecipeError.NOT_ENOUGH_OUTPUT_SPACE);
@@ -92,27 +93,27 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
     }
 
     @Override
-    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<RecyclerRecipe> cached, @NotNull ItemStack stack) {
+    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<RecyclerRecipe> cached, @NotNull ItemResource stack) {
         return cached != null && cached.getRecipe().getInput().testType(stack);
     }
 
     @Override
-    protected @Nullable RecyclerRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot chanceOutputSlot, @Nullable IInventorySlot outputSlot) {
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chanceOutputSlot.getStack(), OUTPUT_CHECK);
+    protected @Nullable RecyclerRecipe findRecipe(int process, @NotNull ItemResource fallbackInput, @NotNull IInventorySlot chanceOutputSlot, @Nullable IInventorySlot outputSlot) {
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chanceOutputSlot.resource(), OUTPUT_CHECK);
     }
 
     @Override
-    protected int getNeededInput(RecyclerRecipe recipe, ItemStack inputStack) {
+    protected int getNeededInput(RecyclerRecipe recipe, ItemResource inputStack) {
         return MathUtils.clampToInt(recipe.getInput().getNeededAmount(inputStack));
     }
 
     @Override
-    public boolean isItemValidForSlot(@NotNull ItemStack stack) {
+    public boolean isItemValidForSlot(@NotNull ItemResource stack) {
         return true;
     }
 
     @Override
-    public boolean isValidInputItem(@NotNull ItemStack stack) {
+    public boolean isValidInputItem(@NotNull ItemResource stack) {
         return containsRecipe(stack);
     }
 
@@ -147,6 +148,6 @@ public class TileEntityRecyclingFactory extends TileEntityMoreMachineFactory<Rec
     @NotNull
     @Override
     public MachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new MachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, energySlot, inputSlots, outputSlots, isSorting(), getComponents(), problemPath());
+        return new MachineUpgradeData(provider, redstone, getControlType(), energyContainer, progress, energySlot, inputSlots, outputSlots, isSorting(), getComponents(), problemPath());
     }
 }

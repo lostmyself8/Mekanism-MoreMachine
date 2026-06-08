@@ -34,6 +34,8 @@ public abstract class MixinTileEntityPressurizedReactionChamber extends TileEnti
                                                                 ItemFluidChemicalRecipeLookupHandler<PressurizedReactionRecipe> {
 
     @Shadow
+    private PRCEnergyContainer energyContainer;
+    @Shadow
     public BasicFluidTank inputFluidTank;
     @Shadow
     public IChemicalTank inputGasTank;
@@ -50,9 +52,6 @@ public abstract class MixinTileEntityPressurizedReactionChamber extends TileEnti
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
-    @Shadow
-    public abstract PRCEnergyContainer getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -61,7 +60,7 @@ public abstract class MixinTileEntityPressurizedReactionChamber extends TileEnti
 
     @Override
     public @Nullable PRCUpgradeData getUpgradeData(Provider provider) {
-        return new PRCUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot,
+        return new PRCUpgradeData(provider, redstone, getControlType(), energyContainer, getOperatingTicks(), energySlot,
                 inputGasTank, inputFluidTank, inputSlot, outputSlot, outputGasTank, getComponents(), problemPath());
     }
 }

@@ -15,8 +15,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.Mekanism;
-import mekanism.common.attachments.containers.ContainerType;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.slot.ContainerSlotType;
@@ -26,7 +25,6 @@ import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.DoubleItemRecipe
 import mekanism.common.recipe.lookup.cache.DoubleInputRecipeCache.CheckRecipeType;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.DoubleItem;
 import mekanism.common.upgrade.IUpgradeData;
-import mekanism.common.util.InventoryUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -36,6 +34,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +45,7 @@ import java.util.Set;
 
 public class TileEntityStampingFactory extends TileEntityMoreMachineItemToItemFactory<StamperRecipe> implements DoubleItemRecipeLookupHandler<StamperRecipe> {
 
-    private static final CheckRecipeType<ItemStack, ItemStack, StamperRecipe, ItemStack> OUTPUT_CHECK = (recipe, input, extra, output) -> InventoryUtils.areItemsStackable(recipe.getOutput(input, extra), output);
+    private static final CheckRecipeType<Item, ItemResource, Item, ItemResource, StamperRecipe, ItemResource> OUTPUT_CHECK = (recipe, input, extra, output) -> output.isEmpty() || output.matches(recipe.getOutput(input, extra));
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
@@ -67,9 +67,9 @@ public class TileEntityStampingFactory extends TileEntityMoreMachineItemToItemFa
     }
 
     @Override
-    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
+    protected void addSlots(MekContainerHelper<IInventorySlot> builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addSlots(builder, listener, updateSortingListener);
-        builder.addSlot(extraSlot = InputInventorySlot.at(this::containsRecipeB, markAllMonitorsChanged(listener), 7, 57));
+        builder.addContainer(extraSlot = InputInventorySlot.at(this::containsRecipeB, markAllMonitorsChanged(listener), 7, 57));
         extraSlot.setSlotType(ContainerSlotType.EXTRA);
     }
 
@@ -80,33 +80,33 @@ public class TileEntityStampingFactory extends TileEntityMoreMachineItemToItemFa
     }
 
     @Override
-    public boolean isItemValidForSlot(@NotNull ItemStack stack) {
-        return containsRecipeAB(stack, extraSlot.getStack());
+    public boolean isItemValidForSlot(@NotNull ItemResource stack) {
+        return containsRecipeAB(stack, extraSlot.resource());
     }
 
     @Override
-    public boolean isValidInputItem(@NotNull ItemStack stack) {
+    public boolean isValidInputItem(@NotNull ItemResource stack) {
         return containsRecipeA(stack);
     }
 
     @Override
-    protected int getNeededInput(StamperRecipe recipe, ItemStack inputStack) {
+    protected int getNeededInput(StamperRecipe recipe, ItemResource inputStack) {
         return MathUtils.clampToInt(recipe.getInput().getNeededAmount(inputStack));
     }
 
     @Override
-    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<StamperRecipe> cached, @NotNull ItemStack stack) {
+    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<StamperRecipe> cached, @NotNull ItemResource stack) {
         if (cached != null) {
             StamperRecipe cachedRecipe = cached.getRecipe();
-            return cachedRecipe.getInput().testType(stack) && (extraSlot.isEmpty() || cachedRecipe.getMold().testType(extraSlot.getStack()));
+            return cachedRecipe.getInput().testType(stack) && (extraSlot.isEmpty() || cachedRecipe.getMold().testType(extraSlot.resource()));
         }
         return false;
     }
 
     @Override
-    protected StamperRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @Nullable IInventorySlot secondaryOutputSlot) {
+    protected StamperRecipe findRecipe(int process, @NotNull ItemResource fallbackInput, @NotNull IInventorySlot outputSlot, @Nullable IInventorySlot secondaryOutputSlot) {
         // TODO: Give it something that is not empty when we don't have a stored secondary stack for getting the output?
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, extraSlot.getStack(), outputSlot.getStack(), OUTPUT_CHECK);
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, extraSlot.resource(), outputSlot.resource(), OUTPUT_CHECK);
     }
 
     @NotNull
@@ -141,12 +141,12 @@ public class TileEntityStampingFactory extends TileEntityMoreMachineItemToItemFa
     }
 
     @Override
-    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider, TransactionContext transaction) {
         if (upgradeData instanceof StamperUpgradeData data) {
             // Generic factory upgrade data handling
-            super.parseUpgradeData(upgradeData, provider);
+            super.parseUpgradeData(upgradeData, provider, transaction);
             // Copy the stack using NBT so that if it is not actually valid due to a reload we don't crash
-            ContainerType.ITEM.copy(data.extraSlot, extraSlot);
+            extraSlot.copyContents(data.extraSlot, transaction);
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
         }
@@ -155,6 +155,6 @@ public class TileEntityStampingFactory extends TileEntityMoreMachineItemToItemFa
     @NotNull
     @Override
     public StamperUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new StamperUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, energySlot, extraSlot, inputSlots, outputSlots, isSorting(), getComponents(), problemPath());
+        return new StamperUpgradeData(provider, redstone, getControlType(), energyContainer, progress, energySlot, extraSlot, inputSlots, outputSlots, isSorting(), getComponents(), problemPath());
     }
 }

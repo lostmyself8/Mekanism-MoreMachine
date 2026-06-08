@@ -6,10 +6,10 @@ import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.recipes.ItemStackChemicalToItemStackRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.tile.machine.TileEntityPaintingMachine;
@@ -33,7 +33,9 @@ import java.util.List;
 public abstract class MixinTileEntityPaintingMachine extends TileEntityProgressMachine<ItemStackChemicalToItemStackRecipe> implements ConstantUsageRecipeLookupHandler, ItemChemicalRecipeLookupHandler<ItemStackChemicalToItemStackRecipe> {
 
     @Shadow
-    private long usedSoFar;
+    private int usedSoFar;
+    @Shadow
+    private MachineEnergyContainer<TileEntityPaintingMachine> energyContainer;
     @Shadow
     public IChemicalTank pigmentTank;
     @Shadow
@@ -49,9 +51,6 @@ public abstract class MixinTileEntityPaintingMachine extends TileEntityProgressM
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityPaintingMachine> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -60,7 +59,7 @@ public abstract class MixinTileEntityPaintingMachine extends TileEntityProgressM
 
     @Override
     public @Nullable AdvancedMachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
+        return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), energyContainer, getOperatingTicks(),
                 usedSoFar, pigmentTank, pigmentInputSlot, energySlot, inputSlot, outputSlot, getComponents(), problemPath());
     }
 }

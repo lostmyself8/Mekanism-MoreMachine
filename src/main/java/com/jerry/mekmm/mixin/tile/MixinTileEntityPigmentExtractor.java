@@ -31,6 +31,8 @@ import java.util.List;
 public abstract class MixinTileEntityPigmentExtractor extends TileEntityProgressMachine<ItemStackToChemicalRecipe> implements ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
 
     @Shadow
+    private MachineEnergyContainer<TileEntityPigmentExtractor> energyContainer;
+    @Shadow
     public IChemicalTank pigmentTank;
     @Shadow
     InputInventorySlot inputSlot;
@@ -41,9 +43,6 @@ public abstract class MixinTileEntityPigmentExtractor extends TileEntityProgress
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityPigmentExtractor> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -52,7 +51,7 @@ public abstract class MixinTileEntityPigmentExtractor extends TileEntityProgress
 
     @Override
     public @Nullable ItemToChemicalUpgradeData getUpgradeData(Provider provider) {
-        return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
+        return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), energyContainer,
                 getOperatingTicks(), energySlot, inputSlot, pigmentTank, getComponents(), problemPath());
     }
 }

@@ -34,6 +34,8 @@ public abstract class MixinTileEntityChemicalWasher extends TileEntityRecipeMach
                                                     FluidChemicalRecipeLookupHandler<FluidChemicalToChemicalRecipe> {
 
     @Shadow
+    private MachineEnergyContainer<TileEntityChemicalWasher> energyContainer;
+    @Shadow
     public BasicFluidTank fluidTank;
     @Shadow
     public IChemicalTank inputTank;
@@ -50,9 +52,6 @@ public abstract class MixinTileEntityChemicalWasher extends TileEntityRecipeMach
         super(blockProvider, pos, state, errorTypes);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityChemicalWasher> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -61,7 +60,7 @@ public abstract class MixinTileEntityChemicalWasher extends TileEntityRecipeMach
 
     @Override
     public @Nullable FluidChemicalToChemicalUpgradeData getUpgradeData(Provider provider) {
-        return new FluidChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), 0, 0,
+        return new FluidChemicalToChemicalUpgradeData(provider, redstone, getControlType(), energyContainer, 0, 0,
                 energySlot, fluidSlot, fluidOutputSlot, inputTank, fluidTank, outputTank, getComponents(), problemPath());
     }
 }

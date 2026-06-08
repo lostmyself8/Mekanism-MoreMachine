@@ -53,10 +53,10 @@ public class TileEntityMoreMachineFactory$ComputerHandler extends ComputerMethod
     }
 
     public static Object getInput_1(TileEntityMoreMachineFactory subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(subject.getInput(helper.getInt(0)));
+        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.getInputSlot(helper.getInt(0))));
     }
 
     public static Object getOutput_1(TileEntityMoreMachineFactory subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(subject.getOutput(helper.getInt(0)));
+        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.getOutputSlot(helper.getInt(0))));
     }
 }

@@ -4,7 +4,7 @@ import com.jerry.mekaf.common.upgrade.NutritionLiquifyingUpgradeData;
 
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
-import mekanism.api.fluid.IExtendedFluidTank;
+import mekanism.api.fluid.IFluidTank;
 import mekanism.api.recipes.basic.BasicItemStackToFluidOptionalItemRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
@@ -31,7 +31,9 @@ import java.util.List;
 public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProgressMachine<BasicItemStackToFluidOptionalItemRecipe> {
 
     @Shadow
-    public IExtendedFluidTank fluidTank;
+    private MachineEnergyContainer<TileEntityNutritionalLiquifier> energyContainer;
+    @Shadow
+    public IFluidTank fluidTank;
     @Shadow
     InputInventorySlot inputSlot;
     @Shadow
@@ -43,9 +45,6 @@ public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProg
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityNutritionalLiquifier> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -54,7 +53,7 @@ public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProg
 
     @Override
     public @Nullable NutritionLiquifyingUpgradeData getUpgradeData(Provider provider) {
-        return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
+        return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), energyContainer, getOperatingTicks(),
                 energySlot, inputSlot, outputSlot, fluidTank, getComponents(), problemPath());
     }
 }

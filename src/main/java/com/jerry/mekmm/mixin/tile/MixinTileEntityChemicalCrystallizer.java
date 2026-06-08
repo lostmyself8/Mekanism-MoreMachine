@@ -31,6 +31,8 @@ import java.util.List;
 public abstract class MixinTileEntityChemicalCrystallizer extends TileEntityProgressMachine<ChemicalCrystallizerRecipe> implements ChemicalRecipeLookupHandler<ChemicalCrystallizerRecipe> {
 
     @Shadow
+    private MachineEnergyContainer<TileEntityChemicalCrystallizer> energyContainer;
+    @Shadow
     public IChemicalTank inputTank;
     @Shadow
     OutputInventorySlot outputSlot;
@@ -41,9 +43,6 @@ public abstract class MixinTileEntityChemicalCrystallizer extends TileEntityProg
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityChemicalCrystallizer> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -52,7 +51,7 @@ public abstract class MixinTileEntityChemicalCrystallizer extends TileEntityProg
 
     @Override
     public @Nullable ChemicalToItemUpgradeData getUpgradeData(Provider provider) {
-        return new ChemicalToItemUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
+        return new ChemicalToItemUpgradeData(provider, redstone, getControlType(), energyContainer,
                 getOperatingTicks(), energySlot, inputTank, outputSlot, getComponents(), problemPath());
     }
 }

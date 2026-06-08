@@ -83,19 +83,19 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
     protected void addGuiElements() {
         super.addGuiElements();
         addRenderableWidget(new MoreMachineGuiSortingTab(this, tile));
-        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16, tile instanceof TileEntityPlantingFactory ? 73 : 52))
+        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainerTyped(), imageWidth - 12, 16, tile instanceof TileEntityPlantingFactory ? 73 : 52))
                 .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY, 0));
 
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getLastUsage));
+        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainerTyped(), tile::getLastUsage));
         if (tile.hasSecondaryResourceBar()) {
             if (tile instanceof TileEntityPlantingFactory factory) {
-                addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(factory.getChemicalTank(), tile.getChemicalTanks(null)), 7, 96,
+                addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(factory.getChemicalTank(), tile.getChemicalTanks()), 7, 96,
                         getBarWidth(), 4, true))
                         .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityMoreMachineFactory<?> & IHasDumpButton) tile, getButtonX(), 96));
             }
             if (tile instanceof TileEntityReplicatingFactory factory) {
-                addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(factory.getChemicalTank(), tile.getChemicalTanks(null)), 7, 76,
+                addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(factory.getChemicalTank(), tile.getChemicalTanks()), 7, 76,
                         getBarWidth(), 4, true))
                         .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityMoreMachineFactory<?> & IHasDumpButton) tile, getButtonX(), 76));

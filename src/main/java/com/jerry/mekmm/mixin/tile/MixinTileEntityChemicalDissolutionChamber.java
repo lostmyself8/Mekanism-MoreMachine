@@ -8,9 +8,9 @@ import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.recipes.ChemicalDissolutionRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.tile.interfaces.IHasDumpButton;
@@ -35,7 +35,9 @@ public abstract class MixinTileEntityChemicalDissolutionChamber extends TileEnti
                                                                 ItemChemicalRecipeLookupHandler<ChemicalDissolutionRecipe> {
 
     @Shadow
-    private long usedSoFar;
+    private int usedSoFar;
+    @Shadow
+    private MachineEnergyContainer<TileEntityChemicalDissolutionChamber> energyContainer;
     @Shadow
     public IChemicalTank injectTank;
     @Shadow
@@ -51,9 +53,6 @@ public abstract class MixinTileEntityChemicalDissolutionChamber extends TileEnti
         super(blockProvider, pos, state, errorTypes, baseTicksRequired);
     }
 
-    @Shadow
-    public abstract MachineEnergyContainer<TileEntityChemicalDissolutionChamber> getEnergyContainer();
-
     @Unique
     @Override
     public boolean isConfigurationDataCompatible(Block type) {
@@ -62,7 +61,7 @@ public abstract class MixinTileEntityChemicalDissolutionChamber extends TileEnti
 
     @Override
     public @Nullable ItemChemicalToChemicalUpgradeData getUpgradeData(Provider provider) {
-        return new ItemChemicalToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
+        return new ItemChemicalToChemicalUpgradeData(provider, redstone, getControlType(), energyContainer,
                 getOperatingTicks(), usedSoFar, energySlot, gasInputSlot, inputSlot, injectTank, outputTank, getComponents(), problemPath());
     }
 }
