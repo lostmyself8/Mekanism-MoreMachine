@@ -43,7 +43,6 @@ public class PersistingDisabledProvidersProvider implements DataProvider {
         this.fakeProviders = fakeProviders;
     }
 
-    @NotNull
     @Override
     public CompletableFuture<?> run(@NotNull CachedOutput cache) {
         if (globalCache == null) {
