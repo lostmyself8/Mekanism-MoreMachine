@@ -1,6 +1,7 @@
 package com.jerry.meklg.common.registries;
 
 import com.jerry.mekmm.Mekmm;
+import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.common.attachments.containers.ContainerType;
@@ -55,7 +56,24 @@ public class LargeGeneratorBlocks {
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder().addEnergy().build()));
 
     public static final BlockRegistryObject<BlockTileModel<TileEntitySolarHeatGenerator, Generator<TileEntitySolarHeatGenerator>>, ItemBlockTooltip<BlockTileModel<TileEntitySolarHeatGenerator, Generator<TileEntitySolarHeatGenerator>>>> SOLAR_HEAT_GENERATOR = LG_BLOCKS.registerDetails("solar_heat_generator", () -> new BlockTileModel<>(LargeGeneratorBlockTypes.SOLAR_HEAT_GENERATOR, properties -> properties.mapColor(MapColor.METAL)))
-            .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder().addEnergy().build()));
+            .forItemHolder(holder -> holder
+                    .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
+                            .addBasic(TileEntitySolarHeatGenerator.MAX_GAS, TileEntitySolarHeatGenerator.IS_COOLED_COOLANT)
+                            .addBasic(TileEntitySolarHeatGenerator.MAX_GAS, TileEntitySolarHeatGenerator.IS_HEATED_COOLANT)
+                            .build())
+                    .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
+                            .addBasic(TileEntitySolarHeatGenerator.MAX_FLUID, fluid -> IMoreMachineDataMapTypes.INSTANCE.getSolarHeatFluid(fluid.getFluidHolder()) != null)
+                            .build())
+                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorsBuilder.builder()
+                            .addBasic(TileEntitySolarHeatGenerator.HEAT_CAPACITY, TileEntitySolarHeatGenerator.INVERSE_CONDUCTION_COEFFICIENT, TileEntitySolarHeatGenerator.INVERSE_INSULATION_COEFFICIENT)
+                            .build())
+                    .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                            .addInput(TileEntitySolarHeatGenerator::isValidReflector)
+                            .addInput(TileEntitySolarHeatGenerator::isValidReflector)
+                            .addInput(TileEntitySolarHeatGenerator::isValidReflector)
+                            .addInput(TileEntitySolarHeatGenerator::isValidReflector)
+                            .addEnergy()
+                            .build()));
 
     private LargeGeneratorBlocks() {}
 }
