@@ -31,9 +31,9 @@ public class GuiRecycler extends GuiConfigurableTile<TileEntityRecycler, Mekanis
         // 箭头
         addRenderableWidget(new GuiUpArrow(this, 68, 38));
         // 能量条
-        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15))
+        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainerTyped(), 164, 15))
                 .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY));
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getActive));
+        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainerTyped(), tile::getActive));
         // 其他槽位在方块实体类中设置
         // 进度条
         addRenderableWidget(new GuiProgress(tile::getScaledProgress, ProgressType.BAR, this, 86, 38).recipeViewerCategory(tile))

@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.registries;
 
 import com.jerry.mekmm.Mekmm;
+import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.common.attachments.component.MoreMachineAttachedSideConfig;
 import com.jerry.mekmm.common.block.BlockAuthorDoll;
 import com.jerry.mekmm.common.block.BlockModelerDoll;
@@ -23,11 +24,11 @@ import com.jerry.mekmm.common.util.MoreMachineUtils;
 import mekanism.api.tier.ITier;
 import mekanism.common.attachments.component.AttachedEjector;
 import mekanism.common.attachments.component.AttachedSideConfig;
-import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.attachments.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
 import mekanism.common.attachments.containers.heat.HeatCapacitorsBuilder;
 import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
+import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
@@ -44,10 +45,10 @@ import mekanism.common.tier.FactoryTier;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -188,13 +189,13 @@ public class MoreMachineBlocks {
         BlockRegistryObject<@NotNull BlockMoreMachineFactory<?>, @NotNull ItemBlockMoreMachineFactory> factory = registerTieredBlock(tier, "_" + type.getMoreMachineFactoryType().getRegistryNameComponent() + "_factory", properties -> new BlockMoreMachineFactory<>(type, properties), ItemBlockMoreMachineFactory::new);
         factory.forItemHolder(holder -> {
             int processes = tier.processes;
-            Predicate<ItemStack> recipeInputPredicate = switch (type.getMoreMachineFactoryType()) {
+            Predicate<ItemResource> recipeInputPredicate = switch (type.getMoreMachineFactoryType()) {
                 case RECYCLING -> s -> MoreMachineRecipeType.RECYCLING.getInputCache().containsInput(null, s);
                 case PLANTING_STATION -> s -> MoreMachineRecipeType.PLANTING_STATION.getInputCache().containsInputA(null, s);
                 case CNC_STAMPING -> s -> MoreMachineRecipeType.STAMPING.getInputCache().containsInputA(null, s);
                 case CNC_LATHING -> s -> MoreMachineRecipeType.LATHING.getInputCache().containsInput(null, s);
                 case CNC_ROLLING_MILL -> s -> MoreMachineRecipeType.ROLLING_MILL.getInputCache().containsInput(null, s);
-                case REPLICATING -> TileEntityReplicator::isValidItemInput;
+                case REPLICATING -> s -> IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(s.typeHolder()) != null;
             };
             switch (type.getMoreMachineFactoryType()) {
                 case CNC_STAMPING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()

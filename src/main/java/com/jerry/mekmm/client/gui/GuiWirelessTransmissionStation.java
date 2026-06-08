@@ -42,18 +42,18 @@ public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEnti
     @Override
     protected void addGuiElements() {
         super.addGuiElements();
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 7, 14));
-        addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, () -> tile.getFluidTanks(null), GaugeType.STANDARD, this, 151, 14));
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 7, 14));
+        addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, tile::getFluidTanks, GaugeType.STANDARD, this, 151, 14));
         addRenderableWidget(new GuiEnergyGauge(new IEnergyInfoHandler() {
 
             @Override
             public long getEnergy() {
-                return tile.getEnergyContainer().getEnergy();
+                return tile.getEnergyContainer().getAmountAsLong();
             }
 
             @Override
             public long getMaxEnergy() {
-                return tile.getEnergyContainer().getMaxEnergy();
+                return tile.getEnergyContainer().getCapacityAsLong();
             }
         }, GaugeType.MEDIUM, this, 53, 14, 68, 60));
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(MekanismLang.MATRIX_INPUT_RATE.translate(EnergyDisplay.of(tile.getInputRate())),

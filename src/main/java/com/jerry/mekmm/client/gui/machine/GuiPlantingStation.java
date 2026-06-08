@@ -31,16 +31,16 @@ public class GuiPlantingStation extends GuiConfigurableTile<TileEntityPlantingSt
     protected void addGuiElements() {
         super.addGuiElements();
 
-        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15))
+        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainerTyped(), 164, 15))
                 .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY));
 
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getActive));
+        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainerTyped(), tile::getActive));
 
         addRenderableWidget(new GuiSlot(SlotType.OUTPUT_WIDE, this, 111, 30))
                 .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE))
                 .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityPlantingStation.NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR));
 
-        addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.chemicalTank, tile.getChemicalTanks(null)), 60, 36, 6, 12, false))
+        addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.chemicalTank, tile.getChemicalTanks()), 60, 36, 6, 12, false))
                 .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_SECONDARY_INPUT));
 
         addRenderableWidget(new GuiProgress(tile::getScaledProgress, ProgressType.BAR, this, 78, 38).recipeViewerCategory(tile))

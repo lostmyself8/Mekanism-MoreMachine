@@ -3,7 +3,7 @@ package com.jerry.mekmm.client.gui.machine;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.tile.machine.TileEntityAmbientGasCollector;
 
-import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
@@ -46,24 +46,23 @@ public class GuiAmbientGasCollector extends GuiMekanismTile<TileEntityAmbientGas
             } else {
                 list.add(MoreMachineLang.IS_BLOCKING.translate());
             }
-            ChemicalStack chemicalStack = tile.chemicalTank.getStack();
-            if (chemicalStack.isEmpty()) {
+            if (tile.chemicalTank.isEmpty()) {
                 list.add(MekanismLang.NO_CHEMICAL.translate());
             } else {
-                list.add(MekanismLang.GENERIC_STORED_MB.translate(chemicalStack, TextUtils.format(chemicalStack.amount())));
+                list.add(MekanismLang.GENERIC_STORED_MB.translate(tile.chemicalTank.resource(), TextUtils.format(tile.chemicalTank.amountAsLong())));
             }
             return list;
         }));
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15))
                 .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, () -> {
-                    MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer = tile.getEnergyContainer();
-                    return energyContainer.getEnergyPerTick() > energyContainer.getEnergy();
+                    MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer = (MachineEnergyContainer<TileEntityAmbientGasCollector>) tile.getEnergyContainer();
+                    return energyContainer.getEnergyPerTick() > energyContainer.getAmountAsLong();
                 });
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 6, 13))
-                .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, () -> tile.chemicalTank.getNeeded() < tile.estimateIncrementAmount());
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 6, 13))
+                .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, () -> tile.chemicalTank.getNeededAsInt(ChemicalResource.EMPTY) < tile.estimateIncrementAmount());
         // TODO: Eventually we may want to consider showing a warning if the block under the pump is of the wrong type
         // or there wasn't a valid spot to suck
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::usedEnergy));
+        addRenderableWidget(new GuiEnergyTab(this, (MachineEnergyContainer<?>) tile.getEnergyContainer(), tile::usedEnergy));
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.Upgrade;
+import mekanism.api.math.MathUtils;
 import mekanism.common.block.attribute.*;
 import mekanism.common.content.blocktype.BlockTypeTile;
 import mekanism.common.content.blocktype.Machine;
@@ -42,7 +43,7 @@ public class MoreMachineBlockTypes {
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.RECYCLER, MoreMachineLang.DESCRIPTION_RECYCLER, MoreMachineFactoryType.RECYCLING)
             .withGui(() -> MoreMachineContainerTypes.RECYCLER)
             .withSound(MekanismSounds.PRECISION_SAWMILL)
-            .withEnergyConfig(MoreMachineConfig.usage.recycler, MoreMachineConfig.storage.recycler)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.recycler.get()), MoreMachineConfig.storage.recycler::get)
             .with(AttributeSideConfig.ELECTRIC_MACHINE)
             .withComputerSupport("recycler")
             .build();
@@ -52,7 +53,7 @@ public class MoreMachineBlockTypes {
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.PLANTING_STATION, MoreMachineLang.DESCRIPTION_PLANTING_STATION, MoreMachineFactoryType.PLANTING_STATION)
             .withGui(() -> MoreMachineContainerTypes.PLANTING_STATION)
             .withSound(MekanismSounds.ENRICHMENT_CHAMBER)
-            .withEnergyConfig(MoreMachineConfig.usage.plantingStation, MoreMachineConfig.storage.plantingStation)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.plantingStation.get()), MoreMachineConfig.storage.plantingStation::get)
             .with(AttributeUpgradeSupport.DEFAULT_ADVANCED_MACHINE_UPGRADES)
             .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
             .withCustomShape(MoreMachineBlockShapes.PLANTING_STATION)
@@ -65,7 +66,7 @@ public class MoreMachineBlockTypes {
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.CNC_STAMPER, MoreMachineLang.DESCRIPTION_CNC_STAMPER, MoreMachineFactoryType.CNC_STAMPING)
             .withGui(() -> MoreMachineContainerTypes.CNC_STAMPER)
             .withSound(MekanismSounds.CRUSHER)
-            .withEnergyConfig(MoreMachineConfig.usage.cnc_stamper, MoreMachineConfig.storage.cnc_stamper)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.cnc_stamper.get()), MoreMachineConfig.storage.cnc_stamper::get)
             .with(AttributeSideConfig.ELECTRIC_MACHINE)
             .withComputerSupport("cnc_stamper")
             .build();
@@ -75,7 +76,7 @@ public class MoreMachineBlockTypes {
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.CNC_LATHE, MoreMachineLang.DESCRIPTION_CNC_LATHE, MoreMachineFactoryType.CNC_LATHING)
             .withGui(() -> MoreMachineContainerTypes.CNC_LATHE)
             .withSound(MekanismSounds.OSMIUM_COMPRESSOR)
-            .withEnergyConfig(MoreMachineConfig.usage.cnc_lathe, MoreMachineConfig.storage.cnc_lathe)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.cnc_lathe.get()), MoreMachineConfig.storage.cnc_lathe::get)
             .with(AttributeSideConfig.ELECTRIC_MACHINE)
             .withComputerSupport("cnc_lathe")
             .build();
@@ -85,7 +86,7 @@ public class MoreMachineBlockTypes {
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.CNC_ROLLING_MILL, MoreMachineLang.DESCRIPTION_CNC_ROLLING_MILL, MoreMachineFactoryType.CNC_ROLLING_MILL)
             .withGui(() -> MoreMachineContainerTypes.CNC_ROLLING_MILL)
             .withSound(MekanismSounds.COMBINER)
-            .withEnergyConfig(MoreMachineConfig.usage.cnc_rollingMill, MoreMachineConfig.storage.cnc_rollingMill)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.cnc_rollingMill.get()), MoreMachineConfig.storage.cnc_rollingMill::get)
             .with(AttributeSideConfig.ELECTRIC_MACHINE)
             .withComputerSupport("cnc_rolling_mill")
             .build();
@@ -94,7 +95,7 @@ public class MoreMachineBlockTypes {
     public static final MoreMachineFactoryMachine<TileEntityReplicator> REPLICATOR = MoreMachineMachineBuilder
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.REPLICATOR, MoreMachineLang.DESCRIPTION_REPLICATOR, MoreMachineFactoryType.REPLICATING)
             .withGui(() -> MoreMachineContainerTypes.REPLICATOR)
-            .withEnergyConfig(MoreMachineConfig.usage.itemReplicator, MoreMachineConfig.storage.itemReplicator)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.itemReplicator.get()), MoreMachineConfig.storage.itemReplicator::get)
             .withSound(MekanismSounds.PURIFICATION_CHAMBER)
             .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
             .withCustomShape(MoreMachineBlockShapes.REPLICATOR)
@@ -104,7 +105,7 @@ public class MoreMachineBlockTypes {
     public static final MoreMachineFactoryMachine<TileEntityFluidReplicator> FLUID_REPLICATOR = MoreMachineMachineBuilder
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.FLUID_REPLICATOR, MoreMachineLang.DESCRIPTION_FLUID_REPLICATOR, MoreMachineFactoryType.REPLICATING)
             .withGui(() -> MoreMachineContainerTypes.FLUID_REPLICATOR)
-            .withEnergyConfig(MoreMachineConfig.usage.fluidReplicator, MoreMachineConfig.storage.fluidReplicator)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.fluidReplicator.get()), MoreMachineConfig.storage.fluidReplicator::get)
             .withSound(MekanismSounds.PURIFICATION_CHAMBER)
             .withSideConfig(TransmissionType.FLUID, TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(MoreMachineBlockShapes.REPLICATOR)
@@ -114,7 +115,7 @@ public class MoreMachineBlockTypes {
     public static final MoreMachineFactoryMachine<TileEntityChemicalReplicator> CHEMICAL_REPLICATOR = MoreMachineMachineBuilder
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.CHEMICAL_REPLICATOR, MoreMachineLang.DESCRIPTION_CHEMicAL_REPLICATOR, MoreMachineFactoryType.REPLICATING)
             .withGui(() -> MoreMachineContainerTypes.CHEMIcAL_REPLICATOR)
-            .withEnergyConfig(MoreMachineConfig.usage.chemicalReplicator, MoreMachineConfig.storage.chemicalReplicator)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.chemicalReplicator.get()), MoreMachineConfig.storage.chemicalReplicator::get)
             .withSound(MekanismSounds.PURIFICATION_CHAMBER)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(MoreMachineBlockShapes.REPLICATOR)
@@ -133,7 +134,7 @@ public class MoreMachineBlockTypes {
     public static final Machine<TileEntityAmbientGasCollector> AMBIENT_GAS_COLLECTOR = MachineBuilder
             .createMachine(() -> MoreMachineTileEntityTypes.AMBIENT_GAS_COLLECTOR, MoreMachineLang.DESCRIPTION_AMBIENT_GAS_COLLECTOR)
             .withGui(() -> MoreMachineContainerTypes.AMBIENT_GAS_COLLECTOR)
-            .withEnergyConfig(MoreMachineConfig.usage.ambientGasCollector, MoreMachineConfig.storage.ambientGasCollector)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.ambientGasCollector.get()), MoreMachineConfig.storage.ambientGasCollector::get)
             .withSupportedUpgrades(Upgrade.SPEED, Upgrade.ENERGY)
             .withCustomShape(MoreMachineBlockShapes.AMBIENT_GAS_COLLECTOR)
             .withComputerSupport("ambientGasCollector")
@@ -144,7 +145,7 @@ public class MoreMachineBlockTypes {
     public static final Machine<TileEntityWirelessChargingStation> WIRELESS_CHARGING_STATION = MachineBuilder
             .createMachine(() -> MoreMachineTileEntityTypes.WIRELESS_CHARGING_STATION, MoreMachineLang.DESCRIPTION_WIRELESS_CHARGING_STATION)
             .withGui(() -> MoreMachineContainerTypes.WIRELESS_CHARGING_STATION)
-            .withEnergyConfig(MoreMachineConfig.storage.wirelessChargingStation)
+            .withEnergyStorage(MoreMachineConfig.storage.wirelessChargingStation)
             .withSideConfig(TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(MoreMachineBlockShapes.WIRELESS_CHARGING_STATION)
             .with(AttributeCustomSelectionBox.JSON)
@@ -158,7 +159,7 @@ public class MoreMachineBlockTypes {
     public static final Machine<TileEntityWirelessTransmissionStation> WIRELESS_TRANSMISSION_STATION = MachineBuilder
             .createMachine(() -> MoreMachineTileEntityTypes.WIRELESS_TRANSMISSION_STATION, MoreMachineLang.DESCRIPTION_WIRELESS_TRANSMISSION_STATION)
             .withGui(() -> MoreMachineContainerTypes.WIRELESS_TRANSMISSION_STATION)
-            .withEnergyConfig(MoreMachineConfig.storage.wirelessTransmitterStation)
+            .withEnergyStorage(MoreMachineConfig.storage.wirelessTransmitterStation)
             .withSideConfig(TransmissionType.ITEM, TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ENERGY, TransmissionType.HEAT)
             .withCustomShape(MoreMachineBlockShapes.WIRELESS_TRANSMISSION_STATION)
             .with(AttributeCustomSelectionBox.JSON)
