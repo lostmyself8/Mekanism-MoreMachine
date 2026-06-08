@@ -4,16 +4,15 @@ import com.jerry.mekmm.api.recipes.PlantingRecipe;
 
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
-import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,18 +41,20 @@ public class PlantingNoPerTickUsageCacheRecipe<HOLDER_A, INPUT_A extends net.min
 
     public static PlantingNoPerTickUsageCacheRecipe<Item, ItemStack, Chemical, ChemicalStack, ChanceOutput, PlantingRecipe> planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors,
                                                                                                                                      IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
-                                                                                                                                     ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler,
+                                                                                                                                     IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler,
                                                                                                                                      IOutputHandler<ChanceOutput> outputHandler) {
         return new PlantingNoPerTickUsageCacheRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput, recipe::getOutput,
-                ConstantPredicates.ITEM_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.alwaysFalse());
+                ItemStack::isEmpty, ChemicalStack::isEmpty, output -> false);
     }
 
     @Override
-    protected void finishProcessing(int operations) {
+    protected boolean finishProcessing(int operations, TransactionContext transaction) {
         if (input != null && secondaryInput != null && output != null && !inputEmptyCheck.test(input) && !secondaryInputEmptyCheck.test(secondaryInput) &&
                 !outputEmptyCheck.test(output)) {
-            secondaryInputHandler.use(secondaryInput, operations);
-            outputHandler.handleOutput(output, operations);
+            return inputHandler.use(input, operations, transaction) &&
+                    secondaryInputHandler.use(secondaryInput, operations, transaction) &&
+                    outputHandler.handleOutput(output, operations, transaction);
         }
+        return false;
     }
 }

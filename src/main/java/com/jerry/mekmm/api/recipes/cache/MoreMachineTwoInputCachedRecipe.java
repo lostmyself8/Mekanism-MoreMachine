@@ -9,6 +9,7 @@ import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
 import net.minecraft.core.TypedInstance;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -82,7 +83,7 @@ public class MoreMachineTwoInputCachedRecipe<HOLDER_A, INPUT_A extends TypedInst
     protected void calculateOperationsThisTick(OperationTracker tracker) {
         super.calculateOperationsThisTick(tracker);
         CachedRecipeHelper.twoInputCalculateOperationsThisTick(tracker, inputHandler, inputSupplier, secondaryInputHandler, secondaryInputSupplier, inputsSetter,
-                outputHandler, outputGetter, outputSetter, inputEmptyCheck, secondaryInputEmptyCheck);
+                outputHandler, outputGetter, outputSetter);
     }
 
     @Override
@@ -96,13 +97,14 @@ public class MoreMachineTwoInputCachedRecipe<HOLDER_A, INPUT_A extends TypedInst
     }
 
     @Override
-    protected void finishProcessing(int operations) {
+    protected boolean finishProcessing(int operations, TransactionContext transaction) {
         // Validate something didn't go horribly wrong
         if (input != null && secondaryInput != null && output != null && !inputEmptyCheck.test(input) && !secondaryInputEmptyCheck.test(secondaryInput) &&
                 !outputEmptyCheck.test(output)) {
-            inputHandler.use(input, operations);
-            secondaryInputHandler.use(secondaryInput, operations);
-            outputHandler.handleOutput(output, operations);
+            return inputHandler.use(input, operations, transaction) &&
+                    secondaryInputHandler.use(secondaryInput, operations, transaction) &&
+                    outputHandler.handleOutput(output, operations, transaction);
         }
+        return false;
     }
 }

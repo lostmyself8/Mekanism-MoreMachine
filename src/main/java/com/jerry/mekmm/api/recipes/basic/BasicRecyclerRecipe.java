@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 
-import mekanism.api.ItemStackTemplateHelper;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
@@ -86,16 +85,24 @@ public class BasicRecyclerRecipe extends RecyclerRecipe {
             return false;
         }
         BasicRecyclerRecipe other = (BasicRecyclerRecipe) o;
-        return input.equals(other.input) && ItemStackTemplateHelper.matches(chanceOutput, other.chanceOutput) && chance == other.chance;
+        return input.equals(other.input) && itemStackTemplateMatches(chanceOutput, other.chanceOutput) && chance == other.chance;
     }
 
     @Override
     public int hashCode() {
         int hash = input.hashCode();
-        hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(chanceOutput);
+        hash = 31 * hash + itemStackTemplateHash(chanceOutput);
         hash = 31 * hash + chanceOutput.count();
         hash = 31 * hash + Double.hashCode(chance);
         return hash;
+    }
+
+    private static boolean itemStackTemplateMatches(ItemStackTemplate a, ItemStackTemplate b) {
+        return ItemStack.isSameItemSameComponents(a.create(), b.create());
+    }
+
+    private static int itemStackTemplateHash(ItemStackTemplate template) {
+        return ItemStack.hashItemAndComponents(template.create());
     }
 
     /**

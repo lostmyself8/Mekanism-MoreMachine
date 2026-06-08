@@ -7,7 +7,6 @@ import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackReci
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipeHelper;
@@ -22,6 +21,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,26 +83,26 @@ public class ReplicatorCachedRecipe<HOLDER, INPUT extends TypedInstance<HOLDER>,
     public static <RECIPE extends MMBasicItemStackChemicalToItemStackRecipe> ReplicatorCachedRecipe<Item, ItemStack, ItemStackTemplate, RECIPE> createItemReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
                                                                                                                                                                      IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull ItemStackTemplate> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput,
-                recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.INVALID_ITEM_TEMPLATE);
+                recipe::getOutput, ItemStack::isEmpty, ChemicalStack::isEmpty, Objects::isNull);
     }
 
     public static <RECIPE extends BasicFluidChemicalToFluidRecipe> ReplicatorCachedRecipe<Fluid, FluidStack, FluidStackTemplate, RECIPE> createFluidReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler,
                                                                                                                                                                IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, IOutputHandler<@NotNull FluidStackTemplate> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, fluidInputHandler, chemicalInputHandler, outputHandler, recipe::getFluidInput, recipe::getChemicalInput,
-                recipe::getOutput, ConstantPredicates.FLUID_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.INVALID_FLUID_TEMPLATE);
+                recipe::getOutput, FluidStack::isEmpty, ChemicalStack::isEmpty, Objects::isNull);
     }
 
     public static <RECIPE extends MMBasicChemicalChemicalToChemicalRecipe> ReplicatorCachedRecipe<Chemical, ChemicalStack, ChemicalStack, RECIPE> createChemicalReplicator(RECIPE recipe, BooleanSupplier recheckAllErrors, IInputHandler<Chemical, @NotNull ChemicalStack> firstInputHandler,
                                                                                                                                                                            IInputHandler<Chemical, @NotNull ChemicalStack> secondaryInputHandler, IOutputHandler<@NotNull ChemicalStack> outputHandler) {
         return new ReplicatorCachedRecipe<>(recipe, recheckAllErrors, firstInputHandler, secondaryInputHandler, outputHandler, recipe::getLeftInput, recipe::getRightInput,
-                recipe::getOutput, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.CHEMICAL_EMPTY, ConstantPredicates.CHEMICAL_EMPTY);
+                recipe::getOutput, ChemicalStack::isEmpty, ChemicalStack::isEmpty, ChemicalStack::isEmpty);
     }
 
     @Override
     protected void calculateOperationsThisTick(OperationTracker tracker) {
         super.calculateOperationsThisTick(tracker);
         CachedRecipeHelper.twoInputCalculateOperationsThisTick(tracker, inputHandler, inputSupplier, secondaryInputHandler, secondaryInputSupplier, inputsSetter,
-                outputHandler, outputGetter, outputSetter, inputEmptyCheck, secondaryInputEmptyCheck);
+                outputHandler, outputGetter, outputSetter);
     }
 
     @Override
@@ -116,13 +116,14 @@ public class ReplicatorCachedRecipe<HOLDER, INPUT extends TypedInstance<HOLDER>,
     }
 
     @Override
-    protected void finishProcessing(int operations) {
+    protected boolean finishProcessing(int operations, TransactionContext transaction) {
         // Validate something didn't go horribly wrong
         if (input != null && secondaryInput != null && output != null && !inputEmptyCheck.test(input) && !secondaryInputEmptyCheck.test(secondaryInput) &&
                 !outputEmptyCheck.test(output)) {
             // inputHandler.use(input, operations);
-            secondaryInputHandler.use(secondaryInput, operations);
-            outputHandler.handleOutput(output, operations);
+            return secondaryInputHandler.use(secondaryInput, operations, transaction) &&
+                    outputHandler.handleOutput(output, operations, transaction);
         }
+        return false;
     }
 }

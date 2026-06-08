@@ -1,12 +1,15 @@
 package com.jerry.mekmm.api.recipes.basic;
 
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.ItemStackChemicalToItemStackRecipe;
 import mekanism.api.recipes.basic.IBasicItemStackOutput;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
+import net.minecraft.core.TypedInstance;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 
@@ -47,8 +50,8 @@ public abstract class MMBasicItemStackChemicalToItemStackRecipe extends ItemStac
     }
 
     @Override
-    @Contract(value = "_, _ -> new", pure = true)
-    public ItemStackTemplate getOutput(ItemStack inputItem, ChemicalStack inputChemical) {
+    @Contract(pure = true)
+    public ItemStackTemplate getOutput(TypedInstance<Item> inputItem, TypedInstance<Chemical> inputChemical) {
         return output;
     }
 

@@ -1,10 +1,13 @@
 package com.jerry.mekmm.api.recipes.basic;
 
 import mekanism.api.annotations.NothingNullByDefault;
+import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.ChemicalChemicalToChemicalRecipe;
 import mekanism.api.recipes.basic.IBasicChemicalOutput;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
+
+import net.minecraft.core.TypedInstance;
 
 import org.jetbrains.annotations.Contract;
 
@@ -43,7 +46,7 @@ public abstract class MMBasicChemicalChemicalToChemicalRecipe extends ChemicalCh
 
     @Override
     @Contract(value = "_, _ -> new", pure = true)
-    public ChemicalStack getOutput(ChemicalStack input1, ChemicalStack input2) {
+    public ChemicalStack getOutput(TypedInstance<Chemical> input1, TypedInstance<Chemical> input2) {
         return output.copy();
     }
 

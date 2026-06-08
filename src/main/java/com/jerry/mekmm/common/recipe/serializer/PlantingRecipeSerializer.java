@@ -3,7 +3,6 @@ package com.jerry.mekmm.common.recipe.serializer;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicPlantingRecipe;
 
-import mekanism.api.ItemStackTemplateHelper;
 import mekanism.api.SerializationConstants;
 import mekanism.api.SerializerHelper;
 import mekanism.api.annotations.NothingNullByDefault;
@@ -51,8 +50,8 @@ public class PlantingRecipeSerializer {
         StreamCodec<RegistryFriendlyByteBuf, BasicPlantingRecipe> streamCodec = StreamCodec.composite(
                 ItemStackIngredient.STREAM_CODEC, PlantingRecipe::getItemInput,
                 IngredientCreatorAccess.chemicalStack().streamCodec(), PlantingRecipe::getChemicalInput,
-                ItemStackTemplateHelper.OPTIONAL_STREAM_CODEC, BasicPlantingRecipe::getMainOutputRaw,
-                ItemStackTemplateHelper.OPTIONAL_STREAM_CODEC, BasicPlantingRecipe::getSecondaryOutputRaw,
+                ByteBufCodecs.optional(ItemStackTemplate.STREAM_CODEC), BasicPlantingRecipe::getMainOutputRaw,
+                ByteBufCodecs.optional(ItemStackTemplate.STREAM_CODEC), BasicPlantingRecipe::getSecondaryOutputRaw,
                 ByteBufCodecs.DOUBLE, PlantingRecipe::getSecondaryChance,
                 ByteBufCodecs.BOOL, PlantingRecipe::perTickUsage,
                 (itemInput, chemicalInput, mainOutput, secondaryOutput, secondChance, perTickUsage) -> factory.apply(itemInput, chemicalInput, mainOutput.orElse(null), secondaryOutput.orElse(null), secondChance, perTickUsage));

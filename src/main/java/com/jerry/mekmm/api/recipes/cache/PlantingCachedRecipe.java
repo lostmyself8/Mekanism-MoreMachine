@@ -11,11 +11,11 @@ import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
 import mekanism.api.recipes.cache.TwoInputCachedRecipe;
 import mekanism.api.recipes.inputs.IInputHandler;
-import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,11 +36,11 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
     protected final Predicate<ChanceOutput> outputEmptyCheck;
     protected final IOutputHandler<@NotNull ChanceOutput> outputHandler;
     protected final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
-    protected final ILongInputHandler<Chemical, ChemicalStack> chemicalInputHandler;
+    protected final IInputHandler<Chemical, ChemicalStack> chemicalInputHandler;
     protected final ChemicalUsageMultiplier chemicalUsage;
-    protected final LongConsumer chemicalUsedSoFarChanged;
-    protected long chemicalUsageMultiplier;
-    protected long chemicalUsedSoFar;
+    protected final IntConsumer chemicalUsedSoFarChanged;
+    protected int chemicalUsageMultiplier;
+    protected int chemicalUsedSoFar;
 
     protected ItemStack recipeItem = ItemStack.EMPTY;
     // Note: Shouldn't be null in places it is actually used, but we mark it as nullable, so we don't have to initialize
@@ -62,7 +62,7 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
      * @param outputHandler            Output handler.
      */
     public PlantingCachedRecipe(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
-                                ILongInputHandler<Chemical, ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, LongConsumer chemicalUsedSoFarChanged,
+                                IInputHandler<Chemical, ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, IntConsumer chemicalUsedSoFarChanged,
                                 IOutputHandler<@NotNull ChanceOutput> outputHandler, Predicate<ChanceOutput> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
         this.itemInputHandler = Objects.requireNonNull(itemInputHandler, "Item input handler cannot be null.");
@@ -79,7 +79,7 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
      *
      * @param chemicalUsedSoFar Amount of chemical that has been used so far.
      */
-    public void loadSavedUsageSoFar(long chemicalUsedSoFar) {
+    public void loadSavedUsageSoFar(int chemicalUsedSoFar) {
         if (chemicalUsedSoFar > 0) {
             this.chemicalUsedSoFar = chemicalUsedSoFar;
         }
@@ -145,20 +145,22 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
     }
 
     @Override
-    protected void useResources(int operations) {
-        super.useResources(operations);
-        if (chemicalUsageMultiplier <= 0) {
-            // We don't need to use the chemical
-            return;
+    protected boolean useResources(int operations, TransactionContext transaction) {
+        if (!super.useResources(operations, transaction)) {
+            return false;
         } else if (recipeChemical == null || recipeChemical.isEmpty()) {
-            // Something went wrong, this if should never really be true if we are in useResources
-            return;
+            return false;
         }
         // Note: We should have enough because of the getOperationsThisTick call to reduce it based on amounts
-        long toUse = operations * chemicalUsageMultiplier;
-        chemicalInputHandler.use(recipeChemical, toUse);
-        chemicalUsedSoFar += toUse;
-        chemicalUsedSoFarChanged.accept(chemicalUsedSoFar);
+        int toUse = operations * chemicalUsageMultiplier;
+        if (!chemicalInputHandler.use(recipeChemical, toUse, transaction)) {
+            return false;
+        }
+        if (toUse > 0) {
+            chemicalUsedSoFar += toUse;
+            chemicalUsedSoFarChanged.accept(chemicalUsedSoFar);
+        }
+        return true;
     }
 
     @Override
@@ -169,18 +171,18 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
     }
 
     @Override
-    protected void finishProcessing(int operations) {
+    protected boolean finishProcessing(int operations, TransactionContext transaction) {
         if (recipeChemical != null && output != null && !recipeItem.isEmpty() && !recipeChemical.isEmpty() && !outputEmptyCheck.test(output)) {
-            if (chemicalUsageMultiplier > 0) {
-                chemicalInputHandler.use(recipeChemical, operations * chemicalUsageMultiplier);
-            }
-            outputHandler.handleOutput(output, operations);
+            return itemInputHandler.use(recipeItem, operations, transaction) &&
+                    chemicalInputHandler.use(recipeChemical, operations * chemicalUsageMultiplier, transaction) &&
+                    outputHandler.handleOutput(output, operations, transaction);
         }
+        return false;
     }
 
     public static PlantingCachedRecipe planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
-                                                ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
-                                                LongConsumer chemicalUsedSoFarChanged, IOutputHandler<ChanceOutput> outputHandler) {
+                                                IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
+                                                IntConsumer chemicalUsedSoFarChanged, IOutputHandler<ChanceOutput> outputHandler) {
         return new PlantingCachedRecipe(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, chemicalUsage,
                 chemicalUsedSoFarChanged, outputHandler, ConstantPredicates.alwaysFalse());
     }

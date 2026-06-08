@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 
-import mekanism.api.ItemStackTemplateHelper;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
@@ -127,20 +126,31 @@ public class BasicPlantingRecipe extends PlantingRecipe {
             return false;
         }
         BasicPlantingRecipe other = (BasicPlantingRecipe) o;
-        return secondaryChance == other.secondaryChance && itemInput.equals(other.itemInput) && chemicalInput.equals(other.chemicalInput) && ItemStackTemplateHelper.matches(mainOutput, other.mainOutput) && ItemStackTemplateHelper.matches(secondaryOutput, other.secondaryOutput);
+        return secondaryChance == other.secondaryChance && itemInput.equals(other.itemInput) && chemicalInput.equals(other.chemicalInput) && itemStackTemplateMatches(mainOutput, other.mainOutput) && itemStackTemplateMatches(secondaryOutput, other.secondaryOutput);
     }
 
     @Override
     public int hashCode() {
         int hash = 31 * itemInput.hashCode() + chemicalInput.hashCode();
         hash = 31 * hash + Double.hashCode(secondaryChance);
-        hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(mainOutput);
+        hash = 31 * hash + itemStackTemplateHash(mainOutput);
         hash = 31 * hash + mainOutput.count();
         if (secondaryOutput != null) {
-            hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(secondaryOutput);
+            hash = 31 * hash + itemStackTemplateHash(secondaryOutput);
             hash = 31 * hash + secondaryOutput.count();
         }
         return hash;
+    }
+
+    private static boolean itemStackTemplateMatches(@Nullable ItemStackTemplate a, @Nullable ItemStackTemplate b) {
+        if (a == null || b == null) {
+            return a == b;
+        }
+        return ItemStack.isSameItemSameComponents(a.create(), b.create());
+    }
+
+    private static int itemStackTemplateHash(ItemStackTemplate template) {
+        return ItemStack.hashItemAndComponents(template.create());
     }
 
     public class BasicChanceOutput implements ChanceOutput {

@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.cache;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
 import mekanism.api.annotations.NothingNullByDefault;
-import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
@@ -12,6 +11,7 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +86,7 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
                                                   BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> inputHandler, IInputHandler<Item, @NotNull ItemStack> extraInputHandler,
                                                   IOutputHandler<@NotNull ItemStackTemplate> outputHandler) {
         return new StamperCachedRecipe(recipe, recheckAllErrors, inputHandler, extraInputHandler, outputHandler, recipe::getInput, recipe::getMold,
-                recipe::getOutput, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.ITEM_EMPTY, ConstantPredicates.INVALID_ITEM_TEMPLATE);
+                recipe::getOutput, ItemStack::isEmpty, ItemStack::isEmpty, Objects::isNull);
     }
 
     @Override
@@ -135,12 +135,13 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
     }
 
     @Override
-    protected void finishProcessing(int operations) {
+    protected boolean finishProcessing(int operations, TransactionContext transaction) {
         if (input != null && secondaryInput != null && output != null && !inputEmptyCheck.test(input) && !secondaryInputEmptyCheck.test(secondaryInput) &&
                 !outputEmptyCheck.test(output)) {
-            inputHandler.use(input, operations);
+            boolean usedInput = inputHandler.use(input, operations, transaction);
             // secondaryInputHandler.use(secondaryInput, operations);
-            outputHandler.handleOutput(output, operations);
+            return usedInput && outputHandler.handleOutput(output, operations, transaction);
         }
+        return false;
     }
 }

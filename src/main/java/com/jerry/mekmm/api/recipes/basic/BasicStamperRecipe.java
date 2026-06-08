@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
-import mekanism.api.ItemStackTemplateHelper;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
@@ -83,14 +82,22 @@ public class BasicStamperRecipe extends StamperRecipe {
             return false;
         }
         BasicStamperRecipe other = (BasicStamperRecipe) o;
-        return input.equals(other.input) && mold.equals(other.mold) && ItemStackTemplateHelper.matches(output, other.output);
+        return input.equals(other.input) && mold.equals(other.mold) && itemStackTemplateMatches(output, other.output);
     }
 
     @Override
     public int hashCode() {
         int hash = Objects.hash(input, mold);
-        hash = 31 * hash + ItemStackTemplateHelper.hashItemAndComponents(output);
+        hash = 31 * hash + itemStackTemplateHash(output);
         hash = 31 * hash + output.count();
         return hash;
+    }
+
+    private static boolean itemStackTemplateMatches(ItemStackTemplate a, ItemStackTemplate b) {
+        return ItemStack.isSameItemSameComponents(a.create(), b.create());
+    }
+
+    private static int itemStackTemplateHash(ItemStackTemplate template) {
+        return ItemStack.hashItemAndComponents(template.create());
     }
 }
