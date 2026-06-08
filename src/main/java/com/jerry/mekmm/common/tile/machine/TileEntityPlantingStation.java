@@ -17,35 +17,32 @@ import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.functions.ConstantPredicates;
+import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.SawmillRecipe.ChanceOutput;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
 import mekanism.api.recipes.inputs.IInputHandler;
-import mekanism.api.recipes.inputs.ILongInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
-import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.integration.computer.computercraft.ComputerConstants;
-import mekanism.common.integration.energy.EnergyCompatUtils;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -53,6 +50,8 @@ import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalReci
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.ItemChemical;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.util.MekanismUtils;
@@ -72,7 +71,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,7 +104,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
 
     private final IOutputHandler<ChanceOutput> outputHandler;
     private final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
-    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInput", docPlaceholder = "input slot")
     InputInventorySlot inputSlot;
@@ -121,10 +119,13 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     EnergyInventorySlot energySlot;
 
     private double chemicalPerTickMeanMultiplier = 1;
-    private long baseTotalUsage;
-    private long usedSoFar;
-    @Getter
+    private int baseTotalUsage;
+    private int usedSoFar;
     private MachineEnergyContainer<TileEntityPlantingStation> energyContainer;
+
+    public MachineEnergyContainer<TileEntityPlantingStation> getEnergyContainerTyped() {
+        return energyContainer;
+    }
 
     public TileEntityPlantingStation(BlockPos pos, BlockState state) {
         super(MoreMachineBlocks.PLANTING_STATION, pos, state, TRACKED_ERROR_TYPES, BASE_TICKS_REQUIRED);
@@ -132,7 +133,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
         configComponent.setupItemIOConfig(Collections.singletonList(inputSlot), List.of(mainOutputSlot, secondaryOutputSlot), energySlot, false);
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
         if (allowExtractingChemical()) {
-            configComponent.setupIOConfig(TransmissionType.CHEMICAL, chemicalTank, RelativeSide.RIGHT).setCanEject(false);
+            setupIOConfig(TransmissionType.CHEMICAL, chemicalTank, RelativeSide.RIGHT).setCanEject(false);
         } else {
             configComponent.setupInputConfig(TransmissionType.CHEMICAL, chemicalTank);
         }
@@ -153,32 +154,41 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
         }
     }
 
+    private <CONTAINER> ConfigInfo setupIOConfig(TransmissionType type, CONTAINER container, RelativeSide side) {
+        ConfigInfo config = configComponent.setupIOConfig(type, container);
+        if (config != null) {
+            config.setDataType(DataType.INPUT_OUTPUT, side);
+        }
+        return config;
+    }
+
     @NotNull
     @Override
-    public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(chemicalTank = BasicChemicalTank.create(MAX_GAS, allowExtractingChemical() ? ConstantPredicates.alwaysTrueBi() : ConstantPredicates.notExternal(),
-                (gas, automationType) -> containsRecipeBA(inputSlot.getStack(), gas), this::containsRecipeB, recipeCacheListener));
+    public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        MekContainerHelper<IChemicalTank> builder = MekContainerHelper.forSideWithChemicalConfig(this);
+        builder.addContainer(chemicalTank = BasicChemicalTank.create(MAX_GAS, allowExtractingChemical() ? ConstantPredicates.alwaysTrueBi() : ConstantPredicates.notExternal(),
+                (gas, automationType) -> containsRecipeBA(inputSlot.resource().toStack(inputSlot.amountAsInt()), gas.toStack(chemicalTank.amountAsInt())),
+                gas -> containsRecipeB(gas.toStack(1)), recipeCacheListener));
         return builder.build();
     }
 
     @NotNull
     @Override
-    protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener));
-        return builder.build();
+    protected IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener);
+        return new EnergyConfigHolder(energyContainer, this);
     }
 
     @Override
-    protected @Nullable IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this);
-        builder.addSlot(inputSlot = InputInventorySlot.at(item -> containsRecipeAB(item, chemicalTank.getStack()), this::containsRecipeA, recipeCacheListener, 56, 17))
+    protected @Nullable IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSideWithItemConfig(this);
+        builder.addContainer(inputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeAB(item.toStack(), chemicalTank.resource().toStack(chemicalTank.amountAsInt())),
+                item -> containsRecipeA(item.toStack(1)), recipeCacheListener, 56, 17))
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_INPUT)));
-        builder.addSlot(chemicalSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 56, 53));
-        builder.addSlot(mainOutputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 116, 35));
-        builder.addSlot(secondaryOutputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 132, 35));
-        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 31, 35));
+        builder.addContainer(chemicalSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 56, 53));
+        builder.addContainer(mainOutputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 116, 35));
+        builder.addContainer(secondaryOutputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 132, 35));
+        builder.addContainer(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 31, 35));
         return builder.build();
     }
 
@@ -193,8 +203,8 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.fillContainerOrConvert();
-        chemicalSlot.fillTankOrConvert();
+        energySlot.fillContainerOrConvert(null);
+        chemicalSlot.fillTankOrConvert(null);
         recipeCacheLookupMonitor.updateAndProcess();
         return sendUpdatePacket;
     }
@@ -219,7 +229,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
         CachedRecipe<PlantingRecipe> cachedRecipe;
         if (recipe.perTickUsage()) {
             cachedRecipe = PlantingCachedRecipe.planting(recipe, recheckAllRecipeErrors, itemInputHandler, chemicalInputHandler, chemicalUsageMultiplier,
-                    used -> usedSoFar = used, outputHandler);
+                    used -> usedSoFar = Math.toIntExact(used), outputHandler);
         } else {
             cachedRecipe = PlantingNoPerTickUsageCacheRecipe.planting(recipe, recheckAllRecipeErrors, itemInputHandler, chemicalInputHandler, outputHandler);
         }
@@ -242,7 +252,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             if (useStatisticalMechanics()) {
                 chemicalPerTickMeanMultiplier = MekanismUtils.getGasPerTickMeanMultiplier(this);
             } else {
-                baseTotalUsage = MekanismUtils.getBaseUsage(this, baseTicksRequired);
+                baseTotalUsage = Math.toIntExact(MekanismUtils.getBaseUsage(this, baseTicksRequired));
             }
         }
     }
@@ -254,14 +264,14 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     }
 
     @Override
-    public long getSavedUsedSoFar(int cacheIndex) {
+    public int getSavedUsedSoFar(int cacheIndex) {
         return usedSoFar;
     }
 
     @Override
     public void loadAdditional(@NotNull ValueInput input) {
         super.loadAdditional(input);
-        usedSoFar = input.getLongOr(SerializationConstants.USED_SO_FAR, usedSoFar);
+        usedSoFar = Math.toIntExact(input.getLongOr(SerializationConstants.USED_SO_FAR, usedSoFar));
     }
 
     @Override
@@ -293,7 +303,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             return notChemicalPort(side, offset);
         } else if (capability == Capabilities.ITEM.block()) {
             return notItemPort(side, offset);
-        } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+        } else if (capability == Capabilities.ENERGY.block()) {
             return notEnergyPort(side, offset);
         }
         return notChemicalPort(side, offset) && notItemPort(side, offset) && notEnergyPort(side, offset);

@@ -10,32 +10,28 @@ import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 import com.jerry.mekmm.common.tile.interfaces.ITileConnectHolder;
 import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
 
-import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.IChemicalTank;
-import mekanism.api.functions.ConstantPredicates;
+import mekanism.api.fluid.IFluidTank;
 import mekanism.api.heat.HeatAPI.HeatTransfer;
+import mekanism.api.heat.IHeatCapacitor;
 import mekanism.api.heat.IHeatHandler;
-import mekanism.common.attachments.containers.ContainerType;
+import mekanism.api.inventory.IInventorySlot;
+import mekanism.common.attachments.containers.type.ContainerType;
+import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.heat.BasicHeatCapacitor;
 import mekanism.common.capabilities.heat.CachedAmbientTemperature;
 import mekanism.common.capabilities.heat.ITileHeatHandler;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
-import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
-import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
-import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
-import mekanism.common.capabilities.holder.heat.HeatCapacitorHelper;
-import mekanism.common.capabilities.holder.heat.IHeatCapacitorHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
-import mekanism.common.content.network.transmitter.LogisticalTransporterBase;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.*;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -46,15 +42,17 @@ import mekanism.common.inventory.container.sync.SyncableDouble;
 import mekanism.common.inventory.container.sync.SyncableInt;
 import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.BasicInventorySlot;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.FluidInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.inventory.Finder;
 import mekanism.common.lib.inventory.TransitRequest;
 import mekanism.common.lib.inventory.TransitRequest.TransitResponse;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.util.*;
 
@@ -70,11 +68,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -133,26 +137,34 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         chemicalsRate = DEFAULT_CHEMICALS_RATE;
         itemsRate = DEFAULT_ITEMS_RATE;
         heatRate = DEFAULT_HEAT_RATE;
-        configComponent.setupIOConfig(TransmissionType.ENERGY, energyContainer, RelativeSide.FRONT);
-        configComponent.setupIOConfig(TransmissionType.FLUID, fluidTank, RelativeSide.LEFT);
-        configComponent.setupIOConfig(TransmissionType.CHEMICAL, chemicalTank, RelativeSide.RIGHT);
+        setupIOConfig(TransmissionType.ENERGY, energyContainer, RelativeSide.FRONT);
+        setupIOConfig(TransmissionType.FLUID, fluidTank, RelativeSide.LEFT);
+        setupIOConfig(TransmissionType.CHEMICAL, chemicalTank, RelativeSide.RIGHT);
         configComponent.setupItemIOConfig(List.of(inventorySlot, fluidFillSlot, chemicalInputSlot), List.of(fluidDrainSlot, chemicalOutputSlot, fluidOutputSlot), energySlot, false);
-        configComponent.setupIOConfig(TransmissionType.HEAT, heatCapacitor, RelativeSide.BACK);
+        setupIOConfig(TransmissionType.HEAT, heatCapacitor, RelativeSide.BACK);
         configComponent.addDisabledSides(RelativeSide.TOP);
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ENERGY, TransmissionType.HEAT);
     }
 
+    private <CONTAINER> ConfigInfo setupIOConfig(TransmissionType type, CONTAINER container, RelativeSide side) {
+        ConfigInfo config = configComponent.setupIOConfig(type, container);
+        if (config != null) {
+            config.setDataType(DataType.INPUT_OUTPUT, side);
+        }
+        return config;
+    }
+
     @Override
-    protected @Nullable IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this);
-        builder.addSlot(inventorySlot = BasicInventorySlot.at(listener, 8, 77));
-        builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fill(chemicalTank, listener, 28, 15));
-        builder.addSlot(chemicalOutputSlot = ChemicalInventorySlot.drain(chemicalTank, listener, 28, 57));
-        builder.addSlot(fluidFillSlot = FluidInventorySlot.fill(fluidTank, listener, 131, 15));
-        builder.addSlot(fluidDrainSlot = FluidInventorySlot.drain(fluidTank, listener, 131, 57));
-        builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, 131, 36));
-        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 28, 36));
+    protected @Nullable IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSideWithItemConfig(this);
+        builder.addContainer(inventorySlot = BasicInventorySlot.at(listener, 8, 77));
+        builder.addContainer(chemicalInputSlot = ChemicalInventorySlot.fill(chemicalTank, listener, 28, 15));
+        builder.addContainer(chemicalOutputSlot = ChemicalInventorySlot.drain(chemicalTank, listener, 28, 57));
+        builder.addContainer(fluidFillSlot = FluidInventorySlot.fill(fluidTank, listener, 131, 15));
+        builder.addContainer(fluidDrainSlot = FluidInventorySlot.drain(fluidTank, listener, 131, 57));
+        builder.addContainer(fluidOutputSlot = OutputInventorySlot.at(listener, 131, 36));
+        builder.addContainer(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 28, 36));
         chemicalInputSlot.setSlotOverlay(SlotOverlay.MINUS);
         chemicalOutputSlot.setSlotOverlay(SlotOverlay.PLUS);
         fluidFillSlot.setSlotOverlay(SlotOverlay.MINUS);
@@ -161,30 +173,29 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
-        ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
-        builder.addTank(chemicalTank = BasicChemicalTank.create(MAX_CHEMICAL, ConstantPredicates.alwaysTrue(), ConstantPredicates.alwaysTrue(), listener));
+    public @Nullable IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener) {
+        MekContainerHelper<IChemicalTank> builder = MekContainerHelper.forSideWithChemicalConfig(this);
+        builder.addContainer(chemicalTank = BasicChemicalTank.create(MAX_CHEMICAL, listener));
         return builder.build();
     }
 
     @Override
-    protected @Nullable IFluidTankHolder getInitialFluidTanks(IContentsListener listener) {
-        FluidTankHelper builder = FluidTankHelper.forSideWithConfig(this);
-        builder.addTank(fluidTank = BasicFluidTank.create(MAX_FLUID, listener));
+    protected @Nullable IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener) {
+        MekContainerHelper<IFluidTank> builder = MekContainerHelper.forSideWithFluidConfig(this);
+        builder.addContainer(fluidTank = BasicFluidTank.create(MAX_FLUID, listener));
         return builder.build();
     }
 
     @Override
-    protected @Nullable IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, listener));
-        return builder.build();
+    protected @Nullable IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+        energyContainer = MachineEnergyContainer.input(this, listener);
+        return new EnergyConfigHolder(energyContainer, this);
     }
 
     @Override
-    protected @Nullable IHeatCapacitorHolder getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
-        HeatCapacitorHelper builder = HeatCapacitorHelper.forSideWithConfig(this);
-        builder.addCapacitor(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener));
+    protected @Nullable IContainerHolder<IHeatCapacitor> getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
+        MekContainerHelper<IHeatCapacitor> builder = MekContainerHelper.forSideWithHeatConfig(this);
+        builder.addContainer(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener));
         return builder.build();
     }
 
@@ -208,11 +219,11 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
         closeInvalidScreens();
-        chemicalInputSlot.fillTank();
-        chemicalOutputSlot.drainTank();
-        fluidFillSlot.fillTank(fluidOutputSlot);
-        fluidDrainSlot.drainTank(fluidOutputSlot);
-        energySlot.fillContainerOrConvert();
+        chemicalInputSlot.fillTankOrConvert(null);
+        chemicalOutputSlot.drainTankIntoSlot(null);
+        fluidFillSlot.fillTankFromSlot(fluidOutputSlot, null);
+        fluidDrainSlot.drainTankIntoSlot(fluidOutputSlot, null);
+        energySlot.fillContainerOrConvert(null);
         // 2.5秒检测一次
         if (level != null && level.getGameTime() % 50 == 0) {
             connectionManager.validateConnections();
@@ -221,11 +232,14 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         if (canFunction()) {
             // 不需要检测速率是否小于等于0，emit会检测
             // 传输能量
-            CableUtils.emit(connectionManager.getEnergyCaches(), energyContainer, energyRate);
+            Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>> energyCaches = (Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>>) (Collection<?>) connectionManager.getEnergyCaches();
+            EnergyUtils.emit(energyCaches, energyRate, null);
             // 传输流体
-            FluidUtils.emit(connectionManager.getFluidCaches(), fluidTank, fluidsRate);
+            Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>> fluidCaches = (Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>>) (Collection<?>) connectionManager.getFluidCaches();
+            ResourceUtils.emit(fluidCaches, fluidTank, fluidsRate, null);
             // 传输化学品
-            ChemicalUtil.emit(connectionManager.getChemicalCaches(), chemicalTank, chemicalsRate);
+            Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> chemicalCaches = (Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>>) (Collection<?>) connectionManager.getChemicalCaches();
+            ResourceUtils.emit(chemicalCaches, chemicalTank, Math.toIntExact(Math.min(Integer.MAX_VALUE, chemicalsRate)), null);
             // 传输物品
             transportItems();
         }
@@ -244,18 +258,22 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         if (itemsRate <= 0) return;
         // TODO:在某种情况下可以平分，希望可以做到不需要给定面即可输出
         // 获取自身的弹出能力
-        net.neoforged.neoforge.items.IItemHandler selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
+        ResourceHandler<ItemResource> selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
         if (selfHandler == null) return;
 
-        for (BlockCapabilityCache<net.neoforged.neoforge.items.IItemHandler, Direction> cache : connectionManager.getItemCaches()) {
-            net.neoforged.neoforge.items.IItemHandler target = cache.getCapability();
+        Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> itemCaches = (Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>>) (Collection<?>) connectionManager.getItemCaches();
+        for (BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction> cache : itemCaches) {
+            ResourceHandler<ItemResource> target = cache.getCapability();
             if (target != null) {
-                TransitRequest request = TransitRequest.definedItem(selfHandler, 1, itemsRate, Finder.ANY);
-                if (!request.isEmpty()) {
-                    TransitResponse response = request.eject(this, getBlockPos(), target, 0, LogisticalTransporterBase::getColor);
+                try (Transaction transaction = Transaction.openRoot()) {
+                    TransitRequest request = TransitRequest.definedItem(selfHandler, 1, itemsRate, Finder.ANY, transaction);
+                    if (request.isEmpty()) {
+                        continue;
+                    }
+                    TransitResponse response = request.eject(this, getBlockPos(), target, 0, null, transaction);
                     if (!response.isEmpty()) {
-                        int amount = response.getSendingAmount();
-                        MekanismUtils.logMismatchedStackSize(inventorySlot.shrinkStack(amount, Action.EXECUTE), amount);
+                        response.useAll(transaction);
+                        transaction.commit();
                     }
                 }
             }
@@ -361,7 +379,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         return status;
     }
 
-    public @Nullable MachineEnergyContainer<TileEntityWirelessTransmissionStation> getEnergyContainer() {
+    public @Nullable MachineEnergyContainer<TileEntityWirelessTransmissionStation> getWirelessEnergyContainer() {
         return energyContainer;
     }
 
@@ -544,11 +562,11 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
 
     @Override
     public int getRedstoneLevel() {
-        return MekanismUtils.redstoneLevelFromContents(energyContainer.getEnergy(), energyContainer.getMaxEnergy());
+        return MekanismUtils.redstoneLevelFromContents(energyContainer.getAmountAsLong(), energyContainer.getCapacityAsLong());
     }
 
     @Override
-    protected boolean makesComparatorDirty(ContainerType<?, ?, ?> type) {
+    protected boolean makesComparatorDirty(IContainerType<?, ?> type) {
         return type == ContainerType.ENERGY;
     }
 

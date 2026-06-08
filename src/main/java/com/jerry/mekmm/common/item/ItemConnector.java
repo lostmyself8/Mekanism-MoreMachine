@@ -29,6 +29,8 @@ import mekanism.common.util.WorldUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.TypedInstance;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -48,6 +50,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
@@ -197,7 +201,7 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
     }
 
     @Override
-    public @NotNull RadialData<ConnectorMode> getRadialData(ItemStack stack) {
+    public <ITEM extends TypedInstance<Item> & DataComponentGetter> @NotNull RadialData<ConnectorMode> getRadialData(ITEM stack) {
         return LAZY_RADIAL_DATA.get();
     }
 
@@ -212,16 +216,16 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
     }
 
     @Override
-    public void addHUDStrings(List<Component> list, Player player, ItemStack stack, EquipmentSlot slotType) {
+    public <ITEM extends TypedInstance<Item> & DataComponentGetter> void addHUDStrings(List<Component> list, Player player, ITEM stack, EquipmentSlot slotType) {
         list.add(MekanismLang.MODE.translateColored(EnumColor.PINK, getMode(stack)));
     }
 
     @Override
-    public void changeMode(@NotNull Player player, @NotNull ItemStack stack, int shift, DisplayChange displayChange) {
-        ConnectorMode mode = getMode(stack);
+    public void changeMode(@NotNull Player player, @NotNull ItemAccess itemAccess, int shift, DisplayChange displayChange, TransactionContext transaction) {
+        ConnectorMode mode = getMode(itemAccess);
         ConnectorMode newMode = mode.adjust(shift);
         if (mode != newMode) {
-            setMode(stack, player, newMode);
+            setMode(itemAccess, player, newMode, transaction);
             displayChange.sendMessage(player, newMode, MekanismLang.CONFIGURE_STATE::translate);
         }
     }

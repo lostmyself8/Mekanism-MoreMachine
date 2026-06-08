@@ -2,7 +2,7 @@ package com.jerry.mekmm.common.inventory.tank;
 
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
-import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.common.capabilities.chemical.VariableCapacityChemicalTank;
 
@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class FactoryVariableCapacityChemicalTank extends VariableCapacityChemicalTank {
 
-    public FactoryVariableCapacityChemicalTank(LongSupplier capacity, BiPredicate<ChemicalStack, @NotNull AutomationType> canExtract, BiPredicate<ChemicalStack, @NotNull AutomationType> canInsert, Predicate<ChemicalStack> validator, @Nullable ChemicalAttributeValidator attributeValidator, @Nullable IContentsListener listener) {
-        super(capacity, canExtract, canInsert, validator, attributeValidator, listener);
+    public FactoryVariableCapacityChemicalTank(LongSupplier capacity, BiPredicate<ChemicalResource, @NotNull AutomationType> canExtract, BiPredicate<ChemicalResource, @NotNull AutomationType> canInsert, Predicate<ChemicalResource> validator, @Nullable ChemicalAttributeValidator attributeValidator, @Nullable IContentsListener listener) {
+        super(capacity, canExtract, canInsert, validator, null, null, attributeValidator, listener);
     }
 }

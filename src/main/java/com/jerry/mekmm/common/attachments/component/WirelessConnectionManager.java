@@ -4,9 +4,8 @@ import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.tile.machine.TileEntityWirelessTransmissionStation;
 import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine.ConnectStatus;
 
-import mekanism.api.chemical.IChemicalHandler;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.common.capabilities.Capabilities;
-import mekanism.common.integration.energy.BlockEnergyCapabilityCache;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.util.WorldUtils;
 
@@ -16,8 +15,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -77,48 +78,48 @@ public class WirelessConnectionManager {
      * 获取能量连接
      */
     @SuppressWarnings("unchecked")
-    public Collection<BlockEnergyCapabilityCache> getEnergyCaches() {
+    public Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>> getEnergyCaches() {
         if (cacheDirty) {
             rebuildAllCaches();
         }
         List<?> rawList = capabilityCache.getOrDefault(TransmissionType.ENERGY, Collections.emptyList());
-        return (Collection<BlockEnergyCapabilityCache>) rawList;
+        return (Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>>) rawList;
     }
 
     /**
      * 获取流体连接
      */
-    @SuppressWarnings({ "unchecked", "removal" })
-    public Collection<BlockCapabilityCache<IFluidHandler, @Nullable Direction>> getFluidCaches() {
+    @SuppressWarnings("unchecked")
+    public Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>> getFluidCaches() {
         if (cacheDirty) {
             rebuildAllCaches();
         }
         List<?> rawList = capabilityCache.getOrDefault(TransmissionType.FLUID, Collections.emptyList());
-        return (Collection<BlockCapabilityCache<IFluidHandler, @Nullable Direction>>) rawList;
+        return (Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>>) rawList;
     }
 
     /**
      * 获取化学品连接
      */
     @SuppressWarnings("unchecked")
-    public Collection<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> getChemicalCaches() {
+    public Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> getChemicalCaches() {
         if (cacheDirty) {
             rebuildAllCaches();
         }
         List<?> rawList = capabilityCache.getOrDefault(TransmissionType.CHEMICAL, Collections.emptyList());
-        return (Collection<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>>) rawList;
+        return (Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>>) rawList;
     }
 
     /**
      * 获取物品连接
      */
-    @SuppressWarnings({ "unchecked", "removal" })
-    public Collection<BlockCapabilityCache<IItemHandler, @Nullable Direction>> getItemCaches() {
+    @SuppressWarnings("unchecked")
+    public Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> getItemCaches() {
         if (cacheDirty) {
             rebuildAllCaches();
         }
         List<?> rawList = capabilityCache.getOrDefault(TransmissionType.ITEM, Collections.emptyList());
-        return (Collection<BlockCapabilityCache<IItemHandler, @Nullable Direction>>) rawList;
+        return (Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>>) rawList;
     }
 
     /**
@@ -167,7 +168,7 @@ public class WirelessConnectionManager {
      */
     private Object createCache(ServerLevel level, ConnectionConfig config) {
         return switch (config.type()) {
-            case ENERGY -> BlockEnergyCapabilityCache.create(level, config.pos(), config.direction());
+            case ENERGY -> Capabilities.ENERGY.createCache(level, config.pos(), config.direction());
             case FLUID -> Capabilities.FLUID.createCache(level, config.pos(), config.direction());
             case CHEMICAL -> Capabilities.CHEMICAL.createCache(level, config.pos(), config.direction());
             case ITEM -> Capabilities.ITEM.createCache(level, config.pos(), config.direction());

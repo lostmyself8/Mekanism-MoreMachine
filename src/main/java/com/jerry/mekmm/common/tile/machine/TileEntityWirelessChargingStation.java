@@ -6,33 +6,33 @@ import com.jerry.mekmm.common.integration.computer.ComputerEnergyContainerWrappe
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 
-import mekanism.api.Action;
-import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
-import mekanism.api.energy.IEnergyContainer;
-import mekanism.api.energy.IStrictEnergyHandler;
+import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.Mekanism;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.proxy.AutomatedEnergyHandler;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.integration.curios.CuriosIntegration;
-import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.TileComponentEjector;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
+import mekanism.common.util.EnergyUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
@@ -45,11 +45,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,6 @@ import java.util.UUID;
 
 public class TileEntityWirelessChargingStation extends TileEntityConfigurableMachine implements IBoundingBlock {
 
-    @Getter
     @WrappingComputerMethod(wrapper = ComputerEnergyContainerWrapper.class, methodNames = { "getEnergy", "getEnergyCapacity", "getEnergyNeeded", "getEnergyFilledPercentage" }, docPlaceholder = "energy container")
     MachineEnergyContainer<TileEntityWirelessChargingStation> energyContainer;
 
@@ -72,26 +71,37 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
 
     public TileEntityWirelessChargingStation(BlockPos pos, BlockState state) {
         super(MoreMachineBlocks.WIRELESS_CHARGING_STATION, pos, state);
-        configComponent.setupIOConfig(TransmissionType.ITEM, chargeSlot, dischargeSlot, RelativeSide.FRONT, true);
-        configComponent.setupIOConfig(TransmissionType.ENERGY, energyContainer, RelativeSide.FRONT);
+        configComponent.setupIOConfig(TransmissionType.ITEM, chargeSlot, dischargeSlot, true).setCanEject(false);
+        setupIOConfig(TransmissionType.ENERGY, energyContainer, RelativeSide.FRONT);
         configComponent.addDisabledSides(RelativeSide.TOP);
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.ENERGY).setCanEject(type -> canFunction());
     }
 
+    private <CONTAINER> ConfigInfo setupIOConfig(TransmissionType type, CONTAINER container, RelativeSide side) {
+        ConfigInfo config = configComponent.setupIOConfig(type, container);
+        if (config != null) {
+            config.setDataType(DataType.INPUT_OUTPUT, side);
+        }
+        return config;
+    }
+
     @Override
-    protected @Nullable IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, listener));
-        return builder.build();
+    protected @Nullable IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+        energyContainer = MachineEnergyContainer.input(this, listener);
+        return new EnergyConfigHolder(energyContainer, this);
+    }
+
+    public MachineEnergyContainer<TileEntityWirelessChargingStation> wirelessEnergyContainer() {
+        return energyContainer;
     }
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this);
-        builder.addSlot(dischargeSlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 17, 35));
-        builder.addSlot(chargeSlot = EnergyInventorySlot.drain(energyContainer, listener, 143, 35));
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSideWithItemConfig(this);
+        builder.addContainer(dischargeSlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 17, 35));
+        builder.addContainer(chargeSlot = EnergyInventorySlot.drain(energyContainer, listener, 143, 35));
         dischargeSlot.setSlotOverlay(SlotOverlay.MINUS);
         chargeSlot.setSlotOverlay(SlotOverlay.PLUS);
         return builder.build();
@@ -100,8 +110,8 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        chargeSlot.drainContainer();
-        dischargeSlot.fillContainerOrConvert();
+        chargeSlot.drainContainerIntoSlot(null);
+        dischargeSlot.fillContainerOrConvert(null);
         if (!energyContainer.isEmpty() && canFunction()) {
             Level level = getLevel();
             UUID uuid = getOwnerUUID();
@@ -111,7 +121,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
                     return sendUpdatePacket;
                 }
                 long maxChargeRate = MoreMachineConfig.general.wirelessChargingStationChargingRate.get();
-                long availableEnergy = energyContainer.getEnergy();
+                long availableEnergy = energyContainer.getAmountAsLong();
                 long toCharge = Math.min(maxChargeRate, availableEnergy);
                 if (toCharge > 0L) {
                     // 优先充能盔甲，其次是主副手和饰品，最后是物品栏
@@ -179,59 +189,41 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         if (amount <= 0L) {
             return amount;
         }
-        ItemStack stack = ItemUtil.getStack(handler, slot);
+        ItemStack stack = handler.getResource(slot).toStack(handler.getAmountAsInt(slot));
         if (stack.isEmpty()) {
             return amount;
         }
-        IStrictEnergyHandler energyHandler = EnergyCompatUtils.getStrictEnergyHandler(stack);
-        if (energyHandler == null) {
-            return amount;
-        }
-        long remaining = energyHandler.insertEnergy(amount, Action.SIMULATE);
-        if (remaining >= amount) {
-            return amount;
-        }
-        long toExtract = amount - remaining;
-        long simulatedExtract = energyContainer.extract(toExtract, Action.SIMULATE, AutomationType.MANUAL);
-        if (simulatedExtract <= 0L) {
-            return amount;
-        }
-        long inserted = simulatedExtract - energyHandler.insertEnergy(simulatedExtract, Action.EXECUTE);
-        if (inserted <= 0L) {
+        EnergyHandler energySource = AutomatedEnergyHandler.manual(energyContainer);
+        if (energySource == null) {
             return amount;
         }
         ItemResource originalResource = handler.getResource(slot);
         int count = handler.getAmountAsInt(slot);
-        try (Transaction transaction = Transaction.open(null)) {
-            if (handler.extract(slot, originalResource, count, transaction) == count &&
+        try (Transaction transaction = Transaction.openRoot()) {
+            int charged = EnergyUtils.charge(energySource, ItemAccess.forHandlerIndex(handler, slot), Math.toIntExact(Math.min(Integer.MAX_VALUE, amount)), transaction);
+            if (charged > 0 && handler.extract(slot, originalResource, count, transaction) == count &&
                     handler.insert(slot, ItemResource.of(stack), count, transaction) == count) {
                 transaction.commit();
-                energyContainer.extract(inserted, Action.EXECUTE, AutomationType.MANUAL);
-                return amount - inserted;
+                return amount - charged;
             }
         }
         return amount;
     }
 
-    private long charge(IEnergyContainer energyContainer, ItemStack stack, long amount) {
+    private long charge(MachineEnergyContainer<TileEntityWirelessChargingStation> energyContainer, ItemStack stack, long amount) {
         if (stack.isEmpty() || amount <= 0L) {
             return amount;
         }
-        IStrictEnergyHandler handler = EnergyCompatUtils.getStrictEnergyHandler(stack);
-        if (handler == null) {
+        EnergyHandler energySource = AutomatedEnergyHandler.manual(energyContainer);
+        if (energySource == null) {
             return amount;
         }
-        // 模拟接收后剩余的量
-        long remaining = handler.insertEnergy(amount, Action.SIMULATE);
-        if (remaining < amount) {
-            // 物品需要的量=总量-模拟接收后剩余的量
-            long toExtract = amount - remaining;
-            // 实际提取的量
-            long extracted = energyContainer.extract(toExtract, Action.EXECUTE, AutomationType.MANUAL);
-            // 实际插入后剩余的量
-            long inserted = handler.insertEnergy(extracted, Action.EXECUTE);
-            // 返回模拟剩余的量和实际插入后剩余的量的和
-            return inserted + remaining;
+        try (Transaction transaction = Transaction.openRoot()) {
+            int charged = EnergyUtils.charge(energySource, ItemAccess.forStack(stack), Math.toIntExact(Math.min(Integer.MAX_VALUE, amount)), transaction);
+            if (charged > 0) {
+                transaction.commit();
+                return amount - charged;
+            }
         }
         return amount;
     }
@@ -280,7 +272,7 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     public long getOutput() {
-        return Math.min(MekanismConfig.gear.mekaSuitInventoryChargeRate.get(), energyContainer.getEnergy());
+        return Math.min(MekanismConfig.gear.mekaSuitInventoryChargeRate.get(), energyContainer.getAmountAsLong());
     }
 
     @Override

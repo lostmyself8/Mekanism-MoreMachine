@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +27,7 @@ public class MixinItemConfigurator {
     private BlockEntity mekmm$tile;
 
     @Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lmekanism/common/util/WorldUtils;getTileEntity(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void getTile(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Player player, Level world, BlockPos pos, Direction side, ItemStack stack) {
+    private void getTile(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Player player, Level world, BlockPos pos, Direction side) {
         mekmm$tile = WorldUtils.getTileEntity(world, pos);
     }
 
