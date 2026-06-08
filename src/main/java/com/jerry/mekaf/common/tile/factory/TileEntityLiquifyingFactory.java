@@ -4,10 +4,9 @@ import com.jerry.mekaf.common.inventory.slot.AdvancedFactoryInputInventorySlot;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 import com.jerry.mekaf.common.upgrade.NutritionLiquifyingUpgradeData;
 
-import mekanism.api.Action;
 import mekanism.api.IContentsListener;
-import mekanism.api.RelativeSide;
-import mekanism.api.fluid.IExtendedFluidTank;
+import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.fluid.IFluidTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
 import mekanism.api.recipes.ItemStackToFluidOptionalItemRecipe;
@@ -23,12 +22,9 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
-import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
-import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
-import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -44,7 +40,6 @@ import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
 import mekanism.common.registries.MekanismFluids;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.upgrade.IUpgradeData;
-import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -55,13 +50,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.ItemStackMap;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +85,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                             methodNames = { "getOutput", "getOutputCapacity", "getOutputNeeded",
                                     "getOutputFilledPercentage" },
                             docPlaceholder = "output tank")
-    public IExtendedFluidTank fluidTank;
+    public IFluidTank fluidTank;
 
     protected IOutputHandler<ItemStackToFluidOptionalItemRecipe.@NotNull FluidOptionalItemOutput>[] liquifiesOutputHandler;
 
@@ -106,25 +103,24 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         }
 
         configComponent.setupItemIOConfig(inputItemSlots, outputItemSlots, energySlot, false);
-        configComponent.setupOutputConfig(TransmissionType.FLUID, fluidTank, RelativeSide.RIGHT);
+        configComponent.setupOutputConfig(TransmissionType.FLUID, fluidTank);
 
         ejectorComponent = new TileComponentEjector(this);
-        ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.FLUID)
-                .setCanTankEject(tank -> tank == fluidTank);
+        ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.FLUID);
     }
 
     @Override
-    protected @Nullable IFluidTankHolder getInitialFluidTanks(IContentsListener listener) {
-        FluidTankHelper builder = FluidTankHelper.forSideWithConfig(this);
-        builder.addTank(fluidTank = BasicFluidTank.output(MAX_FLUID * tier.processes, markAllMonitorsChanged(listener)));
+    protected @Nullable IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener) {
+        MekContainerHelper<IFluidTank> builder = MekContainerHelper.forSideWithFluidConfig(this);
+        builder.addContainer(fluidTank = BasicFluidTank.output(MAX_FLUID * tier.processes, markAllMonitorsChanged(listener)));
         return builder.build();
     }
 
     @Override
-    protected void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {}
+    protected void addTanks(MekContainerHelper<IChemicalTank> builder, IContentsListener listener, IContentsListener updateSortingListener) {}
 
     @Override
-    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
+    protected void addSlots(MekContainerHelper<IInventorySlot> builder, IContentsListener listener, IContentsListener updateSortingListener) {
         itemInputHandlers = new IInputHandler[tier.processes];
         liquifiesOutputHandler = new IOutputHandler[tier.processes];
         processInfoSlots = new NLProcessInfo[tier.processes];
@@ -139,8 +135,8 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
             // listener directly
             AdvancedFactoryInputInventorySlot inputSlot = AdvancedFactoryInputInventorySlot.create(this, i, outputSlot, fluidTank, recipeCacheLookupMonitors[i], getXPos(i), 13);
             int index = i;
-            builder.addSlot(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));
-            builder.addSlot(outputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(NOT_ENOUGH_SPACE_ITEM_OUTPUT_ERROR, index)));
+            builder.addContainer(inputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT, index)));
+            builder.addContainer(outputSlot).tracksWarnings(slot -> slot.warning(WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(NOT_ENOUGH_SPACE_ITEM_OUTPUT_ERROR, index)));
             itemInputHandlers[i] = InputHelper.getInputHandler(inputSlot, RecipeError.NOT_ENOUGH_INPUT);
             liquifiesOutputHandler[i] = OutputHelper.getOutputHandler(fluidTank, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, outputSlot, NOT_ENOUGH_SPACE_ITEM_OUTPUT_ERROR);
             processInfoSlots[i] = new NLProcessInfo(i, inputSlot, outputSlot);
@@ -191,7 +187,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
 
     @Override
     public @NotNull CachedRecipe<BasicItemStackToFluidOptionalItemRecipe> createNewCachedRecipe(@NotNull BasicItemStackToFluidOptionalItemRecipe recipe, int cacheIndex) {
-        return OneInputCachedRecipe.itemToFluidOptionalItem(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], liquifiesOutputHandler[cacheIndex])
+        return new OneInputCachedRecipe<>(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], liquifiesOutputHandler[cacheIndex])
                 .setErrorsChanged(errors -> errorTracker.onErrorsChanged(errors, cacheIndex))
                 .setCanHolderFunction(this::canFunction)
                 .setActive(active -> setActiveState(active, cacheIndex))
@@ -202,7 +198,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                 .setBaselineMaxOperations(this::getOperationsPerTick);
     }
 
-    public boolean inputProducesOutput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IExtendedFluidTank outputTank, boolean updateCache) {
+    public boolean inputProducesOutput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IFluidTank outputTank, boolean updateCache) {
         return outputTank.isEmpty() || getRecipeForInput(process, fallbackInput, outputSlot, outputTank, updateCache) != null;
     }
 
@@ -212,8 +208,13 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         return cached != null && isValidInputStatic(stack);
     }
 
+    @Contract("null, _ -> false")
+    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<BasicItemStackToFluidOptionalItemRecipe> cached, @NotNull ItemResource stack) {
+        return cached != null && isValidInputStatic(stack.toStack());
+    }
+
     @Nullable
-    protected BasicItemStackToFluidOptionalItemRecipe getRecipeForInput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IExtendedFluidTank outputTank, boolean updateCache) {
+    protected BasicItemStackToFluidOptionalItemRecipe getRecipeForInput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IFluidTank outputTank, boolean updateCache) {
         if (!CommonWorldTickHandler.flushTagAndRecipeCaches) {
             // If our recipe caches are valid, grab our cached recipe and see if it is still valid
             CachedRecipe<BasicItemStackToFluidOptionalItemRecipe> cached = getCachedRecipe(process);
@@ -237,7 +238,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     @Nullable
-    protected BasicItemStackToFluidOptionalItemRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, IInventorySlot outputSlot, @NotNull IExtendedFluidTank inputTank) {
+    protected BasicItemStackToFluidOptionalItemRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, IInventorySlot outputSlot, @NotNull IFluidTank inputTank) {
         return null;
     }
 
@@ -250,24 +251,24 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     @Override
-    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider, TransactionContext transaction) {
         if (upgradeData instanceof NutritionLiquifyingUpgradeData data) {
             redstone = data.redstone;
             setControlType(data.controlType);
-            getEnergyContainer().setEnergy(data.energyContainer.getEnergy());
+            energyContainer.copyContents(data.energyContainer, transaction);
             sorting = data.sorting;
-            ContainerType.ITEM.copy(data.energySlot, energySlot);
+            energySlot.copyContents(data.energySlot, transaction);
             System.arraycopy(data.progress, 0, progress, 0, data.progress.length);
             for (int i = 0; i < data.inputSlots.size(); i++) {
-                ContainerType.ITEM.copy(data.inputSlots.get(i), inputItemSlots.get(i));
+                inputItemSlots.get(i).copyContents(data.inputSlots.get(i), transaction);
             }
             for (int i = 0; i < data.outputSlots.size(); i++) {
-                outputItemSlots.get(i).setStack(data.outputSlots.get(i).getStack());
+                outputItemSlots.get(i).copyContents(data.outputSlots.get(i), transaction);
             }
             readUpgradeComponents(provider, data.components);
-            ContainerType.FLUID.copy(data.fluidTank, fluidTank);
+            fluidTank.copyContents(data.fluidTank, transaction);
         } else {
-            super.parseUpgradeData(upgradeData, provider);
+            super.parseUpgradeData(upgradeData, provider, transaction);
         }
     }
 
@@ -281,29 +282,31 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     @ComputerMethod
     ItemStack getInput(int process) throws ComputerException {
         validateValidProcess(process);
-        return processInfoSlots[process].inputSlot().getStack();
+        IInventorySlot inputSlot = processInfoSlots[process].inputSlot();
+        return inputSlot.resource().toStack(inputSlot.amountAsInt());
     }
 
     @ComputerMethod
     ItemStack getOutput(int process) throws ComputerException {
         validateValidProcess(process);
-        return processInfoSlots[process].inputSlot().getStack();
+        IInventorySlot outputSlot = processInfoSlots[process].outputSlot();
+        return outputSlot.resource().toStack(outputSlot.amountAsInt());
     }
     // End methods IComputerTile
 
     @Override
     protected void sortInventoryOrTank() {
-        Map<ItemStack, NLRecipeProcessInfo> processes = ItemStackMap.createTypeAndTagMap();
+        Map<ItemResource, NLRecipeProcessInfo> processes = new HashMap<>();
         List<NLProcessInfo> emptyProcesses = new ArrayList<>();
         for (NLProcessInfo processInfo : processInfoSlots) {
             IInventorySlot inputSlot = processInfo.inputSlot();
             if (inputSlot.isEmpty()) {
                 emptyProcesses.add(processInfo);
             } else {
-                ItemStack inputStack = inputSlot.getStack();
+                ItemResource inputStack = inputSlot.resource();
                 NLRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new NLRecipeProcessInfo());
                 recipeProcessInfo.processes.add(processInfo);
-                recipeProcessInfo.totalCount += inputStack.getCount();
+                recipeProcessInfo.totalCount += inputSlot.amountAsLong();
                 if (recipeProcessInfo.lazyMinPerSlot == null && !CommonWorldTickHandler.flushTagAndRecipeCaches) {
                     // If we don't have a lazily initialized min per slot calculation set for it yet
                     // and our cache is not invalid/out of date due to a reload
@@ -314,7 +317,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                         // And our current process has a cached recipe then set the lazily initialized per slot value
                         // Note: If something goes wrong, and we end up with zero as how much we need as an input
                         // we just bump the value up to one to make sure we properly handle it
-                        recipeProcessInfo.lazyMinPerSlot = (info, factory) -> factory.getNeededInput(info.recipe, (ItemStack) info.item);
+                        recipeProcessInfo.lazyMinPerSlot = (info, factory) -> factory.getNeededInput(info.recipe, info.item.toStack());
                     }
                 }
             }
@@ -323,7 +326,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
             // If all input slots are empty, just exit
             return;
         }
-        for (Map.Entry<ItemStack, NLRecipeProcessInfo> entry : processes.entrySet()) {
+        for (Map.Entry<ItemResource, NLRecipeProcessInfo> entry : processes.entrySet()) {
             NLRecipeProcessInfo recipeProcessInfo = entry.getValue();
             if (recipeProcessInfo.lazyMinPerSlot == null) {
                 recipeProcessInfo.item = entry.getKey();
@@ -334,8 +337,8 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                     // Note: We put all of this logic in the lazy init, so that we don't actually call any of this
                     // until it is needed. That way if we have no empty slots and all our input slots are filled
                     // we don't do any extra processing here, and can properly short circuit
-                    ItemStack item = (ItemStack) info.item;
-                    ItemStack largerInput = item.copyWithCount(Math.min(item.getMaxStackSize(), info.totalCount));
+                    ItemResource item = info.item;
+                    ItemStack largerInput = item.toStack(Math.min(item.getMaxStackSize(), MathUtils.clampToInt(info.totalCount)));
                     NLProcessInfo processInfo = info.processes.getFirst();
                     // Try getting a recipe for our input with a larger size, and update the cache if we find one
                     info.recipe = factory.getRecipeForInput(processInfo.process(), largerInput, processInfo.outputSlot(), fluidTank, true);
@@ -356,11 +359,11 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         distributeItems(processes);
     }
 
-    private void addEmptySlotsAsTargets(Map<ItemStack, NLRecipeProcessInfo> processes, List<NLProcessInfo> emptyProcesses) {
-        for (Map.Entry<ItemStack, NLRecipeProcessInfo> entry : processes.entrySet()) {
+    private void addEmptySlotsAsTargets(Map<ItemResource, NLRecipeProcessInfo> processes, List<NLProcessInfo> emptyProcesses) {
+        for (Map.Entry<ItemResource, NLRecipeProcessInfo> entry : processes.entrySet()) {
             NLRecipeProcessInfo recipeProcessInfo = entry.getValue();
-            int minPerSlot = recipeProcessInfo.getMinPerSlot(this);
-            int maxSlots = recipeProcessInfo.totalCount / minPerSlot;
+            long minPerSlot = recipeProcessInfo.getMinPerSlot(this);
+            long maxSlots = recipeProcessInfo.totalCount / minPerSlot;
             if (maxSlots <= 1) {
                 // If we don't have enough to even fill the input for a slot for a single recipe; skip
                 continue;
@@ -372,8 +375,8 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                 continue;
             }
             // Note: This is some arbitrary input stack one of the stacks contained
-            ItemStack sourceStack = entry.getKey();
-            int emptyToAdd = maxSlots - processCount;
+            ItemStack sourceStack = entry.getKey().toStack();
+            long emptyToAdd = maxSlots - processCount;
             int added = 0;
             List<NLProcessInfo> toRemove = new ArrayList<>();
             for (NLProcessInfo emptyProcess : emptyProcesses) {
@@ -399,27 +402,27 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         }
     }
 
-    private void distributeItems(Map<ItemStack, NLRecipeProcessInfo> processes) {
-        for (Map.Entry<ItemStack, NLRecipeProcessInfo> entry : processes.entrySet()) {
+    private void distributeItems(Map<ItemResource, NLRecipeProcessInfo> processes) {
+        for (Map.Entry<ItemResource, NLRecipeProcessInfo> entry : processes.entrySet()) {
             NLRecipeProcessInfo recipeProcessInfo = entry.getValue();
             int processCount = recipeProcessInfo.processes.size();
             if (processCount == 1) {
                 // If there is only one process with the item in it; short-circuit, no balancing is needed
                 continue;
             }
-            ItemStack item = entry.getKey();
+            ItemResource item = entry.getKey();
             // Note: This isn't based on any limits the slot may have (but we currently don't have any reduced ones
             // here, so it doesn't matter)
             int maxStackSize = item.getMaxStackSize();
-            int numberPerSlot = recipeProcessInfo.totalCount / processCount;
+            long numberPerSlot = recipeProcessInfo.totalCount / processCount;
             if (numberPerSlot == maxStackSize) {
                 // If all the slots are already maxed out; short-circuit, no balancing is needed
                 continue;
             }
-            int remainder = recipeProcessInfo.totalCount % processCount;
-            int minPerSlot = recipeProcessInfo.getMinPerSlot(this);
+            long remainder = recipeProcessInfo.totalCount % processCount;
+            long minPerSlot = recipeProcessInfo.getMinPerSlot(this);
             if (minPerSlot > 1) {
-                int perSlotRemainder = numberPerSlot % minPerSlot;
+                long perSlotRemainder = numberPerSlot % minPerSlot;
                 if (perSlotRemainder > 0) {
                     // Reduce the number we distribute per slot by what our excess
                     // is if we are trying to balance it by the size of the input
@@ -451,7 +454,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
             for (int i = 0; i < processCount; i++) {
                 NLProcessInfo processInfo = recipeProcessInfo.processes.get(i);
                 AdvancedFactoryInputInventorySlot inputSlot = processInfo.inputSlot();
-                int sizeForSlot = numberPerSlot;
+                long sizeForSlot = numberPerSlot;
                 if (remainder > 0) {
                     // If we have a remainder, factor it into our slots
                     if (remainder > minPerSlot) {
@@ -469,36 +472,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                         remainder = 0;
                     }
                 }
-                if (inputSlot.isEmpty()) {
-                    // Note: sizeForSlot should never be zero here as we would not have added
-                    // the empty slot to this item's distribution grouping if it would not
-                    // end up getting any items; check it just in case though before creating
-                    // a stack for the slot and setting it
-                    if (sizeForSlot > 0) {
-                        // Note: We use setStackUnchecked here, as there is a very small chance that
-                        // the stack is not actually valid for the slot because of a reload causing
-                        // recipes to change. If this is the case, then we want to properly not crash,
-                        // but we would rather not add any extra overhead about revalidating the item
-                        // each time as it can get somewhat expensive.
-                        inputSlot.setStackUnchecked(item.copyWithCount(sizeForSlot));
-                    }
-                } else {
-                    // Slot is not currently empty
-                    if (sizeForSlot == 0) {
-                        // If the amount of the item we want to set it to is zero (all got used by earlier stacks, which
-                        // might
-                        // happen if the recipe requires a stacked input (minPerSlot > 1)), then we need to set the slot
-                        // to empty
-                        inputSlot.setEmpty();
-                    } else if (inputSlot.getCount() != sizeForSlot) {
-                        // Otherwise, if our slot doesn't already contain the amount we want it to,
-                        // we need to adjust how much is stored in it, and log an error if it changed
-                        // by a different amount then we expected
-                        // Note: We use setStackSize here rather than setStack to avoid an unnecessary stack copy call
-                        // as copying item stacks can sometimes be rather expensive in a heavily modded environment
-                        MekanismUtils.logMismatchedStackSize(sizeForSlot, inputSlot.setStackSize(sizeForSlot, Action.EXECUTE));
-                    }
-                }
+                inputSlot.setContents(item, sizeForSlot, null);
             }
         }
     }
@@ -511,12 +485,12 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         private final List<NLProcessInfo> processes = new ArrayList<>();
         @Nullable
         private ToIntBiFunction<NLRecipeProcessInfo, TileEntityLiquifyingFactory> lazyMinPerSlot;
-        private Object item;
+        private ItemResource item;
         private BasicItemStackToFluidOptionalItemRecipe recipe;
-        private int minPerSlot = 1;
-        private int totalCount;
+        private long minPerSlot = 1;
+        private long totalCount;
 
-        public int getMinPerSlot(TileEntityLiquifyingFactory factory) {
+        public long getMinPerSlot(TileEntityLiquifyingFactory factory) {
             if (lazyMinPerSlot != null) {
                 // Get the value lazily
                 minPerSlot = Math.max(1, lazyMinPerSlot.applyAsInt(this, factory));

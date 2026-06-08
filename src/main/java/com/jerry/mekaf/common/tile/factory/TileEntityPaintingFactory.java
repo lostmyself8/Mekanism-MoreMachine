@@ -6,6 +6,7 @@ import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -16,20 +17,18 @@ import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe;
 import mekanism.api.recipes.cache.ItemStackConstantChemicalToObjectCachedRecipe.ChemicalUsageMultiplier;
 import mekanism.api.recipes.cache.TwoInputCachedRecipe;
-import mekanism.api.recipes.inputs.ILongInputHandler;
+import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.Mekanism;
-import mekanism.common.attachments.containers.ContainerType;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.slot.SlotOverlay;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
@@ -41,16 +40,17 @@ import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IHasDumpButton;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
-import mekanism.common.util.InventoryUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ import java.util.Set;
 public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFactory<ItemStackChemicalToItemStackRecipe> implements ConstantUsageRecipeLookupHandler,
                                        ItemChemicalRecipeLookupHandler<ItemStackChemicalToItemStackRecipe>, IHasDumpButton {
 
-    private static final CheckRecipeType<ItemStack, ChemicalStack, ItemStackChemicalToItemStackRecipe, ItemStack> OUTPUT_CHECK = (recipe, input, extra, output) -> InventoryUtils.areItemsStackable(recipe.getOutput(input, extra), output);
+    private static final CheckRecipeType<Item, ItemResource, Chemical, ChemicalResource, ItemStackChemicalToItemStackRecipe, ItemResource> OUTPUT_CHECK = (recipe, input, extra, output) -> output.isEmpty() || output.matches(recipe.getOutput(input, extra));
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
@@ -82,9 +82,9 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     public IChemicalTank chemicalTank;
 
     private final ChemicalUsageMultiplier chemicalUsageMultiplier = ChemicalUsageMultiplier.constantUse(this::getTicksRequired, this::getTicksRequired);
-    private final long[] usedSoFar;
+    private final int[] usedSoFar;
 
-    private final ILongInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
+    private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputChemicalItem", docPlaceholder = "chemical slot")
     ChemicalInventorySlot chemicalInputSlot;
@@ -96,20 +96,20 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL);
-        usedSoFar = new long[tier.processes];
+        usedSoFar = new int[tier.processes];
 
         chemicalInputHandler = InputHelper.getInputHandler(chemicalTank, RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
     }
 
     @Override
-    protected void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
-        builder.addTank(chemicalTank = BasicChemicalTank.input(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
+    protected void addTanks(MekContainerHelper<IChemicalTank> builder, IContentsListener listener, IContentsListener updateSortingListener) {
+        builder.addContainer(chemicalTank = BasicChemicalTank.input(MAX_CHEMICAL * tier.processes, this::containsRecipeB, markAllMonitorsChanged(listener)));
     }
 
     @Override
-    protected void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener) {
+    protected void addSlots(MekContainerHelper<IInventorySlot> builder, IContentsListener listener, IContentsListener updateSortingListener) {
         super.addSlots(builder, listener, updateSortingListener);
-        builder.addSlot(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 7, 57));
+        builder.addContainer(chemicalInputSlot = ChemicalInventorySlot.fillOrConvert(chemicalTank, this::getLevel, listener, 7, 57));
         chemicalInputSlot.setSlotOverlay(SlotOverlay.MINUS);
     }
 
@@ -119,31 +119,31 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     }
 
     @Override
-    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ItemStackChemicalToItemStackRecipe> cached, @NotNull ItemStack stack) {
+    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ItemStackChemicalToItemStackRecipe> cached, @NotNull ItemResource stack) {
         if (cached != null) {
             ItemStackChemicalToItemStackRecipe cachedRecipe = cached.getRecipe();
-            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.getType()));
+            return cachedRecipe.getItemInput().testType(stack) && (chemicalTank.isEmpty() || cachedRecipe.getChemicalInput().testType(chemicalTank.resource()));
         }
         return false;
     }
 
     @Override
-    protected @Nullable ItemStackChemicalToItemStackRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot) {
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chemicalTank.getStack(), outputSlot.getStack(), OUTPUT_CHECK);
+    protected @Nullable ItemStackChemicalToItemStackRecipe findRecipe(int process, @NotNull ItemResource fallbackInput, @NotNull IInventorySlot outputSlot) {
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, chemicalTank.resource(), outputSlot.resource(), OUTPUT_CHECK);
     }
 
     @Override
-    public boolean isItemValidForSlot(@NotNull ItemStack stack) {
-        return containsRecipeBA(stack, chemicalTank.getStack());
+    public boolean isItemValidForSlot(@NotNull ItemResource stack) {
+        return containsRecipeBA(stack, chemicalTank.resource());
     }
 
     @Override
-    public boolean isValidInputItem(@NotNull ItemStack stack) {
+    public boolean isValidInputItem(@NotNull ItemResource stack) {
         return containsRecipeA(stack);
     }
 
     @Override
-    protected int getNeededInput(ItemStackChemicalToItemStackRecipe recipe, ItemStack inputStack) {
+    protected int getNeededInput(ItemStackChemicalToItemStackRecipe recipe, ItemResource inputStack) {
         return MathUtils.clampToInt(recipe.getItemInput().getNeededAmount(inputStack));
     }
 
@@ -177,10 +177,10 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     public @NotNull CachedRecipe<ItemStackChemicalToItemStackRecipe> createNewCachedRecipe(@NotNull ItemStackChemicalToItemStackRecipe recipe, int cacheIndex) {
         CachedRecipe<ItemStackChemicalToItemStackRecipe> cachedRecipe;
         if (recipe.perTickUsage()) {
-            cachedRecipe = ItemStackConstantChemicalToObjectCachedRecipe.toItem(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalInputHandler,
+            cachedRecipe = ItemStackConstantChemicalToObjectCachedRecipe.create(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalInputHandler,
                     chemicalUsageMultiplier, used -> usedSoFar[cacheIndex] = used, itemOutputHandlers[cacheIndex]);
         } else {
-            cachedRecipe = TwoInputCachedRecipe.itemChemicalToItem(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalInputHandler, itemOutputHandlers[cacheIndex]);
+            cachedRecipe = new TwoInputCachedRecipe<>(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalInputHandler, itemOutputHandlers[cacheIndex]);
         }
         return cachedRecipe
                 .setErrorsChanged(errors -> errorTracker.onErrorsChanged(errors, cacheIndex))
@@ -194,15 +194,15 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     }
 
     @Override
-    public long getSavedUsedSoFar(int cacheIndex) {
+    public int getSavedUsedSoFar(int cacheIndex) {
         return usedSoFar[cacheIndex];
     }
 
     @Override
     public void loadAdditional(@NotNull ValueInput input) {
         super.loadAdditional(input);
-        input.read(SerializationConstants.USED_SO_FAR, Codec.LONG_STREAM).ifPresentOrElse(savedUsedStream -> {
-            long[] savedUsed = savedUsedStream.toArray();
+        input.read(SerializationConstants.USED_SO_FAR, Codec.INT_STREAM).ifPresentOrElse(savedUsedStream -> {
+            int[] savedUsed = savedUsedStream.toArray();
             if (tier.processes != savedUsed.length) {
                 Arrays.fill(usedSoFar, 0);
             }
@@ -215,15 +215,15 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     @Override
     public void saveAdditional(@NotNull ValueOutput output) {
         super.saveAdditional(output);
-        output.store(SerializationConstants.USED_SO_FAR, Codec.LONG_STREAM, Arrays.stream(usedSoFar));
+        output.store(SerializationConstants.USED_SO_FAR, Codec.INT_STREAM, Arrays.stream(usedSoFar));
     }
 
     @Override
-    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider) {
+    public void parseUpgradeData(@NotNull IUpgradeData upgradeData, HolderLookup.Provider provider, TransactionContext transaction) {
         if (upgradeData instanceof AdvancedMachineUpgradeData data) {
-            super.parseUpgradeData(upgradeData, provider);
-            ContainerType.CHEMICAL.copy(data.stored, chemicalTank);
-            ContainerType.ITEM.copy(data.chemicalSlot, chemicalInputSlot);
+            super.parseUpgradeData(upgradeData, provider, transaction);
+            chemicalTank.copyContents(data.stored, transaction);
+            chemicalInputSlot.copyContents(data.chemicalSlot, transaction);
             System.arraycopy(data.usedSoFar, 0, usedSoFar, 0, data.usedSoFar.length);
         } else {
             Mekanism.logger.warn("Unhandled upgrade data.", new Throwable());
@@ -233,12 +233,12 @@ public class TileEntityPaintingFactory extends TileEntityItemToItemAdvancedFacto
     @NotNull
     @Override
     public AdvancedMachineUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, usedSoFar, chemicalTank, chemicalInputSlot, energySlot,
+        return new AdvancedMachineUpgradeData(provider, redstone, getControlType(), energyContainer, progress, usedSoFar, chemicalTank, chemicalInputSlot, energySlot,
                 inputItemSlots, outputItemSlots, isSorting(), getComponents(), problemPath());
     }
 
     @Override
     public void dump() {
-        chemicalTank.setEmpty();
+        chemicalTank.setContents(ChemicalResource.EMPTY, 0, null);
     }
 }

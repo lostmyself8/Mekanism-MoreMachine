@@ -3,7 +3,7 @@ package com.jerry.mekaf.common.tile.factory;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
 import com.jerry.mekaf.common.upgrade.ItemToChemicalUpgradeData;
 
-import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.math.MathUtils;
 import mekanism.api.recipes.ItemStackToChemicalRecipe;
@@ -22,11 +22,11 @@ import mekanism.common.tile.component.TileComponentEjector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.TriPredicate;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ import java.util.Set;
 
 public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToChemicalFactory<ItemStackToChemicalRecipe> implements ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
 
-    private static final TriPredicate<ItemStackToChemicalRecipe, ItemStack, ChemicalStack> OUTPUT_CHECK = (recipe, input, output) -> ChemicalStack.isSameChemical(recipe.getOutput(input), output);
+    private static final TriPredicate<ItemStackToChemicalRecipe, ItemResource, ChemicalResource> OUTPUT_CHECK = (recipe, input, output) -> output.isEmpty() || output.matches(recipe.getOutput(input));
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,
@@ -54,29 +54,29 @@ public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToC
 
     @Override
     @Contract("null, _ -> false")
-    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ItemStackToChemicalRecipe> cached, @NotNull ItemStack stack) {
+    protected boolean isCachedRecipeValid(@Nullable CachedRecipe<ItemStackToChemicalRecipe> cached, @NotNull ItemResource stack) {
         return cached != null && cached.getRecipe().getInput().testType(stack);
     }
 
     @Override
     @Nullable
-    protected ItemStackToChemicalRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, @NotNull IChemicalTank outputSlot) {
-        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, outputSlot.getStack(), OUTPUT_CHECK);
+    protected ItemStackToChemicalRecipe findRecipe(int process, @NotNull ItemResource fallbackInput, @NotNull IChemicalTank outputSlot) {
+        return getRecipeType().getInputCache().findTypeBasedRecipe(level, fallbackInput, outputSlot.resource(), OUTPUT_CHECK);
     }
 
     @Override
-    protected int getNeededInput(ItemStackToChemicalRecipe recipe, ItemStack inputStack) {
+    protected int getNeededInput(ItemStackToChemicalRecipe recipe, ItemResource inputStack) {
         return MathUtils.clampToInt(recipe.getInput().getNeededAmount(inputStack));
     }
 
     // 物品能否放进槽位
     @Override
-    public boolean isItemValidForSlot(@NotNull ItemStack stack) {
+    public boolean isItemValidForSlot(@NotNull ItemResource stack) {
         return containsRecipe(stack);
     }
 
     @Override
-    public boolean isValidInputItem(@NotNull ItemStack stack) {
+    public boolean isValidInputItem(@NotNull ItemResource stack) {
         return containsRecipe(stack);
     }
 
@@ -105,7 +105,7 @@ public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToC
 
     @Override
     public @NotNull CachedRecipe<ItemStackToChemicalRecipe> createNewCachedRecipe(@NotNull ItemStackToChemicalRecipe recipe, int cacheIndex) {
-        return OneInputCachedRecipe.itemToChemical(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalOutputHandlers[cacheIndex])
+        return new OneInputCachedRecipe<>(recipe, recheckAllRecipeErrors[cacheIndex], itemInputHandlers[cacheIndex], chemicalOutputHandlers[cacheIndex])
                 .setErrorsChanged(errors -> errorTracker.onErrorsChanged(errors, cacheIndex))
                 .setCanHolderFunction(this::canFunction)
                 .setActive(active -> setActiveState(active, cacheIndex))
@@ -118,7 +118,7 @@ public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToC
 
     @Override
     public @Nullable ItemToChemicalUpgradeData getUpgradeData(HolderLookup.Provider provider) {
-        return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), getEnergyContainer(),
+        return new ItemToChemicalUpgradeData(provider, redstone, getControlType(), energyContainer,
                 progress, energySlot, inputItemSlots, outputChemicalTanks, isSorting(), getComponents(), problemPath());
     }
 }

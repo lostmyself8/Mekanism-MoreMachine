@@ -23,12 +23,10 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.common.CommonWorldTickHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.block.attribute.Attribute;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
-import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -69,6 +67,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import it.unimi.dsi.fastutil.ints.IntArraySet;
@@ -120,7 +119,6 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     protected final AdvancedFactoryType type;
 
     // 为了加压工厂而更改
-    @Getter
     protected AdvancedFactoryEnergyContainer energyContainer;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
@@ -130,7 +128,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     protected IInputHandler<Item, @NotNull ItemStack>[] itemInputHandlers;
     protected IOutputHandler<@NotNull ItemStackTemplate>[] itemOutputHandlers;
     protected IInputHandler<Fluid, @NotNull FluidStack>[] fluidInputHandlers;
-    protected IOutputHandler<@NotNull FluidStack>[] fluidOutputHandlers;
+    protected IOutputHandler<@NotNull FluidStackTemplate>[] fluidOutputHandlers;
 
     protected TileEntityAdvancedFactoryBase(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes) {
         super(blockProvider, pos, state);
@@ -184,8 +182,8 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     @Override
-    public @Nullable IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
-        ChemicalTankHelper builder = ChemicalTankHelper.forSideWithConfig(this);
+    public @Nullable IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener) {
+        MekContainerHelper<IChemicalTank> builder = MekContainerHelper.forSideWithChemicalConfig(this);
         addTanks(builder, listener, () -> {
             listener.onContentsChanged();
             // Mark sorting as being needed again
@@ -194,23 +192,21 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         return builder.build();
     }
 
-    @NotNull
     @Override
-    protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSideWithConfig(this);
-        builder.addContainer(energyContainer = AdvancedFactoryEnergyContainer.input(this, () -> {
+    protected @Nullable IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+        energyContainer = AdvancedFactoryEnergyContainer.input(this, () -> {
             listener.onContentsChanged();
             for (FactoryRecipeCacheLookupMonitor<RECIPE> cacheLookupMonitor : recipeCacheLookupMonitors) {
                 cacheLookupMonitor.unpause();
             }
-        }));
-        return builder.build();
+        });
+        return new EnergyConfigHolder(energyContainer, this);
     }
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSideWithConfig(this);
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSideWithItemConfig(this);
         addSlots(builder, listener, () -> {
             listener.onContentsChanged();
             // Mark sorting as being needed again
@@ -219,13 +215,13 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         // Add the energy slot after adding the other slots so that it has the lowest priority in shift clicking
         // Note: We can just pass ourselves as the listener instead of the listener that updates sorting as well,
         // as changes to it won't change anything about the sorting of the recipe
-        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 7, 13));
+        builder.addContainer(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 7, 13));
         return builder.build();
     }
 
-    protected abstract void addTanks(ChemicalTankHelper builder, IContentsListener listener, IContentsListener updateSortingListener);
+    protected abstract void addTanks(MekContainerHelper<IChemicalTank> builder, IContentsListener listener, IContentsListener updateSortingListener);
 
-    protected abstract void addSlots(InventorySlotHelper builder, IContentsListener listener, IContentsListener updateSortingListener);
+    protected abstract void addSlots(MekContainerHelper<IInventorySlot> builder, IContentsListener listener, IContentsListener updateSortingListener);
 
     public int getXPos(int index) {
         int baseX = tier == FactoryTier.BASIC ? 55 : tier == FactoryTier.ADVANCED ? 35 : tier == FactoryTier.ELITE ? 29 : 27;
@@ -253,6 +249,10 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         return type;
     }
 
+    public AdvancedFactoryEnergyContainer advancedEnergyContainer() {
+        return energyContainer;
+    }
+
     public long getRecipeEnergyRequired() {
         return 0;
     }
@@ -260,7 +260,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.fillContainerOrConvert();
+        energySlot.fillContainerOrConvert(null);
 
         handleSecondaryFuel();
         if (sortingNeeded && isSorting()) {
@@ -285,7 +285,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         // Copy this so that if it changes we still have the original amount. Don't bother making it a constant though
         // as this way
         // we can then use minusEqual instead of subtract to remove an extra copy call
-        long prev = energyContainer.getEnergy();
+        long prev = energyContainer.getAmountAsLong();
         for (int i = 0; i < recipeCacheLookupMonitors.length; i++) {
             if (!recipeCacheLookupMonitors[i].updateAndProcess()) {
                 // If we don't have a recipe in that slot make sure that our active state for that position is false
@@ -303,7 +303,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         }
         setActive(isActive);
         // If none of the recipes are actively processing don't bother with any subtraction
-        lastUsage = isActive ? prev - energyContainer.getEnergy() : 0L;
+        lastUsage = isActive ? prev - energyContainer.getAmountAsLong() : 0L;
         return sendUpdatePacket;
     }
 
@@ -362,6 +362,14 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     @ComputerMethod(methodDescription = "Total number of ticks it takes currently for the recipe to complete")
     public int getTicksRequired() {
         return ticksRequired;
+    }
+
+    protected void setTicksRequired(int ticksRequired) {
+        this.ticksRequired = ticksRequired;
+    }
+
+    public int getOperationsPerTick() {
+        return operationsPerTick;
     }
 
     @Override

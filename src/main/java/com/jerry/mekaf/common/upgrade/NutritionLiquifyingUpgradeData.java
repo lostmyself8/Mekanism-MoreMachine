@@ -1,7 +1,7 @@
 package com.jerry.mekaf.common.upgrade;
 
 import mekanism.api.energy.IEnergyContainer;
-import mekanism.api.fluid.IExtendedFluidTank;
+import mekanism.api.fluid.IFluidTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
@@ -26,19 +26,19 @@ public class NutritionLiquifyingUpgradeData implements IUpgradeData {
     public final EnergyInventorySlot energySlot;
     public final List<IInventorySlot> inputSlots;
     public final List<IInventorySlot> outputSlots;
-    public final IExtendedFluidTank fluidTank;
+    public final IFluidTank fluidTank;
     public final CompoundTag components;
 
     public NutritionLiquifyingUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                           IEnergyContainer energyContainer, int operatingTicks, EnergyInventorySlot energySlot, InputInventorySlot inputSlot,
-                                          IInventorySlot outputSlot, IExtendedFluidTank fluidTank, List<ITileComponent> components, PathElement problemPath) {
+                                          IInventorySlot outputSlot, IFluidTank fluidTank, List<ITileComponent> components, PathElement problemPath) {
         this(provider, redstone, controlType, energyContainer, new int[] { operatingTicks }, energySlot, Collections.singletonList(inputSlot),
                 Collections.singletonList(outputSlot), fluidTank, false, components, problemPath);
     }
 
     public NutritionLiquifyingUpgradeData(HolderLookup.Provider provider, boolean redstone, IRedstoneControl.RedstoneControl controlType,
                                           IEnergyContainer energyContainer, int[] progress, EnergyInventorySlot energySlot, List<IInventorySlot> inputSlots,
-                                          List<IInventorySlot> outputSlots, IExtendedFluidTank fluidTank, boolean sorting, List<ITileComponent> components, PathElement problemPath) {
+                                          List<IInventorySlot> outputSlots, IFluidTank fluidTank, boolean sorting, List<ITileComponent> components, PathElement problemPath) {
         this.redstone = redstone;
         this.controlType = controlType;
         this.energyContainer = energyContainer;

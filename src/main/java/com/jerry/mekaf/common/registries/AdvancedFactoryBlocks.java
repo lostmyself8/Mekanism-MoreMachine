@@ -13,11 +13,11 @@ import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
-import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.tier.ITier;
-import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
 import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
+import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
@@ -27,9 +27,9 @@ import mekanism.common.tier.FactoryTier;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -62,16 +62,16 @@ public class AdvancedFactoryBlocks {
         BlockRegistryObject<@NotNull BlockAdvancedFactory<?>, @NotNull ItemBlockAdvancedFactory> factory = registerTieredBlock(tier, "_" + type.getAdvancedFactoryType().getRegistryNameComponent() + "_factory", properties -> new BlockAdvancedFactory<>(type, properties), ItemBlockAdvancedFactory::new);
         factory.forItemHolder(holder -> {
             int processes = tier.processes;
-            Predicate<ItemStack> recipeItemInputPredicate = switch (type.getAdvancedFactoryType()) {
+            Predicate<ItemResource> recipeItemInputPredicate = switch (type.getAdvancedFactoryType()) {
                 case OXIDIZING -> s -> MekanismRecipeType.OXIDIZING.getInputCache().containsInput(null, s);
                 case DISSOLVING -> s -> MekanismRecipeType.DISSOLUTION.getInputCache().containsInputA(null, s);
                 case PRESSURISED_REACTING -> s -> MekanismRecipeType.REACTION.getInputCache().containsInputA(null, s);
-                case LIQUIFYING -> TileEntityLiquifyingFactory::isValidInputStatic;
+                case LIQUIFYING -> s -> TileEntityLiquifyingFactory.isValidInputStatic(s.toStack());
                 case PIGMENT_EXTRACTING -> s -> MekanismRecipeType.PIGMENT_EXTRACTING.getInputCache().containsInput(null, s);
                 case PAINTING -> s -> MekanismRecipeType.PAINTING.getInputCache().containsInputA(null, s);
                 default -> null;
             };
-            Predicate<ChemicalStack> recipeChemicalInputPredicate = switch (type.getAdvancedFactoryType()) {
+            Predicate<ChemicalResource> recipeChemicalInputPredicate = switch (type.getAdvancedFactoryType()) {
                 case DISSOLVING -> s -> MekanismRecipeType.DISSOLUTION.getInputCache().containsInputB(null, s);
                 case WASHING -> s -> MekanismRecipeType.WASHING.getInputCache().containsInputB(null, s);
                 case CRYSTALLIZING -> s -> MekanismRecipeType.CRYSTALLIZING.getInputCache().containsInput(null, s);
