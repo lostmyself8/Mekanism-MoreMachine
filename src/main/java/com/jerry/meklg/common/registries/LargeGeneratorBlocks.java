@@ -3,11 +3,11 @@ package com.jerry.meklg.common.registries;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
-import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.attachments.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
 import mekanism.common.attachments.containers.heat.HeatCapacitorsBuilder;
 import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
+import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
 import mekanism.common.item.block.ItemBlockTooltip;

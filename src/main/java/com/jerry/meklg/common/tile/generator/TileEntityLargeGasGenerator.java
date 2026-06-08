@@ -3,43 +3,41 @@ package com.jerry.meklg.common.tile.generator;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
-import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
-import mekanism.api.chemical.Chemical;
-import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalResource;
+import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.datamaps.IMekanismDataMapTypes;
 import mekanism.api.datamaps.chemical.attribute.ChemicalFuel;
 import mekanism.api.functions.ConstantPredicates;
+import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
-import mekanism.common.attachments.containers.ContainerType;
+import mekanism.api.resource.LargeResourceStack;
+import mekanism.common.attachments.containers.type.ContainerType;
+import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.chemical.VariableCapacityChemicalTank;
-import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableDouble;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +48,7 @@ import java.util.function.Predicate;
 
 public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
-    public static final Predicate<ChemicalStack> HAS_FUEL = chemical -> chemical.typeHolder().getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null;
+    public static final Predicate<ChemicalResource> HAS_FUEL = chemical -> chemical.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null;
     /**
      * The tank this block is storing fuel in.
      */
@@ -77,18 +75,18 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     @NotNull
     @Override
-    public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener) {
-        ChemicalTankHelper builder = ChemicalTankHelper.forSide(facingSupplier);
-        builder.addTank(fuelTank = new FuelTank(listener), RelativeSide.LEFT, RelativeSide.RIGHT, RelativeSide.BACK);
+    public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener) {
+        MekContainerHelper<IChemicalTank> builder = MekContainerHelper.forSide(facingSupplier);
+        builder.addContainer(fuelTank = new FuelTank(listener), RelativeSide.LEFT, RelativeSide.RIGHT, RelativeSide.BACK);
         return builder.build();
     }
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier);
-        builder.addSlot(fuelSlot = ChemicalInventorySlot.fill(fuelTank, listener, 17, 35), RelativeSide.LEFT, RelativeSide.BACK, RelativeSide.RIGHT);
-        builder.addSlot(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35), RelativeSide.TOP);
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier);
+        builder.addContainer(fuelSlot = ChemicalInventorySlot.fill(fuelTank, listener, 17, 35), RelativeSide.LEFT, RelativeSide.BACK, RelativeSide.RIGHT);
+        builder.addContainer(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35), RelativeSide.TOP);
         fuelSlot.setSlotOverlay(SlotOverlay.MINUS);
         return builder.build();
     }
@@ -101,8 +99,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.drainContainer();
-        fuelSlot.fillTank();
+        energySlot.drainContainerIntoSlot(null);
+        fuelSlot.fillTankFromSlot(null);
         gasUsedLastTick = 0;
 
         // updateEfficiency();
@@ -110,22 +108,23 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
         if (!fuelTank.isEmpty() && canFunction() && cachedFuel != null) {
 
             // how full the tank is, poor-man's "pressure" measurement
-            double fullness = fuelTank.getStored() / (double) fuelTank.getCapacity();
+            ChemicalResource fuel = fuelTank.resource();
+            double fullness = fuelTank.amountAsLong() / (double) fuelTank.capacityAsLong(fuel);
 
             // maximum amount that can be produced AND stored
-            long maxJoulesThisTick;
-            long energyDensity = cachedFuel.energyDensity();
-            maxJoulesThisTick = energyDensity * Math.min((long) Math.ceil(cachedFuel.maxBurnPerTick() * fullness), fuelTank.getStored());
-            if (maxJoulesThisTick > 0) {
-                maxJoulesThisTick -= getEnergyContainer().insert(maxJoulesThisTick, Action.SIMULATE, AutomationType.INTERNAL);
-            }
-
-            if (maxJoulesThisTick > 0) {
-                // calculate the mB for this amount of energy, rounded up
-                long mbThisTick = Math.ceilDiv(maxJoulesThisTick, energyDensity);
-                getEnergyContainer().insert(maxJoulesThisTick, Action.EXECUTE, AutomationType.INTERNAL);
-                fuelTank.extract(mbThisTick, Action.EXECUTE, AutomationType.INTERNAL);
-                gasUsedLastTick = mbThisTick;
+            int energyDensity = cachedFuel.energyDensity();
+            int maxEnergyThisTick = MathUtils.clampToInt((long) energyDensity * Math.min((long) Math.ceil(cachedFuel.maxBurnPerTick() * fullness), fuelTank.amountAsLong()));
+            if (maxEnergyThisTick > 0) {
+                try (Transaction transaction = Transaction.openRoot()) {
+                    int inserted = getEnergyContainer().insert(maxEnergyThisTick, transaction, AutomationType.INTERNAL);
+                    if (inserted > 0) {
+                        int mbThisTick = Math.ceilDiv(inserted, energyDensity);
+                        if (fuelTank.extract(fuel, mbThisTick, transaction, AutomationType.INTERNAL) == mbThisTick) {
+                            gasUsedLastTick = mbThisTick;
+                            transaction.commit();
+                        }
+                    }
+                }
             }
         }
 
@@ -150,11 +149,11 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     @Override
     public int getRedstoneLevel() {
-        return MekanismUtils.redstoneLevelFromContents(fuelTank.getStored(), fuelTank.getCapacity());
+        return ContainerType.CHEMICAL.getRedstoneSignalFromContainer(fuelTank);
     }
 
     @Override
-    protected boolean makesComparatorDirty(ContainerType<?, ?, ?> type) {
+    protected boolean makesComparatorDirty(IContainerType<?, ?> type) {
         return type == ContainerType.CHEMICAL;
     }
 
@@ -221,7 +220,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
         if (capability == Capabilities.CHEMICAL.block()) {
             return notChemicalPort(side, offset);
-        } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+        } else if (capability == Capabilities.ENERGY.block()) {
             return notEnergyPort(side, offset);
         } else if (capability == Capabilities.ITEM.block()) {
             return notItemPort(side, offset);
@@ -272,26 +271,15 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     public class FuelTank extends VariableCapacityChemicalTank {
 
         protected FuelTank(@Nullable IContentsListener listener) {
-            super(MoreMachineConfig.generators.LGBGTankCapacity, ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrueBi(), HAS_FUEL, null, listener);
+            super(MoreMachineConfig.generators.LGBGTankCapacity, ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrueBi(), HAS_FUEL, null, null, null, listener);
         }
 
         @Override
-        public void setStack(@NotNull ChemicalStack stack) {
-            Holder<Chemical> oldChemical = getType();
-            super.setStack(stack);
-            recheckOutput(stack, oldChemical);
-        }
-
-        @Override
-        public void setStackUnchecked(@NotNull ChemicalStack stack) {
-            Holder<Chemical> oldChemical = getType();
-            super.setStackUnchecked(stack);
-            recheckOutput(stack, oldChemical);
-        }
-
-        private void recheckOutput(@NotNull ChemicalStack stack, Holder<Chemical> oldChemical) {
-            if (!isTypeEqual(oldChemical) && !stack.isEmpty()) {
-                cachedFuel = isEmpty() ? null : getStack().typeHolder().getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
+        protected void onContentsChanged(@NotNull LargeResourceStack<ChemicalResource> originalState) {
+            super.onContentsChanged(originalState);
+            ChemicalResource newType = resource();
+            if (!newType.isEmpty() && !originalState.matches(newType)) {
+                cachedFuel = newType.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
             }
         }
     }

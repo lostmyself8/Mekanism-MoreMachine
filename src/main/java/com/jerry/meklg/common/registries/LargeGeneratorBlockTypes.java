@@ -6,7 +6,7 @@ import com.jerry.mekmm.common.config.MoreMachineConfig;
 import mekanism.api.math.MathUtils;
 import mekanism.common.block.attribute.*;
 import mekanism.common.lib.math.Pos3D;
-import mekanism.common.util.ChemicalUtil;
+import mekanism.common.util.ChemicalUtils;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.config.MekanismGeneratorsConfig;
 import mekanism.generators.common.content.blocktype.Generator;
@@ -26,7 +26,7 @@ public class LargeGeneratorBlockTypes {
     public static final Generator<TileEntityLargeHeatGenerator> LARGE_HEAT_GENERATOR = GeneratorBuilder
             .createGenerator(() -> LargeGeneratorTileEntityTypes.LARGE_HEAT_GENERATOR, GeneratorsLang.DESCRIPTION_HEAT_GENERATOR)
             .withGui(() -> LargeGeneratorContainerTypes.LARGE_HEAT_GENERATOR)
-            .withEnergyConfig(MoreMachineConfig.storage.largeHeatGenerator)
+            .withEnergyStorage(MoreMachineConfig.storage.largeHeatGenerator::get)
             .withCustomShape(LargeGeneratorBlockShapes.LARGE_HEAT_GENERATOR)
             .withSound(GeneratorsSounds.HEAT_GENERATOR)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
@@ -43,7 +43,7 @@ public class LargeGeneratorBlockTypes {
     public static final Generator<TileEntityLargeGasGenerator> LARGE_GAS_BURNING_GENERATOR = GeneratorBuilder
             .createGenerator(() -> LargeGeneratorTileEntityTypes.LARGE_GAS_BURNING_GENERATOR, GeneratorsLang.DESCRIPTION_GAS_BURNING_GENERATOR)
             .withGui(() -> LargeGeneratorContainerTypes.LARGE_GAS_BURNING_GENERATOR)
-            .withEnergyConfig(() -> MathUtils.multiplyClamped(20_480_000L, ChemicalUtil.hydrogenEnergyDensity()))
+            .withEnergyStorage(() -> MathUtils.multiplyClamped(20_480_000L, ChemicalUtils.hydrogenEnergyDensity()))
             .withCustomShape(LargeGeneratorBlockShapes.LARGE_GAS_BURNING_GENERATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withSound(GeneratorsSounds.GAS_BURNING_GENERATOR)
@@ -57,7 +57,7 @@ public class LargeGeneratorBlockTypes {
     public static final Generator<TileEntityLargeWindGenerator> LARGE_WIND_GENERATOR = GeneratorBuilder
             .createGenerator(() -> LargeGeneratorTileEntityTypes.LARGE_WIND_GENERATOR, GeneratorsLang.DESCRIPTION_WIND_GENERATOR)
             .withGui(() -> LargeGeneratorContainerTypes.LARGE_WIND_GENERATOR)
-            .withEnergyConfig(MekanismGeneratorsConfig.storageConfig.windGenerator)
+            .withEnergyStorage(MekanismGeneratorsConfig.storageConfig.windGenerator::get)
             .withCustomShape(LargeGeneratorBlockShapes.LARGE_WIND_GENERATOR)
             .with(AttributeCustomSelectionBox.JAVA)
             .withSound(GeneratorsSounds.WIND_GENERATOR)

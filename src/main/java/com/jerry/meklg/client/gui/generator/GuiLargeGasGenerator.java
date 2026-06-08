@@ -41,7 +41,7 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
                     GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(productionAmount)),
                     MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())));
         }));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.fuelTank, () -> tile.getChemicalTanks(null), GaugeType.WIDE, this, 55, 18));
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.fuelTank, tile::getChemicalTanks, GaugeType.WIDE, this, 55, 18));
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15));
     }
 

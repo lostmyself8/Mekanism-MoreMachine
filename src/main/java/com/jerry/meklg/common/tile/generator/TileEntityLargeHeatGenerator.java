@@ -3,36 +3,33 @@ package com.jerry.meklg.common.tile.generator;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
-import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
+import mekanism.api.fluid.IFluidTank;
 import mekanism.api.heat.HeatAPI;
+import mekanism.api.heat.IHeatCapacitor;
 import mekanism.api.heat.IHeatHandler;
+import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
-import mekanism.common.attachments.containers.ContainerType;
+import mekanism.common.attachments.containers.type.ContainerType;
+import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.fluid.VariableCapacityFluidTank;
 import mekanism.common.capabilities.heat.BasicHeatCapacitor;
 import mekanism.common.capabilities.heat.CachedAmbientTemperature;
-import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
-import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
-import mekanism.common.capabilities.holder.heat.HeatCapacitorHelper;
-import mekanism.common.capabilities.holder.heat.IHeatCapacitorHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.config.listener.ConfigBasedCachedLongSupplier;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableDouble;
 import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 import mekanism.generators.common.slot.FluidFuelInventorySlot;
 
@@ -44,7 +41,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import org.jetbrains.annotations.NotNull;
@@ -93,31 +91,31 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
 
     @NotNull
     @Override
-    protected IFluidTankHolder getInitialFluidTanks(IContentsListener listener) {
-        FluidTankHelper builder = FluidTankHelper.forSide(facingSupplier);
-        builder.addTank(lavaTank = VariableCapacityFluidTank.input(MoreMachineConfig.generators.largeHeatTankCapacity,
+    protected IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener) {
+        MekContainerHelper<IFluidTank> builder = MekContainerHelper.forSide(facingSupplier);
+        builder.addContainer(lavaTank = VariableCapacityFluidTank.input(MoreMachineConfig.generators.largeHeatTankCapacity,
                 fluidStack -> fluidStack.is(FluidTags.LAVA), listener), RelativeSide.BACK);
         return builder.build();
     }
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier);
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier);
         // Divide the burn time by 20 as that is the ratio of how much a bucket of lava would burn for
         // TODO: Eventually we may want to grab the 20 dynamically in case some mod is changing the burn time of a lava
         // bucket
-        builder.addSlot(fuelSlot = FluidFuelInventorySlot.forFuel(lavaTank, stack -> level == null ? 0 : stack.getBurnTime(null, level.fuelValues()) / 20, size -> new FluidStack(Fluids.LAVA, size),
-                listener, 17, 35), RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.BACK, RelativeSide.TOP, RelativeSide.BOTTOM);
-        builder.addSlot(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35), RelativeSide.RIGHT);
+        builder.addContainer(fuelSlot = FluidFuelInventorySlot.forFuel(lavaTank, stack -> level == null ? 0 : stack.toStack().getBurnTime(null, level.fuelValues()) / 20,
+                Fluids.LAVA.builtInRegistryHolder(), listener, 17, 35), RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.BACK, RelativeSide.TOP, RelativeSide.BOTTOM);
+        builder.addContainer(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35), RelativeSide.RIGHT);
         return builder.build();
     }
 
     @NotNull
     @Override
-    protected IHeatCapacitorHolder getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
-        HeatCapacitorHelper builder = HeatCapacitorHelper.forSide(facingSupplier);
-        builder.addCapacitor(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener), RelativeSide.BACK);
+    protected IContainerHolder<IHeatCapacitor> getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
+        MekContainerHelper<IHeatCapacitor> builder = MekContainerHelper.forSide(facingSupplier);
+        builder.addContainer(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener), RelativeSide.BACK);
         return builder.build();
     }
 
@@ -129,31 +127,34 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.drainContainer();
-        fuelSlot.fillOrBurn();
-        long prev = getEnergyContainer().getEnergy();
+        energySlot.drainContainerIntoSlot(null);
+        fuelSlot.fillOrBurn(null);
+        long prev = getEnergyContainer().getAmountAsLong();
         heatCapacitor.handleHeat(getBoost());
-        if (canFunction() && getEnergyContainer().getNeeded() > 0L) {
+        FluidResource lavaResource = lavaTank.resource();
+        if (canFunction() && !lavaResource.isEmpty() && getEnergyContainer().getNeededAsLong() > 0L) {
             // 计算流体占比 (0.0 到 1.0)
-            double fluidRatio = (double) lavaTank.getFluidAmount() / lavaTank.getCapacity();
+            double fluidRatio = (double) lavaTank.amountAsLong() / lavaTank.capacityAsLong(lavaResource);
             // 使用指数函数实现非线性增长
             // 流体速率：从 1 增长到约 100
             efficiencyMultiplier = (int) Math.max(1, Math.pow(10, fluidRatio * 2));
             int fluidRate = (int) (efficiencyMultiplier * MoreMachineConfig.generators.largeHeatGenerationFluidRate.get());
-            if (lavaTank.extract(fluidRate, Action.SIMULATE, AutomationType.INTERNAL).getAmount() == fluidRate) {
-                setActive(true);
-                lavaTank.extract(fluidRate, Action.EXECUTE, AutomationType.INTERNAL);
-                heatCapacitor.handleHeat(MoreMachineConfig.generators.largeHeatGeneration.get() * efficiencyMultiplier);
-            } else {
-                setActive(false);
+            boolean extracted = false;
+            try (Transaction transaction = Transaction.openRoot()) {
+                if (lavaTank.extract(lavaResource, fluidRate, transaction, AutomationType.INTERNAL) == fluidRate) {
+                    extracted = true;
+                    heatCapacitor.handleHeat(MoreMachineConfig.generators.largeHeatGeneration.get() * efficiencyMultiplier);
+                    transaction.commit();
+                }
             }
+            setActive(extracted);
         } else {
             setActive(false);
         }
         HeatAPI.HeatTransfer loss = simulate();
         lastTransferLoss = loss.adjacentTransfer();
         lastEnvironmentLoss = loss.environmentTransfer();
-        producingEnergy = getEnergyContainer().getEnergy() - prev;
+        producingEnergy = getEnergyContainer().getAmountAsLong() - prev;
         return sendUpdatePacket;
     }
 
@@ -232,7 +233,10 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
         double heatLost = THERMAL_EFFICIENCY * (temp - ambientTemp);
         heatCapacitor.handleHeat(-heatLost);
         long energyFromHeat = MathUtils.clampToLong(Math.abs(heatLost) * carnotEfficiency);
-        getEnergyContainer().insert((long) (Math.min(energyFromHeat, MAX_PRODUCTION.getAsLong()) * efficiencyMultiplier), Action.EXECUTE, AutomationType.INTERNAL);
+        try (Transaction transaction = Transaction.openRoot()) {
+            getEnergyContainer().insert(MathUtils.clampToInt((long) (Math.min(energyFromHeat, MAX_PRODUCTION.getAsLong()) * efficiencyMultiplier)), transaction, AutomationType.INTERNAL);
+            transaction.commit();
+        }
         return super.simulate();
     }
 
@@ -259,11 +263,11 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
 
     @Override
     public int getRedstoneLevel() {
-        return MekanismUtils.redstoneLevelFromContents(lavaTank.getFluidAmount(), lavaTank.getCapacity());
+        return ContainerType.FLUID.getRedstoneSignalFromContainer(lavaTank);
     }
 
     @Override
-    protected boolean makesComparatorDirty(ContainerType<?, ?, ?> type) {
+    protected boolean makesComparatorDirty(IContainerType<?, ?> type) {
         return type == ContainerType.FLUID;
     }
 
@@ -318,7 +322,7 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
         if (capability == Capabilities.FLUID.block()) {
             return notFluidPort(side, offset);
-        } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+        } else if (capability == Capabilities.ENERGY.block()) {
             return notEnergyPort(side, offset);
         } else if (capability == Capabilities.ITEM.block()) {
             return notItemPort(side, offset);

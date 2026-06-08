@@ -3,9 +3,10 @@ package com.jerry.meklg.common.tile.generator;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
 import mekanism.api.*;
+import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
@@ -21,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import lombok.Getter;
@@ -47,9 +49,9 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier);
-        builder.addSlot(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35));
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier);
+        builder.addContainer(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 143, 35));
         return builder.build();
     }
 
@@ -61,7 +63,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.drainContainer();
+        energySlot.drainContainerIntoSlot(null);
         // If we're in a blacklisted dimension, there's nothing more to do
         if (isBlacklistDimension) {
             return sendUpdatePacket;
@@ -71,8 +73,11 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
             currentMultiplier = getMultiplier();
             setActive(canFunction() && currentMultiplier != 0L);
         }
-        if (currentMultiplier != 0L && canFunction() && getEnergyContainer().getNeeded() > 0L) {
-            getEnergyContainer().insert(getCurrentGeneration(), Action.EXECUTE, AutomationType.INTERNAL);
+        if (currentMultiplier != 0L && canFunction() && getEnergyContainer().getNeededAsLong() > 0L) {
+            try (Transaction transaction = Transaction.openRoot()) {
+                getEnergyContainer().insert(MathUtils.clampToInt(getCurrentGeneration()), transaction, AutomationType.INTERNAL);
+                transaction.commit();
+            }
         }
         return sendUpdatePacket;
     }
