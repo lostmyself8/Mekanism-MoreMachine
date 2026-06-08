@@ -4,7 +4,7 @@ import mekanism.api.AutomationType;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.lib.radiation.RadiationManager;
 import mekanism.common.tile.interfaces.ISideConfiguration;
 
@@ -19,10 +19,10 @@ import java.util.function.Supplier;
 
 public class AdjustableChemicalTankHelper {
 
-    private final IChemicalTankHolder slotHolder;
+    private final IContainerHolder<IChemicalTank> slotHolder;
     private boolean built;
 
-    private AdjustableChemicalTankHelper(IChemicalTankHolder slotHolder) {
+    private AdjustableChemicalTankHelper(IContainerHolder<IChemicalTank> slotHolder) {
         this.slotHolder = slotHolder;
     }
 
@@ -53,9 +53,9 @@ public class AdjustableChemicalTankHelper {
             throw new IllegalStateException("Builder has already built.");
         }
         if (slotHolder instanceof AdjustableChemicalTankHolder tankHolder) {
-            tankHolder.addTank(tank);
+            tankHolder.addContainer(tank);
         } else if (slotHolder instanceof CanAdjustConfigChemicalTankHolder tankHolder) {
-            tankHolder.addTank(tank);
+            tankHolder.addContainer(tank);
         } else {
             throw new IllegalArgumentException("Holder does not know how to add tanks");
         }
@@ -67,14 +67,14 @@ public class AdjustableChemicalTankHelper {
             throw new IllegalStateException("Builder has already built.");
         }
         if (slotHolder instanceof AdjustableChemicalTankHolder tankHolder) {
-            tankHolder.addTank(tank, sides);
+            tankHolder.addContainer(tank, sides);
         } else {
             throw new IllegalArgumentException("Holder does not know how to add tanks on specific sides");
         }
         return tank;
     }
 
-    public IChemicalTankHolder build() {
+    public IContainerHolder<IChemicalTank> build() {
         built = true;
         return slotHolder;
     }

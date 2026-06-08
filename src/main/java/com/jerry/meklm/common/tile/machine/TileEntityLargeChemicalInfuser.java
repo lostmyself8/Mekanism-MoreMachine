@@ -9,13 +9,15 @@ import mekanism.api.RelativeSide;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.inventory.IInventorySlot;
+import mekanism.api.math.MathUtils;
 import mekanism.api.recipes.ChemicalChemicalToChemicalRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
-import mekanism.api.recipes.cache.ChemicalChemicalToChemicalCachedRecipe;
+import mekanism.api.recipes.cache.OrderlessTwoInputCachedRecipe;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
@@ -25,22 +27,20 @@ import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
-import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.integration.computer.computercraft.ComputerConstants;
-import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.ContainerSlotType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableLong;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
@@ -54,7 +54,7 @@ import mekanism.common.tile.component.config.slot.EnergySlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
-import mekanism.common.util.ChemicalUtil;
+import mekanism.common.util.ResourceUtils;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
@@ -65,8 +65,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,7 +86,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     public static final long MAX_GAS = 5L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
 
     @Nullable
-    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalOutputCaches;
+    private List<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> chemicalOutputCaches;
 
     @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
                             methodNames = { "getLeftInput", "getLeftInputCapacity", "getLeftInputNeeded",
@@ -113,7 +113,6 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     private final IInputHandler<Chemical, @NotNull ChemicalStack> leftInputHandler;
     private final IInputHandler<Chemical, @NotNull ChemicalStack> rightInputHandler;
 
-    @Getter
     private MachineEnergyContainer<TileEntityLargeChemicalInfuser> energyContainer;
     @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getLeftInputItem", docPlaceholder = "left input item slot")
     ChemicalInventorySlot leftInputSlot;
@@ -158,30 +157,29 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
 
     @NotNull
     @Override
-    public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+    public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT || side == RelativeSide.BACK, side -> side == RelativeSide.FRONT);
-        builder.addTank(leftTank = BasicChemicalTank.input(MAX_GAS, gas -> containsRecipe(gas, rightTank.getStack()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
-        builder.addTank(rightTank = BasicChemicalTank.input(MAX_GAS, gas -> containsRecipe(gas, leftTank.getStack()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
+        builder.addTank(leftTank = BasicChemicalTank.input(MAX_GAS, (gas, automationType) -> containsRecipe(gas, rightTank.resource()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
+        builder.addTank(rightTank = BasicChemicalTank.input(MAX_GAS, (gas, automationType) -> containsRecipe(gas, leftTank.resource()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         builder.addTank(centerTank = BasicChemicalTank.output(2 * MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
         return builder.build();
     }
 
     @NotNull
     @Override
-    protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSide(facingSupplier);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener), RelativeSide.BACK);
-        return builder.build();
+    protected IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener);
+        return new EnergyConfigHolder(energyContainer, this);
     }
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> side == RelativeSide.FRONT || side == RelativeSide.BACK);
-        builder.addSlot(leftInputSlot = ChemicalInventorySlot.fill(leftTank, listener, 6, 56), RelativeSide.LEFT);
-        builder.addSlot(rightInputSlot = ChemicalInventorySlot.fill(rightTank, listener, 154, 56), RelativeSide.RIGHT);
-        builder.addSlot(outputSlot = ChemicalInventorySlot.drain(centerTank, listener, 80, 65), RelativeSide.BACK, RelativeSide.FRONT);
-        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 154, 14), RelativeSide.LEFT, RelativeSide.RIGHT);
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> side == RelativeSide.FRONT || side == RelativeSide.BACK);
+        builder.addContainer(leftInputSlot = ChemicalInventorySlot.fill(leftTank, listener, 6, 56), RelativeSide.LEFT);
+        builder.addContainer(rightInputSlot = ChemicalInventorySlot.fill(rightTank, listener, 154, 56), RelativeSide.RIGHT);
+        builder.addContainer(outputSlot = ChemicalInventorySlot.drain(centerTank, listener, 80, 65), RelativeSide.BACK, RelativeSide.FRONT);
+        builder.addContainer(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 154, 14), RelativeSide.LEFT, RelativeSide.RIGHT);
         leftInputSlot.setSlotType(ContainerSlotType.INPUT);
         leftInputSlot.setSlotOverlay(SlotOverlay.MINUS);
         rightInputSlot.setSlotType(ContainerSlotType.INPUT);
@@ -194,10 +192,10 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.fillContainerOrConvert();
-        leftInputSlot.fillTank();
-        rightInputSlot.fillTank();
-        outputSlot.drainTank();
+        energySlot.fillContainerOrConvert(null);
+        leftInputSlot.fillTankFromSlot(null);
+        rightInputSlot.fillTankFromSlot(null);
+        outputSlot.drainTankIntoSlot(null);
         clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(energyContainer);
         handleEject();
         return sendUpdatePacket;
@@ -210,7 +208,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
             chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getLeftSide().getUnitVec3i()).relative(side), side.getOpposite()));
             chemicalOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(side.getUnitVec3i()).offset(getRightSide().getUnitVec3i()).relative(side), side.getOpposite()));
         }
-        ChemicalUtil.emit(chemicalOutputCaches, centerTank, centerTank.getCapacity());
+        ResourceUtils.emit(chemicalOutputCaches, centerTank, MathUtils.clampToInt(centerTank.capacityAsLong(centerTank.resource())), null);
     }
 
     @Override
@@ -244,7 +242,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     @NotNull
     @Override
     public CachedRecipe<ChemicalChemicalToChemicalRecipe> createNewCachedRecipe(@NotNull ChemicalChemicalToChemicalRecipe recipe, int cacheIndex) {
-        return new ChemicalChemicalToChemicalCachedRecipe<>(recipe, recheckAllRecipeErrors, leftInputHandler, rightInputHandler, outputHandler)
+        return new OrderlessTwoInputCachedRecipe<>(recipe, recheckAllRecipeErrors, leftInputHandler, rightInputHandler, outputHandler)
                 .setErrorsChanged(this::onErrorsChanged)
                 .setCanHolderFunction(this::canFunction)
                 .setActive(this::setActive)
@@ -327,7 +325,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
         if (capability == Capabilities.CHEMICAL.block()) {
             return notChemicalPort(side, offset);
-        } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+        } else if (capability == Capabilities.ENERGY.block()) {
             return notEnergyPort(side, offset);
         } else if (capability == Capabilities.ITEM.block()) {
             return notItemPort(side, offset);

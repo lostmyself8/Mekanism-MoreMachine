@@ -8,10 +8,13 @@ import com.jerry.meklm.common.tile.INotNeedConfig;
 import mekanism.api.*;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
+import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
-import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
+import mekanism.api.fluid.IFluidTank;
+import mekanism.api.inventory.IInventorySlot;
+import mekanism.api.math.MathUtils;
 import mekanism.api.recipes.RotaryRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
@@ -21,16 +24,15 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.api.recipes.vanilla_input.RotaryRecipeInput;
-import mekanism.common.attachments.containers.ContainerType;
+import mekanism.common.attachments.containers.type.ContainerType;
+import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
-import mekanism.common.capabilities.holder.chemical.IChemicalTankHolder;
-import mekanism.common.capabilities.holder.energy.EnergyContainerHelper;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
+import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
-import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
-import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
-import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
@@ -38,16 +40,15 @@ import mekanism.common.integration.computer.SpecialComputerMethodWrapper.Compute
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.integration.computer.computercraft.ComputerConstants;
-import mekanism.common.integration.energy.EnergyCompatUtils;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.ContainerSlotType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.container.sync.SyncableLong;
+import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.inventory.slot.FluidInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
-import mekanism.common.inventory.slot.chemical.ChemicalInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
@@ -64,6 +65,7 @@ import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.interfaces.IHasMode;
 import mekanism.common.tile.prefab.TileEntityRecipeMachine;
 import mekanism.common.util.*;
+import mekanism.common.util.ResourceUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -81,8 +83,9 @@ import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,10 +115,10 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
 
     @Nullable
-    private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> leftOutputCaches;
+    private List<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> leftOutputCaches;
     @Nullable
     @SuppressWarnings("removal")
-    private List<BlockCapabilityCache<net.neoforged.neoforge.fluids.capability.IFluidHandler, @Nullable Direction>> rightOutputCaches;
+    private List<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>> rightOutputCaches;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getChemical", "getChemicalCapacity", "getChemicalNeeded",
@@ -130,7 +133,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItemInput", docPlaceholder = "gas item input slot")
     ChemicalInventorySlot gasInputSlot;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getChemicalItemOutput", docPlaceholder = "gas item output slot")
-    ChemicalInventorySlot gasOutputSlot;
+    OutputInventorySlot gasOutputSlot;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidItemInput", docPlaceholder = "fluid item input slot")
     FluidInventorySlot fluidInputSlot;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidItemOutput", docPlaceholder = "fluid item ouput slot")
@@ -147,7 +150,6 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     private int baselineMaxOperations = 1;
     private int baseOperations = 1;
     private int numPowering;
-    @Getter
     private MachineEnergyContainer<TileEntityLargeRotaryCondensentrator> energyContainer;
 
     public TileEntityLargeRotaryCondensentrator(BlockPos pos, BlockState state) {
@@ -196,7 +198,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
 
     @NotNull
     @Override
-    public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+    public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.LEFT);
         builder.addTank(chemicalTank = BasicChemicalTank.create(CAPACITY, (gas, automationType) -> automationType == AutomationType.MANUAL || mode,
                 (gas, automationType) -> automationType == AutomationType.INTERNAL || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
@@ -204,41 +206,40 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
         return builder.build();
     }
 
-    private boolean isValidChemical(@NotNull ChemicalStack chemical) {
+    private boolean isValidChemical(@NotNull ChemicalResource chemical) {
         return getRecipeType().getInputCache().containsInputChemical(level, chemical);
     }
 
     @NotNull
     @Override
-    protected IFluidTankHolder getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+    protected IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.RIGHT);
         builder.addTank(fluidTank = BasicFluidTank.create(CAPACITY, (fluid, automationType) -> automationType == AutomationType.MANUAL || !mode,
                 (fluid, automationType) -> automationType == AutomationType.INTERNAL || mode, this::isValidFluid, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         return builder.build();
     }
 
-    private boolean isValidFluid(@NotNull FluidStack fluidStack) {
+    private boolean isValidFluid(@NotNull FluidResource fluidStack) {
         return getRecipeType().getInputCache().containsInputFluid(level, fluidStack);
     }
 
     @NotNull
     @Override
-    protected IEnergyContainerHolder getInitialEnergyContainers(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        EnergyContainerHelper builder = EnergyContainerHelper.forSide(facingSupplier);
-        builder.addContainer(energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener), RelativeSide.BACK);
-        return builder.build();
+    protected IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener);
+        return new EnergyConfigHolder(energyContainer, this);
     }
 
     @NotNull
     @Override
-    protected IInventorySlotHolder getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        InventorySlotHelper builder = InventorySlotHelper.forSide(facingSupplier);
+    protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
+        MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier);
         BooleanSupplier modeSupplier = this::getMode;
-        builder.addSlot(gasInputSlot = ChemicalInventorySlot.rotaryDrain(chemicalTank, modeSupplier, listener, 5, 25), RelativeSide.BACK);
-        builder.addSlot(gasOutputSlot = ChemicalInventorySlot.rotaryFill(chemicalTank, modeSupplier, listener, 5, 56), RelativeSide.LEFT);
-        builder.addSlot(fluidInputSlot = FluidInventorySlot.rotary(fluidTank, modeSupplier, listener, 155, 25), RelativeSide.BACK);
-        builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, 155, 56), RelativeSide.RIGHT);
-        builder.addSlot(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 155, 5), RelativeSide.BACK);
+        builder.addContainer(gasInputSlot = ChemicalInventorySlot.rotary(chemicalTank, () -> !getMode(), listener, 5, 25), RelativeSide.BACK);
+        builder.addContainer(gasOutputSlot = OutputInventorySlot.at(listener, 5, 56), RelativeSide.LEFT);
+        builder.addContainer(fluidInputSlot = FluidInventorySlot.rotary(fluidTank, modeSupplier, listener, 155, 25), RelativeSide.BACK);
+        builder.addContainer(fluidOutputSlot = OutputInventorySlot.at(listener, 155, 56), RelativeSide.RIGHT);
+        builder.addContainer(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 155, 5), RelativeSide.BACK);
         gasInputSlot.setSlotType(ContainerSlotType.INPUT);
         gasInputSlot.setSlotOverlay(SlotOverlay.PLUS);
         gasOutputSlot.setSlotType(ContainerSlotType.OUTPUT);
@@ -250,13 +251,13 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Override
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
-        energySlot.fillContainerOrConvert();
+        energySlot.fillContainerOrConvert(null);
         if (mode) {// Fluid to Chemical
-            fluidInputSlot.fillTank(fluidOutputSlot);
-            gasInputSlot.drainTank();
+            fluidInputSlot.fillTankFromSlot(fluidOutputSlot, null);
+            gasInputSlot.drainTankIntoSlot(gasOutputSlot, null);
         } else {// Chemical to Fluid
-            gasOutputSlot.fillTank();
-            fluidInputSlot.drainTank(fluidOutputSlot);
+            gasInputSlot.fillTankFromSlot(gasOutputSlot, null);
+            fluidInputSlot.drainTankIntoSlot(fluidOutputSlot, null);
         }
         clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(energyContainer);
         handleEject();
@@ -270,14 +271,14 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             Direction up = RelativeSide.TOP.getDirection(getDirection());
             leftOutputCaches.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.offset(up.getUnitVec3i()).offset(getLeftSide().getUnitVec3i()).relative(left), left.getOpposite()));
         }
-        ChemicalUtil.emit(leftOutputCaches, chemicalTank, chemicalTank.getCapacity());
+        ResourceUtils.emit(leftOutputCaches, chemicalTank, MathUtils.clampToInt(chemicalTank.capacityAsLong(chemicalTank.resource())), null);
         if (rightOutputCaches == null) {
             rightOutputCaches = new ArrayList<>(1);
             Direction right = RelativeSide.RIGHT.getDirection(getDirection());
             Direction up = RelativeSide.TOP.getDirection(getDirection());
             rightOutputCaches.add(Capabilities.FLUID.createCache((ServerLevel) level, worldPosition.offset(up.getUnitVec3i()).offset(getRightSide().getUnitVec3i()).relative(right), right.getOpposite()));
         }
-        FluidUtils.emit(rightOutputCaches, fluidTank, fluidTank.getCapacity());
+        ResourceUtils.emit(rightOutputCaches, fluidTank, MathUtils.clampToInt(fluidTank.capacityAsLong(fluidTank.resource())), null);
     }
 
     @Override
@@ -335,13 +336,13 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Override
     public int getRedstoneLevel() {
         if (mode) {
-            return MekanismUtils.redstoneLevelFromContents(fluidTank.getFluidAmount(), fluidTank.getCapacity());
+            return ContainerType.FLUID.getRedstoneSignalFromContainer(fluidTank);
         }
-        return MekanismUtils.redstoneLevelFromContents(chemicalTank.getStored(), chemicalTank.getCapacity());
+        return ContainerType.CHEMICAL.getRedstoneSignalFromContainer(chemicalTank);
     }
 
     @Override
-    protected boolean makesComparatorDirty(ContainerType<?, ?, ?> type) {
+    protected boolean makesComparatorDirty(IContainerType<?, ?> type) {
         return type == ContainerType.FLUID || type == ContainerType.CHEMICAL;
     }
 
@@ -447,7 +448,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             return notChemicalPort(side, offset);
         } else if (capability == Capabilities.FLUID.block()) {
             return notFluidPort(side, offset);
-        } else if (EnergyCompatUtils.isEnergyCapability(capability)) {
+        } else if (capability == Capabilities.ENERGY.block()) {
             return notEnergyPort(side, offset);
         } else if (capability == Capabilities.ITEM.block()) {
             return notItemPort(side, offset);

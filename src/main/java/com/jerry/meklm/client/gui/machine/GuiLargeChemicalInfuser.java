@@ -11,8 +11,10 @@ import mekanism.client.gui.element.gauge.GuiGauge;
 import mekanism.client.gui.element.progress.GuiProgress;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
+import mekanism.common.MekanismLang;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker;
+import mekanism.common.util.text.EnergyDisplay;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -37,12 +39,13 @@ public class GuiLargeChemicalInfuser extends GuiMekanismTile<TileEntityLargeChem
         addRenderableWidget(new GuiHorizontalPowerBar(this, tile.getEnergyContainer(), 115, 75))
                 .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY))
                 .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY_REDUCED_RATE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE));
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getEnergyUsed));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.leftTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 25, 13))
+        addRenderableWidget(new GuiEnergyTab(this, () -> java.util.List.of(MekanismLang.USING.translate(EnergyDisplay.of(tile.getEnergyUsed())),
+                MekanismLang.NEEDED.translate(EnergyDisplay.of(tile.getEnergyContainer().getNeededAsLong())))));
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.leftTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 25, 13))
                 .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_LEFT_INPUT));
-        centerGauge = addRenderableWidget(new GuiChemicalGauge(() -> tile.centerTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 79, 4))
+        centerGauge = addRenderableWidget(new GuiChemicalGauge(() -> tile.centerTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 79, 4))
                 .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_OUTPUT_SPACE));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.rightTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 133, 13))
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.rightTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 133, 13))
                 .warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_RIGHT_INPUT));
         addRenderableWidget(new GuiProgress(tile::getActive, ProgressType.SMALL_RIGHT, this, 47, 39).recipeViewerCategory(tile))
                 .warning(WarningTracker.WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(CachedRecipe.OperationTracker.RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT));

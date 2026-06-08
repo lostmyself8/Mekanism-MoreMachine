@@ -24,7 +24,7 @@ import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registration.impl.TileEntityTypeRegistryObject;
 import mekanism.common.registries.MekanismSounds;
-import mekanism.common.util.ChemicalUtil;
+import mekanism.common.util.ChemicalUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -51,7 +51,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ROTARY_CONDENSENTRATOR, MekanismLang.DESCRIPTION_ROTARY_CONDENSENTRATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ROTARY_CONDENSENTRATOR)
             .withSound(MekanismSounds.ROTARY_CONDENSENTRATOR)
-            .withEnergyConfig(MoreMachineConfig.usage.largeRotaryCondensentrator, MoreMachineConfig.storage.largeRotaryCondensentrator)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.largeRotaryCondensentrator.get()), MoreMachineConfig.storage.largeRotaryCondensentrator::get)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ROTARY_CONDENSENTRATOR)
             .with(AttributeCustomSelectionBox.JSON)
@@ -64,7 +64,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_CHEMICAL_INFUSER, MekanismLang.DESCRIPTION_CHEMICAL_INFUSER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_CHEMICAL_INFUSER)
             .withSound(MekanismSounds.CHEMICAL_INFUSER)
-            .withEnergyConfig(MoreMachineConfig.usage.largeChemicalInfuser, MoreMachineConfig.storage.largeChemicalInfuser)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.largeChemicalInfuser.get()), MoreMachineConfig.storage.largeChemicalInfuser::get)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_CHEMICAL_INFUSER)
             .with(AttributeCustomSelectionBox.JSON)
@@ -77,7 +77,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ELECTROLYTIC_SEPARATOR, MekanismLang.DESCRIPTION_ELECTROLYTIC_SEPARATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ELECTROLYTIC_SEPARATOR)
             .withSound(MekanismSounds.ELECTROLYTIC_SEPARATOR)
-            .withEnergyConfig(() -> MathUtils.multiplyClamped(2, ChemicalUtil.hydrogenEnergyDensity()), MoreMachineConfig.storage.largeElectrolyticSeparator)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MathUtils.multiplyClamped(2, ChemicalUtils.hydrogenEnergyDensity())), MoreMachineConfig.storage.largeElectrolyticSeparator::get)
             .withSideConfig(TransmissionType.FLUID, TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ELECTROLYTIC_SEPARATOR)
             .with(AttributeCustomSelectionBox.JSON)
@@ -122,7 +122,7 @@ public class LargeMachineBlockTypes {
     public static final Machine<TileEntityLargeAntiprotonicNucleosynthesizer> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = MachineBuilder
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, MekanismLang.DESCRIPTION_ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
-            .withEnergyConfig(MoreMachineConfig.usage.largeAntiprotonicNucleosynthesizer, MoreMachineConfig.storage.largeAntiprotonicNucleosynthesizer)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.largeAntiprotonicNucleosynthesizer.get()), MoreMachineConfig.storage.largeAntiprotonicNucleosynthesizer::get)
             .withSound(MekanismSounds.ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
             .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
@@ -136,7 +136,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_PIGMENT_MIXER, MekanismLang.DESCRIPTION_PIGMENT_MIXER)
             .withGui(() -> LargeMachineContainerTypes.LARGE_PIGMENT_MIXER)
             .withSound(MekanismSounds.PIGMENT_MIXER)
-            .withEnergyConfig(MoreMachineConfig.usage.largePigmentMixer, MoreMachineConfig.storage.largePigmentMixer)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.largePigmentMixer.get()), MoreMachineConfig.storage.largePigmentMixer::get)
             .with(AttributeUpgradeSupport.DEFAULT_MACHINE_UPGRADES)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_PIGMENT_MIXER)

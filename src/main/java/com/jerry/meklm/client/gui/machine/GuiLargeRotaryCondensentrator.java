@@ -23,6 +23,7 @@ import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.network.PacketUtils;
 import mekanism.common.network.to_server.PacketGuiInteract;
 import mekanism.common.network.to_server.PacketGuiInteract.GuiInteraction;
+import mekanism.common.util.text.EnergyDisplay;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -47,11 +48,12 @@ public class GuiLargeRotaryCondensentrator extends GuiMekanismTile<TileEntityLar
         energyBar = addRenderableWidget(new GuiHorizontalPowerBar(this, tile.getEnergyContainer(), 115, 75))
                 .warning(WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY))
                 .warning(WarningType.NOT_ENOUGH_ENERGY_REDUCED_RATE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE));
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getEnergyUsed));
-        addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, () -> tile.getFluidTanks(null), GaugeType.STANDARD, this, 133, 13))
+        addRenderableWidget(new GuiEnergyTab(this, () -> java.util.List.of(MekanismLang.USING.translate(EnergyDisplay.of(tile.getEnergyUsed())),
+                MekanismLang.NEEDED.translate(EnergyDisplay.of(tile.getEnergyContainer().getNeededAsLong())))));
+        addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, tile::getFluidTanks, GaugeType.STANDARD, this, 133, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_FLUID_INPUT_ERROR))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_SPACE_FLUID_OUTPUT_ERROR));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 25, 13))
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 25, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_GAS_INPUT_ERROR))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR));
         addRenderableWidget(new GuiProgress(new IBooleanProgressInfoHandler() {

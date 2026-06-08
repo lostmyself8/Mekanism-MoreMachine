@@ -14,8 +14,10 @@ import mekanism.client.gui.element.progress.GuiProgress;
 import mekanism.client.gui.element.progress.GuiProgress.ColorDetails;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
+import mekanism.common.MekanismLang;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
+import mekanism.common.util.text.EnergyDisplay;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -42,12 +44,13 @@ public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePig
         addRenderableWidget(new GuiHorizontalPowerBar(this, tile.getEnergyContainer(), 115, 75))
                 .warning(WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY))
                 .warning(WarningType.NOT_ENOUGH_ENERGY_REDUCED_RATE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE));
-        addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainer(), tile::getEnergyUsed));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.leftInputTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 25, 13))
+        addRenderableWidget(new GuiEnergyTab(this, () -> java.util.List.of(MekanismLang.USING.translate(EnergyDisplay.of(tile.getEnergyUsed())),
+                MekanismLang.NEEDED.translate(EnergyDisplay.of(tile.getEnergyContainer().getNeededAsLong())))));
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.leftInputTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 25, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_LEFT_INPUT));
-        centerGauge = addRenderableWidget(new GuiChemicalGauge(() -> tile.outputTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 79, 4))
+        centerGauge = addRenderableWidget(new GuiChemicalGauge(() -> tile.outputTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 79, 4))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.rightInputTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 133, 13))
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.rightInputTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 133, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_RIGHT_INPUT));
         addRenderableWidget(new GuiProgress(tile::getActive, ProgressType.SMALL_RIGHT, this, 47, 39).recipeViewerCategory(tile).colored(new LeftColorDetails()))
                 .warning(WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT));
@@ -66,7 +69,7 @@ public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePig
 
         @Override
         public int getColorFrom() {
-            return tile == null ? 0xFFFFFFFF : getColor(tile.leftInputTank.getStack().getChemicalColorRepresentation());
+            return tile == null ? 0xFFFFFFFF : getColor(tile.leftInputTank.resource().getChemicalColorRepresentation());
         }
     }
 
@@ -74,7 +77,7 @@ public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePig
 
         @Override
         public int getColorFrom() {
-            return tile == null ? 0xFFFFFFFF : getColor(tile.rightInputTank.getStack().getChemicalColorRepresentation());
+            return tile == null ? 0xFFFFFFFF : getColor(tile.rightInputTank.resource().getChemicalColorRepresentation());
         }
     }
 
@@ -94,8 +97,8 @@ public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePig
             if (tile.outputTank.isEmpty()) {
                 // If the pigment tank is empty, try looking up the recipe and grabbing the color from it
                 if (!tile.leftInputTank.isEmpty() && !tile.rightInputTank.isEmpty()) {
-                    ChemicalStack leftInput = tile.leftInputTank.getStack();
-                    ChemicalStack rightInput = tile.rightInputTank.getStack();
+                    ChemicalStack leftInput = new ChemicalStack(tile.leftInputTank.resource().typeHolder(), tile.leftInputTank.amountAsInt());
+                    ChemicalStack rightInput = new ChemicalStack(tile.rightInputTank.resource().typeHolder(), tile.rightInputTank.amountAsInt());
                     ChemicalChemicalToChemicalRecipe recipe;
                     if (cachedRecipe == null) {
                         recipe = getRecipeAndCache();
@@ -111,7 +114,7 @@ public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePig
                 }
                 return 0xFFFFFFFF;
             }
-            return getColor(tile.outputTank.getStack().getChemicalColorRepresentation());
+            return getColor(tile.outputTank.resource().getChemicalColorRepresentation());
         }
 
         private ChemicalChemicalToChemicalRecipe getRecipeAndCache() {

@@ -10,10 +10,10 @@ import com.jerry.meklm.common.tile.machine.*;
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.api.tier.ITier;
-import mekanism.common.attachments.containers.ContainerType;
 import mekanism.common.attachments.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
 import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
+import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
@@ -66,8 +66,8 @@ public class LargeMachineBlocks {
                             .addBasic(TileEntityLargeRotaryCondensentrator.CAPACITY, MekanismRecipeType.ROTARY, RotaryInputRecipeCache::containsInputChemical)
                             .build())
                     .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
-                            .addChemicalRotaryDrainSlot(0)
-                            .addChemicalRotaryFillSlot(0)
+                            .addChemicalRotarySlot(0)
+                            .addOutput()
                             .addFluidRotarySlot(0)
                             .addOutput()
                             .addEnergy()
@@ -157,7 +157,7 @@ public class LargeMachineBlocks {
         return registerTieredBlock(type, "_mid_chemical_tank", (properties, color) -> new BlockTileModel<>(type, BlockTile.defaultProperties(properties).mapColor(color)), ItemBlockMidChemicalTank::new)
                 .forItemHolder(holder -> holder
                         .addAttachedContainerCapabilities(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
-                                .addTank(ComponentBackedLargeChemicalTankTank::create).build())
+                                .addContainer(ComponentBackedLargeChemicalTankTank::create).build())
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 .addChemicalDrainSlot(0)
                                 .addChemicalFillSlot(0)
@@ -169,7 +169,7 @@ public class LargeMachineBlocks {
         return registerTieredBlock(type, "_max_chemical_tank", (properties, color) -> new BlockTileModel<>(type, BlockTile.defaultProperties(properties).mapColor(color)), ItemBlockMaxChemicalTank::new)
                 .forItemHolder(holder -> holder
                         .addAttachedContainerCapabilities(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
-                                .addTank(ComponentBackedLargeChemicalTankTank::create).build())
+                                .addContainer(ComponentBackedLargeChemicalTankTank::create).build())
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 .addChemicalDrainSlot(0)
                                 .addChemicalFillSlot(0)

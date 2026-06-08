@@ -34,7 +34,7 @@ public class GuiLargeChemicalTank extends GuiMekanismTile<TileEntityLargeChemica
     protected void addGuiElements() {
         addRenderableWidget(GuiSideHolder.armorHolder(this));
         super.addGuiElements();
-        addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.getChemicalTank(), tile.getChemicalTanks(null)), 42, 16, 116, 10, true));
+        addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.getChemicalTank(), tile.getChemicalTanks()), 42, 16, 116, 10, true));
         addRenderableWidget(new GuiInnerScreen(this, 42, 37, 118, 28, () -> {
             List<Component> ret = new ArrayList<>();
             IChemicalTank tank = tile.getChemicalTank();
@@ -42,8 +42,8 @@ public class GuiLargeChemicalTank extends GuiMekanismTile<TileEntityLargeChemica
                 ret.add(MekanismLang.CHEMICAL.translate(MekanismLang.NONE));
                 ret.add(MekanismLang.GENERIC_FRACTION.translate(0, TextUtils.format(tile.getTier().getStorage())));
             } else {
-                ret.add(MekanismLang.CHEMICAL.translate(tank.getStack()));
-                ret.add(MekanismLang.GENERIC_FRACTION.translate(TextUtils.format(tank.getStored()), TextUtils.format(tank.getCapacity())));
+                ret.add(MekanismLang.CHEMICAL.translate(tank.asStack()));
+                ret.add(MekanismLang.GENERIC_FRACTION.translate(TextUtils.format(tank.amountAsLong()), TextUtils.format(tank.capacityAsLong(tank.resource()))));
             }
             return ret;
         }));

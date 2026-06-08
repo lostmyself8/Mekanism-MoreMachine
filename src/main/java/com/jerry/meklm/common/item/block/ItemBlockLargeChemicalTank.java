@@ -5,6 +5,7 @@ import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 import mekanism.api.RelativeSide;
 import mekanism.common.attachments.component.AttachedSideConfig;
 import mekanism.common.attachments.component.AttachedSideConfig.LightConfigInfo;
+import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.item.block.ItemBlockTooltip;
@@ -12,7 +13,6 @@ import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tile.TileEntityChemicalTank;
 import mekanism.common.tile.component.config.DataType;
-import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.StorageUtils;
 
 import net.minecraft.util.Util;
@@ -58,7 +58,7 @@ public class ItemBlockLargeChemicalTank<TILE extends TileEntityLargeChemicalTank
             // but we may as well short circuit it here
             return false;
         }
-        return ChemicalUtil.hasAnyChemical(stack);
+        return StorageUtils.isBarVisible(stack);
     }
 
     @Override
@@ -68,6 +68,6 @@ public class ItemBlockLargeChemicalTank<TILE extends TileEntityLargeChemicalTank
 
     @Override
     public int getBarColor(@NotNull ItemStack stack) {
-        return ChemicalUtil.getRGBDurabilityForDisplay(stack);
+        return ContainerType.CHEMICAL.getRGBDurabilityForDisplay(stack);
     }
 }

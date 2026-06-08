@@ -8,6 +8,7 @@ import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
 import mekanism.common.content.blocktype.Machine;
+import mekanism.common.util.ItemAccessUtils;
 import mekanism.common.util.StorageUtils;
 import mekanism.common.util.text.TextUtils;
 
@@ -36,7 +37,7 @@ public class ItemBlockMidChemicalTank extends ItemBlockLargeChemicalTank<TileEnt
     @Deprecated
     public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, @NotNull TooltipFlag flag) {
         MidChemicalTankTier tier = getTier();
-        StorageUtils.addStoredSubstance(stack, tooltipAdder, false);
+        StorageUtils.addStoredSubstance(ItemAccessUtils.sideEffectFreeAccess(stack), tooltipAdder, false);
         tooltipAdder.accept(MekanismLang.CAPACITY_MB.translateColored(EnumColor.INDIGO, EnumColor.GRAY, TextUtils.format(tier.getStorage())));
         super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
     }

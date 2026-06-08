@@ -1,8 +1,8 @@
 package com.jerry.meklm.common.capabilities.holder.fluid;
 
 import mekanism.api.RelativeSide;
-import mekanism.api.fluid.IExtendedFluidTank;
-import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
+import mekanism.api.fluid.IFluidTank;
+import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.tile.interfaces.ISideConfiguration;
 
 import net.minecraft.core.Direction;
@@ -15,10 +15,10 @@ import java.util.function.Supplier;
 
 public class AdjustableFluidTankHelper {
 
-    private final IFluidTankHolder slotHolder;
+    private final IContainerHolder<IFluidTank> slotHolder;
     private boolean built;
 
-    private AdjustableFluidTankHelper(IFluidTankHolder slotHolder) {
+    private AdjustableFluidTankHelper(IContainerHolder<IFluidTank> slotHolder) {
         this.slotHolder = slotHolder;
     }
 
@@ -35,33 +35,33 @@ public class AdjustableFluidTankHelper {
         return new AdjustableFluidTankHelper(new AdjustableConfigFluidTankHolder(sideConfiguration));
     }
 
-    public <TANK extends IExtendedFluidTank> TANK addTank(@NotNull TANK tank) {
+    public <TANK extends IFluidTank> TANK addTank(@NotNull TANK tank) {
         if (built) {
             throw new IllegalStateException("Builder has already built.");
         }
         if (slotHolder instanceof CanAdjustFluidTankHolder slotHolder) {
-            slotHolder.addTank(tank);
+            slotHolder.addContainer(tank);
         } else if (slotHolder instanceof AdjustableConfigFluidTankHolder slotHolder) {
-            slotHolder.addTank(tank);
+            slotHolder.addContainer(tank);
         } else {
             throw new IllegalArgumentException("Holder does not know how to add tanks");
         }
         return tank;
     }
 
-    public <TANK extends IExtendedFluidTank> TANK addTank(@NotNull TANK tank, RelativeSide... sides) {
+    public <TANK extends IFluidTank> TANK addTank(@NotNull TANK tank, RelativeSide... sides) {
         if (built) {
             throw new IllegalStateException("Builder has already built.");
         }
         if (slotHolder instanceof CanAdjustFluidTankHolder slotHolder) {
-            slotHolder.addTank(tank, sides);
+            slotHolder.addContainer(tank, sides);
         } else {
             throw new IllegalArgumentException("Holder does not know how to add tanks on specific sides");
         }
         return tank;
     }
 
-    public IFluidTankHolder build() {
+    public IContainerHolder<IFluidTank> build() {
         built = true;
         return slotHolder;
     }
