@@ -20,6 +20,7 @@ public class LargeGeneratorBlockShapes {
     public static final VoxelShape[] LARGE_HEAT_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] LARGE_GAS_BURNING_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     public static final VoxelShape[] LARGE_WIND_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
+    public static final VoxelShape[] SOLAR_HEAT_GENERATOR = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     private static final Map<BlockPos, VoxelShape>[] LARGE_WIND_GENERATOR_PARTS = new Map[EnumUtils.HORIZONTAL_DIRECTIONS.length];
 
     static {
@@ -48,6 +49,9 @@ public class LargeGeneratorBlockShapes {
                 largeWindGeneratorBoxes());
         VoxelShapeUtils.setShape(largeWindGenerator, LARGE_WIND_GENERATOR);
         setSplitShapes(largeWindGenerator, LARGE_WIND_GENERATOR_PARTS);
+
+        VoxelShape solarHeatGenerator = box(-48, 0, -48, 64, 112, 64);
+        VoxelShapeUtils.setShape(solarHeatGenerator, SOLAR_HEAT_GENERATOR);
     }
 
     private LargeGeneratorBlockShapes() {}

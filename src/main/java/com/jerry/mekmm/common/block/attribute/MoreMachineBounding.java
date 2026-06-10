@@ -232,4 +232,68 @@ public class MoreMachineBounding {
             return predicate.accept(level, mutable, data);
         }
     });
+
+    public static final AttributeHasBounding SOLAR_HEAT_GENERATOR = new AttributeHasBounding(new HandleBoundingBlock() {
+
+        @Override
+        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+            Direction facing = Attribute.getFacing(state);
+            if (facing == null) {
+                return false;
+            }
+            Direction left = facing.getClockWise();
+            Direction right = facing.getCounterClockWise();
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    if (x != 0 || z != 0) {
+                        mutable.setWithOffset(pos, x, 0, z);
+                        if (!predicate.accept(level, mutable, data)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    if (x == -3 || x == 3 || z == -3 || z == 3) {
+                        if ((x == -3 || x == -2 || x == 2 || x == 3) && (z == -3 || z == -2 || z == 2 || z == 3)) {
+                            continue;
+                        }
+                    }
+                    mutable.setWithOffset(pos, x, 1, z);
+                    if (!predicate.accept(level, mutable, data)) {
+                        return false;
+                    }
+                }
+            }
+            for (int i = -1; i <= 1; i++) {
+                if (!handlePanel(level, pos, data, predicate, mutable, facing, i) ||
+                        !handlePanel(level, pos, data, predicate, mutable, left, i) ||
+                        !handlePanel(level, pos, data, predicate, mutable, right, i)) {
+                    return false;
+                }
+            }
+            for (int x = -3; x <= 3; x++) {
+                for (int y = 3; y <= 6; y++) {
+                    for (int z = -3; z <= 3; z++) {
+                        mutable.setWithOffset(pos, x, y, z);
+                        if (!predicate.accept(level, mutable, data)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            mutable.setWithOffset(pos, 0, 3, 0);
+            return predicate.accept(level, mutable, data);
+        }
+
+        private <DATA> boolean handlePanel(Level level, BlockPos pos, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate,
+                                           BlockPos.MutableBlockPos mutable, Direction side, int offset) {
+            Vec3i forward = side.getUnitVec3i();
+            Vec3i axis = side.getClockWise().getUnitVec3i();
+            mutable.setWithOffset(pos, forward.getX() * 3 + axis.getX() * offset, 2, forward.getZ() * 3 + axis.getZ() * offset);
+            return predicate.accept(level, mutable, data);
+        }
+    });
 }

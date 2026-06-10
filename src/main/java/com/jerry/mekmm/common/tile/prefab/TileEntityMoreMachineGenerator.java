@@ -99,6 +99,10 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
         return maxOutput;
     }
 
+    protected void updateMaxOutputRaw(long maxOutput) {
+        this.maxOutput = maxOutput;
+    }
+
     @ComputerMethod(methodDescription = "Get the amount of energy produced by this generator in the last tick.")
     protected abstract long getProductionRate();
 }

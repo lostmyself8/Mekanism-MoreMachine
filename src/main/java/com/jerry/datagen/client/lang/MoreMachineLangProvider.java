@@ -51,6 +51,7 @@ public class MoreMachineLangProvider extends BaseLanguageProvider {
         addItem("uu_matter", "UU Matter");
         addItem("connector", "Connector");
         addItem("advanced_electrolysis_core", "Advanced Electrolysis Core");
+        addItem("reflector", "Reflector");
 
         addBlockItem("recycler", "Recycler");
         addBlockItem("planting_station", "Planting Station");
@@ -81,6 +82,7 @@ public class MoreMachineLangProvider extends BaseLanguageProvider {
         addBlockItem("large_heat_generator", "Large Heat Generator");
         addBlockItem("large_gas_burning_generator", "Large Gas-Burning Generator");
         addBlockItem("large_wind_generator", "Large Wind Generator");
+        addBlockItem("solar_heat_generator", "Solar Heat Generator");
 
         for (String tier : ALL_TIERS) {
             String tierName = toTitle(tier);

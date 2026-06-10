@@ -5,6 +5,7 @@ import com.jerry.mekmm.api.datamaps.ChemicalReplicatorRecipe;
 import com.jerry.mekmm.api.datamaps.FluidReplicatorRecipe;
 import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.api.datamaps.ItemReplicatorRecipe;
+import com.jerry.mekmm.api.datamaps.SolarHeatFluid;
 
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
@@ -29,6 +30,7 @@ public class MoreMachineDataMapTypes implements IMoreMachineDataMapTypes {
 
     private static final DataMapType<Item, ItemReplicatorRecipe> ITEM_REPLICATOR_RECIPE = REGISTER.registerSimple(ItemReplicatorRecipe.ID, Registries.ITEM, ItemReplicatorRecipe.CODEC);
     private static final DataMapType<Fluid, FluidReplicatorRecipe> FLUID_REPLICATOR_RECIPE = REGISTER.registerSimple(FluidReplicatorRecipe.ID, Registries.FLUID, FluidReplicatorRecipe.CODEC);
+    private static final DataMapType<Fluid, SolarHeatFluid> SOLAR_HEAT_FLUID = REGISTER.registerSimple(SolarHeatFluid.ID, Registries.FLUID, SolarHeatFluid.CODEC);
     private static final DataMapType<Chemical, ChemicalReplicatorRecipe> CHEMICAL_REPLICATOR_RECIPE = REGISTER.registerSimple(ChemicalReplicatorRecipe.ID, MekanismAPI.CHEMICAL_REGISTRY_NAME, ChemicalReplicatorRecipe.CODEC);
 
     @Override
@@ -39,6 +41,11 @@ public class MoreMachineDataMapTypes implements IMoreMachineDataMapTypes {
     @Override
     public DataMapType<Fluid, FluidReplicatorRecipe> fluidReplicatorRecipe() {
         return FLUID_REPLICATOR_RECIPE;
+    }
+
+    @Override
+    public DataMapType<Fluid, SolarHeatFluid> solarHeatFluid() {
+        return SOLAR_HEAT_FLUID;
     }
 
     @Override

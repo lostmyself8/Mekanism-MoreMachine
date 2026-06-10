@@ -19,6 +19,7 @@ import com.jerry.meklg.common.content.blocktype.LargeGeneratorBlockShapes;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
+import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 
 public class LargeGeneratorBlockTypes {
 
@@ -64,6 +65,19 @@ public class LargeGeneratorBlockTypes {
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
             .with(MoreMachineBounding.LARGE_WIND_GENERATOR)
             .withComputerSupport("largeWindGenerator")
+            .build();
+
+    // Solar Heat Generator
+    public static final Generator<TileEntitySolarHeatGenerator> SOLAR_HEAT_GENERATOR = GeneratorBuilder
+            .createGenerator(() -> LargeGeneratorTileEntityTypes.SOLAR_HEAT_GENERATOR, GeneratorsLang.DESCRIPTION_SOLAR_GENERATOR)
+            .withGui(() -> LargeGeneratorContainerTypes.SOLAR_HEAT_GENERATOR)
+            .withEnergyStorage(MoreMachineConfig.storage.solarHeatGenerator::get)
+            .withCustomShape(LargeGeneratorBlockShapes.SOLAR_HEAT_GENERATOR)
+            .with(AttributeCustomSelectionBox.JAVA)
+            .with(AttributeUpgradeSupport.MUFFLING_ONLY)
+            .with(MoreMachineBounding.SOLAR_HEAT_GENERATOR)
+            .withComputerSupport("solarHeatGenerator")
+            .replace(Attributes.ACTIVE_MELT_LIGHT)
             .build();
 
     private LargeGeneratorBlockTypes() {}

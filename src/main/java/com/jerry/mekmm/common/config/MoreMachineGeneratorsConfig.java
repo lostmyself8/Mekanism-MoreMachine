@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.config;
 
 import mekanism.common.config.BaseMekanismConfig;
+import mekanism.common.config.value.CachedDoubleValue;
 import mekanism.common.config.value.CachedIntValue;
 import mekanism.common.config.value.CachedLongValue;
 
@@ -19,6 +20,12 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
     public final CachedIntValue largeHeatGenerationFluidRate;
 
     public final CachedLongValue LGBGTankCapacity;
+    public final CachedLongValue solarHeatGeneration;
+    public final CachedDoubleValue solarHeatMaxTemperature;
+    public final CachedDoubleValue solarHeatTargetConversionTemperature;
+    public final CachedDoubleValue solarHeatOptimalGenerationTemperature;
+    public final CachedDoubleValue solarHeatCriticalGenerationTemperature;
+    public final CachedDoubleValue solarHeatHeatGainPerReflector;
 
     MoreMachineGeneratorsConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -39,6 +46,20 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
         MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS.applyToBuilder(builder).push("gas_generator");
         LGBGTankCapacity = CachedLongValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY.applyToBuilder(builder)
                 .defineInRange("tankCapacity", 180L * FluidType.BUCKET_VOLUME, 1, Long.MAX_VALUE));
+        builder.pop();
+
+        MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT.applyToBuilder(builder).push("solar_heat_generator");
+        solarHeatGeneration = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_GENERATION, "generation", 2_500_000L);
+        solarHeatMaxTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_MAX_TEMPERATURE.applyToBuilder(builder)
+                .defineInRange("maxTemperature", 4_000_000D, 1D, 10_000_000D));
+        solarHeatTargetConversionTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_TARGET_CONVERSION_TEMPERATURE.applyToBuilder(builder)
+                .defineInRange("targetConversionTemperature", 1_400D, 1D, 10_000_000D));
+        solarHeatOptimalGenerationTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_OPTIMAL_GENERATION_TEMPERATURE.applyToBuilder(builder)
+                .defineInRange("optimalGenerationTemperature", 3_500_000D, 1D, 10_000_000D));
+        solarHeatCriticalGenerationTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_CRITICAL_GENERATION_TEMPERATURE.applyToBuilder(builder)
+                .defineInRange("criticalGenerationTemperature", 3_000_000D, 1D, 10_000_000D));
+        solarHeatHeatGainPerReflector = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_HEAT_GAIN_PER_REFLECTOR.applyToBuilder(builder)
+                .defineInRange("heatGainPerReflector", 15D, 0D, Double.MAX_VALUE));
         builder.pop();
 
         configSpec = builder.build();

@@ -10,6 +10,7 @@ import mekanism.common.tile.base.TileEntityMekanism;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
+import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 import org.jetbrains.annotations.NotNull;
 
 public class LargeGeneratorTileEntityTypes {
@@ -33,6 +34,12 @@ public class LargeGeneratorTileEntityTypes {
             .build();
 
     public static final TileEntityTypeRegistryObject<@NotNull TileEntityLargeWindGenerator> LARGE_WIND_GENERATOR = LG_TILE_ENTITY_TYPES.mekBuilder(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, TileEntityLargeWindGenerator::new)
+            .clientTicker(TileEntityMekanism::tickClient)
+            .serverTicker(TileEntityMekanism::tickServer)
+            .withSimple(Capabilities.CONFIG_CARD)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<@NotNull TileEntitySolarHeatGenerator> SOLAR_HEAT_GENERATOR = LG_TILE_ENTITY_TYPES.mekBuilder(LargeGeneratorBlocks.SOLAR_HEAT_GENERATOR, TileEntitySolarHeatGenerator::new)
             .clientTicker(TileEntityMekanism::tickClient)
             .serverTicker(TileEntityMekanism::tickServer)
             .withSimple(Capabilities.CONFIG_CARD)

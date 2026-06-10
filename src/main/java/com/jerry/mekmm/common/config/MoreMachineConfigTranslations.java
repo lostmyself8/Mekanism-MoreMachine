@@ -50,6 +50,7 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     ENERGY_STORAGE_LARGE_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Large Heat Generator"),
     ENERGY_STORAGE_LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER(TranslationPreset.ENERGY_STORAGE, "Large Antiprotonic Nucleosynthesizer"),
     ENERGY_STORAGE_LARGE_PIGMENT_MIXER(TranslationPreset.ENERGY_STORAGE, "Large Pigment Mixer"),
+    ENERGY_STORAGE_SOLAR_HEAT_GENERATOR(TranslationPreset.ENERGY_STORAGE, "Solar Heat Generator"),
 
     // Usage Config
     ENERGY_USAGE_RECYCLER(TranslationPreset.ENERGY_USAGE, "Recycler"),
@@ -85,7 +86,15 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
             "The amount of lava in mB that gets consumed to transfer largeHeatGeneration Joules to the Large Heat Generator."),
 
     SERVER_GENERATOR_LARGE_GAS("server.generator.gas", "Large Gas-Burning Generator", "Settings for configuring Large Gas-Burning Generators", true),
-    SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY("server.generator.gas.tank_capacity", "Tank Capacity", "The capacity in mB of the chemical tank in the Large Gas-Burning Generator.");
+    SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY("server.generator.gas.tank_capacity", "Tank Capacity", "The capacity in mB of the chemical tank in the Large Gas-Burning Generator."),
+
+    SERVER_GENERATOR_SOLAR_HEAT("server.generator.solar_heat", "Solar Heat Generator", "Settings for configuring Solar Heat Generators", true),
+    SERVER_GENERATOR_SOLAR_HEAT_GENERATION("server.generator.solar_heat.gen", "Max Energy Generation", "Peak energy generation in Joules/t that the Solar Heat Generator can produce."),
+    SERVER_GENERATOR_SOLAR_HEAT_MAX_TEMPERATURE("server.generator.solar_heat.max_temperature", "Max Temperature", "Maximum temperature in Kelvin that reflectors can heat the Solar Heat Generator to."),
+    SERVER_GENERATOR_SOLAR_HEAT_TARGET_CONVERSION_TEMPERATURE("server.generator.solar_heat.target_conversion_temperature", "Target Conversion Temperature", "Temperature in Kelvin where coolant heat transfer starts."),
+    SERVER_GENERATOR_SOLAR_HEAT_OPTIMAL_GENERATION_TEMPERATURE("server.generator.solar_heat.optimal_generation_temperature", "Optimal Generation Temperature", "Temperature in Kelvin where generation reaches its peak temperature factor."),
+    SERVER_GENERATOR_SOLAR_HEAT_CRITICAL_GENERATION_TEMPERATURE("server.generator.solar_heat.critical_generation_temperature", "Critical Reflector Temperature", "Temperature in Kelvin where reflector damage starts accelerating heavily."),
+    SERVER_GENERATOR_SOLAR_HEAT_HEAT_GAIN_PER_REFLECTOR("server.generator.solar_heat.heat_gain_per_reflector", "Heat Gain Per Reflector", "Heat gained per tick from each reflector at full sun.");
 
     private final String key;
     private final String title;

@@ -29,7 +29,7 @@ public class MoreMachineAssetProvider implements DataProvider {
             "oxidizing", "dissolving", "washing", "crystallizing", "pressurised_reacting", "centrifuging", "liquifying", "pigment_extracting", "painting"
     };
     private static final String[] SIMPLE_ITEMS = {
-            "scrap", "scrap_box", "empty_crystal", "uu_matter", "advanced_electrolysis_core"
+            "scrap", "scrap_box", "empty_crystal", "uu_matter", "advanced_electrolysis_core", "reflector"
     };
     private static final String[] CONNECTOR_MODELS = {
             "connector", "connector_energy", "connector_fluids", "connector_chemicals", "connector_items", "connector_heat"
@@ -44,7 +44,7 @@ public class MoreMachineAssetProvider implements DataProvider {
     private static final String[] LARGE_MACHINES = {
             "large_rotary_condensentrator", "large_chemical_infuser", "large_electrolytic_separator", "large_solar_neutron_activator",
             "large_antiprotonic_nucleosynthesizer", "large_pigment_mixer", "large_heat_generator", "large_gas_burning_generator",
-            "large_wind_generator"
+            "large_wind_generator", "solar_heat_generator"
     };
 
     private final PackOutput.PathProvider blockStatePathProvider;
@@ -73,7 +73,10 @@ public class MoreMachineAssetProvider implements DataProvider {
 
     private void generateItemDefinitions(CachedOutput output, List<CompletableFuture<?>> futures) {
         for (String item : allItemNames()) {
-            JsonObject definition = item.equals("large_wind_generator") ? specialItemDefinition("mekmm:item/large_wind_generator", "mekmm:large_wind_generator") : itemDefinition("mekmm:item/" + item);
+            JsonObject definition = switch (item) {
+                case "large_wind_generator", "solar_heat_generator" -> specialItemDefinition("mekmm:item/" + item, "mekmm:" + item);
+                default -> itemDefinition("mekmm:item/" + item);
+            };
             save(output, futures, itemDefinitionPathProvider.json(id(item)), definition);
         }
     }
@@ -238,14 +241,27 @@ public class MoreMachineAssetProvider implements DataProvider {
     }
 
     private static JsonObject largeMachineItemModel(String machine) {
-        JsonObject root = machine.equals("large_wind_generator") ? new JsonObject() : blockItemModel("mekmm:block/large_machine/" + machine + "/off");
+        JsonObject root = machine.equals("large_wind_generator") || machine.equals("solar_heat_generator") ? new JsonObject() : blockItemModel("mekmm:block/large_machine/" + machine + "/off");
         root.add("display", switch (machine) {
             case "large_chemical_infuser", "large_electrolytic_separator" -> tallLargeMachineDisplay();
             case "large_wind_generator" -> largeWindGeneratorDisplay();
+            case "solar_heat_generator" -> solarHeatGeneratorDisplay();
             case "large_antiprotonic_nucleosynthesizer", "large_pigment_mixer" -> standardLargeMachineDisplay(array(0, -4, 0));
             default -> standardLargeMachineDisplay(null);
         });
         return root;
+    }
+
+    private static JsonObject solarHeatGeneratorDisplay() {
+        JsonObject display = new JsonObject();
+        addTransform(display, "thirdperson_righthand", array(75, 45, 0), array(0, 1, 0), array(0.09, 0.09, 0.09));
+        addTransform(display, "thirdperson_lefthand", array(75, 135, 0), array(0, 1, 0), array(0.09, 0.09, 0.09));
+        addTransform(display, "firstperson_righthand", array(0, 135, 0), array(0, -1, 0.75), array(0.12, 0.12, 0.12));
+        addTransform(display, "firstperson_lefthand", array(0, 45, 0), array(0, -1, 0.75), array(0.12, 0.12, 0.12));
+        addTransform(display, "ground", null, array(0, 2, 0), array(0.1, 0.1, 0.1));
+        addTransform(display, "gui", array(30, -135, 0), array(0, -4, 0), array(0.11, 0.11, 0.11));
+        addTransform(display, "fixed", null, array(0, -5, 0), array(0.14, 0.14, 0.14));
+        return display;
     }
 
     private static JsonObject factoryItemDisplay() {

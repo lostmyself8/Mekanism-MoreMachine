@@ -37,6 +37,8 @@ public interface IMoreMachineDataMapTypes {
 
     DataMapType<Fluid, FluidReplicatorRecipe> fluidReplicatorRecipe();
 
+    DataMapType<Fluid, SolarHeatFluid> solarHeatFluid();
+
     DataMapType<Chemical, ChemicalReplicatorRecipe> chemicalReplicatorRecipe();
 
     @Nullable
@@ -47,6 +49,11 @@ public interface IMoreMachineDataMapTypes {
     @Nullable
     default FluidReplicatorRecipe getFluidReplicatorRecipe(Holder<Fluid> holder) {
         return holder.getData(fluidReplicatorRecipe());
+    }
+
+    @Nullable
+    default SolarHeatFluid getSolarHeatFluid(Holder<Fluid> holder) {
+        return holder.getData(solarHeatFluid());
     }
 
     @Nullable
