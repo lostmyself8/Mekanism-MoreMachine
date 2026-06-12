@@ -3,7 +3,7 @@ name: Latest Build
 on:
   push:
     branches: ['26.1', '1.21.1', '1.20.1']
-    paths: ['src/**', '**/*.gradle', 'gradle.properties', 'gradle/libs/**']
+    paths: ['src/**', '**/*.gradle', 'gradle.properties', 'gradle/libs/**', '.github/actions/build_setup/**', '.github/workflows/auto-build.yml']
 
 concurrency:
   group: auto-build-${{ github.ref }}
