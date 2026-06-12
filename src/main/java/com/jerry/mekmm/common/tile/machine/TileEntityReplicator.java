@@ -45,7 +45,6 @@ import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.upgrade.AdvancedMachineUpgradeData;
 
@@ -114,7 +113,6 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
         configComponent.setupInputConfig(TransmissionType.CHEMICAL, chemicalTank);
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
 
         chemicalInputHandler = InputHelper.getConstantInputHandler(chemicalTank);
@@ -164,8 +162,8 @@ public class TileEntityReplicator extends TileEntityProgressMachine<MMBasicItemS
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         chemicalSlot.fillTankOrConvert(null);
         recipeCacheLookupMonitor.updateAndProcess();

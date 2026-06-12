@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.core.TypedInstance;
@@ -15,12 +14,13 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@NothingNullByDefault
+@NullMarked
 public class BasicStamperRecipe extends StamperRecipe {
 
     protected final ItemStackIngredient input;

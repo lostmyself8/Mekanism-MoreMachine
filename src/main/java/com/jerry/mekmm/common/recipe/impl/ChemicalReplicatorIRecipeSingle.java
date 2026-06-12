@@ -3,8 +3,7 @@ package com.jerry.mekmm.common.recipe.impl;
 import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
-import mekanism.api.annotations.NothingNullByDefault;
-import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalStackTemplate;
 import mekanism.api.recipes.ChemicalChemicalToChemicalRecipe;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 
@@ -13,8 +12,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class ChemicalReplicatorIRecipeSingle extends MMBasicChemicalChemicalToChemicalRecipe {
 
     /**
@@ -23,7 +23,7 @@ public class ChemicalReplicatorIRecipeSingle extends MMBasicChemicalChemicalToCh
      * @param output     Output.
      * @apiNote The order of the inputs does not matter.
      */
-    public ChemicalReplicatorIRecipeSingle(ChemicalStackIngredient leftInput, ChemicalStackIngredient rightInput, ChemicalStack output) {
+    public ChemicalReplicatorIRecipeSingle(ChemicalStackIngredient leftInput, ChemicalStackIngredient rightInput, ChemicalStackTemplate output) {
         super(leftInput, rightInput, output);
     }
 

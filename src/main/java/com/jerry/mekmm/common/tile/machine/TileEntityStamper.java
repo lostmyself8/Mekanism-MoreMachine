@@ -35,7 +35,6 @@ import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.DoubleItem;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 import net.minecraft.SharedConstants;
@@ -86,7 +85,6 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
         configComponent.setupItemIOExtraConfig(itemInputSlot, outputSlot, moldInputSlot, energySlot);
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
 
         itemInputHandler = InputHelper.getInputHandler(itemInputSlot, RecipeError.NOT_ENOUGH_INPUT);
@@ -119,8 +117,8 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         recipeCacheLookupMonitor.updateAndProcess();
         return sendUpdatePacket;

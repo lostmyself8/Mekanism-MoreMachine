@@ -2,7 +2,6 @@ package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
@@ -15,12 +14,13 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.function.*;
 
 // 可能之后会拓展为额外输入不消化的通用CachedRecipe，因此参数不使用“mold”
-@NothingNullByDefault
+@NullMarked
 public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
 
     private final IInputHandler<Item, ItemStack> inputHandler;

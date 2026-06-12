@@ -2,7 +2,6 @@ package com.jerry.mekmm.api.recipes;
 
 import com.jerry.mekmm.Mekmm;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
@@ -19,11 +18,12 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-@NothingNullByDefault
+@NullMarked
 public abstract class RecyclerRecipe extends MekanismRecipe<SingleRecipeInput> implements Predicate<@NotNull ItemStack> {
 
     protected static final RandomSource RANDOM = RandomSource.create();

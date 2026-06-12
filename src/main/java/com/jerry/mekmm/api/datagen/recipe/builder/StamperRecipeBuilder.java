@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.datagen.recipe.builder;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicStamperRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.datagen.recipe.MekanismRecipeBuilder;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
@@ -13,7 +12,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 
-@NothingNullByDefault
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class StamperRecipeBuilder extends MekanismRecipeBuilder<StamperRecipeBuilder> {
 
     private final ItemStackIngredient input;

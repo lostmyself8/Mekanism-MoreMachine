@@ -3,7 +3,6 @@ package com.jerry.mekmm.common.registries;
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.registration.MekanismDeferredHolder;
 import mekanism.common.registration.impl.DataComponentDeferredRegister;
 
@@ -12,8 +11,9 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.codec.ByteBufCodecs;
 
 import com.mojang.serialization.Codec;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineDataComponents {
 
     private MoreMachineDataComponents() {}

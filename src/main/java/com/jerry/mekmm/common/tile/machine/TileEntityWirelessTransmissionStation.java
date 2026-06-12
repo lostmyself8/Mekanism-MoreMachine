@@ -20,8 +20,6 @@ import mekanism.api.heat.HeatAPI.HeatTransfer;
 import mekanism.api.heat.IHeatCapacitor;
 import mekanism.api.heat.IHeatHandler;
 import mekanism.api.inventory.IInventorySlot;
-import mekanism.common.attachments.containers.type.ContainerType;
-import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
@@ -32,6 +30,8 @@ import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
+import mekanism.common.component.containers.type.ContainerType;
+import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.*;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -50,7 +50,6 @@ import mekanism.common.lib.inventory.Finder;
 import mekanism.common.lib.inventory.TransitRequest;
 import mekanism.common.lib.inventory.TransitRequest.TransitResponse;
 import mekanism.common.lib.transmitter.TransmissionType;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
@@ -143,7 +142,6 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         configComponent.setupItemIOConfig(List.of(inventorySlot, fluidFillSlot, chemicalInputSlot), List.of(fluidDrainSlot, chemicalOutputSlot, fluidOutputSlot), energySlot, false);
         setupIOConfig(TransmissionType.HEAT, heatCapacitor, RelativeSide.BACK);
         configComponent.addDisabledSides(RelativeSide.TOP);
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ENERGY, TransmissionType.HEAT);
     }
 
@@ -210,14 +208,14 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    protected void onUpdateClient() {
-        super.onUpdateClient();
+    protected void onUpdateClient(net.minecraft.world.level.Level level) {
+        super.onUpdateClient(level);
         closeInvalidScreens();
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         closeInvalidScreens();
         chemicalInputSlot.fillTankOrConvert(null);
         chemicalOutputSlot.drainTankIntoSlot(null);
@@ -297,7 +295,8 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         //
         // for (ConnectionConfig config : connectionManager.getConnectionsByType(TransmissionType.HEAT)) {
         // // 检查该方向是否有相邻的热处理系统
-        // IHeatHandler sink = WorldUtils.getCapability(level, Capabilities.HEAT, config.pos(), config.direction());
+        // IHeatHandler sink = WorldUtils.getCapability(currentLevel, Capabilities.HEAT, config.pos(),
+        // config.direction());
         // // 只有存在相邻系统时才进行热交换计算
         // if (sink != null) {
         // // 获取目标温度

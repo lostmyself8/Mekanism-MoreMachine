@@ -2,13 +2,14 @@ package com.jerry.mekmm.api.text;
 
 import com.jerry.mekmm.Mekmm;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.ILangEntry;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 
-@NothingNullByDefault
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public enum APIMoreMachineLang implements ILangEntry {
 
     // Upgrades

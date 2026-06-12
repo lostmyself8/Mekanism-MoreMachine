@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.basic;
 import com.jerry.mekmm.api.recipes.MoreMachineRecipeSerializers;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
@@ -11,12 +10,13 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@NothingNullByDefault
+@NullMarked
 public class BasicRecyclerRecipe extends RecyclerRecipe {
 
     private final ItemStackIngredient input;

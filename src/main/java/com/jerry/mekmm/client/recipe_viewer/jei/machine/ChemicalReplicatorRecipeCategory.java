@@ -6,8 +6,8 @@ import com.jerry.mekmm.common.recipe.impl.ChemicalReplicatorIRecipeSingle;
 
 import mekanism.api.MekanismAPI;
 import mekanism.api.SerializationConstants;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalStackTemplate;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.creator.IngredientCreatorAccess;
 import mekanism.client.gui.element.gauge.GaugeType;
@@ -37,17 +37,18 @@ import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@NothingNullByDefault
+@NullMarked
 public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasicChemicalChemicalToChemicalRecipe> {
 
     // TODO: Re-evaluate
     private static final Codec<MMBasicChemicalChemicalToChemicalRecipe> RECIPE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ChemicalStackIngredient.CODEC.fieldOf(SerializationConstants.INPUT).forGetter(MMBasicChemicalChemicalToChemicalRecipe::getLeftInput),
             IngredientCreatorAccess.chemicalStack().codec().fieldOf(SerializationConstants.CHEMICAL_INPUT).forGetter(MMBasicChemicalChemicalToChemicalRecipe::getRightInput),
-            ChemicalStack.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(MMBasicChemicalChemicalToChemicalRecipe::getOutputRaw)).apply(instance, ChemicalReplicatorIRecipeSingle::new));
+            ChemicalStackTemplate.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(MMBasicChemicalChemicalToChemicalRecipe::getOutputRaw)).apply(instance, ChemicalReplicatorIRecipeSingle::new));
 
     private final GuiGauge<?> secondaryGauge;
     private final GuiGauge<?> outputGauge;
@@ -86,7 +87,7 @@ public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasic
         ContextMap slotDisplayContext = getSlotDisplayContext();
         initChemical(builder, RecipeIngredientRole.INPUT, firstGauge, recipe.getLeftInput().getRepresentations(slotDisplayContext));
         initChemical(builder, RecipeIngredientRole.INPUT, secondaryGauge, recipe.getRightInput().getRepresentations(slotDisplayContext));
-        initChemical(builder, RecipeIngredientRole.OUTPUT, outputGauge, recipe.getOutputDefinition());
+        initChemical(builder, outputGauge, recipe.getOutputDefinition());
         initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getRightInput(), true));
     }
 

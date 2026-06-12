@@ -5,7 +5,6 @@ import com.jerry.mekmm.api.recipes.basic.BasicPlantingRecipe;
 
 import mekanism.api.SerializationConstants;
 import mekanism.api.SerializerHelper;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 import mekanism.api.recipes.ingredients.creator.IngredientCreatorAccess;
@@ -22,10 +21,11 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Optional;
 
-@NothingNullByDefault
+@NullMarked
 public class PlantingRecipeSerializer {
 
     private PlantingRecipeSerializer() {}

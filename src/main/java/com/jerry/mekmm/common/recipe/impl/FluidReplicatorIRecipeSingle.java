@@ -4,7 +4,6 @@ import com.jerry.mekmm.api.recipes.FluidChemicalToFluidRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.FluidStackIngredient;
 
@@ -14,8 +13,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class FluidReplicatorIRecipeSingle extends BasicFluidChemicalToFluidRecipe {
 
     /**

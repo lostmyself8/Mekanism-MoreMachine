@@ -49,7 +49,6 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.ItemChemical;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
@@ -138,7 +137,6 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
             configComponent.setupInputConfig(TransmissionType.CHEMICAL, chemicalTank);
         }
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM)
                 .setCanTankEject(tank -> tank != chemicalTank);
 
@@ -201,8 +199,8 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         chemicalSlot.fillTankOrConvert(null);
         recipeCacheLookupMonitor.updateAndProcess();

@@ -3,14 +3,15 @@ package com.jerry.mekmm.api.datagen.recipe.builder;
 import com.jerry.mekmm.api.recipes.basic.BasicLatheRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicRollingMillRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.datagen.recipe.builder.ItemStackToItemStackRecipeBuilder;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 
-@NothingNullByDefault
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class MoreMachineItemStackToItemStackRecipeBuilder extends ItemStackToItemStackRecipeBuilder {
 
     protected MoreMachineItemStackToItemStackRecipeBuilder(ItemStackIngredient input, ItemStackTemplate output, Factory factory) {
