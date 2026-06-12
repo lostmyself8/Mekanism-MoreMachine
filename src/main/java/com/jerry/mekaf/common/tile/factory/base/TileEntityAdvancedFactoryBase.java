@@ -13,6 +13,7 @@ import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalStackTemplate;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.MekanismRecipe;
@@ -120,7 +121,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     protected EnergyInventorySlot energySlot;
     protected IInputHandler<Chemical, @NotNull ChemicalStack>[] chemicalInputHandlers;
-    protected IOutputHandler<@NotNull ChemicalStack>[] chemicalOutputHandlers;
+    protected IOutputHandler<@NotNull ChemicalStackTemplate>[] chemicalOutputHandlers;
     protected IInputHandler<Item, @NotNull ItemStack>[] itemInputHandlers;
     protected IOutputHandler<@NotNull ItemStackTemplate>[] itemOutputHandlers;
     protected IInputHandler<Fluid, @NotNull FluidStack>[] fluidInputHandlers;
@@ -169,7 +170,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     @Override
     protected void presetVariables() {
         super.presetVariables();
-        tier = Attribute.getTier(getBlockHolder(), FactoryTier.class);
+        tier = Attribute.getTierNN(getBlockHolder(), FactoryTier.class);
         Runnable setSortingNeeded = () -> sortingNeeded = true;
         recipeCacheLookupMonitors = new FactoryRecipeCacheLookupMonitor[tier.processes];
         for (int i = 0; i < recipeCacheLookupMonitors.length; i++) {
@@ -254,8 +255,8 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
 
         handleSecondaryFuel();

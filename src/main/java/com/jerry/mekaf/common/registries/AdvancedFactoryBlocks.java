@@ -15,10 +15,10 @@ import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.tier.ITier;
-import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
-import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
-import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.attribute.AttributeTier;
+import mekanism.common.component.containers.fluid.FluidTanksBuilder;
+import mekanism.common.component.containers.item.ItemSlotsBuilder;
+import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.registration.impl.BlockDeferredRegister;

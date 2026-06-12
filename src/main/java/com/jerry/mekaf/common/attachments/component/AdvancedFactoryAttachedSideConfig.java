@@ -1,8 +1,8 @@
 package com.jerry.mekaf.common.attachments.component;
 
 import mekanism.api.RelativeSide;
-import mekanism.common.attachments.component.AttachedSideConfig;
-import mekanism.common.attachments.component.AttachedSideConfig.LightConfigInfo;
+import mekanism.common.component.component.AttachedSideConfig;
+import mekanism.common.component.component.AttachedSideConfig.LightConfigInfo;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.util.EnumUtils;
