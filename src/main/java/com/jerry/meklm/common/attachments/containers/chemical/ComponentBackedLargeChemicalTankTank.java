@@ -3,14 +3,15 @@ package com.jerry.meklm.common.attachments.containers.chemical;
 import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 import com.jerry.meklm.common.item.block.ItemBlockLargeChemicalTank;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.functions.ConstantPredicates;
 import mekanism.api.math.MathUtils;
-import mekanism.common.attachments.containers.chemical.ComponentBackedChemicalTank;
+import mekanism.common.component.containers.chemical.ComponentBackedChemicalTank;
 
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 
-@NothingNullByDefault
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class ComponentBackedLargeChemicalTankTank extends ComponentBackedChemicalTank {
 
     public static ComponentBackedLargeChemicalTankTank create(ItemAccess attachedAccess, int tankIndex) {

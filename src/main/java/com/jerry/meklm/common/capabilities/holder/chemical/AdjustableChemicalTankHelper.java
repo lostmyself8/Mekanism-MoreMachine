@@ -32,7 +32,7 @@ public class AdjustableChemicalTankHelper {
         // Note: This only is the case if radiation is enabled as otherwise things like gauge droppers can work as the
         // way to remove radioactive contents
         return (type, automationType) -> automationType != AutomationType.EXTERNAL ||
-                (outputTank.get().isEmpty() && type.isRadioactive() && RadiationManager.isGlobalRadiationEnabled());
+                (outputTank.get().isEmpty() && type.getChemical().isRadioactive() && RadiationManager.isGlobalRadiationEnabled());
     }
 
     public static AdjustableChemicalTankHelper forSide(Supplier<Direction> facingSupplier) {

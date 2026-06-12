@@ -1,7 +1,5 @@
 package com.jerry.meklg.client.render.item;
 
-import mekanism.api.annotations.NothingNullByDefault;
-
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
@@ -12,11 +10,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@NothingNullByDefault
+@NullMarked
 public class RenderSolarHeatGeneratorItem implements SpecialModelRenderer<Void> {
 
     private final ModelSolarHeatGenerator solarHeatGenerator;

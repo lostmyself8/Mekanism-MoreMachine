@@ -3,10 +3,10 @@ package com.jerry.meklm.common.item.block;
 import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 
 import mekanism.api.RelativeSide;
-import mekanism.common.attachments.component.AttachedSideConfig;
-import mekanism.common.attachments.component.AttachedSideConfig.LightConfigInfo;
-import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
+import mekanism.common.component.component.AttachedSideConfig;
+import mekanism.common.component.component.AttachedSideConfig.LightConfigInfo;
+import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.content.blocktype.Machine;
 import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.lib.transmitter.TransmissionType;

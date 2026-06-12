@@ -30,7 +30,7 @@ public class ItemBlockMidChemicalTank extends ItemBlockLargeChemicalTank<TileEnt
 
     @Override
     public MidChemicalTankTier getTier() {
-        return Attribute.getTier(getBlock(), MidChemicalTankTier.class);
+        return Attribute.getTierNN(getBlock(), MidChemicalTankTier.class);
     }
 
     @Override

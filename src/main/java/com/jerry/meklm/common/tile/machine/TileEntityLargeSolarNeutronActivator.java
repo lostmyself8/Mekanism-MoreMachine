@@ -13,6 +13,7 @@ import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalStackTemplate;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.api.functions.ConstantPredicates;
@@ -29,11 +30,11 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.api.recipes.vanilla_input.SingleChemicalRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
-import mekanism.common.attachments.containers.type.ContainerType;
-import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.component.containers.type.ContainerType;
+import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
@@ -48,7 +49,6 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
@@ -109,7 +109,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     private int numPowering;
     private byte seeSunCount = 0;
 
-    private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
+    private final IOutputHandler<@NotNull ChemicalStackTemplate> outputHandler;
     private final IInputHandler<Chemical, @NotNull ChemicalStack> inputHandler;
 
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input slot")
@@ -133,7 +133,6 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             gasConfig.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, inputTank, outputTank));
         }
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)
                 .setCanTankEject(tank -> tank != inputTank);
         inputHandler = InputHelper.getInputHandler(inputTank, RecipeError.NOT_ENOUGH_INPUT);
@@ -186,8 +185,8 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         if (solarCheck == null) {
             recheckSettings();
         }
@@ -323,7 +322,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     public void recalculateUpgrades(Upgrade upgrade) {
         super.recalculateUpgrades(upgrade);
         if (upgrade == Upgrade.SPEED) {
-            baselineMaxOperations = (int) Math.pow(2, upgradeComponent.getUpgrades(Upgrade.SPEED));
+            baselineMaxOperations = (int) Math.pow(2, getUpgrades(Upgrade.SPEED));
         }
     }
 

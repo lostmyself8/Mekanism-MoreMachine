@@ -109,7 +109,7 @@ public class GuiLargePigmentMixer extends GuiConfigurableTile<TileEntityLargePig
                         }
                     }
                     if (recipe != null) {
-                        return getColor(recipe.getOutput(leftInput, rightInput).getChemicalColorRepresentation());
+                        return getColor(recipe.getOutput(leftInput, rightInput).chemical().value().getColorRepresentation());
                     }
                 }
                 return 0xFFFFFFFF;

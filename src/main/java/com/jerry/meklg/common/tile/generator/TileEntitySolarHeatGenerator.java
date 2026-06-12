@@ -200,8 +200,8 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.drainContainerIntoSlot(null);
 
         long previousEnergy = getEnergyContainer().getAmountAsLong();
@@ -487,8 +487,8 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected void onUpdateClient() {
-        super.onUpdateClient();
+    protected void onUpdateClient(net.minecraft.world.level.Level level) {
+        super.onUpdateClient(level);
         updateAngle();
     }
 

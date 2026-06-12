@@ -4,7 +4,6 @@ import com.jerry.meklm.common.tile.machine.TileEntityLargePigmentMixer;
 
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.RenderTickHandler;
 import mekanism.client.render.lib.Outlines.Line;
 import mekanism.client.render.tileentity.IWireFrameRenderer;
@@ -27,10 +26,11 @@ import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@NothingNullByDefault
+@NullMarked
 public class RenderLargePigmentMixer extends MekanismTileEntityRenderer<TileEntityLargePigmentMixer, RenderLargePigmentMixer.LargePigmentMixerRenderState> implements IWireFrameRenderer {
 
     private static final float SHAFT_SPEED = 5F;

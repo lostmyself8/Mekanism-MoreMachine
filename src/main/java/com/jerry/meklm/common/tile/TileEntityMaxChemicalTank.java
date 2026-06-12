@@ -29,7 +29,7 @@ public class TileEntityMaxChemicalTank extends TileEntityLargeChemicalTank<MaxCh
     @Override
     protected void presetVariables() {
         super.presetVariables();
-        tier = Attribute.getTier(getBlockHolder(), MaxChemicalTankTier.class);
+        tier = Attribute.getTierNN(getBlockHolder(), MaxChemicalTankTier.class);
     }
 
     @Override

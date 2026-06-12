@@ -30,7 +30,7 @@ public class ItemBlockMaxChemicalTank extends ItemBlockLargeChemicalTank<TileEnt
 
     @Override
     public MaxChemicalTankTier getTier() {
-        return Attribute.getTier(getBlock(), MaxChemicalTankTier.class);
+        return Attribute.getTierNN(getBlock(), MaxChemicalTankTier.class);
     }
 
     @Override

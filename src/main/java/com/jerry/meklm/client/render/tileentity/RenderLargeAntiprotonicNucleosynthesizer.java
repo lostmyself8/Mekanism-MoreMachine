@@ -5,7 +5,6 @@ import com.jerry.meklm.common.tile.machine.TileEntityLargeAntiprotonicNucleosynt
 
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.EnumColor;
 import mekanism.client.model.ModelEnergyCore;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
@@ -25,8 +24,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntityRenderer<@NotNull TileEntityLargeAntiprotonicNucleosynthesizer, LargeAntiprotonicNucleosynthesizerRenderState> {
 
     private final ModelEnergyCore core;
