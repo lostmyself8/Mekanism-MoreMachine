@@ -1,6 +1,5 @@
 package com.jerry.datagen.common.recipe.builder;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.recipe.upgrade.MekanismShapedRecipe;
 import mekanism.common.registration.impl.BlockRegistryObject;
 
@@ -11,7 +10,9 @@ import net.minecraft.world.item.crafting.CraftingRecipe.CraftingBookInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 
-@NothingNullByDefault
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public class MoreMachineDataShapedRecipeBuilder extends ExtendedShapedRecipeBuilder {
 
     private MoreMachineDataShapedRecipeBuilder(Holder<Item> result, int count) {
