@@ -14,25 +14,24 @@
             {
               "function": "minecraft:copy_components",
               "include": [
-                "mekanism:ejector",
                 "mekanism:owner",
                 "mekanism:redstone_control",
                 "mekanism:security",
-                "mekanism:side_config",
-                "mekanism:sorting",
                 "mekanism:upgrades",
                 "mekanism:items",
-                "mekanism:chemicals"
+                "mekanism:fluids",
+                "mekanism:chemicals",
+                "mekanism:heat_data"
               ],
               "source": "block_entity"
             }
           ],
-          "name": "mekmm:elite_centrifuging_factory"
+          "name": "mekmm:solar_heat_generator"
         }
       ],
       "name": "main",
       "rolls": 1.0
     }
   ],
-  "random_sequence": "mekmm:blocks/elite_centrifuging_factory"
+  "random_sequence": "mekmm:blocks/solar_heat_generator"
 }
