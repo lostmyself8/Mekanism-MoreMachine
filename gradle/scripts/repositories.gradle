@@ -4,7 +4,6 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
-    maven { url = 'https://jitpack.io' }
     maven {//CrT
         url = 'https://maven.blamejared.com'
         name = 'BlameJared Maven'
