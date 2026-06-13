@@ -21,6 +21,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.jerry.meklg.client.model.ModelSolarHeatGenerator;
+import com.jerry.meklg.client.model.ModelSolarHeatGenerator.SolarHeatGeneratorRotationRenderState;
 import com.jerry.meklg.client.render.RenderSolarHeatGenerator.SolarHeatGeneratorRenderState;
 import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -45,14 +46,21 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
             poseStack.translate(0.5, 1.5, 0.5);
             MekanismRenderer.rotate(poseStack, solarHeatGenerator.getDirection(), 0, 180, 90, 270);
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-            model.renderWireFrame(poseStack, buffer, solarHeatGenerator.getAngle(), getPanelVisibility(solarHeatGenerator), isHighContrast);
+            model.renderWireFrame(poseStack, buffer, new SolarHeatGeneratorRotationRenderState(solarHeatGenerator.getAngle()), getPanelVisibility(solarHeatGenerator), isHighContrast);
             poseStack.popPose();
         }
     }
 
     @Override
-    protected String getProfilerSection() {
-        return MoreMachineProfilerConstants.SOLAR_HEAT_GENERATOR;
+    public void submit(SolarHeatGeneratorRenderState state, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (state.direction != null) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 1.5, 0.5);
+            MekanismRenderer.rotate(poseStack, state.direction, 0, 180, 90, 270);
+            poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+            model.collectBlock(state.rotation, poseStack, nodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.panels);
+            poseStack.popPose();
+        }
     }
 
     @Override
@@ -64,22 +72,15 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     public void extractRenderState(TileEntitySolarHeatGenerator tile, SolarHeatGeneratorRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@org.jspecify.annotations.Nullable CrumblingOverlay breakProgress) {
         super.extractRenderState(tile, state, partialTicks, cameraPosition, breakProgress);
         state.direction = tile.getDirection();
-        state.angle = tile.getAngle();
+        state.rotation.angle = tile.getAngle();
         for (int slot = 0; slot < state.panels.length; slot++) {
             state.panels[slot] = tile.shouldRenderPanel(slot);
         }
     }
 
     @Override
-    public void submit(SolarHeatGeneratorRenderState state, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (state.direction != null) {
-            poseStack.pushPose();
-            poseStack.translate(0.5, 1.5, 0.5);
-            MekanismRenderer.rotate(poseStack, state.direction, 0, 180, 90, 270);
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-            model.collectBlock(poseStack, nodeCollector, state.angle, state.lightCoords, OverlayTexture.NO_OVERLAY, state.panels);
-            poseStack.popPose();
-        }
+    protected String getProfilerSection() {
+        return MoreMachineProfilerConstants.SOLAR_HEAT_GENERATOR;
     }
 
     @Override
@@ -94,7 +95,7 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     }
 
     private boolean[] getPanelVisibility(TileEntitySolarHeatGenerator tile) {
-        boolean[] panels = new boolean[ModelSolarHeatGenerator.PANEL_COUNT];
+        boolean[] panels = new boolean[TileEntitySolarHeatGenerator.SLOT_COUNT];
         for (int slot = 0; slot < panels.length; slot++) {
             panels[slot] = tile.shouldRenderPanel(slot);
         }
@@ -103,8 +104,8 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
 
     public static class SolarHeatGeneratorRenderState extends BlockEntityRenderState {
 
-        public final boolean[] panels = new boolean[ModelSolarHeatGenerator.PANEL_COUNT];
-        public float angle;
+        public final boolean[] panels = new boolean[TileEntitySolarHeatGenerator.SLOT_COUNT];
+        public SolarHeatGeneratorRotationRenderState rotation = new SolarHeatGeneratorRotationRenderState(0);
         @Nullable
         public Direction direction;
     }

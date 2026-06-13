@@ -1,5 +1,7 @@
 package com.jerry.meklg.client.model;
 
+import com.jerry.meklg.client.model.ModelSolarHeatGenerator.SolarHeatGeneratorRotationRenderState;
+import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.client.model.MekanismJavaModel;
@@ -24,12 +26,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ModelSolarHeatGenerator extends MekanismJavaModel<Void> {
+public class ModelSolarHeatGenerator extends MekanismJavaModel<SolarHeatGeneratorRotationRenderState> {
 
     public static final ModelLayerLocation SOLAR_HEAT_GENERATOR_LAYER = new ModelLayerLocation(Mekmm.rl("solar_heat_generator"), "main");
     private static final Identifier SOLAR_HEAT_GENERATOR_TEXTURE = Mekmm.rl("render/solar_heat_generator.png");
 
-    public static final int PANEL_COUNT = 4;
     private static final boolean[] ALL_PANELS = { true, true, true, true };
 
     private static final ModelPartData ports_1 = new ModelPartData("ports_1", CubeListBuilder.create()
@@ -290,7 +291,7 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<Void> {
     private final RenderType RENDER_TYPE = RenderTypes.entitySolid(SOLAR_HEAT_GENERATOR_TEXTURE);
     private final List<ModelPart> parts;
     private final ModelPart top;
-    private final ModelPart[] panels = new ModelPart[PANEL_COUNT];
+    private final ModelPart[] panels = new ModelPart[TileEntitySolarHeatGenerator.SLOT_COUNT];
 
     public ModelSolarHeatGenerator(EntityModelSet entityModelSet) {
         super(entityModelSet.bakeLayer(SOLAR_HEAT_GENERATOR_LAYER));
@@ -305,27 +306,31 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<Void> {
     }
 
     @Override
-    public void collect(Void state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
-        collectItem(matrix, submitNodeCollector, light, overlayLight, hasEffect);
+    public void collect(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
+        collectItem(state, matrix, submitNodeCollector, light, overlayLight, hasEffect);
     }
 
-    public void collectItem(@NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
+    public void collectItem(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
         setPanelVisibility(ALL_PANELS);
-        top.setRotation(0F, 0F, 0F);
+        setupAnim(state);
         collectParts(parts, matrix, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, hasEffect);
     }
 
-    public void collectBlock(@NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, double angle, int light, int overlayLight, boolean[] renderPanels) {
+    public void collectBlock(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean[] renderPanels) {
         setPanelVisibility(renderPanels);
-        top.setRotation(getAbsoluteRotation(angle), 0F, 0F);
+        setupAnim(state);
         collectParts(parts, matrix, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, false);
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle, boolean[] renderPanels, boolean isHighContrast) {
+    @Override
+    public void setupAnim(SolarHeatGeneratorRotationRenderState state) {
+        super.setupAnim(state);
+        top.setRotation(getAbsoluteRotation(state.angle), 0F, 0F);
+    }
+
+    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, SolarHeatGeneratorRotationRenderState state, boolean[] renderPanels, boolean isHighContrast) {
         setPanelVisibility(renderPanels);
-
-        top.setRotation(getAbsoluteRotation(angle), 0F, 0F);
-
+        setupAnim(state);
         renderPartsAsWireFrame(parts, matrix, vertexBuilder, isHighContrast);
     }
 
@@ -337,5 +342,14 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<Void> {
 
     private float getAbsoluteRotation(double angle) {
         return (float) ((angle % 360) * Mth.DEG_TO_RAD);
+    }
+
+    public static class SolarHeatGeneratorRotationRenderState {
+
+        public float angle;
+
+        public SolarHeatGeneratorRotationRenderState(float angle) {
+            this.angle = angle;
+        }
     }
 }

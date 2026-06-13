@@ -4,9 +4,10 @@ import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
 import mekanism.client.gui.element.GuiSideHolder;
-import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiChemicalGauge;
+import mekanism.client.gui.element.gauge.GuiEnergyGauge;
+import mekanism.client.gui.element.gauge.GuiEnergyGauge.IEnergyInfoHandler;
 import mekanism.client.gui.element.gauge.GuiFluidGauge;
 import mekanism.client.gui.element.tab.GuiEnergyTab;
 import mekanism.client.gui.element.tab.GuiHeatTab;
@@ -27,12 +28,15 @@ import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GuiSolarHeatGenerator extends GuiMekanismTile<TileEntitySolarHeatGenerator, MekanismTileContainer<TileEntitySolarHeatGenerator>> {
 
     public GuiSolarHeatGenerator(MekanismTileContainer<TileEntitySolarHeatGenerator> container, Inventory inv, Component title) {
-        super(container, inv, title);
+        super(container, inv, title, DEFAULT_IMAGE_WIDTH + 28, DEFAULT_IMAGE_HEIGHT + 3);
         dynamicSlots = true;
+        inventoryLabelX += 14;
+        inventoryLabelY += 2;
     }
 
     @Override
@@ -48,7 +52,18 @@ public class GuiSolarHeatGenerator extends GuiMekanismTile<TileEntitySolarHeatGe
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(
                 GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(tile.getProductionRate())),
                 MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())))));
-        addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 179, 14));
+        addRenderableWidget(new GuiEnergyGauge(new IEnergyInfoHandler() {
+
+            @Override
+            public long getEnergy() {
+                return Objects.requireNonNull(tile.getEnergyContainer()).getAmountAsLong();
+            }
+
+            @Override
+            public long getMaxEnergy() {
+                return Objects.requireNonNull(tile.getEnergyContainer()).getCapacityAsLong();
+            }
+        }, GaugeType.SMALL_MED, this, 179, 14, 18, 40));
         addRenderableWidget(new GuiHeatTab(this, () -> {
             Component temp = MekanismUtils.getTemperatureDisplay(tile.getTotalTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true);
             Component transfer = MekanismUtils.getTemperatureDisplay(tile.getLastTransferLoss(), UnitDisplayUtils.TemperatureUnit.KELVIN, false);

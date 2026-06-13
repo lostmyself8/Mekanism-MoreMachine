@@ -85,7 +85,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     /**
      * 放置反射镜的槽位数量
      */
-    private static final int SLOT_COUNT = 4;
+    public static final int SLOT_COUNT = 4;
     private static final int SOLAR_CLEAR_RADIUS = 2;
     private static final int SOLAR_CHECK_INTERVAL = 20;
     private static final double NORTH_SOUTH_HEAT_TARGET = 900;
