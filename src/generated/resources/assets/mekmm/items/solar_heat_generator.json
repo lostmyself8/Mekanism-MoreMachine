@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "mekmm:item/solar_heat_generator",
+    "model": {
+      "type": "mekmm:solar_heat_generator"
+    }
+  }
+}
