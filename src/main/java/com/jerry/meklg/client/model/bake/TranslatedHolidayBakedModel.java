@@ -1,13 +1,13 @@
 package com.jerry.meklg.client.model.bake;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.lib.QuadTransformation;
 
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Supplier;
 
-@NothingNullByDefault
+@NullMarked
 abstract class TranslatedHolidayBakedModel {
 
     private static final QuadTransformation BASE_TRANSFORM = QuadTransformation.translate(0, 1, 0);

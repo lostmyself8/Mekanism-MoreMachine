@@ -38,7 +38,6 @@ import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookup
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
 import mekanism.common.registries.MekanismFluids;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.BlockPos;
@@ -105,7 +104,6 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         configComponent.setupItemIOConfig(inputItemSlots, outputItemSlots, energySlot, false);
         configComponent.setupOutputConfig(TransmissionType.FLUID, fluidTank);
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.FLUID);
     }
 

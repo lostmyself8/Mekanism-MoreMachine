@@ -3,17 +3,17 @@ package com.jerry.mekmm.common.inventory.slot;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 
 import mekanism.api.IContentsListener;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 
 import net.minecraft.world.item.Item;
 
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineFactoryInputInventorySlot extends InputInventorySlot {
 
     public static MoreMachineFactoryInputInventorySlot create(TileEntityMoreMachineFactory<?> factory, int process, IInventorySlot outputSlot, @Nullable IContentsListener listener,

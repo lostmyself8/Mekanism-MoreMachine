@@ -36,7 +36,7 @@ public class MMRecipeViewerUtils {
         // CreativeModeTabs.searchTab().getDisplayItems(). The bigger issue is how to come up with unique synthetic
         // names for the recipes as EMI requires they be unique. (Maybe index them?)
         for (Map.Entry<ResourceKey<Item>, Item> entry : BuiltInRegistries.ITEM.entrySet()) {
-            MMBasicItemStackChemicalToItemStackRecipe recipe = TileEntityReplicator.getRecipe(entry.getValue().getDefaultInstance(), MoreMachineChemicals.UU_MATTER.asStack(1));
+            MMBasicItemStackChemicalToItemStackRecipe recipe = TileEntityReplicator.getRecipe(entry.getValue().getDefaultInstance(), MoreMachineChemicals.UU_MATTER.asResource().toStack(1));
             if (recipe != null) {
                 replicator.put(RegistryUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
@@ -47,7 +47,7 @@ public class MMRecipeViewerUtils {
     public static Map<Identifier, BasicFluidChemicalToFluidRecipe> getFluidReplicatorRecipes() {
         Map<Identifier, BasicFluidChemicalToFluidRecipe> replicator = new HashMap<>();
         for (Map.Entry<ResourceKey<Fluid>, Fluid> entry : BuiltInRegistries.FLUID.entrySet()) {
-            BasicFluidChemicalToFluidRecipe recipe = TileEntityFluidReplicator.getRecipe(new FluidStack(entry.getValue(), 1), MoreMachineChemicals.UU_MATTER.asStack(1));
+            BasicFluidChemicalToFluidRecipe recipe = TileEntityFluidReplicator.getRecipe(new FluidStack(entry.getValue(), 1), MoreMachineChemicals.UU_MATTER.asResource().toStack(1));
             if (recipe != null) {
                 replicator.put(RegistryUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }
@@ -59,7 +59,7 @@ public class MMRecipeViewerUtils {
         Map<Identifier, MMBasicChemicalChemicalToChemicalRecipe> replicator = new HashMap<>();
         for (Map.Entry<ResourceKey<Chemical>, Chemical> entry : MekanismAPI.CHEMICAL_REGISTRY.entrySet()) {
             // mek将很多方法弃用了，所以只能使用这个办法。
-            MMBasicChemicalChemicalToChemicalRecipe recipe = TileEntityChemicalReplicator.getRecipe(new ChemicalStack(MekanismAPI.CHEMICAL_REGISTRY.wrapAsHolder(entry.getValue()), 1), MoreMachineChemicals.UU_MATTER.asStack(1));
+            MMBasicChemicalChemicalToChemicalRecipe recipe = TileEntityChemicalReplicator.getRecipe(new ChemicalStack(MekanismAPI.CHEMICAL_REGISTRY.wrapAsHolder(entry.getValue()), 1), MoreMachineChemicals.UU_MATTER.asResource().toStack(1));
             if (recipe != null) {
                 replicator.put(RegistryUtils.synthetic(entry.getKey().identifier(), "replicator", Mekmm.MOD_ID), recipe);
             }

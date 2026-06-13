@@ -13,11 +13,11 @@ import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
 import mekanism.common.Mekanism;
-import mekanism.common.attachments.containers.type.ContainerType;
-import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.component.containers.type.ContainerType;
+import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
@@ -42,7 +42,6 @@ import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import mekanism.common.upgrade.ChemicalTankUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.ChemicalUtils;
-import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.NBTUtils;
 import mekanism.common.util.ResourceUtils;
 
@@ -92,10 +91,9 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     ChemicalInventorySlot fillSlot;
 
     public TileEntityLargeChemicalTank(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
-        super(blockProvider, pos, state);
+        super(blockProvider, pos, state, tile -> new TileComponentEjector(tile, () -> MathUtils.clampToInt(((TileEntityLargeChemicalTank<?>) tile).tier.getOutput())));
         configComponent.setupIOConfig(TransmissionType.ITEM, drainSlot, fillSlot, true).setCanEject(false);
         setupIOConfig(TransmissionType.CHEMICAL, getChemicalTank(), RelativeSide.TOP);
-        ejectorComponent = new TileComponentEjector(this, () -> MathUtils.clampToInt(tier.getOutput()));
         ejectorComponent.setOutputData(configComponent, TransmissionType.CHEMICAL)
                 .setCanEject(type -> canFunction() && dumping != GasMode.DUMPING);
     }
@@ -112,7 +110,7 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     public @Nullable IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener) {
         // 化学品下进上出
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.TOP);
-        builder.addTank(chemicalTank = LargeChemicalTankChemicalTank.create(tier, MekanismUtils.getGameTimeSupplier(this), listener), RelativeSide.TOP, RelativeSide.BACK);
+        builder.addTank(chemicalTank = LargeChemicalTankChemicalTank.create(tier, this::getGameTime, listener), RelativeSide.TOP, RelativeSide.BACK);
         return builder.build();
     }
 
@@ -135,8 +133,8 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         drainSlot.drainTankIntoSlot(null);
         fillSlot.fillTankFromSlot(null);
         if (dumping != GasMode.IDLE) {

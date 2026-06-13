@@ -13,7 +13,7 @@
 // import com.jerry.mekmm.Mekmm;
 // import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 //
-// import mekanism.api.annotations.NothingNullByDefault;
+// import org.jspecify.annotations.NullMarked;
 // import mekanism.common.block.attribute.Attribute;
 // import mekanism.common.registration.impl.BlockRegistryObject;
 // import mekanism.common.resource.PrimaryResource;
@@ -31,7 +31,7 @@
 // import fr.iglee42.evolvedmekanism.registries.EMTags;
 // import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 //
-// @NothingNullByDefault
+// @NullMarked
 // public class EMAdvancedFactoryRecipeProvider extends CompatRecipeProvider {
 //
 // public EMAdvancedFactoryRecipeProvider(String modId) {

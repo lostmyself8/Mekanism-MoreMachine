@@ -45,7 +45,6 @@ import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.ITripleRecipeLookupHandler.ItemFluidChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.ItemFluidChemical;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
@@ -147,7 +146,6 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
             config.addSlotInfo(DataType.INPUT_OUTPUT, new ChemicalSlotInfo(true, true, List.of(inputChemicalTank, outputChemicalTank)));
         }
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)
                 .setCanTankEject(tank -> tank != inputChemicalTank);
 
@@ -376,7 +374,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
             // Note: we handle clearing radioactive contents later in drop calculation due to when things are written to
             // NBT
             // 点击按钮后只需要释放输入储罐的辐射
-            IRadiationManager.INSTANCE.dumpRadiation(getWorldNN(), worldPosition, inputChemicalTank.resource(), inputChemicalTank.amountAsLong());
+            IRadiationManager.INSTANCE.dumpRadiation(level, worldPosition, inputChemicalTank.resource(), inputChemicalTank.amountAsLong());
         }
         inputChemicalTank.setContents(ChemicalResource.EMPTY, 0, null);
     }

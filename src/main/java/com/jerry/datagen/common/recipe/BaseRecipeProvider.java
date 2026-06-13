@@ -1,6 +1,5 @@
 package com.jerry.datagen.common.recipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.resource.PrimaryResource;
 import mekanism.common.resource.ResourceType;
 import mekanism.common.tags.MekanismTags;
@@ -17,9 +16,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.DifferenceIngredient;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.*;
 
-@NothingNullByDefault
+@NullMarked
 public abstract class BaseRecipeProvider extends RecipeProvider {
 
     protected BaseRecipeProvider(RecipeOutput output, HolderLookup.Provider registries) {

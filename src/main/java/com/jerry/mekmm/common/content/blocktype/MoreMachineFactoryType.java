@@ -5,15 +5,16 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFa
 import com.jerry.mekmm.common.registries.MoreMachineBlockTypes;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.IHasTranslationKey;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.Locale;
 import java.util.function.Supplier;
 
-@NothingNullByDefault
+@NullMarked
 public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTranslationKey {
 
     RECYCLING("recycling", MoreMachineLang.RECYCLING, () -> MoreMachineBlockTypes.RECYCLER, () -> MoreMachineBlocks.RECYCLER),

@@ -1,13 +1,12 @@
 package com.jerry.datagen.common.loot.table;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.Mekanism;
-import mekanism.common.attachments.containers.type.ContainerType;
-import mekanism.common.attachments.containers.type.IContainerType;
-import mekanism.common.attachments.containers.type.IListContainerType;
 import mekanism.common.block.BlockPersonalStorage;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.block.attribute.Attributes.AttributeInventory;
+import mekanism.common.component.containers.type.ContainerType;
+import mekanism.common.component.containers.type.IContainerType;
+import mekanism.common.component.containers.type.IListContainerType;
 import mekanism.common.lib.frequency.FrequencyType;
 import mekanism.common.lib.frequency.IFrequencyHandler;
 import mekanism.common.lib.frequency.IFrequencyItem;
@@ -53,6 +52,7 @@ import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 import java.util.function.Function;
@@ -317,7 +317,7 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
                         .otherwise(entry)));
     }
 
-    @NothingNullByDefault
+    @NullMarked
     public static class DelayedLootItemBuilder implements ConditionUserBuilder<@NotNull DelayedLootItemBuilder>, FunctionUserBuilder<@NotNull DelayedLootItemBuilder> {
 
         private final List<LootItemFunction.Builder> functions = new ArrayList<>();

@@ -1,6 +1,5 @@
 package com.jerry.mekmm.api.recipes.cache;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.*;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipeHelper;
@@ -12,6 +11,7 @@ import net.minecraft.core.TypedInstance;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.function.*;
@@ -19,7 +19,7 @@ import java.util.function.*;
 /**
  * Base class to help implement handling of recipes with two inputs.
  */
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineTwoInputCachedRecipe<HOLDER_A, INPUT_A extends TypedInstance<HOLDER_A>, HOLDER_B, INPUT_B extends TypedInstance<HOLDER_B>, OUTPUT, RECIPE extends MekanismRecipe<?> & BiPredicate<INPUT_A, INPUT_B>> extends CachedRecipe<RECIPE> {
 
     protected final IInputHandler<HOLDER_A, INPUT_A> inputHandler;

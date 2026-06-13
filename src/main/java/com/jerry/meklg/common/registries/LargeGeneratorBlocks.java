@@ -5,13 +5,13 @@ import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.datamaps.IMekanismDataMapTypes;
-import mekanism.common.attachments.containers.chemical.ChemicalTanksBuilder;
-import mekanism.common.attachments.containers.fluid.FluidTanksBuilder;
-import mekanism.common.attachments.containers.heat.HeatCapacitorsBuilder;
-import mekanism.common.attachments.containers.item.ItemSlotsBuilder;
-import mekanism.common.attachments.containers.type.ContainerType;
 import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
+import mekanism.common.component.containers.chemical.ChemicalTanksBuilder;
+import mekanism.common.component.containers.fluid.FluidTanksBuilder;
+import mekanism.common.component.containers.heat.HeatCapacitorsBuilder;
+import mekanism.common.component.containers.item.ItemSlotsBuilder;
+import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.registration.impl.BlockDeferredRegister;
 import mekanism.common.registration.impl.BlockRegistryObject;

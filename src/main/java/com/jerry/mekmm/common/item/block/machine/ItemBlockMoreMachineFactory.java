@@ -5,10 +5,10 @@ import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 
 import mekanism.api.text.EnumColor;
 import mekanism.common.MekanismLang;
-import mekanism.common.attachments.component.AttachedEjector;
-import mekanism.common.attachments.component.AttachedSideConfig;
 import mekanism.common.block.attribute.Attribute;
 import mekanism.common.block.prefab.BlockTile;
+import mekanism.common.component.component.AttachedEjector;
+import mekanism.common.component.component.AttachedSideConfig;
 import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tier.FactoryTier;
@@ -45,7 +45,7 @@ public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?
 
     @Override
     public FactoryTier getTier() {
-        return Attribute.getTier(getBlock(), FactoryTier.class);
+        return Attribute.getTierNN(getBlock(), FactoryTier.class);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.jerry.mekmm.api.recipes.basic;
 
 import com.jerry.mekmm.api.recipes.FluidChemicalToFluidRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
 import mekanism.api.recipes.ingredients.FluidStackIngredient;
@@ -11,12 +10,13 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import org.jetbrains.annotations.Contract;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@NothingNullByDefault
+@NullMarked
 public abstract class BasicFluidChemicalToFluidRecipe extends FluidChemicalToFluidRecipe {
 
     protected final FluidStackIngredient fluidInput;

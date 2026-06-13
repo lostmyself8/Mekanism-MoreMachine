@@ -5,16 +5,17 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryBlockTypes;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.IHasTranslationKey.IHasEnumNameTranslationKey;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismBlocks;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.Locale;
 import java.util.function.Supplier;
 
-@NothingNullByDefault
+@NullMarked
 public enum AdvancedFactoryType implements IHasEnumNameTranslationKey {
 
     OXIDIZING("oxidizing", MoreMachineLang.OXIDIZING, () -> AdvancedFactoryBlockTypes.CHEMICAL_OXIDIZER, () -> MekanismBlocks.CHEMICAL_OXIDIZER),

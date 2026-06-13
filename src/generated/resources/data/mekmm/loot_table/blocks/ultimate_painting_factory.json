@@ -25,8 +25,7 @@
                 "mekanism:security",
                 "mekanism:side_config",
                 "mekanism:sorting",
-                "mekanism:upgrades",
-                "mekanism:energy"
+                "mekanism:upgrades"
               ],
               "source": "block_entity"
             }

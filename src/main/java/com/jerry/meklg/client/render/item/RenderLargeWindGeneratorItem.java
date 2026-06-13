@@ -1,7 +1,6 @@
 package com.jerry.meklg.client.render.item;
 
 import mekanism.api.MekanismAPITags;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.MekanismRenderer;
 
 import net.minecraft.client.Minecraft;
@@ -16,11 +15,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@NothingNullByDefault
+@NullMarked
 public class RenderLargeWindGeneratorItem implements SpecialModelRenderer<LargeWindGeneratorRotationRenderState> {
 
     private static final int SPEED = 16;

@@ -1,6 +1,5 @@
 package com.jerry.mekmm.api.recipes.basic;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.ItemStackChemicalToItemStackRecipe;
@@ -15,12 +14,13 @@ import net.minecraft.world.item.ItemStackTemplate;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@NothingNullByDefault
+@NullMarked
 public abstract class MMBasicItemStackChemicalToItemStackRecipe extends ItemStackChemicalToItemStackRecipe implements IBasicItemStackOutput {
 
     protected final ItemStackIngredient itemInput;

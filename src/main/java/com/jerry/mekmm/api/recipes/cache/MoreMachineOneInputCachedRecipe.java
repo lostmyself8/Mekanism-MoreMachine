@@ -2,7 +2,6 @@ package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipeHelper;
@@ -17,6 +16,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 /**
  * Base class to help implement handling of recipes with one input.
  */
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineOneInputCachedRecipe<HOLDER, INPUT extends TypedInstance<HOLDER>, OUTPUT, RECIPE extends MekanismRecipe<?> & Predicate<INPUT>> extends CachedRecipe<RECIPE> {
 
     private final IInputHandler<HOLDER, INPUT> inputHandler;

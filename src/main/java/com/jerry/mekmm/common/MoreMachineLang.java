@@ -2,12 +2,13 @@ package com.jerry.mekmm.common;
 
 import com.jerry.mekmm.Mekmm;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.text.ILangEntry;
 
 import net.minecraft.util.Util;
 
-@NothingNullByDefault
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public enum MoreMachineLang implements ILangEntry {
 
     // Gui lang strings

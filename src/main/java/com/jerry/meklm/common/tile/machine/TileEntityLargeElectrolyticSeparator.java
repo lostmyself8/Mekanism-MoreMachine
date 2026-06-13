@@ -25,8 +25,6 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.api.recipes.vanilla_input.SingleFluidRecipeInput;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
-import mekanism.common.attachments.containers.type.ContainerType;
-import mekanism.common.attachments.containers.type.IContainerType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.FixedUsageEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
@@ -34,6 +32,8 @@ import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
 import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
+import mekanism.common.component.containers.type.ContainerType;
+import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
@@ -55,7 +55,6 @@ import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.FluidRecipeLooku
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tile.TileEntityChemicalTank.GasMode;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
@@ -194,7 +193,6 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
             energyConfig.addSlotInfo(DataType.INPUT, new EnergySlotInfo(true, false, energyContainer));
         }
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL)
                 .setCanTankEject(tank -> {
                     if (tank == leftTank) {
@@ -255,8 +253,8 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         fluidSlot.fillTankFromSlot(null);
 
@@ -355,7 +353,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     public void recalculateUpgrades(Upgrade upgrade) {
         super.recalculateUpgrades(upgrade);
         if (upgrade == Upgrade.SPEED) {
-            int upgradeCount = upgradeComponent.getUpgrades(Upgrade.SPEED);
+            int upgradeCount = getUpgrades(Upgrade.SPEED);
             double speed = Math.pow(2, upgradeCount);
             baseOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
             baselineMaxOperations = (int) speed;

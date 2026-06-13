@@ -4,7 +4,6 @@ import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.functions.ConstantPredicates;
@@ -15,11 +14,12 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.function.LongSupplier;
 
-@NothingNullByDefault
+@NullMarked
 public class LargeChemicalTankChemicalTank<TIER extends ILargeChemicalTankTier> extends BasicChemicalTank {
 
     public static <TIER extends ILargeChemicalTankTier> LargeChemicalTankChemicalTank<TIER> create(TIER tier, LongSupplier gameTimeSupplier, @Nullable IContentsListener listener) {

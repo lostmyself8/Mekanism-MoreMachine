@@ -13,7 +13,6 @@ import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineItems;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismBlocks;
 import mekanism.common.registries.MekanismItems;
@@ -33,11 +32,12 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 import java.util.function.BiFunction;
 
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineRecipeProvider extends BaseRecipeProvider {
 
     static final char DIAMOND_CHAR = 'D';

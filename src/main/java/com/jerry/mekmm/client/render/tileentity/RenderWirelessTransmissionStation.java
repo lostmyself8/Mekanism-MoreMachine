@@ -6,7 +6,6 @@ import com.jerry.mekmm.common.attachments.component.ConnectionConfig;
 import com.jerry.mekmm.common.item.ItemConnector;
 import com.jerry.mekmm.common.tile.machine.TileEntityWirelessTransmissionStation;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.common.lib.transmitter.TransmissionType;
 
@@ -27,11 +26,12 @@ import net.minecraft.world.phys.Vec3;
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
-@NothingNullByDefault
+@NullMarked
 public class RenderWirelessTransmissionStation extends MekanismTileEntityRenderer<@NotNull TileEntityWirelessTransmissionStation, WirelessTransmissionStationRenderState> {
 
     public RenderWirelessTransmissionStation(Context context) {

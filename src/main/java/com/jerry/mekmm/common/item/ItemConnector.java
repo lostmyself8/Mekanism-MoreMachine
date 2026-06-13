@@ -10,7 +10,6 @@ import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IIncrementalEnum;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.radial.IRadialDataHelper;
 import mekanism.api.radial.RadialData;
 import mekanism.api.radial.mode.IRadialMode;
@@ -57,6 +56,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Locale;
@@ -230,7 +230,7 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
         }
     }
 
-    @NothingNullByDefault
+    @NullMarked
     public enum ConnectorMode implements IIncrementalEnum<ConnectorMode>, IHasEnumNameTextComponent, IRadialMode, StringRepresentable {
 
         ITEMS(MekanismLang.CONFIGURATOR_CONFIGURATE, TransmissionType.ITEM, EnumColor.GRAY, null),

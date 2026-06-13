@@ -3,7 +3,6 @@ package com.jerry.mekmm.api.recipes.outputs;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe.ChanceOutput;
 
 import mekanism.api.AutomationType;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.outputs.IOutputHandler;
@@ -13,9 +12,11 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
+import org.jspecify.annotations.NullMarked;
+
 import java.util.Objects;
 
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineOutputHelper {
 
     private MoreMachineOutputHelper() {}

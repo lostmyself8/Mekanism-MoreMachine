@@ -3,7 +3,6 @@ package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.common.tile.machine.TileEntityPlantingStation;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.client.gui.element.bar.GuiBar;
 import mekanism.client.gui.element.bar.GuiEmptyBar;
@@ -27,10 +26,11 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@NothingNullByDefault
+@NullMarked
 public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe> {
 
     private final GuiBar<?> chemicalInput;

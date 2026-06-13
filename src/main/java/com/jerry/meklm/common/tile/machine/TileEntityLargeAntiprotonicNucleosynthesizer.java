@@ -53,7 +53,6 @@ import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLoo
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.ItemChemical;
 import mekanism.common.recipe.lookup.monitor.NucleosynthesizerRecipeCacheLookupMonitor;
 import mekanism.common.recipe.lookup.monitor.RecipeCacheLookupMonitor;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.interfaces.IBoundingBlock;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 import mekanism.common.util.WorldUtils;
@@ -121,7 +120,6 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
         configComponent.setupInputConfig(TransmissionType.CHEMICAL, gasTank);
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
 
         itemInputHandler = InputHelper.getInputHandler(inputSlot, RecipeError.NOT_ENOUGH_INPUT);
@@ -181,8 +179,8 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         gasInputSlot.fillTankOrConvert(null);
         clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(energyContainer);
@@ -228,7 +226,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     public void recalculateUpgrades(Upgrade upgrade) {
         super.recalculateUpgrades(upgrade);
         if (upgrade == Upgrade.SPEED) {
-            int upgradeCount = upgradeComponent.getUpgrades(Upgrade.SPEED);
+            int upgradeCount = getUpgrades(Upgrade.SPEED);
             baselineMaxOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
         }
     }

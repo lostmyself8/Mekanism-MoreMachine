@@ -10,14 +10,20 @@ dependencies {
 
     // Mekanism (jarjar embedded)
     jarJar(forge.mekanism)
-    jarJar(variantOf(forge.mekanism) { classifier("additions") })
-    jarJar(variantOf(forge.mekanism) { classifier("generators") })
-    jarJar(variantOf(forge.mekanism) { classifier("tools") })
+    jarJar(forge.meka)
+    jarJar(forge.mekg)
+    jarJar(forge.mekt)
+//    jarJar(variantOf(forge.mekanism) { classifier("additions") })
+//    jarJar(variantOf(forge.mekanism) { classifier("generators") })
+//    jarJar(variantOf(forge.mekanism) { classifier("tools") })
 
     compileOnly(forge.mekanism)
-    compileOnly(variantOf(forge.mekanism) { classifier("additions") })
-    compileOnly(variantOf(forge.mekanism) { classifier("generators") })
-    compileOnly(variantOf(forge.mekanism) { classifier("tools") })
+    compileOnly(forge.meka)
+    compileOnly(forge.mekg)
+    compileOnly(forge.mekt)
+//    compileOnly(variantOf(forge.mekanism) { classifier("additions") })
+//    compileOnly(variantOf(forge.mekanism) { classifier("generators") })
+//    compileOnly(variantOf(forge.mekanism) { classifier("tools") })
 
 //    compileOnly(forge.mekanismcovers)
 //    compileOnly(forge.evolvedmekanism)
@@ -53,9 +59,12 @@ dependencies {
 
     // Mekanism
     localRuntime(forge.mekanism)
-    localRuntime(variantOf(forge.mekanism) { classifier("additions") })
-    localRuntime(variantOf(forge.mekanism) { classifier("generators") })
-    localRuntime(variantOf(forge.mekanism) { classifier("tools") })
+    localRuntime(forge.meka)
+    localRuntime(forge.mekg)
+    localRuntime(forge.mekt)
+//    localRuntime(variantOf(forge.mekanism) { classifier("additions") })
+//    localRuntime(variantOf(forge.mekanism) { classifier("generators") })
+//    localRuntime(variantOf(forge.mekanism) { classifier("tools") })
 
 //    localRuntime(forge.mekanismcovers)
 //    localRuntime(forge.igleelibrary)

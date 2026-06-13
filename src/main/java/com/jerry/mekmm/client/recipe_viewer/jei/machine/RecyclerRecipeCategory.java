@@ -2,7 +2,6 @@ package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.gui.element.GuiUpArrow;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.progress.ProgressType;
@@ -23,8 +22,9 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe> {
 
     private final GuiSlot input;

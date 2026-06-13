@@ -2,7 +2,6 @@ package com.jerry.meklg.client.render;
 
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.render.tileentity.IWireFrameRenderer;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
@@ -28,8 +27,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEntitySolarHeatGenerator, SolarHeatGeneratorRenderState> implements IWireFrameRenderer {
 
     private final ModelSolarHeatGenerator model;

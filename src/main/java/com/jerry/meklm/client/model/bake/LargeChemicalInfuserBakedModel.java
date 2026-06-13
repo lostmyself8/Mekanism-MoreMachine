@@ -2,9 +2,9 @@ package com.jerry.meklm.client.model.bake;
 
 import com.jerry.meklm.common.base.holiday.holiday_info.ChemicalInfuserHolidayInfo;
 
-import mekanism.api.annotations.NothingNullByDefault;
+import org.jspecify.annotations.NullMarked;
 
-@NothingNullByDefault
+@NullMarked
 public class LargeChemicalInfuserBakedModel extends TranslatedHolidayBakedModel {
 
     public LargeChemicalInfuserBakedModel(Object original) {

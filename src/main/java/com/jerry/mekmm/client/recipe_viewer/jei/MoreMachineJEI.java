@@ -11,7 +11,6 @@ import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineChemicals;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.recipe_viewer.jei.JeiGuiElementHandler;
 import mekanism.client.recipe_viewer.jei.MekanismJEI;
@@ -29,9 +28,10 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import org.jspecify.annotations.NullMarked;
 
 @JeiPlugin
-@NothingNullByDefault
+@NullMarked
 public class MoreMachineJEI implements IModPlugin {
 
     @Override
@@ -82,7 +82,7 @@ public class MoreMachineJEI implements IModPlugin {
         RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.LATHE, MoreMachineRecipeType.LATHING);
         RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.ROLLING_MILL, MoreMachineRecipeType.ROLLING_MILL);
 
-        registry.addIngredientInfo(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS.asStack(FluidType.BUCKET_VOLUME), MekanismJEI.TYPE_CHEMICAL,
+        registry.addIngredientInfo(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS.asResource().toStack(FluidType.BUCKET_VOLUME), MekanismJEI.TYPE_CHEMICAL,
                 MoreMachineLang.RECIPE_VIEWER_INFO_UNSTABLE_DIMENSIONAL_GAS.translate(MoreMachineConfig.general.gasCollectAmount.get()));
     }
 

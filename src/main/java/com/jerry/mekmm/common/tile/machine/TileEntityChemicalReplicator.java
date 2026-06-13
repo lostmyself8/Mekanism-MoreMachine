@@ -17,6 +17,7 @@ import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
+import mekanism.api.chemical.ChemicalStackTemplate;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.cache.CachedRecipe;
@@ -42,7 +43,6 @@ import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
@@ -101,7 +101,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
 
     private final IInputHandler<Chemical, @NotNull ChemicalStack> firstInputHandler;
     private final IInputHandler<Chemical, @NotNull ChemicalStack> secondaryInputHandler;
-    private final IOutputHandler<@NotNull ChemicalStack> outputHandler;
+    private final IOutputHandler<@NotNull ChemicalStackTemplate> outputHandler;
     // 气罐槽
     // UU物质
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getUUSlot", docPlaceholder = "uu slot")
@@ -125,7 +125,6 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
         }
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
 
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.CHEMICAL, TransmissionType.ITEM)
                 .setCanTankEject(tank -> tank == outputTank);
 
@@ -178,8 +177,8 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         uuSlot.fillTankOrConvert(null);
         inputSlot.fillTankOrConvert(null);
@@ -238,7 +237,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
             return new ChemicalReplicatorIRecipeSingle(
                     IngredientCreatorAccess.chemicalStack().fromHolder(chemicalHolder, Math.toIntExact(recipe.inputAmount())),
                     IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, Math.toIntExact(recipe.UUAmount())),
-                    new ChemicalStack(chemicalHolder, Math.toIntExact(recipe.outputAmount())));
+                    new ChemicalStackTemplate(chemicalHolder, Math.toIntExact(recipe.outputAmount())));
         }
         return null;
     }

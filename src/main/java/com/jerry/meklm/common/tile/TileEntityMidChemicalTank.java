@@ -29,7 +29,7 @@ public class TileEntityMidChemicalTank extends TileEntityLargeChemicalTank<MidCh
     @Override
     protected void presetVariables() {
         super.presetVariables();
-        tier = Attribute.getTier(getBlockHolder(), MidChemicalTankTier.class);
+        tier = Attribute.getTierNN(getBlockHolder(), MidChemicalTankTier.class);
     }
 
     @Override

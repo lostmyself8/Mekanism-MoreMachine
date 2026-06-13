@@ -3,7 +3,7 @@ name: Latest Build
 on:
   push:
     branches: ['26.1', '1.21.1', '1.20.1']
-    paths: ['src/**', '**/*.gradle', 'gradle.properties', 'gradle/libs/**']
+    paths: ['src/**', '**/*.gradle', 'gradle.properties', 'gradle/libs/**', '.github/actions/build_setup/**', '.github/workflows/auto-build.yml']
 
 concurrency:
   group: auto-build-${{ github.ref }}
@@ -27,6 +27,8 @@ jobs:
           fetch-depth: 0 # do a full checkout instead of a shallow clone of HEAD so spotless's ratchetFrom works
       - name: Setup Build
         uses: ./.github/actions/build_setup
+        with:
+          disable-cache: true
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Get Mod Version

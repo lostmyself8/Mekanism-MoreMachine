@@ -1,6 +1,5 @@
 package com.jerry.mekmm.api.recipes;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.ingredients.ChemicalStackIngredient;
@@ -13,6 +12,7 @@ import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -28,7 +28,7 @@ import java.util.function.BiPredicate;
  *
  * @apiNote Chemical Washers can process this recipe type.
  */
-@NothingNullByDefault
+@NullMarked
 public abstract class FluidChemicalToFluidRecipe extends MekanismRecipe<SingleFluidChemicalRecipeInput> implements BiPredicate<@NotNull FluidStack, ChemicalStack> {
 
     @Override

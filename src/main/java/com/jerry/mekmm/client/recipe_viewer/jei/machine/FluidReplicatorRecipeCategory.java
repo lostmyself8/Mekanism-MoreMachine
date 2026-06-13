@@ -5,7 +5,6 @@ import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
 import com.jerry.mekmm.common.recipe.impl.FluidReplicatorIRecipeSingle;
 
 import mekanism.api.SerializationConstants;
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.recipes.ingredients.FluidStackIngredient;
 import mekanism.api.recipes.ingredients.creator.IngredientCreatorAccess;
 import mekanism.client.gui.element.gauge.*;
@@ -35,10 +34,11 @@ import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@NothingNullByDefault
+@NullMarked
 public class FluidReplicatorRecipeCategory extends BaseRecipeCategory<BasicFluidChemicalToFluidRecipe> {
 
     // TODO: Re-evaluate

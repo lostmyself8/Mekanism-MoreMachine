@@ -61,8 +61,8 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.drainContainerIntoSlot(null);
         // If we're in a blacklisted dimension, there's nothing more to do
         if (isBlacklistDimension) {
@@ -87,8 +87,8 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected void onUpdateClient() {
-        super.onUpdateClient();
+    protected void onUpdateClient(net.minecraft.world.level.Level level) {
+        super.onUpdateClient(level);
         if (getActive()) {
             angle = (angle + getHeightSpeedRatio()) % 360;
         }

@@ -48,23 +48,23 @@ public class GuiWirelessTransmissionStationConfig extends GuiConnectListHolder<T
         energyRateField.setMaxLength(Long.toString(MoreMachineConfig.general.energyRate.get()).length());
         // 都是输入0-9的数字，直接借用Mek现有的
         energyRateField.setInputValidator(InputValidator.DIGIT);
-        energyRateField.configureDigitalBorderInput(() -> setLongText(energyRateField, GuiLongValue.SET_ENERGY_RATE));
+        energyRateField.configureDigitalBorderInput(field -> setLongText(field, GuiLongValue.SET_ENERGY_RATE));
         fluidsRateField = addRenderableWidget(new GuiTextField(this, 13, 61, 60, 11));
         fluidsRateField.setMaxLength(Integer.toString(MoreMachineConfig.general.fluidsRate.get()).length());
         fluidsRateField.setInputValidator(InputValidator.DIGIT);
-        fluidsRateField.configureDigitalBorderInput(() -> setText(fluidsRateField, GuiIntValue.SET_FLUIDS_RATE));
+        fluidsRateField.configureDigitalBorderInput(field -> setText(field, GuiIntValue.SET_FLUIDS_RATE));
         chemicalsRateField = addRenderableWidget(new GuiTextField(this, 13, 88, 60, 11));
         chemicalsRateField.setMaxLength(Long.toString(MoreMachineConfig.general.chemicalsRate.get()).length());
         chemicalsRateField.setInputValidator(InputValidator.DIGIT);
-        chemicalsRateField.configureDigitalBorderInput(() -> setLongText(chemicalsRateField, GuiLongValue.SET_CHEMICALS_RATE));
+        chemicalsRateField.configureDigitalBorderInput(field -> setLongText(field, GuiLongValue.SET_CHEMICALS_RATE));
         itemsRateField = addRenderableWidget(new GuiTextField(this, 13, 115, 60, 11));
         itemsRateField.setMaxLength(Integer.toString(MoreMachineConfig.general.itemsRate.get()).length());
         itemsRateField.setInputValidator(InputValidator.DIGIT);
-        itemsRateField.configureDigitalBorderInput(() -> setText(itemsRateField, GuiIntValue.SET_ITEMS_RATE));
+        itemsRateField.configureDigitalBorderInput(field -> setText(field, GuiIntValue.SET_ITEMS_RATE));
         heatRateField = addRenderableWidget(new GuiTextField(this, 13, 142, 60, 11));
         heatRateField.setMaxLength(Double.toString(MoreMachineConfig.general.heatRate.get() * 10_000).length());
         heatRateField.setInputValidator(c -> c >= '0' && c <= '9' || c == '.');
-        heatRateField.configureDigitalBorderInput(() -> setDoubleText(heatRateField, GuiDoubleValue.SET_HEAT_RATE));
+        heatRateField.configureDigitalBorderInput(field -> setDoubleText(field, GuiDoubleValue.SET_HEAT_RATE));
     }
 
     // 覆写，以免绘制SecurityTab和RedstoneControl

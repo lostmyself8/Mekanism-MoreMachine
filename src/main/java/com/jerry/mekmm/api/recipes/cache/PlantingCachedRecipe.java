@@ -2,7 +2,6 @@ package com.jerry.mekmm.api.recipes.cache;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 
-import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.functions.ConstantPredicates;
@@ -19,6 +18,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.function.*;
@@ -30,7 +30,7 @@ import java.util.function.*;
  *
  * @since 10.7.0
  */
-@NothingNullByDefault
+@NullMarked
 public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
 
     protected final Predicate<ChanceOutput> outputEmptyCheck;

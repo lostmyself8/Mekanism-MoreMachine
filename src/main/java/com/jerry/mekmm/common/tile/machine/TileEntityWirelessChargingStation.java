@@ -27,7 +27,6 @@ import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.lib.transmitter.TransmissionType;
-import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.interfaces.IBoundingBlock;
@@ -74,7 +73,6 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         configComponent.setupIOConfig(TransmissionType.ITEM, chargeSlot, dischargeSlot, true).setCanEject(false);
         setupIOConfig(TransmissionType.ENERGY, energyContainer, RelativeSide.FRONT);
         configComponent.addDisabledSides(RelativeSide.TOP);
-        ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.ENERGY).setCanEject(type -> canFunction());
     }
 
@@ -108,12 +106,12 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     @Override
-    protected boolean onUpdateServer() {
-        boolean sendUpdatePacket = super.onUpdateServer();
+    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+        boolean sendUpdatePacket = super.onUpdateServer(level);
         chargeSlot.drainContainerIntoSlot(null);
         dischargeSlot.fillContainerOrConvert(null);
         if (!energyContainer.isEmpty() && canFunction()) {
-            Level level = getLevel();
+            Level currentLevel = getLevel();
             UUID uuid = getOwnerUUID();
             if (level != null && uuid != null) {
                 Player player = level.getPlayerByUUID(uuid);
