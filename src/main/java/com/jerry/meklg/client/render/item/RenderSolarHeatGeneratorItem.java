@@ -1,12 +1,11 @@
 package com.jerry.meklg.client.render.item;
 
-import com.jerry.meklg.client.model.ModelSolarHeatGenerator;
-
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.item.ItemStack;
 
+import com.jerry.meklg.client.model.ModelSolarHeatGenerator;
 import com.jerry.meklg.client.model.ModelSolarHeatGenerator.SolarHeatGeneratorRotationRenderState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

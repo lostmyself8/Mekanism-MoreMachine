@@ -1,7 +1,5 @@
 package com.jerry.meklg.client.model;
 
-import com.jerry.meklg.client.model.ModelSolarHeatGenerator.SolarHeatGeneratorRotationRenderState;
-import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 import com.jerry.mekmm.Mekmm;
 
 import mekanism.client.model.MekanismJavaModel;
@@ -20,6 +18,8 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
+import com.jerry.meklg.client.model.ModelSolarHeatGenerator.SolarHeatGeneratorRotationRenderState;
+import com.jerry.meklg.common.tile.generator.TileEntitySolarHeatGenerator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.jetbrains.annotations.NotNull;
