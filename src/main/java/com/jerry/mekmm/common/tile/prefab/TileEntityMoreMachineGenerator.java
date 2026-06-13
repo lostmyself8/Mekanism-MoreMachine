@@ -61,7 +61,7 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
     }
 
     @Override
-    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+    protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         if (canFunction()) {
             // TODO: Maybe even make some generators have a side config/ejector component and move this to the ejector

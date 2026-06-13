@@ -63,6 +63,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -208,13 +209,13 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    protected void onUpdateClient(net.minecraft.world.level.Level level) {
+    protected void onUpdateClient(Level level) {
         super.onUpdateClient(level);
         closeInvalidScreens();
     }
 
     @Override
-    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+    protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         closeInvalidScreens();
         chemicalInputSlot.fillTankOrConvert(null);

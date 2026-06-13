@@ -54,6 +54,7 @@ import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -229,7 +230,7 @@ public abstract class TileEntityMoreMachineFactory<RECIPE extends MekanismRecipe
     }
 
     @Override
-    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+    protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
 

@@ -96,6 +96,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
      */
     private static final float MIN_ANGLE = -30F;
     private static final float MAX_ANGLE = 30F;
+    private static final String RENDER_PANEL_PREFIX = "renderPanel";
 
     /**
      * 决定槽位是否能渲染反射镜
@@ -487,7 +488,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected void onUpdateClient(net.minecraft.world.level.Level level) {
+    protected void onUpdateClient(Level level) {
         super.onUpdateClient(level);
         updateAngle();
     }

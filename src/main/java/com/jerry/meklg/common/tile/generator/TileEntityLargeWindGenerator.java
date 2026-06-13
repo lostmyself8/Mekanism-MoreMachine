@@ -87,7 +87,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected void onUpdateClient(net.minecraft.world.level.Level level) {
+    protected void onUpdateClient(Level level) {
         super.onUpdateClient(level);
         if (getActive()) {
             angle = (angle + getHeightSpeedRatio()) % 360;

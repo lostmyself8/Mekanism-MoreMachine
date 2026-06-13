@@ -56,6 +56,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -148,7 +149,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
     }
 
     @Override
-    public boolean isValidInputItem(ItemResource stack) {
+    public boolean isValidInputItem(@NonNull ItemResource stack) {
         return IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(stack.toStack().typeHolder()) != null;
     }
 

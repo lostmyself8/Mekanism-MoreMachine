@@ -248,7 +248,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     }
 
     @Override
-    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+    protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         if (mode) {// Fluid to Chemical
