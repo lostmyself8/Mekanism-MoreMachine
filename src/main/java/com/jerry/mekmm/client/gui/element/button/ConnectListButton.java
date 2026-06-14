@@ -12,6 +12,7 @@ import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.common.util.MekanismUtils;
+import mekanism.common.util.MekanismUtils.ResourceType;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.Level;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.function.Function;
@@ -31,7 +33,7 @@ import java.util.function.ObjIntConsumer;
 
 public class ConnectListButton extends MekanismButton {
 
-    private static final Identifier TEXTURE = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI_BUTTON, "lists_holder.png");
+    private static final Identifier TEXTURE = MekanismUtils.getResource(ResourceType.GUI_BUTTON, "lists_holder.png");
 
     protected static final int TEXTURE_WIDTH = 131;// 156
     protected static final int TEXTURE_HEIGHT = 58;
@@ -71,8 +73,6 @@ public class ConnectListButton extends MekanismButton {
     }
 
     protected void setVisibility(boolean visible) {
-        // TODO: Should we check visibility before passing things like tooltip to children? That way we don't have to
-        // manually hide the children as well
         this.visible = visible;
         this.slot.visible = visible;
         this.slotDisplay.visible = visible;
@@ -96,28 +96,33 @@ public class ConnectListButton extends MekanismButton {
     @Override
     public void drawBackground(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.drawBackground(guiGraphics, mouseX, mouseY, partialTicks);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getButtonX(), getButtonY(), 0, isMouseOverCheckWindows(mouseX, mouseY) ? 0 : 29, getButtonWidth(), getButtonHeight(), TEXTURE_WIDTH, 29, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override
-    public void renderForeground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    public void renderForeground(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         super.renderForeground(guiGraphics, mouseX, mouseY);
         ConnectionConfig connection = getConnection();
+        if (connection == null) {
+            return;
+        }
         if (connection != prevConnection) {
             slotDisplay.updateStackList();
             prevConnection = connection;
         }
-        // 似乎不太可能为null
-        EnumColor color = switch (connection.type()) {
+        EnumColor color = getColor(connection);
+        GuiUtils.fill(guiGraphics, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), MekanismRenderer.getColorARGB(color, 0.3F));
+        Component connectionDescriptor = level.getBlockState(connection.pos()).getBlock().asItem().getDefaultInstance().getHoverName();
+        drawScrollingString(guiGraphics, connectionDescriptor, 19, 3, TextAlignment.LEFT, titleTextColor(), 227, 3, false);
+    }
+
+    private static EnumColor getColor(ConnectionConfig connection) {
+        return switch (connection.type()) {
             case ENERGY -> EnumColor.BRIGHT_GREEN;
             case FLUID -> EnumColor.AQUA;
             case CHEMICAL -> EnumColor.YELLOW;
             case ITEM -> EnumColor.GRAY;
             case HEAT -> EnumColor.ORANGE;
         };
-        GuiUtils.fill(guiGraphics, getButtonX(), getButtonY(), getButtonWidth(), getButtonHeight(), MekanismRenderer.getColorARGB(color, 0.3F));
-        Component connectionDescriptor = level.getBlockState(connection.pos()).getBlock().asItem().getDefaultInstance().getHoverName();
-        // 这里width代替了FilterButton里面的textWidth，但似乎可以更长
-        drawScrollingString(guiGraphics, connectionDescriptor, 19, 3, TextAlignment.LEFT, titleTextColor(), 227, 3, false);
     }
 }

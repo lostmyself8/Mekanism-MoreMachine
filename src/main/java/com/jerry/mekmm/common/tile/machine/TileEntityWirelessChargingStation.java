@@ -36,6 +36,7 @@ import mekanism.common.util.EnergyUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +51,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -90,10 +91,6 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         return new EnergyConfigHolder(energyContainer, this);
     }
 
-    public MachineEnergyContainer<TileEntityWirelessChargingStation> wirelessEnergyContainer() {
-        return energyContainer;
-    }
-
     @NotNull
     @Override
     protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener) {
@@ -105,8 +102,12 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         return builder.build();
     }
 
+    public MachineEnergyContainer<TileEntityWirelessChargingStation> getEnergyContainerTyped() {
+        return energyContainer;
+    }
+
     @Override
-    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+    protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         chargeSlot.drainContainerIntoSlot(null);
         dischargeSlot.fillContainerOrConvert(null);

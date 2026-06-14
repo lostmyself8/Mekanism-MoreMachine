@@ -114,7 +114,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     public IChemicalTank chemicalTank;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getItemSlot", docPlaceholder = "item slot")
     public BasicInventorySlot inventorySlot;
-    public MachineEnergyContainer<TileEntityWirelessTransmissionStation> energyContainer;
+    MachineEnergyContainer<TileEntityWirelessTransmissionStation> energyContainer;
     @WrappingComputerMethod(wrapper = ComputerHeatCapacitorWrapper.class, methodNames = "getTemperature", docPlaceholder = "transmission")
     public BasicHeatCapacitor heatCapacitor;
 
@@ -231,13 +231,13 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         if (canFunction()) {
             // 不需要检测速率是否小于等于0，emit会检测
             // 传输能量
-            Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>> energyCaches = (Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>>) (Collection<?>) connectionManager.getEnergyCaches();
+            Collection<BlockCapabilityCache<EnergyHandler, @Nullable Direction>> energyCaches = connectionManager.getEnergyCaches();
             EnergyUtils.emit(energyCaches, energyRate, null);
             // 传输流体
-            Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>> fluidCaches = (Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>>) (Collection<?>) connectionManager.getFluidCaches();
+            Collection<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>> fluidCaches = connectionManager.getFluidCaches();
             ResourceUtils.emit(fluidCaches, fluidTank, fluidsRate, null);
             // 传输化学品
-            Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> chemicalCaches = (Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>>) (Collection<?>) connectionManager.getChemicalCaches();
+            Collection<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> chemicalCaches = connectionManager.getChemicalCaches();
             ResourceUtils.emit(chemicalCaches, chemicalTank, Math.toIntExact(Math.min(Integer.MAX_VALUE, chemicalsRate)), null);
             // 传输物品
             transportItems();
@@ -260,7 +260,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         ResourceHandler<ItemResource> selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
         if (selfHandler == null) return;
 
-        Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> itemCaches = (Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>>) (Collection<?>) connectionManager.getItemCaches();
+        Collection<BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction>> itemCaches = connectionManager.getItemCaches();
         for (BlockCapabilityCache<ResourceHandler<ItemResource>, @Nullable Direction> cache : itemCaches) {
             ResourceHandler<ItemResource> target = cache.getCapability();
             if (target != null) {
@@ -379,7 +379,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         return status;
     }
 
-    public @Nullable MachineEnergyContainer<TileEntityWirelessTransmissionStation> getWirelessEnergyContainer() {
+    public MachineEnergyContainer<TileEntityWirelessTransmissionStation> energyContainer() {
         return energyContainer;
     }
 

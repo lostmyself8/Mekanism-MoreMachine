@@ -2,7 +2,6 @@ package com.jerry.mekmm.client.gui;
 
 import com.jerry.mekmm.client.gui.element.bar.GuiFlexibleHorizontalRateBar;
 import com.jerry.mekmm.common.MoreMachineLang;
-import com.jerry.mekmm.common.inventory.container.tile.WirelessTransmissionStationContainer;
 import com.jerry.mekmm.common.network.to_server.button.MoreMachinePacketTileButtonPress;
 import com.jerry.mekmm.common.network.to_server.button.MoreMachinePacketTileButtonPress.MoreMachineClickedTileButton;
 import com.jerry.mekmm.common.tile.machine.TileEntityWirelessTransmissionStation;
@@ -19,6 +18,7 @@ import mekanism.client.gui.element.tab.GuiEnergyTab;
 import mekanism.client.gui.element.tab.GuiHeatTab;
 import mekanism.client.gui.tooltip.TooltipUtils;
 import mekanism.common.MekanismLang;
+import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.network.PacketUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils;
@@ -32,9 +32,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEntityWirelessTransmissionStation, WirelessTransmissionStationContainer> {
+public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEntityWirelessTransmissionStation, MekanismTileContainer<TileEntityWirelessTransmissionStation>> {
 
-    public GuiWirelessTransmissionStation(WirelessTransmissionStationContainer container, Inventory inv, Component title) {
+    public GuiWirelessTransmissionStation(MekanismTileContainer<TileEntityWirelessTransmissionStation> container, Inventory inv, Component title) {
         super(container, inv, title, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT + 14);
         dynamicSlots = true;
     }
@@ -48,12 +48,12 @@ public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEnti
 
             @Override
             public long getEnergy() {
-                return tile.getEnergyContainer().getAmountAsLong();
+                return tile.energyContainer().getAmountAsLong();
             }
 
             @Override
             public long getMaxEnergy() {
-                return tile.getEnergyContainer().getCapacityAsLong();
+                return tile.energyContainer().getCapacityAsLong();
             }
         }, GaugeType.MEDIUM, this, 53, 14, 68, 60));
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(MekanismLang.MATRIX_INPUT_RATE.translate(EnergyDisplay.of(tile.getInputRate())),

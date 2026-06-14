@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +25,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -32,7 +32,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Collection;
 
 @NullMarked
-public class RenderWirelessTransmissionStation extends MekanismTileEntityRenderer<@NotNull TileEntityWirelessTransmissionStation, WirelessTransmissionStationRenderState> {
+public class RenderWirelessTransmissionStation extends MekanismTileEntityRenderer<TileEntityWirelessTransmissionStation, WirelessTransmissionStationRenderState> {
 
     public RenderWirelessTransmissionStation(Context context) {
         super(context);
@@ -41,25 +41,6 @@ public class RenderWirelessTransmissionStation extends MekanismTileEntityRendere
     /**
      * 渲染单个连接
      */
-    private void renderConnection(PoseStack matrix, MultiBufferSource renderer, BlockPos tilePos, ConnectionConfig config) {
-        Vector3f start = new Vector3f(0.5f, 2.7f, 0.5f);
-        BlockPos targetPos = config.pos();
-        Direction targetFace = config.direction();
-        // 计算相对坐标
-        float relX = targetPos.getX() - tilePos.getX();
-        float relY = targetPos.getY() - tilePos.getY();
-        float relZ = targetPos.getZ() - tilePos.getZ();
-        // 目标方块中心
-        Vector3f end = new Vector3f(relX + 0.5f, relY + 0.5f, relZ + 0.5f);
-        // 偏移到面上
-        Vector3f faceOffset = getFaceOffset(targetFace);
-        end.add(faceOffset);
-        // 根据传输类型选择颜色
-        ColorRGB color = getColorForType(config.type());
-        // 渲染光束
-        RenderLineHelper.renderLine(matrix, renderer, start, end, color.r, color.g, color.b, 0.15f);
-    }
-
     private void renderConnection(PoseStack matrix, SubmitNodeCollector submitNodeCollector, BlockPos tilePos, ConnectionConfig config) {
         Vector3f start = new Vector3f(0.5f, 2.7f, 0.5f);
         BlockPos targetPos = config.pos();
@@ -76,7 +57,7 @@ public class RenderWirelessTransmissionStation extends MekanismTileEntityRendere
         // 根据传输类型选择颜色
         ColorRGB color = getColorForType(config.type());
         // 渲染光束
-        // RenderLineHelper.renderLine(matrix, renderer, start, end, color.r, color.g, color.b, 0.15f);
+        submitNodeCollector.submitCustomGeometry(matrix, RenderTypes.lightning(), (pose, vertexConsumer) -> RenderLineHelper.renderLine(pose, vertexConsumer, start, end, color.r, color.g, color.b, 0.15f));
     }
 
     /**

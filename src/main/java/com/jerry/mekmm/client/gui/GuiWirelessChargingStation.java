@@ -51,7 +51,7 @@ public class GuiWirelessChargingStation extends GuiConfigurableTile<TileEntityWi
         addRenderableWidget(new GuiInnerScreen(this, imageWidth + 2, 40, 20, 77));
         addRenderableWidget(GuiSideHolder.create(this, imageWidth, 36, 85, false, true, SpecialColors.TAB_ARMOR_SLOTS));
         super.addGuiElements();
-        addRenderableWidget(new GuiEnergyGauge(tile.getEnergyContainer(), GaugeType.WIDE, this, 55, 18));
+        addRenderableWidget(new GuiEnergyGauge(tile.getEnergyContainerTyped(), GaugeType.WIDE, this, 55, 18));
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(MekanismLang.MATRIX_INPUT_RATE.translate(EnergyDisplay.of(tile.getInputRate())),
                 MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getOutput())))));
 

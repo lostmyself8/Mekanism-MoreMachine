@@ -7,7 +7,6 @@ import com.jerry.mekmm.common.item.ItemReflector;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 import com.jerry.mekmm.common.util.WorldUtil.SolarCheck;
 
-import lombok.Getter;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
@@ -62,6 +61,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
