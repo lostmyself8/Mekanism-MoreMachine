@@ -7,6 +7,7 @@ import com.jerry.mekmm.common.item.ItemReflector;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 import com.jerry.mekmm.common.util.WorldUtil.SolarCheck;
 
+import lombok.Getter;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
@@ -35,7 +36,6 @@ import mekanism.common.integration.computer.SpecialComputerMethodWrapper.Compute
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableDouble;
-import mekanism.common.inventory.container.sync.SyncableInt;
 import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.BasicInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
@@ -52,6 +52,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -96,7 +98,8 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
      */
     private static final float MIN_ANGLE = -30F;
     private static final float MAX_ANGLE = 30F;
-    private static final String RENDER_PANEL_PREFIX = "renderPanel";
+    private static final String RENDER_PANEL_MASK = "renderPanelMask";
+    private static final String TRACKING_ANGLE = "trackingAngle";
 
     /**
      * 决定槽位是否能渲染反射镜
@@ -107,10 +110,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
      * 当前旋转了的角度
      */
     private float angle;
-    /**
-     * 太阳到中心方块的射线与地面的夹角
-     */
-    private float sunRayGroundAngle;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getHeatedCoolant", "getHeatedCoolantCapacity", "getHeatedCoolantNeeded",
@@ -134,12 +133,12 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
     private long productionRate;
-    private long lastCoolantConverted;
+    @Getter
     private double coolantConversionEfficiency;
-    private double fluidEfficiency = 1;
+    @Getter
     private double lastTransferLoss;
+    @Getter
     private double lastEnvironmentLoss;
-    private double solarIntensity;
     private double solarVisibility;
     private boolean hasSolarExposure;
     private long lastSolarAreaCheck;
@@ -179,16 +178,12 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         slots = new ArrayList<>();
         MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier);
         for (int slotX = 0; slotX < SLOT_COUNT; slotX++) {
-            BasicInventorySlot slot = BasicInventorySlot.at(ConstantPredicates.alwaysTrueBi(), (stack, automationType) -> automationType != AutomationType.EXTERNAL && canInsert(stack.toStack()), listener, 67 + slotX * 18, 57);
+            BasicInventorySlot slot = BasicInventorySlot.at(ConstantPredicates.alwaysTrueBi(), (stack, automationType) -> automationType != AutomationType.EXTERNAL && isValidReflector(stack.toStack()), listener, 67 + slotX * 18, 57);
             builder.addContainer(slot, RelativeSide.BACK, RelativeSide.TOP);
             slots.add(slot);
         }
         builder.addContainer(energySlot = EnergyInventorySlot.drain(getEnergyContainer(), listener, 180, 57));
         return builder.build();
-    }
-
-    private boolean canInsert(ItemStack stack) {
-        return isValidReflector(stack);
     }
 
     public static boolean isValidReflector(ItemStack stack) {
@@ -206,7 +201,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         energySlot.drainContainerIntoSlot(null);
 
         long previousEnergy = getEnergyContainer().getAmountAsLong();
-        lastCoolantConverted = 0;
         productionRate = 0;
 
         // 消耗反射镜耐久
@@ -218,7 +212,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
 
         if (canFunction()) {
             CoolantConversion conversion = convertCoolant();
-            lastCoolantConverted = conversion.converted();
             if (conversion.converted() > 0 && getEnergyContainer().getNeededAsLong() > 0L) {
                 SolarHeatFluid solarHeatFluid = getSolarHeatFluid();
                 long generation = calculateGeneration(conversion, solarHeatFluid);
@@ -235,6 +228,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
 
         productionRate = getEnergyContainer().getAmountAsLong() - previousEnergy;
         updateMaxOutputRaw(MoreMachineConfig.generators.solarHeatGeneration.get());
+        updateAngle();
 
         setActive(isGatheringHeat(reflectorCount) || productionRate > 0);
         if (updateRenderPanels()) {
@@ -247,7 +241,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     protected BlockPos offSetOutput(BlockPos from, Direction side) {
         Direction back = getOppositeDirection();
         return from.offset(new Vec3i(back.getStepX() * 3, 0, back.getStepZ() * 3)).relative(side);
-        // 前
     }
 
     private HeatTransfer updateTemperature(int reflectorCount) {
@@ -299,7 +292,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         if (level == null) {
             hasSolarExposure = false;
             solarVisibility = 0;
-            solarIntensity = 0;
             return;
         }
         long gameTime = level.getGameTime();
@@ -332,7 +324,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         if (level == null || solarChecks == null || !level.dimensionType().hasSkyLight() || level.getSkyDarken() >= 4) {
             hasSolarExposure = false;
             solarVisibility = 0;
-            solarIntensity = 0;
             return;
         }
         int visible = 0;
@@ -344,14 +335,10 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         }
         solarVisibility = solarChecks.length == 0 ? 0 : visible / (double) solarChecks.length;
         hasSolarExposure = visible > 0;
-        if (!hasSolarExposure) {
-            solarIntensity = 0;
-        }
     }
 
     private double calculateSolarIntensity() {
         if (level == null || !hasSolarExposure || solarChecks == null) {
-            solarIntensity = 0;
             return 0;
         }
         double productionMultiplier = 0;
@@ -367,9 +354,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         } else {
             directionMultiplier = NORTH_SOUTH_HEAT_GAIN_MULTIPLIER;
         }
-        double multiplier = directionMultiplier * sunBrightness * productionMultiplier;
-        solarIntensity = Mth.clamp(multiplier, 0, 1);
-        return solarIntensity;
+        return Mth.clamp(directionMultiplier * sunBrightness * productionMultiplier, 0, 1);
     }
 
     @Nullable
@@ -380,17 +365,14 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     private CoolantConversion convertCoolant() {
         if (cooledCoolantTank.isEmpty()) {
             coolantConversionEfficiency = 0;
-            fluidEfficiency = getSolarHeatFluidEfficiency();
             return CoolantConversion.NONE;
         }
         ChemicalResource cooledCoolant = cooledCoolantTank.resource();
         CooledCoolant coolantType = getCooledCoolant(cooledCoolant);
         if (coolantType == null) {
             coolantConversionEfficiency = 0;
-            fluidEfficiency = getSolarHeatFluidEfficiency();
             return CoolantConversion.NONE;
         }
-        fluidEfficiency = getSolarHeatFluidEfficiency();
         double availableHeat = Math.max(0, getSolarHeatTemperature() - MoreMachineConfig.generators.solarHeatTargetConversionTemperature.get()) * heatCapacitor.getHeatCapacity();
         availableHeat *= coolantType.conductivity();
         int toConvert = MathUtils.clampToInt(Math.min(MathUtils.clampToLong(availableHeat / coolantType.thermalEnthalpy()), cooledCoolantTank.amountAsLong()));
@@ -426,11 +408,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return IMoreMachineDataMapTypes.INSTANCE.getSolarHeatFluid(fluidTank.resource().typeHolder());
     }
 
-    private double getSolarHeatFluidEfficiency() {
-        SolarHeatFluid solarHeatFluid = getSolarHeatFluid();
-        return solarHeatFluid == null ? 0 : solarHeatFluid.efficiency();
-    }
-
     private void consumeSolarHeatFluid(long converted, @Nullable SolarHeatFluid solarHeatFluid, long generated) {
         if (generated > 0 && solarHeatFluid != null && solarHeatFluid.usage() > 0) {
             FluidResource fluid = fluidTank.resource();
@@ -452,7 +429,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         if (solarHeatFluid.usage() > 0 && fluidTank.amountAsInt() < getSolarHeatFluidUsage(conversion.converted(), solarHeatFluid)) {
             return 0;
         }
-        double ambientTemp = getAmbientTemperature();
         double temperature = getSolarHeatTemperature();
         double tempPowerFactor;
         double targetTemp = MoreMachineConfig.generators.solarHeatTargetConversionTemperature.get();
@@ -494,7 +470,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     private void updateAngle() {
-        sunRayGroundAngle = calculateSunRayGroundAngle(getBlockPos().above(3));
+        float sunRayGroundAngle = calculateSunRayGroundAngle(getBlockPos().above(3));
         if (sunRayGroundAngle > 0F) {
             angle = calculateSunTrackingReflectorAngle();
         }
@@ -574,43 +550,44 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     public float getAngle() {
+        if (level != null && level.isClientSide()) {
+            updateAngle();
+        }
         return angle;
-    }
-
-    public float getSunRayGroundAngle() {
-        return sunRayGroundAngle;
-    }
-
-    public long getLastCoolantConverted() {
-        return lastCoolantConverted;
-    }
-
-    public double getCoolantConversionEfficiency() {
-        return coolantConversionEfficiency;
-    }
-
-    public double getFluidEfficiency() {
-        return fluidEfficiency;
-    }
-
-    public double getLastTransferLoss() {
-        return lastTransferLoss;
-    }
-
-    public double getLastEnvironmentLoss() {
-        return lastEnvironmentLoss;
-    }
-
-    public double getSolarIntensity() {
-        return solarIntensity;
-    }
-
-    public double getSolarVisibility() {
-        return solarVisibility;
     }
 
     public boolean shouldRenderPanel(int slot) {
         return slot >= 0 && slot < renderPanels.length && renderPanels[slot];
+    }
+
+    private int getRenderPanelMask() {
+        int mask = 0;
+        for (int slot = 0; slot < renderPanels.length; slot++) {
+            if (renderPanels[slot]) {
+                mask |= 1 << slot;
+            }
+        }
+        return mask;
+    }
+
+    private void setRenderPanelMask(int mask) {
+        for (int slot = 0; slot < renderPanels.length; slot++) {
+            renderPanels[slot] = (mask & (1 << slot)) != 0;
+        }
+    }
+
+    @Override
+    public void writeReducedUpdatedTag(@NotNull ValueOutput output) {
+        super.writeReducedUpdatedTag(output);
+        output.putInt(RENDER_PANEL_MASK, getRenderPanelMask());
+        output.putFloat(TRACKING_ANGLE, angle);
+    }
+
+    @Override
+    public void handleUpdateTag(@NotNull ValueInput input) {
+        super.handleUpdateTag(input);
+        setRenderPanelMask(input.getIntOr(RENDER_PANEL_MASK, getRenderPanelMask()));
+        angle = input.getFloatOr(TRACKING_ANGLE, angle);
     }
 
     @Override
@@ -791,14 +768,9 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
         container.track(SyncableLong.create(this::getProductionRate, value -> productionRate = value));
-        container.track(SyncableLong.create(this::getLastCoolantConverted, value -> lastCoolantConverted = value));
         container.track(SyncableDouble.create(this::getCoolantConversionEfficiency, value -> coolantConversionEfficiency = value));
-        container.track(SyncableDouble.create(this::getFluidEfficiency, value -> fluidEfficiency = value));
         container.track(SyncableDouble.create(this::getLastTransferLoss, value -> lastTransferLoss = value));
         container.track(SyncableDouble.create(this::getLastEnvironmentLoss, value -> lastEnvironmentLoss = value));
-        container.track(SyncableDouble.create(this::getSolarIntensity, value -> solarIntensity = value));
-        container.track(SyncableDouble.create(this::getSolarVisibility, value -> solarVisibility = value));
         container.track(SyncableDouble.create(this::getSolarHeatTemperature, this::setClientTemperature));
-        container.track(SyncableInt.create(this::getReflectorCount, value -> {}));
     }
 }
