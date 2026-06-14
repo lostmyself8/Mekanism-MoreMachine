@@ -10,7 +10,6 @@ import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.common.lib.transmitter.TransmissionType;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
