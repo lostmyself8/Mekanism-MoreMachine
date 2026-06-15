@@ -85,7 +85,7 @@ public class Mekmm implements IModModule {
     }
 
     public static ResourceLocation rl(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+       return new ResourceLocation("mekmm", path);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
