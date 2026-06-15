@@ -2,7 +2,7 @@
 jei = "29.5.0.28"
 emi = "1.1.22"
 crt = "21.0.38"
-mekanism = "10.8.0.homebaked"
+mekanism = "26.1-SNAPSHOT"
 ccTweaked = "1.116.1"
 cucumber = "1.21.1-8.0.9"
 mysticalagriculture = "1.21.1-8.0.9"
@@ -42,10 +42,7 @@ cc-tweaked-core-api   = { module = "cc.tweaked:cc-tweaked-1.21.1-core-api", vers
 cc-tweaked-forge-api  = { module = "cc.tweaked:cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
 cc-tweaked-forge-impl = { module = "cc.tweaked:cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
 
-mekanism            = { module = "dev:Mekanism-26.1.2", version.ref = "mekanism" }
-meka                = { module = "dev:MekanismAdditions-26.1.2", version.ref = "mekanism" }
-mekg                = { module = "dev:MekanismGenerators-26.1.2", version.ref = "mekanism" }
-mekt                = { module = "dev:MekanismTools-26.1.2", version.ref = "mekanism" }
+mekanism            = { module = "com.github.QiuYe-123:Mekanism", version.ref = "mekanism" }
 crt                 = { module = "com.blamejared.crafttweaker:CraftTweaker-neoforge-1.21.1", version.ref = "crt" }
 cucumber            = { module = "com.blakebr0.cucumber:Cucumber", version.ref = "cucumber" }
 mysticalagriculture = { module = "com.blakebr0.mysticalagriculture:MysticalAgriculture", version.ref = "mysticalagriculture" }
