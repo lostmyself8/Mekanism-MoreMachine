@@ -9,6 +9,7 @@ import com.jerry.mekmm.common.util.MoreMachineUtils;
 import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
 import mekanism.api.Upgrade;
+import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
@@ -19,8 +20,8 @@ import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
-import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
-import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
+import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
+import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -188,14 +189,14 @@ public abstract class TileEntityMoreMachineFactory<RECIPE extends MekanismRecipe
     }
 
     @Override
-    protected @Nullable IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+    protected @Nullable ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener) {
         energyContainer = MachineEnergyContainer.input(this, () -> {
             listener.onContentsChanged();
             for (FactoryRecipeCacheLookupMonitor<RECIPE> cacheLookupMonitor : recipeCacheLookupMonitors) {
                 cacheLookupMonitor.unpause();
             }
         });
-        return new EnergyConfigHolder(energyContainer, this);
+        return SingleConfigHolder.energy(energyContainer, this);
     }
 
     public MachineEnergyContainer<TileEntityMoreMachineFactory<?>> getEnergyContainerTyped() {

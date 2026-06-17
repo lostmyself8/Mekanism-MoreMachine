@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = UpgradeUtils.class, remap = false)
 public abstract class MixinUpgradeUtils {
 
-    @Inject(method = "getItem", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "getItem", at = @At(value = "HEAD"))
     private static void getItem(Upgrade upgrade, CallbackInfoReturnable<Holder<Item>> cir) {
         switch (upgrade.toString()) {
             // case "THREAD" -> cir.setReturnValue(MMItems.THREAD_UPGRADE);

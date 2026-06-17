@@ -44,7 +44,7 @@ public class GuiSolarHeatGenerator extends GuiMekanismTile<TileEntitySolarHeatGe
         addRenderableWidget(GuiSideHolder.create(this, -26, 6, 98, true, true, SpecialColors.TAB_ARMOR_SLOTS));
         super.addGuiElements();
         addRenderableWidget(new GuiInnerScreen(this, 47, 14, 110, 40, () -> List.of(
-                MekanismLang.TEMPERATURE.translate(MekanismUtils.getTemperatureDisplay(tile.getTotalTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true)),
+                MekanismLang.TEMPERATURE.translate(MekanismUtils.getTemperatureDisplay(tile.getSolarHeatTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true)),
                 MekanismLang.TEMPERATURE.translate(tile.getCoolantConversionEfficiency()))));
         addRenderableWidget(new GuiChemicalGauge(() -> tile.cooledCoolantTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 27, 14));
         addRenderableWidget(new GuiChemicalGauge(() -> tile.superheatedCoolantTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 159, 14));
@@ -65,7 +65,7 @@ public class GuiSolarHeatGenerator extends GuiMekanismTile<TileEntitySolarHeatGe
             }
         }, GaugeType.SMALL_MED, this, 179, 14, 18, 40));
         addRenderableWidget(new GuiHeatTab(this, () -> {
-            Component temp = MekanismUtils.getTemperatureDisplay(tile.getTotalTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true);
+            Component temp = MekanismUtils.getTemperatureDisplay(tile.getSolarHeatTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true);
             Component transfer = MekanismUtils.getTemperatureDisplay(tile.getLastTransferLoss(), UnitDisplayUtils.TemperatureUnit.KELVIN, false);
             Component environment = MekanismUtils.getTemperatureDisplay(tile.getLastEnvironmentLoss(), UnitDisplayUtils.TemperatureUnit.KELVIN, false);
             return List.of(MekanismLang.TEMPERATURE.translate(temp), MekanismLang.TRANSFERRED_RATE.translate(transfer), MekanismLang.DISSIPATED_RATE.translate(environment));

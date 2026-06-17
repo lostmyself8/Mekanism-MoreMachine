@@ -9,7 +9,7 @@ import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
 import mekanism.common.component.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.component.containers.fluid.FluidTanksBuilder;
-import mekanism.common.component.containers.heat.HeatCapacitorsBuilder;
+import mekanism.common.component.containers.heat.HeatCapacitorBuilder;
 import mekanism.common.component.containers.item.ItemSlotsBuilder;
 import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.item.block.ItemBlockTooltip;
@@ -37,9 +37,8 @@ public class LargeGeneratorBlocks {
                     .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
                             .addBasic(MoreMachineConfig.generators.largeHeatTankCapacity, fluid -> fluid.is(FluidTags.LAVA))
                             .build())
-                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorsBuilder.builder()
-                            .addBasic(TileEntityLargeHeatGenerator.HEAT_CAPACITY, TileEntityLargeHeatGenerator.INVERSE_CONDUCTION_COEFFICIENT, TileEntityLargeHeatGenerator.INVERSE_INSULATION_COEFFICIENT)
-                            .build())
+                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorBuilder.basicCreator(
+                            TileEntityLargeHeatGenerator.HEAT_CAPACITY, TileEntityLargeHeatGenerator.INVERSE_CONDUCTION_COEFFICIENT, TileEntityLargeHeatGenerator.INVERSE_INSULATION_COEFFICIENT))
                     .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                             .addBasic(1)
                             .addEnergy()
@@ -67,9 +66,8 @@ public class LargeGeneratorBlocks {
                     .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
                             .addBasic(TileEntitySolarHeatGenerator.MAX_FLUID, fluid -> IMoreMachineDataMapTypes.INSTANCE.getSolarHeatFluid(fluid.typeHolder()) != null)
                             .build())
-                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorsBuilder.builder()
-                            .addBasic(TileEntitySolarHeatGenerator.HEAT_CAPACITY, TileEntitySolarHeatGenerator.INVERSE_CONDUCTION_COEFFICIENT, TileEntitySolarHeatGenerator.INVERSE_INSULATION_COEFFICIENT)
-                            .build())
+                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorBuilder.basicCreator(
+                            TileEntitySolarHeatGenerator.HEAT_CAPACITY, TileEntitySolarHeatGenerator.INVERSE_CONDUCTION_COEFFICIENT, TileEntitySolarHeatGenerator.INVERSE_INSULATION_COEFFICIENT))
                     .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                             .addInput(item -> TileEntitySolarHeatGenerator.isValidReflector(item.toStack()))
                             .addInput(item -> TileEntitySolarHeatGenerator.isValidReflector(item.toStack()))

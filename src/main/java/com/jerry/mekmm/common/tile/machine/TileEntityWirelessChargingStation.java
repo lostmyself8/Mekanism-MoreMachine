@@ -8,13 +8,14 @@ import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
+import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.common.Mekanism;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
-import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
-import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
+import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
+import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.capabilities.proxy.AutomatedEnergyHandler;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.ComputerException;
@@ -86,9 +87,9 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     @Override
-    protected @Nullable IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+    protected @Nullable ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener) {
         energyContainer = MachineEnergyContainer.input(this, listener);
-        return new EnergyConfigHolder(energyContainer, this);
+        return SingleConfigHolder.energy(energyContainer, this);
     }
 
     @NotNull

@@ -2,11 +2,12 @@ package com.jerry.mekmm.common.tile.prefab;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
+import mekanism.api.energy.IEnergyContainer;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.BasicEnergyContainer;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.capabilities.holder.energy.BasicEnergyHolder;
-import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
+import mekanism.common.capabilities.holder.single.BasicSingleHolder;
+import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.EnergyUtils;
@@ -55,9 +56,9 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
 
     @NotNull
     @Override
-    protected IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+    protected ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener) {
         energyContainer = BasicEnergyContainer.output(MachineEnergyContainer.validateBlock(this).getStorage(), listener);
-        return new BasicEnergyHolder(energyContainer, facingSupplier, getEnergySideSet());
+        return new BasicSingleHolder<>(energyContainer, facingSupplier, getEnergySideSet());
     }
 
     @Override

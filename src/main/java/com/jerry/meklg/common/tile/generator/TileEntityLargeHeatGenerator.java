@@ -8,6 +8,7 @@ import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.fluid.IFluidTank;
 import mekanism.api.heat.HeatAPI;
+import mekanism.api.heat.HeatCapacitorWrapper;
 import mekanism.api.heat.IHeatCapacitor;
 import mekanism.api.heat.IHeatHandler;
 import mekanism.api.inventory.IInventorySlot;
@@ -19,6 +20,8 @@ import mekanism.common.capabilities.heat.BasicHeatCapacitor;
 import mekanism.common.capabilities.heat.CachedAmbientTemperature;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
+import mekanism.common.capabilities.holder.single.OverridingSingleHolder;
 import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.config.listener.ConfigBasedCachedLongSupplier;
@@ -44,6 +47,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import org.jetbrains.annotations.NotNull;
@@ -114,10 +118,9 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
 
     @NotNull
     @Override
-    protected IContainerHolder<IHeatCapacitor> getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
-        MekContainerHelper<IHeatCapacitor> builder = MekContainerHelper.forSide(facingSupplier);
-        builder.addContainer(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener), RelativeSide.BACK);
-        return builder.build();
+    protected ISingleContainerHolder<IHeatCapacitor> getInitialHeatCapacitor(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
+        heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener);
+        return new OverridingSingleHolder<>(heatCapacitor, facingSupplier, (capacitor, side) -> side == RelativeSide.BOTTOM ? new DefaultInsulationCapacitor(capacitor) : capacitor);
     }
 
     @Override
@@ -128,35 +131,82 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
-        energySlot.drainContainerIntoSlot(null);
-        fuelSlot.fillOrBurn(null);
-        long prev = getEnergyContainer().getAmountAsLong();
-        heatCapacitor.handleHeat(getBoost());
-        FluidResource lavaResource = lavaTank.resource();
-        if (canFunction() && !lavaResource.isEmpty() && getEnergyContainer().getNeededAsLong() > 0L) {
-            // 计算流体占比 (0.0 到 1.0)
-            double fluidRatio = (double) lavaTank.amountAsLong() / lavaTank.capacityAsLong(lavaResource);
-            // 使用指数函数实现非线性增长
-            // 流体速率：从 1 增长到约 100
-            efficiencyMultiplier = (int) Math.max(1, Math.pow(10, fluidRatio * 2));
-            int fluidRate = (int) (efficiencyMultiplier * MoreMachineConfig.generators.largeHeatGenerationFluidRate.get());
+        try (Transaction transaction = Transaction.openRoot()) {
+            energySlot.drainContainerIntoSlot(transaction);
+            fuelSlot.fillOrBurn(transaction);
+            long prev = getEnergyContainer().getAmountAsLong();
+            heatCapacitor.handleHeat(getBoost(), transaction);
+            FluidResource lavaResource = lavaTank.resource();
             boolean extracted = false;
-            try (Transaction transaction = Transaction.openRoot()) {
-                if (lavaTank.extract(lavaResource, fluidRate, transaction, AutomationType.INTERNAL) == fluidRate) {
-                    extracted = true;
-                    heatCapacitor.handleHeat(MoreMachineConfig.generators.largeHeatGeneration.get() * efficiencyMultiplier);
-                    transaction.commit();
+            if (canFunction() && !lavaResource.isEmpty() && getEnergyContainer().getNeededAsLong() > 0L) {
+                // 计算流体占比 (0.0 到 1.0)
+                double fluidRatio = (double) lavaTank.amountAsLong() / lavaTank.capacityAsLong(lavaResource);
+                // 使用指数函数实现非线性增长
+                // 流体速率：从 1 增长到约 100
+                efficiencyMultiplier = (int) Math.max(1, Math.pow(10, fluidRatio * 2));
+                int fluidRate = (int) (efficiencyMultiplier * MoreMachineConfig.generators.largeHeatGenerationFluidRate.get());
+                try (Transaction subTransaction = Transaction.open(transaction)) {
+                    if (lavaTank.extract(lavaResource, fluidRate, subTransaction, AutomationType.INTERNAL) == fluidRate) {
+                        extracted = true;
+                        heatCapacitor.handleHeat(MoreMachineConfig.generators.largeHeatGeneration.get() * efficiencyMultiplier, subTransaction);
+                        subTransaction.commit();
+                    }
                 }
             }
             setActive(extracted);
-        } else {
-            setActive(false);
+            HeatAPI.HeatTransfer loss = simulate(transaction);
+            lastTransferLoss = loss.adjacentTransfer();
+            lastEnvironmentLoss = loss.environmentTransfer();
+            producingEnergy = getEnergyContainer().getAmountAsLong() - prev;
+            transaction.commit();
         }
-        HeatAPI.HeatTransfer loss = simulate();
-        lastTransferLoss = loss.adjacentTransfer();
-        lastEnvironmentLoss = loss.environmentTransfer();
-        producingEnergy = getEnergyContainer().getAmountAsLong() - prev;
         return sendUpdatePacket;
+    }
+
+    public double getTemperature() {
+        return heatCapacitor.getTemperature();
+    }
+
+    @Override
+    public double getAmbientTemperature(@NotNull Direction side) {
+        return Objects.requireNonNull(ambientTemperature, "Tile cannot simulate temperature before initialization").getAsDouble();
+    }
+
+    @NotNull
+    @Override
+    public HeatAPI.HeatTransfer simulate(TransactionContext transaction) {
+        double ambientTemp = Objects.requireNonNull(ambientTemperature, "Tile cannot simulate temperature before initialization").getAsDouble();
+        double temp = getTemperature();
+        // 1 - Qc / Qh
+        double carnotEfficiency = 1 - Math.min(ambientTemp, temp) / Math.max(ambientTemp, temp);
+        double heatLost = THERMAL_EFFICIENCY * (temp - ambientTemp);
+        heatCapacitor.handleHeat(-heatLost, transaction);
+        long energyFromHeat = MathUtils.clampToLong(Math.abs(heatLost) * carnotEfficiency);
+        getEnergyContainer().insert(MathUtils.clampToInt((long) (Math.min(energyFromHeat, MAX_PRODUCTION.getAsLong()) * efficiencyMultiplier)), transaction, AutomationType.INTERNAL);
+        return super.simulate(transaction);
+    }
+
+    @Nullable
+    @Override
+    public IHeatHandler getAdjacent(@NotNull Direction side) {
+        return side == Direction.DOWN ? super.getAdjacent(side) : null;
+    }
+
+    @Override
+    public long getProductionRate() {
+        return producingEnergy;
+    }
+
+    private static class DefaultInsulationCapacitor extends HeatCapacitorWrapper {
+
+        protected DefaultInsulationCapacitor(IHeatCapacitor internal) {
+            super(internal);
+        }
+
+        @Override
+        public double getInverseInsulation() {
+            return HeatAPI.DEFAULT_INVERSE_INSULATION;
+        }
     }
 
     @Override
@@ -212,44 +262,6 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
             boost += MoreMachineConfig.generators.largeHeatGenerationNether.get();
         }
         return boost;
-    }
-
-    @Override
-    public double getInverseInsulation(int capacitor, @Nullable Direction side) {
-        return side == Direction.DOWN ? HeatAPI.DEFAULT_INVERSE_INSULATION : super.getInverseInsulation(capacitor, side);
-    }
-
-    @Override
-    public double getTotalInverseInsulation(@Nullable Direction side) {
-        return side == Direction.DOWN ? HeatAPI.DEFAULT_INVERSE_INSULATION : super.getTotalInverseInsulation(side);
-    }
-
-    @NotNull
-    @Override
-    public HeatAPI.HeatTransfer simulate() {
-        double ambientTemp = ambientTemperature.getAsDouble();
-        double temp = getTotalTemperature();
-        // 1 - Qc / Qh
-        double carnotEfficiency = 1 - Math.min(ambientTemp, temp) / Math.max(ambientTemp, temp);
-        double heatLost = THERMAL_EFFICIENCY * (temp - ambientTemp);
-        heatCapacitor.handleHeat(-heatLost);
-        long energyFromHeat = MathUtils.clampToLong(Math.abs(heatLost) * carnotEfficiency);
-        try (Transaction transaction = Transaction.openRoot()) {
-            getEnergyContainer().insert(MathUtils.clampToInt((long) (Math.min(energyFromHeat, MAX_PRODUCTION.getAsLong()) * efficiencyMultiplier)), transaction, AutomationType.INTERNAL);
-            transaction.commit();
-        }
-        return super.simulate();
-    }
-
-    @Nullable
-    @Override
-    public IHeatHandler getAdjacent(@NotNull Direction side) {
-        return side == Direction.DOWN ? getAdjacentUnchecked(side) : null;
-    }
-
-    @Override
-    public long getProductionRate() {
-        return producingEnergy;
     }
 
     @ComputerMethod(nameOverride = "getTransferLoss")

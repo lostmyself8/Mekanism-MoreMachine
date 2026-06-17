@@ -29,7 +29,7 @@ import mekanism.common.component.component.AttachedEjector;
 import mekanism.common.component.component.AttachedSideConfig;
 import mekanism.common.component.containers.chemical.ChemicalTanksBuilder;
 import mekanism.common.component.containers.fluid.FluidTanksBuilder;
-import mekanism.common.component.containers.heat.HeatCapacitorsBuilder;
+import mekanism.common.component.containers.heat.HeatCapacitorBuilder;
 import mekanism.common.component.containers.item.ItemSlotsBuilder;
 import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.content.blocktype.Machine;
@@ -259,9 +259,8 @@ public class MoreMachineBlocks {
                             .addEnergy()
                             .addDrainEnergy()
                             .build())
-                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorsBuilder.builder()
-                            .addBasic(TileEntityWirelessTransmissionStation.HEAT_CAPACITY, TileEntityWirelessTransmissionStation.INVERSE_CONDUCTION_COEFFICIENT, TileEntityWirelessTransmissionStation.INVERSE_INSULATION_COEFFICIENT)
-                            .build()));
+                    .addAttachmentOnlyContainers(ContainerType.HEAT, () -> HeatCapacitorBuilder.basicCreator(
+                            TileEntityWirelessTransmissionStation.HEAT_CAPACITY, TileEntityWirelessTransmissionStation.INVERSE_CONDUCTION_COEFFICIENT, TileEntityWirelessTransmissionStation.INVERSE_INSULATION_COEFFICIENT)));
 
     public static final BlockRegistryObject<@NotNull BlockAuthorDoll, @NotNull ItemBlockAuthorDoll> AUTHOR_DOLL = MM_BLOCKS.register("author_doll",
             properties -> new BlockAuthorDoll(MoreMachineBlockTypes.AUTHOR_DOLL, BlockTile.defaultProperties(properties).sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockAuthorDoll::new);

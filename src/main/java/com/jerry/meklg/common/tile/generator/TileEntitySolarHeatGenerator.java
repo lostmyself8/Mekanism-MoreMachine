@@ -28,6 +28,8 @@ import mekanism.common.capabilities.heat.BasicHeatCapacitor;
 import mekanism.common.capabilities.heat.CachedAmbientTemperature;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.single.BasicSingleHolder;
+import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerHeatCapacitorWrapper;
@@ -59,6 +61,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import lombok.Getter;
@@ -66,6 +69,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -166,10 +170,9 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
 
     @NotNull
     @Override
-    protected IContainerHolder<IHeatCapacitor> getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
-        MekContainerHelper<IHeatCapacitor> builder = MekContainerHelper.forSide(facingSupplier);
-        builder.addContainer(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener), RelativeSide.LEFT, RelativeSide.RIGHT);
-        return builder.build();
+    protected ISingleContainerHolder<IHeatCapacitor> getInitialHeatCapacitor(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
+        heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener);
+        return new BasicSingleHolder<>(heatCapacitor, facingSupplier, EnumSet.of(RelativeSide.LEFT, RelativeSide.RIGHT));
     }
 
     @NotNull
@@ -198,35 +201,36 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
-        energySlot.drainContainerIntoSlot(null);
+        try (Transaction transaction = Transaction.openRoot()) {
+            energySlot.drainContainerIntoSlot(transaction);
 
-        long previousEnergy = getEnergyContainer().getAmountAsLong();
-        productionRate = 0;
+            long previousEnergy = getEnergyContainer().getAmountAsLong();
+            productionRate = 0;
 
-        // 消耗反射镜耐久
-        int reflectorCount = getReflectorCount();
-        updateSolarAreaCheck();
-        HeatTransfer loss = updateTemperature(reflectorCount);
-        lastTransferLoss = loss.adjacentTransfer();
-        lastEnvironmentLoss = loss.environmentTransfer();
+            // 消耗反射镜耐久
+            int reflectorCount = getReflectorCount();
+            updateSolarAreaCheck();
+            HeatTransfer loss = updateTemperature(reflectorCount, transaction);
+            lastTransferLoss = loss.adjacentTransfer();
+            lastEnvironmentLoss = loss.environmentTransfer();
 
-        if (canFunction()) {
-            CoolantConversion conversion = convertCoolant();
-            if (conversion.converted() > 0 && getEnergyContainer().getNeededAsLong() > 0L) {
-                SolarHeatFluid solarHeatFluid = getSolarHeatFluid();
-                long generation = calculateGeneration(conversion, solarHeatFluid);
-                consumeSolarHeatFluid(conversion.converted(), solarHeatFluid, generation);
-                try (Transaction transaction = Transaction.openRoot()) {
+            if (canFunction()) {
+                CoolantConversion conversion = convertCoolant(transaction);
+                if (conversion.converted() > 0 && getEnergyContainer().getNeededAsLong() > 0L) {
+                    SolarHeatFluid solarHeatFluid = getSolarHeatFluid();
+                    long generation = calculateGeneration(conversion, solarHeatFluid);
+                    consumeSolarHeatFluid(conversion.converted(), solarHeatFluid, generation, transaction);
                     getEnergyContainer().insert(MathUtils.clampToInt(generation), transaction, AutomationType.INTERNAL);
-                    transaction.commit();
                 }
             }
+            productionRate = getEnergyContainer().getAmountAsLong() - previousEnergy;
+            transaction.commit();
         }
+        int reflectorCount = getReflectorCount();
         if (isGatheringHeat(reflectorCount) && level instanceof ServerLevel serverLevel) {
             damageReflectors(serverLevel);
         }
 
-        productionRate = getEnergyContainer().getAmountAsLong() - previousEnergy;
         updateMaxOutputRaw(MoreMachineConfig.generators.solarHeatGeneration.get());
         updateAngle();
 
@@ -243,16 +247,16 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return from.offset(new Vec3i(back.getStepX() * 3, 0, back.getStepZ() * 3)).relative(side);
     }
 
-    private HeatTransfer updateTemperature(int reflectorCount) {
+    private HeatTransfer updateTemperature(int reflectorCount, TransactionContext transaction) {
         double ambientTemp = getAmbientTemperature();
         double temperature = getSolarHeatTemperature();
         double targetTemperature = getTargetTemperature(reflectorCount, ambientTemp);
         if (isGatheringHeat(reflectorCount) && temperature < targetTemperature) {
             double heatNeeded = (targetTemperature - temperature) * heatCapacitor.getHeatCapacity();
             double heatGain = MoreMachineConfig.generators.solarHeatHeatGainPerReflector.get() * reflectorCount * calculateSolarIntensity() * heatCapacitor.getHeatCapacity();
-            heatCapacitor.handleHeat(Math.min(heatGain, heatNeeded));
+            heatCapacitor.handleHeat(Math.min(heatGain, heatNeeded), transaction);
         }
-        return simulate();
+        return simulate(transaction);
     }
 
     @Override
@@ -261,7 +265,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     private double getAmbientTemperature() {
-        return ambientTemperature.getAsDouble();
+        return Objects.requireNonNull(ambientTemperature, "Tile cannot simulate temperature before initialization").getAsDouble();
     }
 
     private double getTargetTemperature(int reflectorCount, double ambientTemp) {
@@ -362,7 +366,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return stack.getData(IMekanismDataMapTypes.INSTANCE.cooledChemicalCoolant());
     }
 
-    private CoolantConversion convertCoolant() {
+    private CoolantConversion convertCoolant(TransactionContext transaction) {
         if (cooledCoolantTank.isEmpty()) {
             coolantConversionEfficiency = 0;
             return CoolantConversion.NONE;
@@ -386,16 +390,16 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             return CoolantConversion.NONE;
         }
         int inserted;
-        try (Transaction transaction = Transaction.openRoot()) {
-            inserted = superheatedCoolantTank.insert(heatedCoolant, toConvert, transaction, AutomationType.INTERNAL);
-            if (inserted <= 0 || cooledCoolantTank.extract(cooledCoolant, inserted, transaction, AutomationType.INTERNAL) != inserted) {
+        try (Transaction subTransaction = Transaction.open(transaction)) {
+            inserted = superheatedCoolantTank.insert(heatedCoolant, toConvert, subTransaction, AutomationType.INTERNAL);
+            if (inserted <= 0 || cooledCoolantTank.extract(cooledCoolant, inserted, subTransaction, AutomationType.INTERNAL) != inserted) {
                 coolantConversionEfficiency = 0;
                 return CoolantConversion.NONE;
             }
-            transaction.commit();
+            subTransaction.commit();
         }
         double heatRemoved = inserted * coolantType.thermalEnthalpy();
-        heatCapacitor.handleHeat(-heatRemoved);
+        heatCapacitor.handleHeat(-heatRemoved, transaction);
         coolantConversionEfficiency = Mth.clamp(heatRemoved / Math.max(1, availableHeat), 0, 1);
         return new CoolantConversion(inserted, heatRemoved);
     }
@@ -408,12 +412,12 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return IMoreMachineDataMapTypes.INSTANCE.getSolarHeatFluid(fluidTank.resource().typeHolder());
     }
 
-    private void consumeSolarHeatFluid(long converted, @Nullable SolarHeatFluid solarHeatFluid, long generated) {
+    private void consumeSolarHeatFluid(long converted, @Nullable SolarHeatFluid solarHeatFluid, long generated, TransactionContext transaction) {
         if (generated > 0 && solarHeatFluid != null && solarHeatFluid.usage() > 0) {
             FluidResource fluid = fluidTank.resource();
-            try (Transaction transaction = Transaction.openRoot()) {
-                fluidTank.extract(fluid, getSolarHeatFluidUsage(converted, solarHeatFluid), transaction, AutomationType.INTERNAL);
-                transaction.commit();
+            try (Transaction subTransaction = Transaction.open(transaction)) {
+                fluidTank.extract(fluid, getSolarHeatFluidUsage(converted, solarHeatFluid), subTransaction, AutomationType.INTERNAL);
+                subTransaction.commit();
             }
         }
     }
@@ -539,6 +543,10 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     public double getSolarHeatTemperature() {
+        return getTemperature();
+    }
+
+    public double getTemperature() {
         if (level != null && level.isClientSide()) {
             return clientTemperature;
         }

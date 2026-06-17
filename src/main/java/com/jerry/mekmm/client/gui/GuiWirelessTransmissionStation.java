@@ -76,7 +76,7 @@ public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEnti
                 (element, mouseX, mouseY) -> PacketUtils.sendToServer(new MoreMachinePacketTileButtonPress(MoreMachineClickedTileButton.WIRELESS_TRANSMISSION_STATION_CONFIG, ((GuiWirelessTransmissionStation) element.gui()).tile))))
                 .setTooltip(TooltipUtils.create(MoreMachineLang.CONFIGURATION));
         addRenderableWidget(new GuiHeatTab(this, () -> {
-            Component temp = MekanismUtils.getTemperatureDisplay(tile.getTotalTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true);
+            Component temp = MekanismUtils.getTemperatureDisplay(tile.getTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true);
             Component transfer = MekanismUtils.getTemperatureDisplay(tile.getLastTransferLoss(), UnitDisplayUtils.TemperatureUnit.KELVIN, false);
             Component environment = MekanismUtils.getTemperatureDisplay(tile.getLastEnvironmentLoss(), UnitDisplayUtils.TemperatureUnit.KELVIN, false);
             return List.of(MekanismLang.TEMPERATURE.translate(temp), MekanismLang.TRANSFERRED_RATE.translate(transfer), MekanismLang.DISSIPATED_RATE.translate(environment));

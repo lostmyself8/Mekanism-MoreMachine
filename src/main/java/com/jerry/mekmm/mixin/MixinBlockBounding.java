@@ -13,6 +13,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import com.jerry.meklg.common.content.blocktype.LargeGeneratorBlockShapes;
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -38,6 +39,7 @@ public class MixinBlockBounding {
         mekmm$setLargeWindGeneratorPartShape(world, pos, cir);
     }
 
+    @Unique
     private void mekmm$setLargeWindGeneratorPartShape(BlockGetter world, BlockPos pos, CallbackInfoReturnable<VoxelShape> cir) {
         BlockPos mainPos = BlockBounding.getMainBlockPos(world, pos);
         if (mainPos == null) {

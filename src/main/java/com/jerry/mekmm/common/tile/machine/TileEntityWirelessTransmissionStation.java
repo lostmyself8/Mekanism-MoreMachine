@@ -15,6 +15,7 @@ import mekanism.api.RelativeSide;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.IChemicalTank;
+import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.fluid.IFluidTank;
 import mekanism.api.heat.HeatAPI.HeatTransfer;
 import mekanism.api.heat.IHeatCapacitor;
@@ -28,8 +29,8 @@ import mekanism.common.capabilities.heat.CachedAmbientTemperature;
 import mekanism.common.capabilities.heat.ITileHeatHandler;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
-import mekanism.common.capabilities.holder.energy.EnergyConfigHolder;
-import mekanism.common.capabilities.holder.energy.IEnergyContainerHolder;
+import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
+import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.integration.computer.ComputerException;
@@ -73,6 +74,7 @@ import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.NotNull;
@@ -186,16 +188,15 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    protected @Nullable IEnergyContainerHolder getInitialEnergyContainer(IContentsListener listener) {
+    protected @Nullable ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener) {
         energyContainer = MachineEnergyContainer.input(this, listener);
-        return new EnergyConfigHolder(energyContainer, this);
+        return SingleConfigHolder.energy(energyContainer, this);
     }
 
     @Override
-    protected @Nullable IContainerHolder<IHeatCapacitor> getInitialHeatCapacitors(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
-        MekContainerHelper<IHeatCapacitor> builder = MekContainerHelper.forSideWithHeatConfig(this);
-        builder.addContainer(heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener));
-        return builder.build();
+    protected @Nullable ISingleContainerHolder<IHeatCapacitor> getInitialHeatCapacitor(IContentsListener listener, CachedAmbientTemperature ambientTemperature) {
+        heatCapacitor = BasicHeatCapacitor.create(HEAT_CAPACITY, INVERSE_CONDUCTION_COEFFICIENT, INVERSE_INSULATION_COEFFICIENT, ambientTemperature, listener);
+        return SingleConfigHolder.heat(heatCapacitor, this);
     }
 
     private void closeInvalidScreens() {
@@ -242,13 +243,16 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
             // 传输物品
             transportItems();
         }
-        // 传输热量
-        HeatTransfer loss = simulate();
-        // 如果有无线交换热量缓存时要加上无线交换的热量损失
-        // 交换热量需要每tick进行
-        // 如果没有无线热量传递，则只计算相邻方块的热传导；如果有无线热量传递，则计算两者的加和
-        lastTransferLoss = loss.adjacentTransfer();
-        lastEnvironmentLoss = loss.environmentTransfer();
+        try (Transaction transaction = Transaction.openRoot()) {
+            // 传输热量
+            HeatTransfer loss = simulate(transaction);
+            // 如果有无线交换热量缓存时要加上无线交换的热量损失
+            // 交换热量需要每tick进行
+            // 如果没有无线热量传递，则只计算相邻方块的热传导；如果有无线热量传递，则计算两者的加和
+            lastTransferLoss = loss.adjacentTransfer();
+            lastEnvironmentLoss = loss.environmentTransfer();
+            transaction.commit();
+        }
         return sendUpdatePacket;
     }
 
@@ -280,57 +284,17 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     /**
-     * 与{@link ITileHeatHandler#simulateAdjacent()}相似
+     * 与{@link ITileHeatHandler#simulateAdjacent(TransactionContext)}相似
      *
      * @return double 与连接方块的热量传递值
      */
-    // 连接两个及以上数量的方块时会导致热量频繁交换（
-    private double exchangeHeat() {
-        // double adjacentTransfer = 0;
-        // // 累积总热量变化
-        // double totalHeatToTransfer = 0;
-        // // 当前温度(在循环开始前获取,避免循环中温度变化影响计算)
-        // double currentTemp = getTemperature();
-        // // 获取当前系统该方向的热容量（在simulateAdjacent()中是这样，但在这只是获取热量容器的热容量）
-        // double heatCapacity = heatCapacitor.getHeatCapacity();
-        //
-        // for (ConnectionConfig config : connectionManager.getConnectionsByType(TransmissionType.HEAT)) {
-        // // 检查该方向是否有相邻的热处理系统
-        // IHeatHandler sink = WorldUtils.getCapability(currentLevel, Capabilities.HEAT, config.pos(),
-        // config.direction());
-        // // 只有存在相邻系统时才进行热交换计算
-        // if (sink != null) {
-        // // 获取目标温度
-        // double sinkTemp = sink.getTotalTemperature();
-        // // 计算总热阻
-        // double invConduction = sink.getTotalInverseConduction() + heatCapacitor.getInverseConduction();
-        // if (invConduction == 0) continue;
-        // double tempDifference = currentTemp - sinkTemp;
-        // double tempToTransfer = tempDifference / invConduction;
-        // // 将温度差转换为实际热量Q = ΔT × C
-        // double heatToTransfer = tempToTransfer * heatCapacity;
-        // // 限制热量传递速率，最多传递50%的温差
-        // double maxHeatTransfer = Math.abs(tempDifference) * heatCapacity * 0.5;
-        // heatToTransfer = Mth.clamp(heatToTransfer, -maxHeatTransfer, maxHeatTransfer);
-        // totalHeatToTransfer -= heatToTransfer;
-        // // 对方接收热量
-        // sink.handleHeat(heatToTransfer);
-        // // 对方接收热量
-        // adjacentTransfer = incrementAdjacentTransfer(adjacentTransfer, tempToTransfer, config.direction());
-        // }
-        // }
-        // // 一次性应用所有热量变化
-        // if (totalHeatToTransfer != 0) {
-        // heatCapacitor.handleHeat(totalHeatToTransfer);
-        // }
-        // return adjacentTransfer;
-
+    private double exchangeHeat(TransactionContext transaction) {
         // 如果热量速率为0或没有热量连接,直接返回
         if (heatRate <= 0) return 0;
         List<ConnectionConfig> heatConnections = connectionManager.getConnectionsByType(TransmissionType.HEAT).stream().toList();
         if (heatConnections.isEmpty()) return 0;
         double adjacentTransfer = 0;
-        double currentTemp = getTemperature();
+        double sourceTemp = getTemperature();
         double heatCapacity = heatCapacitor.getHeatCapacity();
 
         // 计算每个连接分配的温度变化量
@@ -339,18 +303,19 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         for (ConnectionConfig config : heatConnections) {
             IHeatHandler sink = WorldUtils.getCapability(level, Capabilities.HEAT, config.pos(), config.direction());
             if (sink != null) {
-                double sinkTemp = sink.getTotalTemperature();
+                double sinkTemp = sink.getTemperature();
                 // 单向传输:只有当传输站温度高于目标温度时才传输
-                if (currentTemp > sinkTemp) {
+                if (sourceTemp > sinkTemp) {
                     // 计算实际可传输的温度(不能超过温差)
-                    double maxTempTransfer = currentTemp - sinkTemp;
+                    double maxTempTransfer = sourceTemp - sinkTemp;
                     double actualTempTransfer = Math.min(tempChangePerConnection, maxTempTransfer);
                     // 计算对应的热量 Q = ΔT × C
                     double heatToTransfer = actualTempTransfer * heatCapacity;
                     // 从传输站移除热量
-                    heatCapacitor.handleHeat(-heatToTransfer);
+                    heatCapacitor.handleHeat(-heatToTransfer, transaction);
                     // 向目标添加热量
-                    sink.handleHeat(heatToTransfer);
+                    sink.handleHeat(heatToTransfer, transaction);
+                    sourceTemp -= actualTempTransfer;
                     adjacentTransfer += actualTempTransfer;
                 }
             }
@@ -365,8 +330,8 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     }
 
     @Override
-    public double simulateAdjacent() {
-        return super.simulateAdjacent() + exchangeHeat();
+    public double simulateAdjacent(TransactionContext transaction) {
+        return super.simulateAdjacent(transaction) + exchangeHeat(transaction);
     }
 
     @Override
