@@ -70,10 +70,12 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
             if (outputCaches == null) {
                 Direction direction = getDirection();
                 RelativeSide[] energySides = getEnergySides();
-                outputCaches = new ArrayList<>(energySides.length);
+                outputCaches = new ArrayList<>(portCount(energySides.length));
                 for (RelativeSide energySide : energySides) {
                     Direction side = energySide.getDirection(direction);
-                    outputCaches.add(Capabilities.ENERGY.createCache((ServerLevel) level, offSetOutput(worldPosition, side), side.getOpposite()));
+                    for (BlockPos outputPos : offSetOutputs(worldPosition, side)) {
+                        outputCaches.add(Capabilities.ENERGY.createCache(level, outputPos, side.getOpposite()));
+                    }
                 }
             }
             EnergyUtils.emit(outputCaches, energyContainer, Math.toIntExact(Math.min(Integer.MAX_VALUE, getMaxOutput())), null);
@@ -83,6 +85,27 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
 
     private Set<RelativeSide> getEnergySideSet() {
         return Arrays.stream(getEnergySides()).collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
+     * Number of physical energy ports used for automatic energy output.
+     *
+     * @param input number of relative sides exposing this generator's energy container
+     * @return expected physical port count, used only to size the output cache list
+     */
+    protected int portCount(int input) {
+        return input;
+    }
+
+    /**
+     * Maps one energy output side to the physical positions that should be emitted into.
+     *
+     * @param from main tile position
+     * @param side absolute output direction
+     * @return physical output positions for this side
+     */
+    protected BlockPos[] offSetOutputs(BlockPos from, Direction side) {
+        return new BlockPos[] { offSetOutput(from, side) };
     }
 
     protected BlockPos offSetOutput(BlockPos from, Direction side) {
