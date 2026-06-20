@@ -485,13 +485,17 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         if (level == null || !level.dimensionType().hasSkyLight()) {
             return 0F;
         }
-        double dayProgress = Math.floorMod(level.getGameTime(), 24_000L) / 24_000D;
+        double dayProgress = getSolarDayProgress();
         double sunRadians = dayProgress * Math.PI * 2D;
         Vec3 target = Vec3.atCenterOf(targetPos);
         Vec3 sun = target.add(Math.cos(sunRadians) * 1024D, Math.sin(sunRadians) * 1024D, 0D);
         Vec3 ray = target.subtract(sun);
         double horizontalLength = Math.sqrt(ray.x * ray.x + ray.z * ray.z);
         return (float) Math.toDegrees(Math.atan2(-ray.y, horizontalLength));
+    }
+
+    private double getSolarDayProgress() {
+        return level == null ? 0D : Math.floorMod(level.getDefaultClockTime(), 24_000L) / 24_000D;
     }
 
     private float clampAngle(float angle) {
@@ -503,7 +507,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         if (level == null) {
             return angle;
         }
-        double dayProgress = Math.floorMod(level.getGameTime(), 24_000L) / 24_000D;
+        double dayProgress = getSolarDayProgress();
         float eastTrackingAngle = clampAngle((float) (MAX_ANGLE - (MAX_ANGLE - MIN_ANGLE) * dayProgress * 2D));
         return switch (getDirection()) {
             case EAST -> eastTrackingAngle;

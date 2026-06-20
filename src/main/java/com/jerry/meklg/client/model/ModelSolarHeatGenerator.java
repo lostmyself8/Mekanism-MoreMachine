@@ -289,12 +289,14 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<SolarHeatGenerato
     }
 
     private final RenderType RENDER_TYPE = RenderTypes.entitySolid(SOLAR_HEAT_GENERATOR_TEXTURE);
+    private final EntityModelSet entityModelSet;
     private final List<ModelPart> parts;
     private final ModelPart top;
     private final ModelPart[] panels = new ModelPart[TileEntitySolarHeatGenerator.SLOT_COUNT];
 
     public ModelSolarHeatGenerator(EntityModelSet entityModelSet) {
         super(entityModelSet.bakeLayer(SOLAR_HEAT_GENERATOR_LAYER));
+        this.entityModelSet = entityModelSet;
         parts = getRenderableParts(root, BASE, MIDDLE, TOP);
         top = TOP.getFromRoot(root);
 
@@ -303,6 +305,10 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<SolarHeatGenerato
         panels[1] = panelPart.getChild(panel_b_r1.name());
         panels[2] = panelPart.getChild(panel_c_r1.name());
         panels[3] = panelPart.getChild(panel_d_r1.name());
+    }
+
+    public ModelSolarHeatGenerator copy() {
+        return new ModelSolarHeatGenerator(entityModelSet);
     }
 
     @Override

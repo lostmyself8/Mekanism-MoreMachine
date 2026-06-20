@@ -58,14 +58,14 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
             poseStack.translate(0.5, 1.5, 0.5);
             MekanismRenderer.rotate(poseStack, state.direction, 0, 180, 90, 270);
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-            model.collectBlock(state.rotation, poseStack, nodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.panels);
+            state.model.collectBlock(state.rotation, poseStack, nodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.panels);
             poseStack.popPose();
         }
     }
 
     @Override
     public SolarHeatGeneratorRenderState createRenderState() {
-        return new SolarHeatGeneratorRenderState();
+        return new SolarHeatGeneratorRenderState(model);
     }
 
     @Override
@@ -105,8 +105,13 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     public static class SolarHeatGeneratorRenderState extends BlockEntityRenderState {
 
         public final boolean[] panels = new boolean[TileEntitySolarHeatGenerator.SLOT_COUNT];
+        private final ModelSolarHeatGenerator model;
         public SolarHeatGeneratorRotationRenderState rotation = new SolarHeatGeneratorRotationRenderState(0);
         @Nullable
         public Direction direction;
+
+        private SolarHeatGeneratorRenderState(ModelSolarHeatGenerator rendererModel) {
+            model = rendererModel.copy();
+        }
     }
 }
