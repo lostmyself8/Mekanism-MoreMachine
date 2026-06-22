@@ -8,6 +8,7 @@
 	"item.mekmm.uu_matter": "UU物质",
 	"item.mekmm.connector": "连接器",
 	"item.mekmm.advanced_electrolysis_core": "高级电解核心",
+	"item.mekmm.reflector": "反射镜",
 
 	"block.mekmm.basic_oxidizing_factory": "基础氧化工厂",
 	"block.mekmm.advanced_oxidizing_factory": "高级氧化工厂",
@@ -175,6 +176,7 @@
 	"block.mekmm.large_heat_generator": "大型热力发电机",
 	"block.mekmm.large_gas_burning_generator": "大型燃气发电机",
 	"block.mekmm.large_wind_generator": "大型风力发电机",
+	"block.mekmm.solar_heat_generator": "太阳光热发电机",
 
 	"chemical.mekmm.nutritional_paste": "营养糊剂",
 	"chemical.mekmm.nutrient_solution": "营养液",
@@ -345,6 +347,7 @@
 	"container.mekmm.large_heat_generator": "大型热力发电机",
 	"container.mekmm.large_gas_burning_generator": "大型燃气发电机",
 	"container.mekmm.large_wind_generator": "大型风力发电机",
+	"container.mekmm.solar_heat_generator": "太阳光热发电机",
 
 	"charging.mekmm.equips": "装备栏充能",
 	"charging.mekmm.inventory": "物品栏充能",
