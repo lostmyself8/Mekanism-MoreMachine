@@ -85,6 +85,8 @@ dependencies {
     // immersiveengineering
 //    localRuntime(forge.immersiveengineering)
 
+    localRuntime(forge.spark)
+
     // Runtime Recipe Viewers - uncomment whichever one you want to use //
 //    modLocalRuntime(forge.jer)
 //    modLocalRuntime(forge.emi)

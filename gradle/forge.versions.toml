@@ -22,6 +22,7 @@ modernfix = "5.27.0+mc26.1"
 modernui = "RM220vWV" #3.12.0.2 - not yet for 26.1
 
 ## curseforge maven ##
+spark = "8275631"
 mekanismcovers = "6071684"
 igleelibrary = "7000755"
 evolvedmekanism = "7321395"
@@ -63,6 +64,7 @@ igleelibrary        = { module = "curse.maven:iglee-library-541199", version.ref
 evolvedmekanism     = { module = "curse.maven:evolved-mekanism-1230085", version.ref = "evolvedmekanism" }
 immersiveengineering= { module = "curse.maven:immersive-engineering-231951", version.ref = "immersiveengineering" }
 
+spark               = { module = "curse.maven:spark-361579", version.ref = "spark" }
 jecharacters        = { module = "dev:jecharacters-1.21-neoforge", version.ref = "jech" }
 [bundles]
 jei = ["jei-common-api", "jei-neoforge-api", "jei-neoforge-impl"]
