@@ -55,7 +55,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -92,8 +91,8 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
      * 放置反射镜的槽位数量
      */
     public static final int SLOT_COUNT = 4;
-    private static final int SOLAR_CLEAR_RADIUS = 2;
     private static final int SOLAR_CHECK_INTERVAL = 20;
+    private static final int MAX_SOLAR_RAY_STEPS = 64;
     private static final double NORTH_SOUTH_HEAT_TARGET = 900;
     private static final double NORTH_SOUTH_HEAT_GAIN_MULTIPLIER = 0.12;
     private static final double GENERATION_HEAT_MULTIPLIER = 8;
@@ -102,6 +101,8 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
      */
     private static final float MIN_ANGLE = -30F;
     private static final float MAX_ANGLE = 30F;
+    private static final float TRACKING_ANGLE_STEP = 0.25F;
+    private static final float SEEK_SUN_ANGLE_STEP = 4F;
     private static final String RENDER_PANEL_MASK = "renderPanelMask";
     private static final String TRACKING_ANGLE = "trackingAngle";
 
@@ -113,6 +114,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     /**
      * 当前旋转了的角度
      */
+    @Getter
     private float angle;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
@@ -146,6 +148,9 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     private double solarVisibility;
     private boolean hasSolarExposure;
     private long lastSolarAreaCheck;
+    private long lastAngleUpdateTick;
+    private boolean wasSunAboveHorizon;
+    private boolean finishingSunset;
     private SolarHeatCheck[] solarChecks;
     private double clientTemperature;
 
@@ -229,10 +234,11 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         int reflectorCount = getReflectorCount();
         if (isGatheringHeat(reflectorCount) && level instanceof ServerLevel serverLevel) {
             damageReflectors(serverLevel);
+            reflectorCount = getReflectorCount();
         }
 
         updateMaxOutputRaw(MoreMachineConfig.generators.solarHeatGeneration.get());
-        updateAngle();
+        updateAngle(reflectorCount > 0);
 
         setActive(isGatheringHeat(reflectorCount) || productionRate > 0);
         if (updateRenderPanels()) {
@@ -314,14 +320,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             solarChecks = null;
             return;
         }
-        BlockPos center = getBlockPos().above(3);
-        solarChecks = new SolarHeatCheck[(SOLAR_CLEAR_RADIUS * 2 + 1) * (SOLAR_CLEAR_RADIUS * 2 + 1)];
-        int index = 0;
-        for (int x = -SOLAR_CLEAR_RADIUS; x <= SOLAR_CLEAR_RADIUS; x++) {
-            for (int z = -SOLAR_CLEAR_RADIUS; z <= SOLAR_CLEAR_RADIUS; z++) {
-                solarChecks[index++] = new SolarHeatCheck(level, center.offset(x, 0, z));
-            }
-        }
+        solarChecks = new SolarHeatCheck[] { new SolarHeatCheck(level, getBlockPos().above(3)) };
     }
 
     private void updateSolarStats() {
@@ -353,7 +352,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         double sunBrightness = WorldUtils.getSunBrightness(level, getBlockPos().above(3));
         double directionMultiplier;
         if (isEastWestFacing()) {
-            double angle = calculateSunRayGroundAngle(getBlockPos().above(3));
+            double angle = calculateSunRayGroundAngle();
             directionMultiplier = angle <= 0 ? 0 : Math.sin(Math.toRadians(angle));
         } else {
             directionMultiplier = NORTH_SOUTH_HEAT_GAIN_MULTIPLIER;
@@ -470,36 +469,87 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected void onUpdateClient(Level level) {
         super.onUpdateClient(level);
-        updateAngle();
+        updateAngle(hasRenderedReflector());
     }
 
-    private void updateAngle() {
-        float sunRayGroundAngle = calculateSunRayGroundAngle(getBlockPos().above(3));
-        if (sunRayGroundAngle > 0F) {
+    private void updateAngle(boolean hasReflector) {
+        if (level == null) {
+            return;
+        }
+        long gameTime = level.getGameTime();
+        if (gameTime == lastAngleUpdateTick) {
+            return;
+        }
+        lastAngleUpdateTick = gameTime;
+        boolean sunAboveHorizon = isSunAboveHorizon();
+        if (!hasReflector) {
+            wasSunAboveHorizon = sunAboveHorizon;
+            finishingSunset = false;
+            return;
+        }
+        if (sunAboveHorizon) {
+            if (isDawnTransitionFrame()) {
+                angle = calculateSunriseReflectorAngle();
+                return;
+            }
+            wasSunAboveHorizon = true;
+            finishingSunset = false;
             angle = calculateSunTrackingReflectorAngle();
+        } else if ((wasSunAboveHorizon || finishingSunset) && !isAtAngle(calculateSunsetReflectorAngle())) {
+            finishingSunset = true;
+            moveAngleTowards(quantizeAngle(calculateSunsetReflectorAngle()), TRACKING_ANGLE_STEP);
+        } else {
+            wasSunAboveHorizon = false;
+            finishingSunset = false;
+            moveAngleTowards(quantizeAngle(calculateSunriseReflectorAngle()), SEEK_SUN_ANGLE_STEP);
         }
     }
 
     // 计算太阳到目标方块的直线与地面的夹角度数
-    private float calculateSunRayGroundAngle(BlockPos targetPos) {
+    private float calculateSunRayGroundAngle() {
         if (level == null || !level.dimensionType().hasSkyLight()) {
             return 0F;
         }
         double dayProgress = getSolarDayProgress();
         double sunRadians = dayProgress * Math.PI * 2D;
-        Vec3 target = Vec3.atCenterOf(targetPos);
-        Vec3 sun = target.add(Math.cos(sunRadians) * 1024D, Math.sin(sunRadians) * 1024D, 0D);
-        Vec3 ray = target.subtract(sun);
-        double horizontalLength = Math.sqrt(ray.x * ray.x + ray.z * ray.z);
-        return (float) Math.toDegrees(Math.atan2(-ray.y, horizontalLength));
+        return (float) Math.toDegrees(Math.atan2(Math.sin(sunRadians), Math.abs(Math.cos(sunRadians))));
     }
 
     private double getSolarDayProgress() {
         return level == null ? 0D : Math.floorMod(level.getDefaultClockTime(), 24_000L) / 24_000D;
     }
 
+    private long getSolarDayTime() {
+        return level == null ? 0L : Math.floorMod(level.getDefaultClockTime(), 24_000L);
+    }
+
+    private boolean isSunAboveHorizon() {
+        return level != null && level.dimensionType().hasSkyLight() && !level.isDarkOutside();
+    }
+
+    private boolean isDawnTransitionFrame() {
+        return !wasSunAboveHorizon && getSolarDayTime() >= 12_000L;
+    }
+
     private float clampAngle(float angle) {
         return Mth.clamp(angle, MIN_ANGLE, MAX_ANGLE);
+    }
+
+    private float quantizeAngle(float angle) {
+        return Math.round(angle / TRACKING_ANGLE_STEP) * TRACKING_ANGLE_STEP;
+    }
+
+    private void moveAngleTowards(float targetAngle, float step) {
+        float angleDelta = targetAngle - angle;
+        if (Math.abs(angleDelta) <= step) {
+            angle = targetAngle;
+        } else {
+            angle = quantizeAngle(clampAngle(angle + Math.copySign(step, angleDelta)));
+        }
+    }
+
+    private boolean isAtAngle(float targetAngle) {
+        return Math.abs(quantizeAngle(targetAngle) - angle) <= TRACKING_ANGLE_STEP;
     }
 
     // 让反射镜对着太阳
@@ -512,6 +562,22 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         return switch (getDirection()) {
             case EAST -> eastTrackingAngle;
             case WEST -> -eastTrackingAngle;
+            default -> 0F;
+        };
+    }
+
+    private float calculateSunsetReflectorAngle() {
+        return switch (getDirection()) {
+            case EAST -> MIN_ANGLE;
+            case WEST -> -MIN_ANGLE;
+            default -> 0F;
+        };
+    }
+
+    private float calculateSunriseReflectorAngle() {
+        return switch (getDirection()) {
+            case EAST -> MAX_ANGLE;
+            case WEST -> -MAX_ANGLE;
             default -> 0F;
         };
     }
@@ -561,15 +627,17 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
         clientTemperature = temperature;
     }
 
-    public float getAngle() {
-        if (level != null && level.isClientSide()) {
-            updateAngle();
-        }
-        return angle;
-    }
-
     public boolean shouldRenderPanel(int slot) {
         return slot >= 0 && slot < renderPanels.length && renderPanels[slot];
+    }
+
+    private boolean hasRenderedReflector() {
+        for (boolean renderPanel : renderPanels) {
+            if (renderPanel) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int getRenderPanelMask() {
@@ -599,6 +667,22 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     public void handleUpdateTag(@NotNull ValueInput input) {
         super.handleUpdateTag(input);
         setRenderPanelMask(input.getIntOr(RENDER_PANEL_MASK, getRenderPanelMask()));
+        readTrackingAngle(input);
+    }
+
+    @Override
+    public void writeSustainedData(@NotNull ValueOutput output) {
+        super.writeSustainedData(output);
+        output.putFloat(TRACKING_ANGLE, angle);
+    }
+
+    @Override
+    public void readSustainedData(@NotNull ValueInput input) {
+        super.readSustainedData(input);
+        readTrackingAngle(input);
+    }
+
+    private void readTrackingAngle(ValueInput input) {
         angle = input.getFloatOr(TRACKING_ANGLE, angle);
     }
 
@@ -757,17 +841,66 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
                 return;
             }
             lastCheckedSun = time;
-            if (world.getFluidState(pos).isEmpty()) {
-                canSeeSun = world.canSeeSky(pos);
-            } else {
-                BlockPos above = pos.above();
-                if (world.canSeeSky(above)) {
-                    BlockState state = world.getBlockState(above);
-                    canSeeSun = !state.liquid() && !state.canOcclude();
+            canSeeSun = canSeeSunAlongRay();
+        }
+
+        private boolean canSeeSunAlongRay() {
+            double dayProgress = Math.floorMod(world.getDefaultClockTime(), 24_000L) / 24_000D;
+            double sunRadians = dayProgress * Math.PI * 2D;
+            double stepX = Math.cos(sunRadians);
+            double stepY = Math.sin(sunRadians);
+            if (stepY <= 0) {
+                return false;
+            }
+            return rayCanReachSky(stepX, stepY);
+        }
+
+        private boolean rayCanReachSky(double stepX, double stepY) {
+            double x = pos.getX() + 0.5D;
+            double y = pos.getY() + 0.5D;
+            double z = pos.getZ() + 0.5D;
+            int blockX = Mth.floor(x);
+            int blockY = Mth.floor(y);
+            int blockZ = Mth.floor(z);
+            int xDirection = stepX > 0 ? 1 : stepX < 0 ? -1 : 0;
+            double nextX = firstBoundaryDistance(x, blockX, stepX, xDirection);
+            double nextY = firstBoundaryDistance(y, blockY, stepY, 1);
+            double xDelta = xDirection == 0 ? Double.POSITIVE_INFINITY : Math.abs(1D / stepX);
+            double yDelta = 1D / stepY;
+            BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+            int maxBuildHeight = world.dimensionType().minY() + world.dimensionType().height();
+            int steps = 0;
+            while (blockY < maxBuildHeight && steps++ < MAX_SOLAR_RAY_STEPS) {
+                if (nextX < nextY) {
+                    blockX += xDirection;
+                    nextX += xDelta;
                 } else {
-                    canSeeSun = false;
+                    blockY++;
+                    nextY += yDelta;
+                }
+                if (blockY >= maxBuildHeight) {
+                    return true;
+                }
+                cursor.set(blockX, blockY, blockZ);
+                if (blocksSun(cursor)) {
+                    return false;
                 }
             }
+            return true;
+        }
+
+        private double firstBoundaryDistance(double coordinate, int blockCoordinate, double step, int direction) {
+            if (direction > 0) {
+                return (blockCoordinate + 1D - coordinate) / step;
+            } else if (direction < 0) {
+                return (coordinate - blockCoordinate) / -step;
+            }
+            return Double.POSITIVE_INFINITY;
+        }
+
+        private boolean blocksSun(BlockPos pos) {
+            BlockState state = world.getBlockState(pos);
+            return !world.getFluidState(pos).isEmpty() || state.canOcclude();
         }
     }
 
