@@ -11,6 +11,10 @@
 		"3": "mekanism:block/bottom",
 		"particle": "mekanism:block/bottom"
 	},
+	"__comment": "this exists because the model is at Y-1 to fit inside vanilla size restrictions",
+	"transform": {
+		"translation": [0, 1, 0]
+	},
 	"elements": [
 		{
 			"name": "ring_light",

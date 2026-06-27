@@ -8,6 +8,10 @@
 		"0": "mekmm:block/chemical_tank/chemical_tank_max",
 		"particle": "mekmm:block/chemical_tank/chemical_tank_max"
 	},
+	"__comment": "this exists because the model is at Y-1 to fit inside vanilla size restrictions",
+	"transform": {
+		"translation": [0, 1, 0]
+	},
 	"elements": [
 		{
 			"name": "bottom_led",

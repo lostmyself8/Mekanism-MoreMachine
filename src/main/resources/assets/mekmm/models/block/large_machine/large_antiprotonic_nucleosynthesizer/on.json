@@ -4,6 +4,10 @@
 	"textures": {
 		"particle": "mekanism:block/models/antiprotonic_nucleosynthesizer_back"
 	},
+	"__comment": "this exists because the model is at Y-1 to fit inside vanilla size restrictions",
+	"transform": {
+		"translation": [0, 1, 0]
+	},
 	"children": {
 		"base": {
 			"parent": "mekmm:block/large_machine/large_antiprotonic_nucleosynthesizer/base/on",

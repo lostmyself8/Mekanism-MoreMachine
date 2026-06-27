@@ -12,6 +12,10 @@
 		"4": "mekmm:block/large_machine/screen_off",
 		"particle": "mekanism:block/base/base_bottom"
 	},
+	"__comment": "this exists because the model is at Y-1 to fit inside vanilla size restrictions",
+	"transform": {
+		"translation": [0, 1, 0]
+	},
 	"elements": [
 		{
 			"name": "back1",
