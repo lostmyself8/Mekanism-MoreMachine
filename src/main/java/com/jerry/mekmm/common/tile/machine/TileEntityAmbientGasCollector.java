@@ -32,7 +32,6 @@ import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.base.TileEntityMekanism;
-import mekanism.common.tile.interfaces.IRedstoneControl.RedstoneControl;
 import mekanism.common.util.*;
 
 import net.minecraft.core.BlockPos;
@@ -150,7 +149,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
                 for (RelativeSide outputSide : getOutputSides()) {
                     // 从相对位置获取绝对位置
                     Direction side = outputSide.getDirection(getDirection());
-                    chemicalHandler.add(Capabilities.CHEMICAL.createCache((ServerLevel) level, worldPosition.relative(side), side.getOpposite()));
+                    chemicalHandler.add(Capabilities.CHEMICAL.createCache(level, worldPosition.relative(side), side.getOpposite()));
                 }
             }
             ResourceUtils.emit(chemicalHandler, chemicalTank, outputRate, null);
@@ -228,6 +227,10 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
     @Override
     public List<Component> getInfo(@NotNull Upgrade upgrade) {
         return UpgradeUtils.getMultScaledInfo(this, upgrade);
+    }
+
+    public MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer() {
+        return this.energyContainer;
     }
 
     public boolean usedEnergy() {

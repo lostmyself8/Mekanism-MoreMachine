@@ -13,7 +13,7 @@ import mekanism.client.gui.element.tab.GuiEnergyTab;
 import mekanism.common.MekanismLang;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
-import mekanism.common.inventory.warning.WarningTracker;
+import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.util.text.EnergyDisplay;
 import mekanism.common.util.text.TextUtils;
 
@@ -54,14 +54,12 @@ public class GuiAmbientGasCollector extends GuiMekanismTile<TileEntityAmbientGas
             return list;
         }));
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15))
-                .warning(WarningTracker.WarningType.NOT_ENOUGH_ENERGY, () -> {
-                    MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer = (MachineEnergyContainer<TileEntityAmbientGasCollector>) tile.getEnergyContainer();
+                .warning(WarningType.NOT_ENOUGH_ENERGY, () -> {
+                    MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer = tile.energyContainer();
                     return energyContainer.getEnergyPerTick() > energyContainer.getAmountAsLong();
                 });
         addRenderableWidget(new GuiChemicalGauge(() -> tile.chemicalTank, tile::getChemicalTanks, GaugeType.STANDARD, this, 6, 13))
-                .warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, () -> tile.chemicalTank.getNeededAsInt(ChemicalResource.EMPTY) < tile.estimateIncrementAmount());
-        // TODO: Eventually we may want to consider showing a warning if the block under the pump is of the wrong type
-        // or there wasn't a valid spot to suck
+                .warning(WarningType.NO_SPACE_IN_OUTPUT, () -> tile.chemicalTank.getNeededAsInt(ChemicalResource.EMPTY) < tile.estimateIncrementAmount());
         addRenderableWidget(new GuiEnergyTab(this, (MachineEnergyContainer<?>) tile.getEnergyContainer(), tile::usedEnergy));
     }
 
