@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ChemicalStackLinkedSet {
 
-    public static final Hash.Strategy<? super ChemicalStack> TYPE_AND_COMPONENTS = new Hash.Strategy<ChemicalStack>() {
+    public static final Hash.Strategy<? super ChemicalStack> TYPE_AND_COMPONENTS = new Hash.Strategy<>() {
 
         public int hashCode(@Nullable ChemicalStack stack) {
             // Keep this strategy consistent with equals: compare chemical type only, ignore amount.
