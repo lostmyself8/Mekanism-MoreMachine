@@ -13,8 +13,8 @@ public class ChemicalStackLinkedSet {
     public static final Hash.Strategy<? super ChemicalStack> TYPE_AND_COMPONENTS = new Hash.Strategy<ChemicalStack>() {
 
         public int hashCode(@Nullable ChemicalStack stack) {
-            // hashCode会在空时返回0，因此不需要判断非空
-            return stack.hashCode();
+            // Keep this strategy consistent with equals: compare chemical type only, ignore amount.
+            return stack == null || stack.isEmpty() ? 0 : stack.getChemical().hashCode();
         }
 
         public boolean equals(@Nullable ChemicalStack first, @Nullable ChemicalStack second) {
