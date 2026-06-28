@@ -4,7 +4,6 @@ import com.jerry.mekaf.common.upgrade.ChemicalToItemUpgradeData;
 
 import com.jerry.mekmm.common.util.ChemicalStackMap;
 
-import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalStack;
@@ -32,7 +31,6 @@ import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.ChemicalSlotInfo;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.upgrade.IUpgradeData;
-import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -274,7 +272,7 @@ public abstract class TileEntityChemicalToItemFactory<RECIPE extends MekanismRec
             // spare items to distribute to them
         }
         // Distribute items among the slots
-        distributeItems(processes);
+        distributeChemicals(processes);
     }
 
     protected void addEmptyTanksAsTargets(Map<ChemicalStack, CIRecipeProcessInfo<RECIPE>> processes, List<CIProcessInfo> emptyProcesses) {
@@ -320,7 +318,7 @@ public abstract class TileEntityChemicalToItemFactory<RECIPE extends MekanismRec
         }
     }
 
-    protected void distributeItems(Map<ChemicalStack, CIRecipeProcessInfo<RECIPE>> processes) {
+    protected void distributeChemicals(Map<ChemicalStack, CIRecipeProcessInfo<RECIPE>> processes) {
         for (Map.Entry<ChemicalStack, CIRecipeProcessInfo<RECIPE>> entry : processes.entrySet()) {
             CIRecipeProcessInfo<RECIPE> recipeProcessInfo = entry.getValue();
             long processAmount = recipeProcessInfo.processes.size();
@@ -411,13 +409,8 @@ public abstract class TileEntityChemicalToItemFactory<RECIPE extends MekanismRec
                         // happen if the recipe requires a stacked input (minPerTank > 1)), then we need to set the slot
                         // to empty
                         inputTank.setEmpty();
-                    } else if (inputTank.getCapacity() != sizeForTank) {
-                        // Otherwise, if our slot doesn't already contain the amount we want it to,
-                        // we need to adjust how much is stored in it, and log an error if it changed
-                        // by a different amount then we expected
-                        // Note: We use setStackSize here rather than setStack to avoid an unnecessary stack copy call
-                        // as copying item stacks can sometimes be rather expensive in a heavily modded environment
-                        MekanismUtils.logMismatchedStackSize(sizeForTank, inputTank.setStackSize(sizeForTank, Action.EXECUTE));
+                    } else if (inputTank.getStack().getAmount() != sizeForTank) {
+                        inputTank.setStackUnchecked(item.copyWithAmount(sizeForTank));
                     }
                 }
             }
