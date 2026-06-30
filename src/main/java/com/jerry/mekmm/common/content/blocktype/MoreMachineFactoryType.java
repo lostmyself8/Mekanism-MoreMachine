@@ -6,7 +6,7 @@ import com.jerry.mekmm.common.registries.MoreMachineBlockTypes;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
 import mekanism.api.annotations.NothingNullByDefault;
-import mekanism.api.text.IHasTranslationKey;
+import mekanism.api.text.IHasTranslationKey.IHasEnumNameTranslationKey;
 import mekanism.api.text.ILangEntry;
 import mekanism.common.registration.impl.BlockRegistryObject;
 
@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 @NothingNullByDefault
-public enum MoreMachineFactoryType implements IHasTranslationKey.IHasEnumNameTranslationKey {
+public enum MoreMachineFactoryType implements IHasEnumNameTranslationKey {
 
     RECYCLING("recycling", MoreMachineLang.RECYCLING, () -> MoreMachineBlockTypes.RECYCLER, () -> MoreMachineBlocks.RECYCLER),
     PLANTING_STATION("planting", MoreMachineLang.PLANTING, () -> MoreMachineBlockTypes.PLANTING_STATION, () -> MoreMachineBlocks.PLANTING_STATION),

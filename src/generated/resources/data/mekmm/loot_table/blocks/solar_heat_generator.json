@@ -23,7 +23,11 @@
                 "mekanism:redstone_control",
                 "mekanism:security",
                 "mekanism:upgrades",
-                "mekanism:energy"
+                "mekanism:energy",
+                "mekanism:items",
+                "mekanism:fluids",
+                "mekanism:chemicals",
+                "mekanism:heat_data"
               ],
               "source": "block_entity"
             }

@@ -9,6 +9,7 @@
     "client.recipe_viewer.MixinMekanismEmi",
     "recipe.MixinMekanismRecipeType",
     "recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
+    "resource.ore.MixinOreType",
     "tile.MixinTileEntityChemicalCrystallizer",
     "tile.MixinTileEntityChemicalDissolutionChamber",
     "tile.MixinTileEntityChemicalOxidizer",
