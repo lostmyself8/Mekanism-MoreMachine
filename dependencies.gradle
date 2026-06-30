@@ -93,8 +93,8 @@ dependencies {
     localRuntime(forge.jei.neoforge.impl)
 
     // Client-only runtime mods //
-//    clientLocalRuntime(forge.sodium)
-//    clientLocalRuntime(forge.iris)
+    clientLocalRuntime(forge.sodium)
+    clientLocalRuntime(forge.iris)
 //    clientLocalRuntime(forge.modernui) // not yet for 26.1
 
     //////////////////////////////////////////////////////
