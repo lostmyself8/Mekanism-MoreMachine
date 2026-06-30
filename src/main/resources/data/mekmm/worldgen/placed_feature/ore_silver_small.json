@@ -1,0 +1,39 @@
+{
+  "feature": "mekmm:ore_silver_small",
+  "placement": [
+    {
+      "type": "mekanism:disableable",
+      "ore_type": {
+        "type": "silver",
+        "index": 0
+      },
+      "retro_gen": false
+    },
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "mekanism:configurable_constant",
+        "ore_type": {
+          "type": "silver",
+          "index": 0
+        }
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "mekanism:configurable",
+        "ore_type": {
+          "type": "silver",
+          "index": 0
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}
