@@ -60,7 +60,6 @@ public class PersistingDisabledProvidersProvider implements DataProvider {
             return;
         }
 
-        // NeoForge added field so we can't just AT it
         FieldReflectionHelper<HashCache, Map<String, ProviderCache>> originalCachesField = new FieldReflectionHelper<>(HashCache.class, "originalCaches", () -> null);
         Map<String, ProviderCache> originalCaches = originalCachesField.getValue(cache);
 
