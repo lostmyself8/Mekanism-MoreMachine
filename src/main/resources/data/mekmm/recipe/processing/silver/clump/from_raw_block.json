@@ -1,0 +1,1 @@
+{"type":"mekanism:purifying","chemical_input":{"amount":2,"chemical":"mekanism:oxygen"},"item_input":{"count":1,"tag":"c:storage_blocks/raw_silver"},"output":{"count":18,"id":"mekmm:clump_silver"},"per_tick_usage":true}

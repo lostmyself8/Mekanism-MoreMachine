@@ -1,0 +1,1 @@
+{"type":"mekanism:injecting","chemical_input":{"amount":2,"chemical":"mekanism:hydrogen_chloride"},"item_input":{"count":1,"tag":"c:storage_blocks/raw_silver"},"output":{"count":24,"id":"mekmm:shard_silver"},"per_tick_usage":true}
