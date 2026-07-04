@@ -6,7 +6,6 @@ import com.jerry.mekmm.api.recipes.TripleItemToItemRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicPresserRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicStamperRecipe;
 
-import com.mojang.datafixers.util.Function4;
 import mekanism.api.SerializationConstants;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
@@ -15,6 +14,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import com.mojang.datafixers.util.Function3;
+import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class MoreMachineRecipeSerializer {
