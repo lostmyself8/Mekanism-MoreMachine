@@ -31,6 +31,15 @@ public class MoreMachineAssetProvider implements DataProvider {
     private static final String[] SIMPLE_ITEMS = {
             "scrap", "scrap_box", "empty_crystal", "uu_matter", "advanced_electrolysis_core", "reflector"
     };
+    private static final String[] SILVER_ITEMS = {
+            "clump_silver", "crystal_silver", "dirty_dust_silver", "dust_silver", "enriched_silver", "ingot_silver", "nugget_silver", "raw_silver", "shard_silver"
+    };
+    private static final String[][] SILVER_BLOCKS = {
+            { "block_silver", "storage/silver", "block/storage/silver" },
+            { "block_raw_silver", "storage/raw_silver", "block/storage/raw_silver" },
+            { "silver_ore", "ore/silver", "block/silver_ore" },
+            { "deepslate_silver_ore", "deepslate_ore/silver", "block/deepslate_silver_ore" }
+    };
     private static final String[] CONNECTOR_MODELS = {
             "connector", "connector_energy", "connector_fluids", "connector_chemicals", "connector_items", "connector_heat"
     };
@@ -134,6 +143,9 @@ public class MoreMachineAssetProvider implements DataProvider {
         for (String item : SIMPLE_ITEMS) {
             save(output, futures, itemModelPathProvider.json(id(item)), flatItemModel("minecraft:item/generated", "mekmm:item/" + item));
         }
+        for (String item : SILVER_ITEMS) {
+            save(output, futures, itemModelPathProvider.json(id(item)), flatItemModel("minecraft:item/generated", "mekmm:item/" + item));
+        }
         for (String item : CONNECTOR_MODELS) {
             String texture = item.equals("connector") ? "mekmm:item/connector_energy" : "mekmm:item/" + item;
             save(output, futures, itemModelPathProvider.json(id(item)), flatItemModel("item/handheld", texture, item.equals("connector")));
@@ -168,6 +180,9 @@ public class MoreMachineAssetProvider implements DataProvider {
             save(output, futures, blockStatePathProvider.json(id(machine)),
                     activeFacingBlockState("mekmm:block/large_machine/" + machine + "/off", "mekmm:block/large_machine/" + machine + "/on"));
         }
+        for (String[] block : SILVER_BLOCKS) {
+            save(output, futures, blockStatePathProvider.json(id(block[0])), simpleBlockState("mekmm:block/" + block[1]));
+        }
     }
 
     private void generateTieredBlockModels(CachedOutput output, List<CompletableFuture<?>> futures) {
@@ -184,6 +199,10 @@ public class MoreMachineAssetProvider implements DataProvider {
         for (String tier : BASE_TIERS) {
             save(output, futures, blockModelPathProvider.json(id("chemical_tank/mid_chemical_tank/" + tier)), chemicalTankModel("mid_chemical_tank", tier));
             save(output, futures, blockModelPathProvider.json(id("chemical_tank/max_chemical_tank/" + tier)), chemicalTankModel("max_chemical_tank", tier));
+        }
+        for (String[] block : SILVER_BLOCKS) {
+            save(output, futures, blockModelPathProvider.json(id(block[1])), cubeAllBlockModel("mekmm:" + block[2]));
+            save(output, futures, itemModelPathProvider.json(id(block[0])), blockItemModel("mekmm:block/" + block[1]));
         }
     }
 
@@ -350,6 +369,16 @@ public class MoreMachineAssetProvider implements DataProvider {
         return root;
     }
 
+    private static JsonObject simpleBlockState(String model) {
+        JsonObject root = new JsonObject();
+        JsonObject variants = new JsonObject();
+        JsonObject variant = new JsonObject();
+        variant.addProperty("model", model);
+        variants.add("", variant);
+        root.add("variants", variants);
+        return root;
+    }
+
     private static JsonObject activeFacingBlockState(String offModel, String onModel) {
         JsonObject root = new JsonObject();
         JsonObject variants = new JsonObject();
@@ -439,6 +468,15 @@ public class MoreMachineAssetProvider implements DataProvider {
         return root;
     }
 
+    private static JsonObject cubeAllBlockModel(String texture) {
+        JsonObject root = new JsonObject();
+        root.addProperty("parent", "minecraft:block/cube_all");
+        JsonObject textures = new JsonObject();
+        textures.addProperty("all", texture);
+        root.add("textures", textures);
+        return root;
+    }
+
     private static JsonObject blockModelWithTextures(String parent, String[]... textureEntries) {
         JsonObject root = blockItemModel(parent);
         JsonObject textures = new JsonObject();
@@ -487,7 +525,11 @@ public class MoreMachineAssetProvider implements DataProvider {
     private static List<String> allItemNames() {
         List<String> names = new ArrayList<>();
         names.addAll(List.of(SIMPLE_ITEMS));
+        names.addAll(List.of(SILVER_ITEMS));
         names.add("connector");
+        for (String[] block : SILVER_BLOCKS) {
+            names.add(block[0]);
+        }
         names.addAll(List.of(FACING_MACHINES));
         names.addAll(List.of(BASE_ACTIVE_MACHINES));
         names.addAll(List.of(LARGE_MACHINES));
