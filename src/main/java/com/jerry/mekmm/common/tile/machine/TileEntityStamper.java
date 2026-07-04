@@ -104,10 +104,10 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
     @Override
     protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSideWithItemConfig(this);
-        builder.addContainer(itemInputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeAB(item.toStack(), moldInputSlot.resource().toStack(moldInputSlot.amountAsInt())),
+        builder.addContainer(itemInputSlot = InputInventorySlot.at((item, _) -> containsRecipeAB(item.toStack(), moldInputSlot.resource().toStack(moldInputSlot.amountAsInt())),
                 item -> containsRecipeA(item.toStack(1)), recipeCacheListener,
                 64, 17)).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT)));
-        builder.addContainer(moldInputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeBA(itemInputSlot.resource().toStack(itemInputSlot.amountAsInt()), item.toStack()),
+        builder.addContainer(moldInputSlot = InputInventorySlot.at((item, _) -> containsRecipeBA(itemInputSlot.resource().toStack(itemInputSlot.amountAsInt()), item.toStack()),
                 item -> containsRecipeB(item.toStack(1)), recipeCacheListener,
                 64, 53)).tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT)));
         builder.addContainer(outputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 116, 35))

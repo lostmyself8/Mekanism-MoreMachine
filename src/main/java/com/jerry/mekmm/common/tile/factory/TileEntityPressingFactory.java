@@ -21,8 +21,12 @@ import mekanism.common.integration.computer.SpecialComputerMethodWrapper.Compute
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.slot.ContainerSlotType;
 import mekanism.common.inventory.slot.InputInventorySlot;
+import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.lookup.ITripleRecipeLookupHandler;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
+import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.BlockPos;
@@ -39,6 +43,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -67,6 +72,18 @@ public class TileEntityPressingFactory extends TileEntityMoreMachineItemToItemFa
 
     public TileEntityPressingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
+        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
+        if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.INPUT_1, new InventorySlotInfo(true, false, inputSlots));
+            itemConfig.addSlotInfo(DataType.INPUT_2, new InventorySlotInfo(true, false, secondarySlot));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, outputSlots));
+            List<IInventorySlot> ioSlots = new ArrayList<>(inputSlots);
+            ioSlots.addAll(outputSlots);
+            ioSlots.add(secondarySlot);
+            itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, ioSlots));
+            itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, tertiarySlot));
+            itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
+        }
         secondaryInputHandler = InputHelper.getInputHandler(secondarySlot, RecipeError.NOT_ENOUGH_SECONDARY_INPUT);
         tertiaryInputHandler = InputHelper.getInputHandler(tertiarySlot, TileEntityPresser.NOT_ENOUGH_TERTIARY_INPUT_ERROR);
     }

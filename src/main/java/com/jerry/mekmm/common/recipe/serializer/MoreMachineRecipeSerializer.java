@@ -6,6 +6,7 @@ import com.jerry.mekmm.api.recipes.TripleItemToItemRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicPresserRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicStamperRecipe;
 
+import com.mojang.datafixers.util.Function4;
 import mekanism.api.SerializationConstants;
 import mekanism.api.recipes.ingredients.ItemStackIngredient;
 
@@ -20,12 +21,6 @@ public class MoreMachineRecipeSerializer {
 
     private MoreMachineRecipeSerializer() {}
 
-    @FunctionalInterface
-    public interface QuadRecipeFactory<A, B, C, D, R> {
-
-        R apply(A a, B b, C c, D d);
-    }
-
     public static RecipeSerializer<BasicStamperRecipe> stamping(Function3<ItemStackIngredient, ItemStackIngredient, ItemStackTemplate, BasicStamperRecipe> factory) {
         return new RecipeSerializer<>(RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemStackIngredient.CODEC.fieldOf(SerializationConstants.INPUT).forGetter(StamperRecipe::getInput),
@@ -37,16 +32,16 @@ public class MoreMachineRecipeSerializer {
                         factory));
     }
 
-    public static RecipeSerializer<BasicPresserRecipe> pressing(QuadRecipeFactory<ItemStackIngredient, ItemStackIngredient, ItemStackIngredient, ItemStackTemplate, BasicPresserRecipe> factory) {
+    public static RecipeSerializer<BasicPresserRecipe> pressing(Function4<ItemStackIngredient, ItemStackIngredient, ItemStackIngredient, ItemStackTemplate, BasicPresserRecipe> factory) {
         return new RecipeSerializer<>(RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemStackIngredient.CODEC.fieldOf("primary_input").forGetter(TripleItemToItemRecipe::getFirstInput),
                 ItemStackIngredient.CODEC.fieldOf("secondary_input").forGetter(TripleItemToItemRecipe::getSecondInput),
                 ItemStackIngredient.CODEC.fieldOf("tertiary_input").forGetter(TripleItemToItemRecipe::getThirdInput),
-                ItemStackTemplate.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(BasicPresserRecipe::getOutputRaw)).apply(instance, factory::apply)), StreamCodec.composite(
+                ItemStackTemplate.CODEC.fieldOf(SerializationConstants.OUTPUT).forGetter(BasicPresserRecipe::getOutputRaw)).apply(instance, factory)), StreamCodec.composite(
                         ItemStackIngredient.STREAM_CODEC, BasicPresserRecipe::getFirstInput,
                         ItemStackIngredient.STREAM_CODEC, BasicPresserRecipe::getSecondInput,
                         ItemStackIngredient.STREAM_CODEC, BasicPresserRecipe::getThirdInput,
                         ItemStackTemplate.STREAM_CODEC, BasicPresserRecipe::getOutputRaw,
-                        factory::apply));
+                        factory));
     }
 }

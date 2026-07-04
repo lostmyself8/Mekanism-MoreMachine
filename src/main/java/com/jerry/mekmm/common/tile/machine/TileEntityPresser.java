@@ -35,6 +35,9 @@ import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.lookup.ITripleRecipeLookupHandler;
+import mekanism.common.tile.component.config.ConfigInfo;
+import mekanism.common.tile.component.config.DataType;
+import mekanism.common.tile.component.config.slot.InventorySlotInfo;
 import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 import net.minecraft.SharedConstants;
@@ -90,7 +93,15 @@ public class TileEntityPresser extends TileEntityProgressMachine<TripleItemToIte
 
     public TileEntityPresser(BlockPos pos, BlockState state) {
         super(MoreMachineBlocks.PRESSER, pos, state, TRACKED_ERROR_TYPES, BASE_TICKS_REQUIRED);
-        configComponent.setupItemIOExtraConfig(primaryItemInputSlot, outputSlot, tertiaryItemInputSlot, energySlot);
+        ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
+        if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.INPUT_1, new InventorySlotInfo(true, false, primaryItemInputSlot));
+            itemConfig.addSlotInfo(DataType.INPUT_2, new InventorySlotInfo(true, false, secondaryItemInputSlot));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, outputSlot));
+            itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, primaryItemInputSlot, secondaryItemInputSlot, outputSlot));
+            itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, tertiaryItemInputSlot));
+            itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
+        }
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
 
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
@@ -112,13 +123,13 @@ public class TileEntityPresser extends TileEntityProgressMachine<TripleItemToIte
     @Override
     protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSideWithItemConfig(this);
-        builder.addContainer(primaryItemInputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeABC(item.toStack(), secondaryItemInputSlot.resource().toStack(secondaryItemInputSlot.amountAsInt()), tertiaryItemInputSlot.resource().toStack(tertiaryItemInputSlot.amountAsInt())),
+        builder.addContainer(primaryItemInputSlot = InputInventorySlot.at((item, _) -> containsRecipeABC(item.toStack(), secondaryItemInputSlot.resource().toStack(secondaryItemInputSlot.amountAsInt()), tertiaryItemInputSlot.resource().toStack(tertiaryItemInputSlot.amountAsInt())),
                 item -> containsRecipeA(item.toStack(1)), recipeCacheListener, 64, 16))
                 .tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(NOT_ENOUGH_PRIMARY_INPUT_ERROR)));
-        builder.addContainer(secondaryItemInputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeBAC(primaryItemInputSlot.resource().toStack(primaryItemInputSlot.amountAsInt()), item.toStack(), tertiaryItemInputSlot.resource().toStack(tertiaryItemInputSlot.amountAsInt())),
+        builder.addContainer(secondaryItemInputSlot = InputInventorySlot.at((item, _) -> containsRecipeBAC(primaryItemInputSlot.resource().toStack(primaryItemInputSlot.amountAsInt()), item.toStack(), tertiaryItemInputSlot.resource().toStack(tertiaryItemInputSlot.amountAsInt())),
                 item -> containsRecipeB(item.toStack(1)), recipeCacheListener, 64, 35))
                 .tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT)));
-        builder.addContainer(tertiaryItemInputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeCAB(primaryItemInputSlot.resource().toStack(primaryItemInputSlot.amountAsInt()), secondaryItemInputSlot.resource().toStack(secondaryItemInputSlot.amountAsInt()), item.toStack()),
+        builder.addContainer(tertiaryItemInputSlot = InputInventorySlot.at((item, _) -> containsRecipeCAB(primaryItemInputSlot.resource().toStack(primaryItemInputSlot.amountAsInt()), secondaryItemInputSlot.resource().toStack(secondaryItemInputSlot.amountAsInt()), item.toStack()),
                 item -> containsRecipeC(item.toStack(1)), recipeCacheListener, 64, 54))
                 .tracksWarnings(slot -> slot.warning(WarningType.NO_MATCHING_RECIPE, getWarningCheck(NOT_ENOUGH_TERTIARY_INPUT_ERROR)));
         builder.addContainer(outputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 116, 35))

@@ -41,9 +41,9 @@ public class MoreMachineTileEntityTypes {
             registerFactory(tier, MoreMachineFactoryType.RECYCLING, TileEntityRecyclingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.PLANTING_STATION, TileEntityPlantingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.CNC_STAMPING, TileEntityStampingFactory::new);
-            registerFactory(tier, MoreMachineFactoryType.PRESSING, TileEntityPressingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.CNC_LATHING, TileEntityMoreMachineItemStackToItemStackFactory::new);
             registerFactory(tier, MoreMachineFactoryType.CNC_ROLLING_MILL, TileEntityMoreMachineItemStackToItemStackFactory::new);
+            registerFactory(tier, MoreMachineFactoryType.PRESSING, TileEntityPressingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.REPLICATING, TileEntityReplicatingFactory::new);
         }
     }

@@ -13,9 +13,9 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
     public final CachedLongValue recycler;
     public final CachedLongValue plantingStation;
     public final CachedLongValue cnc_stamper;
-    public final CachedLongValue presser;
     public final CachedLongValue cnc_lathe;
     public final CachedLongValue cnc_rollingMill;
+    public final CachedLongValue presser;
     public final CachedLongValue itemReplicator;
     public final CachedLongValue fluidReplicator;
     public final CachedLongValue chemicalReplicator;
@@ -38,9 +38,9 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
         recycler = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_RECYCLER, "recycler", 20_000L, 1);
         plantingStation = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_PLANTING_STATION, "plantingStation", 80_000L, 1);
         cnc_stamper = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_CNC_STAMPER, "cnc_stamper", 20_000L, 1);
-        presser = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_PRESSER, "presser", 20_000L, 1);
         cnc_lathe = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_CNC_LATHE, "cnc_lathe", 20_000L, 1);
         cnc_rollingMill = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_ROLLING_MILL, "cnc_rollingMill", 20_000L, 1);
+        presser = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_PRESSER, "presser", 20_000L, 1);
         ambientGasCollector = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_AMBIENT_GAS_COLLECTOR, "ambientGasCollector", 40_000L, 1);
         wirelessChargingStation = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_WIRELESS_CHARGING_STATION, "wirelessChargingStation", 40_000_000L, 1);
         wirelessTransmitterStation = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_WIRELESS_TRANSMITTER_STATION, "wirelessTransmitterStation", 400_000_000L, 1);

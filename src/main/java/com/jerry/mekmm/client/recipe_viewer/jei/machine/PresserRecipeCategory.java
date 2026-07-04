@@ -2,7 +2,6 @@ package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.api.recipes.TripleItemToItemRecipe;
 
-import mekanism.client.gui.element.GuiUpArrow;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
@@ -30,9 +29,8 @@ public class PresserRecipeCategory extends HolderRecipeCategory<TripleItemToItem
 
     public PresserRecipeCategory(IGuiHelper helper, IRecipeViewerRecipeType<TripleItemToItemRecipe> recipeType) {
         super(helper, recipeType);
-        addElement(new GuiUpArrow(this, 68, 38));
         primaryInput = addSlot(SlotType.INPUT, 64, 16);
-        secondaryInput = addSlot(SlotType.INPUT, 64, 35);
+        secondaryInput = addSlot(SlotType.INPUT_2, 64, 35);
         tertiaryInput = addSlot(SlotType.EXTRA, 64, 54);
         output = addSlot(SlotType.OUTPUT, 116, 35);
         addSlot(SlotType.POWER, 41, 35).with(SlotOverlay.POWER);

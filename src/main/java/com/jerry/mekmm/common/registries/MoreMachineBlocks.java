@@ -162,9 +162,9 @@ public class MoreMachineBlocks {
                     .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>>> PRESSER = MM_BLOCKS.register("presser", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.PRESSER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-                    (block, properties) -> new ItemBlockTooltip<>(block, true, properties
-                            .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
-                            .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.EXTRA_MACHINE)))
+            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+                    .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
+                    .component(MekanismDataComponents.SIDE_CONFIG, MoreMachineAttachedSideConfig.PRESSER)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                     .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputA)
                     .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputB)

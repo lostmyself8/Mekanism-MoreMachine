@@ -1,5 +1,6 @@
 package com.jerry.mekmm.common.item.block.machine;
 
+import com.jerry.mekmm.common.attachments.component.MoreMachineAttachedSideConfig;
 import com.jerry.mekmm.common.block.attribute.MoreMachineAttributeFactoryType;
 import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 
@@ -30,7 +31,8 @@ public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?
             // case COMPRESSING, INFUSING -> AttachedSideConfig.ADVANCED_MACHINE;
             // case COMBINING -> AttachedSideConfig.EXTRA_MACHINE;
             // case PURIFYING, INJECTING -> AttachedSideConfig.ADVANCED_MACHINE_INPUT_ONLY;
-            case CNC_STAMPING, PRESSING -> AttachedSideConfig.EXTRA_MACHINE;
+            case CNC_STAMPING -> AttachedSideConfig.EXTRA_MACHINE;
+            case PRESSING -> MoreMachineAttachedSideConfig.PRESSER;
             case RECYCLING, CNC_LATHING, CNC_ROLLING_MILL -> AttachedSideConfig.ELECTRIC_MACHINE;
             case PLANTING_STATION, REPLICATING -> AttachedSideConfig.ADVANCED_MACHINE_INPUT_ONLY;
         };

@@ -1,0 +1,7 @@
+{
+  "parent": "mekmm:block/presser",
+  "textures": {
+    "front": "mekmm:block/presser/front_active",
+    "side": "mekmm:block/presser/side_active"
+  }
+}
