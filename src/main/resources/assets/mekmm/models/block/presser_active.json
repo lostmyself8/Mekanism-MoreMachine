@@ -1,9 +1,0 @@
-{
-	"format_version": "1.9.0",
-	"credit": "Made with Blockbench",
-	"parent": "mekmm:block/presser",
-	"textures": {
-		"2": "mekmm:block/presser/side_active",
-		"3": "mekmm:block/presser/front_active"
-	}
-}

@@ -1,6 +1,5 @@
 package com.jerry.datagen;
 
-import com.jerry.datagen.client.lang.MoreMachineLangProvider;
 import com.jerry.datagen.client.model.MoreMachineAssetProvider;
 import com.jerry.datagen.common.MoreMachineDataMapsProvider;
 import com.jerry.datagen.common.loot.MoreMachineLootProvider;
@@ -74,7 +73,6 @@ public class MekmmDataGenerator {
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
-//        gen.addProvider(true, new MoreMachineLangProvider(output));
         gen.addProvider(true, new MoreMachineAssetProvider(output));
         gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
         gen.addProvider(true, new MoreMachineDataMapsProvider(output, lookupProvider));
