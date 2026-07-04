@@ -25,5 +25,6 @@ public class MoreMachineRecipeSerializersInternal {
         MoreMachineRecipeSerializers.STAMPING = MM_RECIPE_SERIALIZERS.register("stamper", () -> MoreMachineRecipeSerializer.stamping(BasicStamperRecipe::new));
         MoreMachineRecipeSerializers.LATHING = MM_RECIPE_SERIALIZERS.register("lathe", () -> MekanismRecipeSerializer.itemToItem(BasicLatheRecipe::new));
         MoreMachineRecipeSerializers.ROLLING_MILL = MM_RECIPE_SERIALIZERS.register("rolling_mill", () -> MekanismRecipeSerializer.itemToItem(BasicRollingMillRecipe::new));
+        MoreMachineRecipeSerializers.PRESSING = MM_RECIPE_SERIALIZERS.register("pressing", () -> MoreMachineRecipeSerializer.pressing(BasicPresserRecipe::new));
     }
 }
