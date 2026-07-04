@@ -455,7 +455,6 @@
 	"tag.block.c.storage_blocks.silver": "Silver Storage Blocks",
 	"tag.block.c.storage_blocks.raw_silver": "Raw Silver Storage Blocks",
 
-
 	"configuration.mekmm.general.energy.max_transmission_rate": "Макс. швидкість передачі енергії",
 	"configuration.mekmm.general.energy.max_transmission_rate.tooltip": "Встановіть максимальну швидкість виходу енергії під час бездротової передачі",
 	"configuration.mekmm.general.fluids.max_transmission_rate": "Макс. швидкість передачі рідин",
