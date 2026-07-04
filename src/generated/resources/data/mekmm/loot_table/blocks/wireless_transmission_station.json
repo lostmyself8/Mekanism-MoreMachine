@@ -25,8 +25,7 @@
                 "mekmm:heat_rate",
                 "mekmm:items_rate",
                 "mekanism:fluids",
-                "mekanism:chemicals",
-                "mekanism:heat_data"
+                "mekanism:chemicals"
               ],
               "source": "block_entity"
             }

@@ -7,6 +7,7 @@ import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 
 public class GuiFlexibleHorizontalRateBar extends GuiBar<IBarInfoHandler> {
@@ -27,7 +28,7 @@ public class GuiFlexibleHorizontalRateBar extends GuiBar<IBarInfoHandler> {
     protected void renderBarOverlay(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks, double handlerLevel) {
         int displayInt = (int) (handlerLevel * texWidth);
         if (displayInt > 0) {
-            GuiGraphicsExtractor.blit(getResource(), relativeX + 1, relativeY + 1, 0, 0, displayInt, texHeight, texWidth, texHeight);
+            GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, getResource(), relativeX + 1, relativeY + 1, 0, 0, displayInt, texHeight, texWidth, texHeight);
         }
     }
 }
