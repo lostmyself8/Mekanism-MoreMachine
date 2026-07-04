@@ -5,6 +5,7 @@ import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.common.attachments.component.MoreMachineAttachedSideConfig;
 import com.jerry.mekmm.common.block.BlockAuthorDoll;
 import com.jerry.mekmm.common.block.BlockModelerDoll;
+import com.jerry.mekmm.common.block.BlockMoreMachineResource;
 import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine.BlockMoreMachineFactory;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactory;
@@ -13,6 +14,9 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFa
 import com.jerry.mekmm.common.item.block.*;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
+import com.jerry.mekmm.common.resource.MoreMachineBlockResourceInfo;
+import com.jerry.mekmm.common.resource.MoreMachineResource;
+import com.jerry.mekmm.common.resource.ore.MoreMachineOreType;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
 import com.jerry.mekmm.common.tile.factory.TileEntityReplicatingFactory;
 import com.jerry.mekmm.common.tile.machine.*;
@@ -22,9 +26,11 @@ import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.tier.ITier;
+import mekanism.common.block.BlockOre;
 import mekanism.common.block.attribute.AttributeTier;
 import mekanism.common.block.prefab.BlockTile;
 import mekanism.common.block.prefab.BlockTile.BlockTileModel;
+import mekanism.common.block.states.BlockStateHelper;
 import mekanism.common.component.component.AttachedEjector;
 import mekanism.common.component.component.AttachedSideConfig;
 import mekanism.common.component.containers.chemical.ChemicalTanksBuilder;
@@ -33,6 +39,7 @@ import mekanism.common.component.containers.heat.HeatCapacitorBuilder;
 import mekanism.common.component.containers.item.ItemSlotsBuilder;
 import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.content.blocktype.Machine;
+import mekanism.common.item.block.ItemBlockMekanism;
 import mekanism.common.item.block.ItemBlockTooltip;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
@@ -41,6 +48,9 @@ import mekanism.common.registration.impl.BlockDeferredRegister;
 import mekanism.common.registration.impl.BlockRegistryObject;
 import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.resource.BlockResourceInfo;
+import mekanism.common.resource.IResource;
+import mekanism.common.resource.ore.OreBlockType;
+import mekanism.common.resource.ore.OreType;
 import mekanism.common.tier.FactoryTier;
 
 import net.minecraft.world.item.BlockItem;
@@ -48,12 +58,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -64,6 +78,8 @@ public class MoreMachineBlocks {
     private MoreMachineBlocks() {}
 
     public static final BlockDeferredRegister MM_BLOCKS = new BlockDeferredRegister(Mekmm.MOD_ID);
+    public static final Map<IResource, BlockRegistryObject<?, ?>> PROCESSED_RESOURCE_BLOCKS = new LinkedHashMap<>();
+    public static final Map<OreType, OreBlockType> ORES = new LinkedHashMap<>();
 
     private static final Table<FactoryTier, MoreMachineFactoryType, BlockRegistryObject<@NotNull BlockMoreMachineFactory<?>, @NotNull ItemBlockMoreMachineFactory>> MM_FACTORIES = HashBasedTable.create();
 
@@ -74,6 +90,20 @@ public class MoreMachineBlocks {
                 MM_FACTORIES.put(tier, type, registerMoreMachineFactory(MoreMachineBlockTypes.getMoreMachineFactory(tier, type)));
             }
         }
+        for (MoreMachineResource resource : MoreMachineEnumUtils.MM_RESOURCES) {
+            if (resource.getResourceBlockInfo() != null) {
+                PROCESSED_RESOURCE_BLOCKS.put(resource, registerResourceBlock(resource.getResourceBlockInfo()));
+            }
+            MoreMachineBlockResourceInfo rawResource = resource.getRawResourceBlockInfo();
+            if (rawResource != null) {
+                PROCESSED_RESOURCE_BLOCKS.put(rawResource, registerResourceBlock(rawResource));
+            }
+        }
+        OreType.values();
+        if (MoreMachineOreType.SILVER == null) {
+            throw new IllegalStateException("Silver ore type was not registered before MoreMachine blocks initialized.");
+        }
+        ORES.put(MoreMachineOreType.SILVER, registerOre(MoreMachineOreType.SILVER));
     }
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityRecycler, MoreMachineFactoryMachine<TileEntityRecycler>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityRecycler, MoreMachineFactoryMachine<TileEntityRecycler>>>> RECYCLER = MM_BLOCKS.register("recycler", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.RECYCLER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
@@ -271,6 +301,28 @@ public class MoreMachineBlocks {
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(ITier tier, String suffix,
                                                                                                                       Function<BlockBehaviour.Properties, ? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {
         return MM_BLOCKS.register(tier.getBaseTier().getLowerName() + suffix, blockSupplier, itemCreator);
+    }
+
+    private static BlockRegistryObject<BlockMoreMachineResource, ItemBlockMekanism<BlockMoreMachineResource>> registerResourceBlock(MoreMachineBlockResourceInfo resource) {
+        return MM_BLOCKS.register("block_" + resource.getRegistrySuffix(), properties -> new BlockMoreMachineResource(properties, resource), (block, properties) -> {
+            if (!block.getResourceInfo().burnsInFire()) {
+                properties = properties.fireResistant();
+            }
+            return new ItemBlockMekanism<>(block, properties);
+        });
+    }
+
+    private static OreBlockType registerOre(OreType ore) {
+        String name = ore.getResource().getRegistrySuffix() + "_ore";
+        BlockRegistryObject<BlockOre, ItemBlockTooltip<BlockOre>> stoneOre = MM_BLOCKS.registerDetails(name, properties -> new BlockOre(ore,
+                BlockStateHelper.applyLightLevelAdjustments(properties)
+                        .strength(3, 3)
+                        .requiresCorrectToolForDrops()
+                        .mapColor(MapColor.STONE)
+                        .instrument(NoteBlockInstrument.BASEDRUM)));
+        BlockRegistryObject<BlockOre, ItemBlockTooltip<BlockOre>> deepslateOre = MM_BLOCKS.register("deepslate_" + name, () -> BlockBehaviour.Properties.ofLegacyCopy(stoneOre.value()),
+                properties -> new BlockOre(ore, properties.mapColor(MapColor.DEEPSLATE).strength(4.5F, 3).sound(SoundType.DEEPSLATE)), ItemBlockTooltip::new);
+        return new OreBlockType(stoneOre, deepslateOre);
     }
 
     /**

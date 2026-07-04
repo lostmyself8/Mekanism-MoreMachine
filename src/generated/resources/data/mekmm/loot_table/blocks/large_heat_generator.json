@@ -19,8 +19,7 @@
                 "mekanism:security",
                 "mekanism:upgrades",
                 "mekanism:items",
-                "mekanism:fluids",
-                "mekanism:heat_data"
+                "mekanism:fluids"
               ],
               "source": "block_entity"
             }

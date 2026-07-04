@@ -3,11 +3,6 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -23,11 +18,9 @@
                 "mekanism:redstone_control",
                 "mekanism:security",
                 "mekanism:upgrades",
-                "mekanism:energy",
                 "mekanism:items",
                 "mekanism:fluids",
-                "mekanism:chemicals",
-                "mekanism:heat_data"
+                "mekanism:chemicals"
               ],
               "source": "block_entity"
             }

@@ -8,6 +8,7 @@
 		"MixinItemConfigurator",
 		"recipe.MixinMekanismRecipeType",
 		"recipe.lookup.monitor.MixinRecipeCacheLookupMonitor",
+		"resource.ore.MixinOreType",
 		"tile.MixinTileEntityChemicalCrystallizer",
 		"tile.MixinTileEntityChemicalDissolutionChamber",
 		"tile.MixinTileEntityChemicalOxidizer",

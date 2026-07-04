@@ -7,6 +7,7 @@ import com.jerry.meklm.common.tier.MidChemicalTankTier;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
+import com.jerry.mekmm.common.resource.MoreMachineResource;
 
 import mekanism.common.tier.FactoryTier;
 
@@ -33,6 +34,11 @@ public class MoreMachineEnumUtils {
      * Cached value of {@link MidChemicalTankTier#values()}. DO NOT MODIFY THIS LIST.
      */
     public static final MidChemicalTankTier[] MID_CHEMICAL_TANK_TIERS = MidChemicalTankTier.values();
+
+    /**
+     * Cached value of {@link MoreMachineResource#values()}. DO NOT MODIFY THIS LIST.
+     */
+    public static final MoreMachineResource[] MM_RESOURCES = MoreMachineResource.values();
 
     // /**
     // * Cached value of {@link EMFactoryTier()}(If you load it). DO NOT MODIFY THIS LIST.
