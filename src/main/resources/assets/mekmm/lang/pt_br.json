@@ -208,6 +208,8 @@
 	"chemical.mekmm.nutrient_solution": "Solução Nutriente",
 	"chemical.mekmm.uu_matter": "Matéria-UU",
 	"chemical.mekmm.unstable_dimensional_gas": "Gás Dimensional Instável",
+	"chemical.mekmm.dirty_silver": "Dirty Silver Slurry",
+	"chemical.mekmm.clean_silver": "Clean Silver Slurry",
 
 	"container.mekmm.basic_oxidizing_factory": "Fábrica de Oxidador Químico Básica",
 	"container.mekmm.advanced_oxidizing_factory": "Fábrica de Oxidador Químico Avançada",

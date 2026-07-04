@@ -235,21 +235,15 @@ public class MoreMachineBlocks {
                 case RECYCLING -> s -> MoreMachineRecipeType.RECYCLING.getInputCache().containsInput(null, s);
                 case PLANTING_STATION -> s -> MoreMachineRecipeType.PLANTING_STATION.getInputCache().containsInputA(null, s);
                 case CNC_STAMPING -> s -> MoreMachineRecipeType.STAMPING.getInputCache().containsInputA(null, s);
-                case PRESSING -> s -> MoreMachineRecipeType.PRESSING.getInputCache().containsInputA(null, s);
                 case CNC_LATHING -> s -> MoreMachineRecipeType.LATHING.getInputCache().containsInput(null, s);
                 case CNC_ROLLING_MILL -> s -> MoreMachineRecipeType.ROLLING_MILL.getInputCache().containsInput(null, s);
+                case PRESSING -> s -> MoreMachineRecipeType.PRESSING.getInputCache().containsInputA(null, s);
                 case REPLICATING -> s -> IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(s.typeHolder()) != null;
             };
             switch (type.getMoreMachineFactoryType()) {
                 case CNC_STAMPING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                         .addBasicFactorySlots(processes, recipeInputPredicate)
                         .addInput(MekanismRecipeType.COMBINING, InputRecipeCache.DoubleItem::containsInputB)
-                        .addEnergy()
-                        .build());
-                case PRESSING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
-                        .addBasicFactorySlots(processes, recipeInputPredicate)
-                        .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputB)
-                        .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputC)
                         .addEnergy()
                         .build());
                 case CNC_LATHING, CNC_ROLLING_MILL, RECYCLING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -268,6 +262,12 @@ public class MoreMachineBlocks {
                                 .addChemicalFillOrConvertSlot(1)
                                 .addEnergy()
                                 .build());
+                case PRESSING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                        .addBasicFactorySlots(processes, recipeInputPredicate)
+                        .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputB)
+                        .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputC)
+                        .addEnergy()
+                        .build());
                 case REPLICATING -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                         .addBasic(TileEntityReplicatingFactory.MAX_GAS * processes, TileEntityReplicatingFactory::isValidChemicalInput)
                         .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()

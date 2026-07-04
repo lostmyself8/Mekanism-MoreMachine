@@ -366,9 +366,9 @@ public class MoreMachineBlockShapes {
             case RECYCLING -> RECYCLING_FACTORY;
             case PLANTING_STATION -> PLANTING_FACTORY;
             case CNC_STAMPING -> STAMPING_FACTORY;
-            case PRESSING -> PRESSING_FACTORY;
             case CNC_LATHING -> LATHING_FACTORY;
             case CNC_ROLLING_MILL -> ROLLING_MILL_FACTORY;
+            case PRESSING -> PRESSING_FACTORY;
             case REPLICATING -> REPLICATOR_FACTORY;
         };
     }

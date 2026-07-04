@@ -208,6 +208,8 @@
 	"chemical.mekmm.nutrient_solution": "营养液",
 	"chemical.mekmm.uu_matter": "UU物质",
 	"chemical.mekmm.unstable_dimensional_gas": "不稳定维度气体",
+	"chemical.mekmm.dirty_silver": "污浊银浆液",
+	"chemical.mekmm.clean_silver": "纯净银浆液",
 
 	"container.mekmm.basic_oxidizing_factory": "基础氧化工厂",
 	"container.mekmm.advanced_oxidizing_factory": "高级氧化工厂",

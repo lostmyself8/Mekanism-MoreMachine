@@ -208,6 +208,8 @@
 	"chemical.mekmm.nutrient_solution": "Поживний розчин",
 	"chemical.mekmm.uu_matter": "Універсально придатна матерія",
 	"chemical.mekmm.unstable_dimensional_gas": "Нестабільний вимірний газ",
+	"chemical.mekmm.dirty_silver": "Dirty Silver Slurry",
+	"chemical.mekmm.clean_silver": "Clean Silver Slurry",
 
 	"container.mekmm.basic_oxidizing_factory": "Базова окиснювальна фабрика",
 	"container.mekmm.advanced_oxidizing_factory": "Покращена окиснювальна фабрика",

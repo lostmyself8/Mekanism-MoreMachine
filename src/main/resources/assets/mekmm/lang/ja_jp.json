@@ -208,6 +208,8 @@
 	"chemical.mekmm.nutrient_solution": "栄養促成補助液",
 	"chemical.mekmm.uu_matter": "UUマター",
 	"chemical.mekmm.unstable_dimensional_gas": "不安定ディメンショナルガス",
+	"chemical.mekmm.dirty_silver": "Dirty Silver Slurry",
+	"chemical.mekmm.clean_silver": "Clean Silver Slurry",
 
 	"container.mekmm.basic_oxidizing_factory": "基本酸化ファクトリー",
 	"container.mekmm.advanced_oxidizing_factory": "発展酸化ファクトリー",
