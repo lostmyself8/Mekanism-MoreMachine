@@ -38,10 +38,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -113,16 +113,9 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
         chargeSlot.drainContainerIntoSlot(null);
         dischargeSlot.fillContainerOrConvert(null);
         if (!energyContainer.isEmpty() && canFunction()) {
-            Level currentLevel = getLevel();
-            UUID uuid = getOwnerUUID();
-            if (level != null && uuid != null) {
-                Player player = level.getPlayerByUUID(uuid);
-                if (player == null) {
-                    return sendUpdatePacket;
-                }
-                long maxChargeRate = MoreMachineConfig.general.wirelessChargingStationChargingRate.get();
-                long availableEnergy = energyContainer.getAmountAsLong();
-                long toCharge = Math.min(maxChargeRate, availableEnergy);
+            ServerPlayer player = getChargingPlayer(level);
+            if (player != null) {
+                long toCharge = Math.min(MoreMachineConfig.general.wirelessChargingStationChargingRate.get(), energyContainer.getAmountAsLong());
                 if (toCharge > 0L) {
                     // 优先充能盔甲，其次是主副手和饰品，最后是物品栏
                     if (chargeEquipment) {
@@ -138,6 +131,11 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
             }
         }
         return sendUpdatePacket;
+    }
+
+    private @Nullable ServerPlayer getChargingPlayer(ServerLevel level) {
+        UUID uuid = getOwnerUUID();
+        return uuid == null ? null : level.getServer().getPlayerList().getPlayer(uuid);
     }
 
     private long chargeSuit(Player player, long toCharge) {
