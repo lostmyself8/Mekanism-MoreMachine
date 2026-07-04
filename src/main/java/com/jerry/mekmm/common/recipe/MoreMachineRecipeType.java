@@ -3,6 +3,8 @@ package com.jerry.mekmm.common.recipe;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
+import com.jerry.mekmm.api.recipes.TripleItemToItemRecipe;
+import com.jerry.mekmm.common.recipe.lookup.cache.MoreMachineInputRecipeCache;
 
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.api.recipes.vanilla_input.SingleItemChemicalRecipeInput;
@@ -23,4 +25,6 @@ public class MoreMachineRecipeType {
     public static RecipeTypeRegistryObject<SingleRecipeInput, ItemStackToItemStackRecipe, InputRecipeCache.SingleItem<ItemStackToItemStackRecipe>> LATHING;
 
     public static RecipeTypeRegistryObject<SingleRecipeInput, ItemStackToItemStackRecipe, InputRecipeCache.SingleItem<ItemStackToItemStackRecipe>> ROLLING_MILL;
+
+    public static RecipeTypeRegistryObject<RecipeInput, TripleItemToItemRecipe, MoreMachineInputRecipeCache.TripleItem<TripleItemToItemRecipe>> PRESSING;
 }

@@ -91,6 +91,16 @@ public class MoreMachineBlockTypes {
             .withComputerSupport("cnc_rolling_mill")
             .build();
 
+    // Presser
+    public static final MoreMachineFactoryMachine<TileEntityPresser> PRESSER = MoreMachineMachineBuilder
+            .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.PRESSER, MoreMachineLang.DESCRIPTION_PRESSER, MoreMachineFactoryType.PRESSING)
+            .withGui(() -> MoreMachineContainerTypes.PRESSER)
+            .withSound(MekanismSounds.COMBINER)
+            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.presser.get()), MoreMachineConfig.storage.presser::get)
+            .with(AttributeSideConfig.ELECTRIC_MACHINE)
+            .withComputerSupport("presser")
+            .build();
+
     // Replicator
     public static final MoreMachineFactoryMachine<TileEntityReplicator> REPLICATOR = MoreMachineMachineBuilder
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.REPLICATOR, MoreMachineLang.DESCRIPTION_REPLICATOR, MoreMachineFactoryType.REPLICATING)

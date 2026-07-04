@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"#": "#c:raw_materials/silver",
+		"P": "mekmm:raw_silver"
+	},
+	"pattern": ["###", "#P#", "###"],
+	"result": {
+		"count": 1,
+		"id": "mekmm:block_raw_silver"
+	}
+}

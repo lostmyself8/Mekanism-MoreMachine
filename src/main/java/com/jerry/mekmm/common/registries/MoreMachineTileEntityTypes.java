@@ -41,6 +41,7 @@ public class MoreMachineTileEntityTypes {
             registerFactory(tier, MoreMachineFactoryType.RECYCLING, TileEntityRecyclingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.PLANTING_STATION, TileEntityPlantingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.CNC_STAMPING, TileEntityStampingFactory::new);
+            registerFactory(tier, MoreMachineFactoryType.PRESSING, TileEntityPressingFactory::new);
             registerFactory(tier, MoreMachineFactoryType.CNC_LATHING, TileEntityMoreMachineItemStackToItemStackFactory::new);
             registerFactory(tier, MoreMachineFactoryType.CNC_ROLLING_MILL, TileEntityMoreMachineItemStackToItemStackFactory::new);
             registerFactory(tier, MoreMachineFactoryType.REPLICATING, TileEntityReplicatingFactory::new);
@@ -82,6 +83,12 @@ public class MoreMachineTileEntityTypes {
             .build();
 
     public static final TileEntityTypeRegistryObject<TileEntityRollingMill> CNC_ROLLING_MILL = MM_TILE_ENTITY_TYPES.mekBuilder(MoreMachineBlocks.CNC_ROLLING_MILL, TileEntityRollingMill::new)
+            .clientTicker(TileEntityMekanism::tickClient)
+            .serverTicker(TileEntityMekanism::tickServer)
+            .withSimple(Capabilities.CONFIG_CARD)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntityPresser> PRESSER = MM_TILE_ENTITY_TYPES.mekBuilder(MoreMachineBlocks.PRESSER, TileEntityPresser::new)
             .clientTicker(TileEntityMekanism::tickClient)
             .serverTicker(TileEntityMekanism::tickServer)
             .withSimple(Capabilities.CONFIG_CARD)

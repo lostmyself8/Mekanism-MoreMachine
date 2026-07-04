@@ -1,0 +1,162 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench, made by TedXenon",
+	"parent": "block/block",
+	"render_type": "cutout",
+	"textures": {
+		"0": "mekanism:block/factory/factory_front_back",
+		"1": "mekmm:block/factory/pressing/pressing_factory_front",
+		"2": "mekmm:block/factory/pressing/pressing_factory_side",
+		"3": "mekmm:block/factory/pressing/pressing_factory_bottom",
+		"4": "mekmm:block/factory/pressing/pressing_factory_back",
+		"5": "mekmm:block/factory/pressing/pressing_factory_top",
+		"6": "mekanism:block/models/ports",
+		"7": "mekanism:block/models/ports_led",
+		"particle": "mekanism:block/factory/factory_front_back"
+	},
+	"elements": [
+		{
+			"name": "back_led",
+			"from": [4, 4, 16],
+			"to": [12, 12, 16],
+			"faces": {
+				"south": {
+					"uv": [8, 8, 16, 16],
+					"texture": "#7",
+					"cullface": "south",
+					"neoforge_data": { "block_light": 15, "sky_light": 15 }
+				}
+			}
+		},
+		{
+			"name": "port_back",
+			"from": [4, 4, 15],
+			"to": [12, 12, 16],
+			"faces": {
+				"east": { "uv": [0, 0, 1, 8], "texture": "#6" },
+				"south": { "uv": [0, 0, 8, 8], "texture": "#6", "cullface": "south" },
+				"west": { "uv": [0, 0, 1, 8], "texture": "#6" }
+			}
+		},
+		{
+			"name": "base",
+			"from": [0, 0, 0],
+			"to": [16, 16, 4],
+			"faces": {
+				"north": { "uv": [0, 0, 16, 16], "texture": "#1", "cullface": "north" },
+				"east": { "uv": [4, 0, 0, 16], "texture": "#2", "cullface": "east" },
+				"south": { "uv": [0, 0, 16, 16], "texture": "#0" },
+				"west": { "uv": [0, 0, 4, 16], "texture": "#2", "cullface": "west" },
+				"up": { "uv": [0, 16, 16, 12], "texture": "#5", "cullface": "up" },
+				"down": { "uv": [0, 4, 16, 0], "texture": "#3", "cullface": "down" }
+			}
+		},
+		{
+			"name": "top",
+			"from": [0, 12, 4],
+			"to": [16, 16, 16],
+			"faces": {
+				"east": { "uv": [16, 0, 4, 4], "texture": "#2", "cullface": "east" },
+				"south": { "uv": [0, 0, 16, 4], "texture": "#4", "cullface": "south" },
+				"west": { "uv": [4, 0, 16, 4], "texture": "#2", "cullface": "west" },
+				"up": { "uv": [0, 12, 16, 0], "texture": "#5", "cullface": "up" },
+				"down": { "uv": [0, 16, 16, 4], "texture": "#3" }
+			}
+		},
+		{
+			"name": "bottom",
+			"from": [0, 0, 4],
+			"to": [16, 4, 16],
+			"faces": {
+				"east": { "uv": [16, 12, 4, 16], "texture": "#2", "cullface": "east" },
+				"south": {
+					"uv": [0, 12, 16, 16],
+					"texture": "#4",
+					"cullface": "south"
+				},
+				"west": { "uv": [4, 12, 16, 16], "texture": "#2", "cullface": "west" },
+				"up": { "uv": [0, 4, 16, 16], "texture": "#3" },
+				"down": { "uv": [0, 16, 16, 4], "texture": "#3", "cullface": "down" }
+			}
+		},
+		{
+			"name": "pillar",
+			"from": [1, 4, 4],
+			"to": [4, 12, 7],
+			"faces": {
+				"south": { "uv": [1, 4, 4, 12], "texture": "#4" },
+				"west": { "uv": [4, 4, 7, 12], "texture": "#2" }
+			}
+		},
+		{
+			"name": "pillar",
+			"from": [1, 4, 12],
+			"to": [4, 12, 15],
+			"faces": {
+				"north": { "uv": [12, 4, 15, 12], "texture": "#4" },
+				"south": { "uv": [1, 4, 4, 12], "texture": "#4" },
+				"west": { "uv": [12, 4, 15, 12], "texture": "#2" }
+			}
+		},
+		{
+			"name": "pillar",
+			"from": [12, 4, 12],
+			"to": [15, 12, 15],
+			"faces": {
+				"north": { "uv": [4, 4, 1, 12], "texture": "#4" },
+				"east": { "uv": [15, 4, 12, 12], "texture": "#2" },
+				"south": { "uv": [12, 4, 15, 12], "texture": "#4" }
+			}
+		},
+		{
+			"name": "pillar",
+			"from": [12, 4, 4],
+			"to": [15, 12, 7],
+			"faces": {
+				"east": { "uv": [7, 4, 4, 12], "texture": "#2" },
+				"south": { "uv": [12, 4, 15, 12], "texture": "#4" }
+			}
+		},
+		{
+			"name": "side",
+			"from": [2, 4, 7],
+			"to": [4, 12, 12],
+			"faces": {
+				"west": { "uv": [7, 4, 12, 12], "texture": "#2" }
+			}
+		},
+		{
+			"name": "side",
+			"from": [12, 4, 7],
+			"to": [14, 12, 12],
+			"faces": {
+				"east": { "uv": [12, 4, 7, 12], "texture": "#2" }
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "port_leds",
+			"origin": [8, 8, 8],
+			"scope": 0,
+			"color": 0,
+			"children": [0]
+		},
+		{
+			"name": "ports",
+			"origin": [0, 0, 0],
+			"scope": 0,
+			"color": 0,
+			"children": [1]
+		},
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10
+	]
+}

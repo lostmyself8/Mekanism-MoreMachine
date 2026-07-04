@@ -26,6 +26,7 @@ public class MoreMachineLangProvider extends BaseLanguageProvider {
             { "recycling", "Recycling" },
             { "planting", "Planting" },
             { "stamping", "Stamping" },
+            { "pressing", "Pressing" },
             { "lathing", "Lathe" },
             { "rolling_mill", "Rolling Mill" },
             { "replicating", "Replicating" }
@@ -56,6 +57,7 @@ public class MoreMachineLangProvider extends BaseLanguageProvider {
         addBlockItem("recycler", "Recycler");
         addBlockItem("planting_station", "Planting Station");
         addBlockItem("cnc_stamper", "CNC Stamper");
+        addBlockItem("presser", "Presser");
         addBlockItem("cnc_lathe", "CNC Lathe");
         addBlockItem("cnc_rolling_mill", "CNC Rolling Mill");
         addBlockItem("replicator", "Replicator");
@@ -102,6 +104,7 @@ public class MoreMachineLangProvider extends BaseLanguageProvider {
         add(MoreMachineLang.RECYCLING, "Recycling");
         add(MoreMachineLang.PLANTING, "Planting");
         add(MoreMachineLang.STAMPING, "Stamping");
+        add(MoreMachineLang.PRESSING, "Pressing");
         add(MoreMachineLang.LATHING, "Lathing");
         add(MoreMachineLang.ROLLING_MILL, "Rolling Mill");
         add(MoreMachineLang.REPLICATING, "Replicating");
@@ -119,6 +122,7 @@ public class MoreMachineLangProvider extends BaseLanguageProvider {
         add(MoreMachineLang.DESCRIPTION_RECYCLER, "A machine for recycling items.");
         add(MoreMachineLang.DESCRIPTION_PLANTING_STATION, "A machine for automatically growing plants.");
         add(MoreMachineLang.DESCRIPTION_CNC_STAMPER, "A machine for stamping items.");
+        add(MoreMachineLang.DESCRIPTION_PRESSER, "A machine for pressing items.");
         add(MoreMachineLang.DESCRIPTION_CNC_LATHE, "A machine for lathing items.");
         add(MoreMachineLang.DESCRIPTION_CNC_ROLLING_MILL, "A machine for rolling items.");
         add(MoreMachineLang.DESCRIPTION_REPLICATOR, "A machine for replicating items with UU Matter.");

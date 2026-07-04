@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mekmm:block_silver"
+        }
+      ],
+      "name": "main",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "mekmm:blocks/block_silver"
+}

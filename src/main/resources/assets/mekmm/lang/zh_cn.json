@@ -455,7 +455,6 @@
 	"tag.block.c.storage_blocks.silver": "银块",
 	"tag.block.c.storage_blocks.raw_silver": "粗银块",
 
-
 	"configuration.mekmm.general.energy.max_transmission_rate": "最大能量传输速率",
 	"configuration.mekmm.general.energy.max_transmission_rate.tooltip": "设置在无线传输时能量的最大输出速率（单位：J）",
 	"configuration.mekmm.general.fluids.max_transmission_rate": "最大流体传输速率",

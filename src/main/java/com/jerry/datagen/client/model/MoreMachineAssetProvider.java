@@ -23,7 +23,7 @@ public class MoreMachineAssetProvider implements DataProvider {
     private static final String[] ALL_TIERS = concat(BASE_TIERS, EXTRA_TIERS);
 
     private static final String[] MORE_MACHINE_FACTORIES = {
-            "recycling", "planting", "stamping", "lathing", "rolling_mill", "replicating"
+            "recycling", "planting", "stamping", "pressing", "lathing", "rolling_mill", "replicating"
     };
     private static final String[] ADVANCED_FACTORIES = {
             "oxidizing", "dissolving", "washing", "crystallizing", "pressurised_reacting", "centrifuging", "liquifying", "pigment_extracting", "painting"
@@ -35,7 +35,7 @@ public class MoreMachineAssetProvider implements DataProvider {
             "connector", "connector_energy", "connector_fluids", "connector_chemicals", "connector_items", "connector_heat"
     };
     private static final String[] BASE_ACTIVE_MACHINES = {
-            "recycler", "planting_station", "cnc_stamper", "cnc_lathe", "cnc_rolling_mill"
+            "recycler", "planting_station", "cnc_stamper", "presser", "cnc_lathe", "cnc_rolling_mill"
     };
     private static final String[] FACING_MACHINES = {
             "replicator", "fluid_replicator", "chemical_replicator", "ambient_gas_collector", "wireless_charging_station",
@@ -94,6 +94,10 @@ public class MoreMachineAssetProvider implements DataProvider {
                 blockModelWithTextures("mekmm:block/cnc_stamper",
                         texture("3", "mekmm:block/cnc_stamper/front_active"),
                         texture("4", "mekmm:block/cnc_stamper/side_active")));
+        save(output, futures, blockModelPathProvider.json(id("presser_active")),
+                blockModelWithTextures("mekmm:block/presser",
+                        texture("front", "mekmm:block/presser/front_active"),
+                        texture("side", "mekmm:block/presser/side_active")));
     }
 
     private void generateBlockItemModels(CachedOutput output, List<CompletableFuture<?>> futures) {

@@ -455,7 +455,6 @@
 	"tag.block.c.storage_blocks.silver": "Silver Storage Blocks",
 	"tag.block.c.storage_blocks.raw_silver": "Raw Silver Storage Blocks",
 
-
 	"configuration.mekmm.general.energy.max_transmission_rate": "Energy Max Transmission Rate",
 	"configuration.mekmm.general.energy.max_transmission_rate.tooltip": "Set the maximum energy output rate during wireless transmission",
 	"configuration.mekmm.general.fluids.max_transmission_rate": "Fluids Max Transmission Rate",

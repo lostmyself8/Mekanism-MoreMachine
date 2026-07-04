@@ -3,6 +3,7 @@ package com.jerry.mekmm.client.recipe_viewer;
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
+import com.jerry.mekmm.api.recipes.TripleItemToItemRecipe;
 import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
 import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe;
 import com.jerry.mekmm.api.recipes.basic.MMBasicItemStackChemicalToItemStackRecipe;
@@ -26,6 +27,8 @@ public class MMRecipeViewerRecipeType {
     public static final RVRecipeTypeWrapper<?, ItemStackToItemStackRecipe, ?> LATHE = new RVRecipeTypeWrapper<>(MoreMachineRecipeType.LATHING, ItemStackToItemStackRecipe.class, -28, -16, 144, 54, MoreMachineBlocks.CNC_LATHE);
 
     public static final RVRecipeTypeWrapper<?, ItemStackToItemStackRecipe, ?> ROLLING_MILL = new RVRecipeTypeWrapper<>(MoreMachineRecipeType.ROLLING_MILL, ItemStackToItemStackRecipe.class, -28, -16, 144, 54, MoreMachineBlocks.CNC_ROLLING_MILL);
+
+    public static final RVRecipeTypeWrapper<?, TripleItemToItemRecipe, ?> PRESSING = new RVRecipeTypeWrapper<>(MoreMachineRecipeType.PRESSING, TripleItemToItemRecipe.class, -28, -16, 144, 54, MoreMachineBlocks.PRESSER);
 
     public static final FakeRVRecipeType<MMBasicItemStackChemicalToItemStackRecipe> REPLICATOR = new FakeRVRecipeType<>(MoreMachineBlocks.REPLICATOR, MMBasicItemStackChemicalToItemStackRecipe.class, -3, -3, 170, 79);
 

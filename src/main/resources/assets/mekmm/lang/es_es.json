@@ -455,7 +455,6 @@
 	"tag.block.c.storage_blocks.silver": "Silver Storage Blocks",
 	"tag.block.c.storage_blocks.raw_silver": "Raw Silver Storage Blocks",
 
-
 	"configuration.mekmm.general.energy.max_transmission_rate": "Tasa máxima de transmisión de energía",
 	"configuration.mekmm.general.energy.max_transmission_rate.tooltip": "Establece la tasa máxima de salida de energía durante la transmisión inalámbrica",
 	"configuration.mekmm.general.fluids.max_transmission_rate": "Tasa máxima de transmisión de fluidos",

@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": ["mekmm:ingot_silver"],
+	"result": {
+		"count": 9,
+		"id": "mekmm:nugget_silver"
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"#": "#c:nuggets/silver",
+		"P": "mekmm:nugget_silver"
+	},
+	"pattern": ["###", "#P#", "###"],
+	"result": {
+		"count": 1,
+		"id": "mekmm:ingot_silver"
+	}
+}

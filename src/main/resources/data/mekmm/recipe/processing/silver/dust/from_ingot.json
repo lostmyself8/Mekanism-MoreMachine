@@ -1,0 +1,11 @@
+{
+	"type": "mekanism:crushing",
+	"input": {
+		"count": 1,
+		"ingredient": "#c:ingots/silver"
+	},
+	"output": {
+		"count": 1,
+		"id": "mekmm:dust_silver"
+	}
+}

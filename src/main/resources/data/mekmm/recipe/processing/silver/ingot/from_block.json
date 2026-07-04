@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": ["mekmm:block_silver"],
+	"result": {
+		"count": 9,
+		"id": "mekmm:ingot_silver"
+	}
+}

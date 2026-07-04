@@ -23,6 +23,7 @@ public class MoreMachineContainerTypes {
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityStamper>> CNC_STAMPER = MM_CONTAINER_TYPES.register(MoreMachineBlocks.CNC_STAMPER, TileEntityStamper.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityLathe>> CNC_LATHE = MM_CONTAINER_TYPES.register(MoreMachineBlocks.CNC_LATHE, TileEntityLathe.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityRollingMill>> CNC_ROLLING_MILL = MM_CONTAINER_TYPES.register(MoreMachineBlocks.CNC_ROLLING_MILL, TileEntityRollingMill.class);
+    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityPresser>> PRESSER = MM_CONTAINER_TYPES.register(MoreMachineBlocks.PRESSER, TileEntityPresser.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityReplicator>> REPLICATOR = MM_CONTAINER_TYPES.register(MoreMachineBlocks.REPLICATOR, TileEntityReplicator.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityFluidReplicator>> FLUID_REPLICATOR = MM_CONTAINER_TYPES.register(MoreMachineBlocks.FLUID_REPLICATOR, TileEntityFluidReplicator.class);
     public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityChemicalReplicator>> CHEMIcAL_REPLICATOR = MM_CONTAINER_TYPES.register(MoreMachineBlocks.CHEMICAL_REPLICATOR, TileEntityChemicalReplicator.class);

@@ -5,6 +5,7 @@ import com.jerry.mekmm.api.recipes.PlantingRecipe;
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
 import com.jerry.mekmm.api.recipes.StamperRecipe;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
+import com.jerry.mekmm.common.recipe.lookup.cache.MoreMachineInputRecipeCache;
 
 import mekanism.api.recipes.ItemStackToItemStackRecipe;
 import mekanism.api.recipes.MekanismRecipe;
@@ -45,5 +46,7 @@ public class MixinMekanismRecipeType {
         MoreMachineRecipeType.LATHING = register(MoreMachineRecipeTypes.NAME_LATHING, recipeType -> new InputRecipeCache.SingleItem<>(recipeType, ItemStackToItemStackRecipe::getInput));
 
         MoreMachineRecipeType.ROLLING_MILL = register(MoreMachineRecipeTypes.NAME_ROLLING_MILL, recipeType -> new InputRecipeCache.SingleItem<>(recipeType, ItemStackToItemStackRecipe::getInput));
+
+        MoreMachineRecipeType.PRESSING = register(MoreMachineRecipeTypes.NAME_PRESSING, MoreMachineInputRecipeCache.Pressing::new);
     }
 }

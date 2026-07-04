@@ -1,0 +1,11 @@
+{
+	"type": "mekanism:crushing",
+	"input": {
+		"count": 1,
+		"ingredient": "#c:clumps/silver"
+	},
+	"output": {
+		"count": 1,
+		"id": "mekmm:dirty_dust_silver"
+	}
+}

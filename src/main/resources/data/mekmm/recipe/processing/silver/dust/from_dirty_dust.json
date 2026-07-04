@@ -1,0 +1,11 @@
+{
+	"type": "mekanism:enriching",
+	"input": {
+		"count": 1,
+		"ingredient": "#c:dirty_dusts/silver"
+	},
+	"output": {
+		"count": 1,
+		"id": "mekmm:dust_silver"
+	}
+}

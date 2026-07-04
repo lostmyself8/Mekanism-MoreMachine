@@ -1,0 +1,11 @@
+{
+	"type": "mekanism:enriching",
+	"input": {
+		"count": 1,
+		"ingredient": "#c:storage_blocks/raw_silver"
+	},
+	"output": {
+		"count": 12,
+		"id": "mekmm:dust_silver"
+	}
+}

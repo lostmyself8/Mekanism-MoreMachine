@@ -14,6 +14,7 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFa
 import com.jerry.mekmm.common.item.block.*;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
+import com.jerry.mekmm.common.recipe.lookup.cache.MoreMachineInputRecipeCache;
 import com.jerry.mekmm.common.resource.MoreMachineBlockResourceInfo;
 import com.jerry.mekmm.common.resource.MoreMachineResource;
 import com.jerry.mekmm.common.resource.ore.MoreMachineOreType;
@@ -99,7 +100,6 @@ public class MoreMachineBlocks {
                 PROCESSED_RESOURCE_BLOCKS.put(rawResource, registerResourceBlock(rawResource));
             }
         }
-        OreType.values();
         if (MoreMachineOreType.SILVER == null) {
             throw new IllegalStateException("Silver ore type was not registered before MoreMachine blocks initialized.");
         }
@@ -157,6 +157,18 @@ public class MoreMachineBlocks {
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ELECTRIC_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                     .addInput(MoreMachineRecipeType.ROLLING_MILL, SingleInputRecipeCache::containsInput)
+                    .addOutput()
+                    .addEnergy()
+                    .build()));
+
+    public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>>> PRESSER = MM_BLOCKS.register("presser", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.PRESSER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
+                    (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+                            .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
+                            .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.EXTRA_MACHINE)))
+            .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                    .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputA)
+                    .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputB)
+                    .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputC)
                     .addOutput()
                     .addEnergy()
                     .build()));
@@ -223,6 +235,7 @@ public class MoreMachineBlocks {
                 case RECYCLING -> s -> MoreMachineRecipeType.RECYCLING.getInputCache().containsInput(null, s);
                 case PLANTING_STATION -> s -> MoreMachineRecipeType.PLANTING_STATION.getInputCache().containsInputA(null, s);
                 case CNC_STAMPING -> s -> MoreMachineRecipeType.STAMPING.getInputCache().containsInputA(null, s);
+                case PRESSING -> s -> MoreMachineRecipeType.PRESSING.getInputCache().containsInputA(null, s);
                 case CNC_LATHING -> s -> MoreMachineRecipeType.LATHING.getInputCache().containsInput(null, s);
                 case CNC_ROLLING_MILL -> s -> MoreMachineRecipeType.ROLLING_MILL.getInputCache().containsInput(null, s);
                 case REPLICATING -> s -> IMoreMachineDataMapTypes.INSTANCE.getItemReplicatorRecipe(s.typeHolder()) != null;
@@ -231,6 +244,12 @@ public class MoreMachineBlocks {
                 case CNC_STAMPING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                         .addBasicFactorySlots(processes, recipeInputPredicate)
                         .addInput(MekanismRecipeType.COMBINING, InputRecipeCache.DoubleItem::containsInputB)
+                        .addEnergy()
+                        .build());
+                case PRESSING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                        .addBasicFactorySlots(processes, recipeInputPredicate)
+                        .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputB)
+                        .addInput(MoreMachineRecipeType.PRESSING, MoreMachineInputRecipeCache.TripleItem::containsInputC)
                         .addEnergy()
                         .build());
                 case CNC_LATHING, CNC_ROLLING_MILL, RECYCLING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()

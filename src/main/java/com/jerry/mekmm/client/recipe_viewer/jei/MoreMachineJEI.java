@@ -56,6 +56,7 @@ public class MoreMachineJEI implements IModPlugin {
         registry.addRecipeCategories(new StamperRecipeCategory(guiHelper, MMRecipeViewerRecipeType.STAMPING));
         registry.addRecipeCategories(new ItemStackToItemStackRecipeCategory(guiHelper, MMRecipeViewerRecipeType.LATHE));
         registry.addRecipeCategories(new ItemStackToItemStackRecipeCategory(guiHelper, MMRecipeViewerRecipeType.ROLLING_MILL));
+        registry.addRecipeCategories(new PresserRecipeCategory(guiHelper, MMRecipeViewerRecipeType.PRESSING));
     }
 
     @Override
@@ -81,6 +82,7 @@ public class MoreMachineJEI implements IModPlugin {
         RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.STAMPING, MoreMachineRecipeType.STAMPING);
         RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.LATHE, MoreMachineRecipeType.LATHING);
         RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.ROLLING_MILL, MoreMachineRecipeType.ROLLING_MILL);
+        RecipeRegistryHelper.register(registry, MMRecipeViewerRecipeType.PRESSING, MoreMachineRecipeType.PRESSING);
 
         registry.addIngredientInfo(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS.asResource().toStack(FluidType.BUCKET_VOLUME), MekanismJEI.TYPE_CHEMICAL,
                 MoreMachineLang.RECIPE_VIEWER_INFO_UNSTABLE_DIMENSIONAL_GAS.translate(MoreMachineConfig.general.gasCollectAmount.get()));
@@ -92,7 +94,8 @@ public class MoreMachineJEI implements IModPlugin {
             return;
         }
         MMCatalystRegistryHelper.register(registry, true, MMRecipeViewerRecipeType.RECYCLER, MMRecipeViewerRecipeType.PLANTING_STATION, MMRecipeViewerRecipeType.REPLICATOR,
-                MMRecipeViewerRecipeType.FLUID_REPLICATOR, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MMRecipeViewerRecipeType.STAMPING, MMRecipeViewerRecipeType.LATHE, MMRecipeViewerRecipeType.ROLLING_MILL);
+                MMRecipeViewerRecipeType.FLUID_REPLICATOR, MMRecipeViewerRecipeType.CHEMICAL_REPLICATOR, MMRecipeViewerRecipeType.STAMPING, MMRecipeViewerRecipeType.LATHE,
+                MMRecipeViewerRecipeType.ROLLING_MILL, MMRecipeViewerRecipeType.PRESSING);
         AFCatalystRegistryHelper.register(registry);
 
         /*

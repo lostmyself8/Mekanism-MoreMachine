@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:smelting",
+	"category": "misc",
+	"cookingtime": 200,
+	"experience": 0.3,
+	"ingredient": "mekmm:dust_silver",
+	"result": {
+		"count": 1,
+		"id": "mekmm:ingot_silver"
+	}
+}

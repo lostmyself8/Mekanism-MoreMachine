@@ -1,0 +1,15 @@
+{
+	"type": "mekanism:washing",
+	"chemical_input": {
+		"amount": 1,
+		"chemical": "mekmm:dirty_silver"
+	},
+	"fluid_input": {
+		"amount": 5,
+		"ingredient": "#minecraft:water"
+	},
+	"output": {
+		"amount": 1,
+		"id": "mekmm:clean_silver"
+	}
+}
