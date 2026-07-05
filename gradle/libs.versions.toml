@@ -2,7 +2,7 @@
 minecraft = "26.1.2"
 neoForge = "26.1.2.74"
 loader = "4"
-spotless = "8.4.0"
+spotless = "8.8.0"
 modDevGradle = "2.0.141"
 lombok = "9.5.0"
 jetbrains-annotations = "26.1.0"
