@@ -15,7 +15,7 @@ spotless {
         def formatFile = file("$rootDir/gradle/spotless/spotless.eclipseformat.xml")
         toggleOffOn()
         importOrderFile(orderFile)
-        removeUnusedImports('cleanthat-javaparser-unnecessaryimport')
+        // The JavaParser-based unused import step rejects Java 25 unnamed lambda parameters (_).
         endWithNewline()
         eclipse('4.36').configFile(formatFile)
     }
