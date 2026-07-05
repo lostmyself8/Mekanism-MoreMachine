@@ -1,8 +1,12 @@
 package com.jerry.meklg.common.tile.generator;
 
+import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
-import mekanism.api.*;
+import mekanism.api.AutomationType;
+import mekanism.api.IContentsListener;
+import mekanism.api.MekanismAPITags;
+import mekanism.api.RelativeSide;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
 import mekanism.common.capabilities.Capabilities;
@@ -23,6 +27,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,6 +45,10 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
 
     private static final float SPEED = 32.0F;
     public static final int TOP_Y = 36;
+    public static final int CHUNK_RADIUS = 2;
+    private static final int DETECTION_COOLDOWN_MIN = 20;
+    private static final int DETECTION_COOLDOWN_MAX = 200;
+    private static final int DETECTION_COOLDOWN_STEP = 20;
 
     private static final RelativeSide[] ENERGY_SIDES = new RelativeSide[] { RelativeSide.FRONT, RelativeSide.LEFT, RelativeSide.RIGHT, RelativeSide.BACK };
 
@@ -48,11 +57,15 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     @Getter
     private double currentMultiplier = 0.0F;
     private boolean isBlacklistDimension;
+    private boolean hasSameBlockNearby;
+    private int detectionCooldown = DETECTION_COOLDOWN_MIN;
+    private int detectionTicker = 0;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = { "getEnergyItem" }, docPlaceholder = "energy item slot")
     EnergyInventorySlot energySlot;
 
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
         super(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, pos, state);
+        updateMaxOutput();
     }
 
     @NotNull
@@ -69,19 +82,25 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected boolean onUpdateServer(net.minecraft.server.level.ServerLevel level) {
+    protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.drainContainerIntoSlot(null);
         // If we're in a blacklisted dimension, there's nothing more to do
         if (isBlacklistDimension) {
             return sendUpdatePacket;
         }
+        detectionTicker = Math.min(detectionTicker + 1, detectionCooldown);
+        if (detectionTicker >= detectionCooldown && canFunction()) {
+            detectionTicker = 0;
+            hasSameBlockNearby = checkSameBlockNearby();
+            detectionCooldown = hasSameBlockNearby ? DETECTION_COOLDOWN_MIN : Math.min(detectionCooldown + DETECTION_COOLDOWN_STEP, DETECTION_COOLDOWN_MAX);
+        }
         if (ticker % SharedConstants.TICKS_PER_SECOND == 0) {
             // Recalculate the current multiplier once a second
             currentMultiplier = getMultiplier();
-            setActive(canFunction() && currentMultiplier != 0L);
         }
-        if (currentMultiplier != 0L && canFunction() && getEnergyContainer().getNeededAsLong() > 0L) {
+        setActive(canFunction() && currentMultiplier != 0L && !hasSameBlockNearby);
+        if (currentMultiplier != 0L && canFunction() && !hasSameBlockNearby && getEnergyContainer().getNeededAsLong() > 0L) {
             try (Transaction transaction = Transaction.openRoot()) {
                 getEnergyContainer().insert(MathUtils.clampToInt(getCurrentGeneration()), transaction, AutomationType.INTERNAL);
                 transaction.commit();
@@ -121,7 +140,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     public long getCurrentGeneration() {
-        return MathUtils.clampToLong(MekanismGeneratorsConfig.generators.windGenerationMin.get() * currentMultiplier);
+        return MathUtils.clampToLong(MoreMachineConfig.generators.largeWindGenerationMin.get() * currentMultiplier);
     }
 
     @Override
@@ -133,7 +152,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     public float getHeightSpeedRatio() {
-        int height = getBlockPos().getY() + 4;
+        int height = getBlockPos().getY() + TOP_Y;
         if (level == null) {
             // Fallback to default values, but in general this is not going to happen
             return SPEED * height / 384F;
@@ -152,7 +171,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
             BlockPos top = getBlockPos().above(TOP_Y);
             // Validate it isn't fluid logged to help try and prevent https://github.com/mekanism/Mekanism/issues/7344
             // Clamp the height limits as the logical bounds of the world
-            if (level.getFluidState(top).isEmpty() && level.canSeeSky(top)) {
+            if (canSeeSky(top) && !hasSameBlockNearby) {
                 int minBuildHeight = level.getMinY();
                 // Based off of how PortalForcer#createPortal calculates
                 // The minus one is to handle that the max level height is treated as exclusive
@@ -160,8 +179,8 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
                 int minY = Math.max(MekanismGeneratorsConfig.generators.windGenerationMinY.get(), minBuildHeight);
                 int maxY = Math.min(MekanismGeneratorsConfig.generators.windGenerationMaxY.get(), maxLevelHeight);
                 int clampedY = Math.min(maxY, Math.max(minY, top.getY()));
-                long minG = MekanismGeneratorsConfig.generators.windGenerationMin.get();
-                long maxG = MekanismGeneratorsConfig.generators.windGenerationMax.get();
+                long minG = MoreMachineConfig.generators.largeWindGenerationMin.get();
+                long maxG = MoreMachineConfig.generators.largeWindGenerationMax.get();
                 double slope = ((double) (maxG - minG)) / (maxY - minY);
                 double toGen = minG + (slope * (clampedY - minY));
                 return (toGen / minG);
@@ -170,22 +189,67 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         return 0L;
     }
 
+    private boolean checkSameBlockNearby() {
+        if (level == null) {
+            return false;
+        }
+        int selfChunkX = getBlockPos().getX() >> 4;
+        int selfChunkZ = getBlockPos().getZ() >> 4;
+        int minY = level.getMinY();
+        int maxY = level.getMaxY() + 1;
+
+        BlockPos.MutableBlockPos candidate = new BlockPos.MutableBlockPos();
+        for (int cx = selfChunkX - CHUNK_RADIUS; cx <= selfChunkX + CHUNK_RADIUS; cx++) {
+            for (int cz = selfChunkZ - CHUNK_RADIUS; cz <= selfChunkZ + CHUNK_RADIUS; cz++) {
+                if (!level.isLoaded(candidate.set(cx << 4, getBlockPos().getY(), cz << 4))) {
+                    continue;
+                }
+                int startX = cx << 4;
+                int startZ = cz << 4;
+                for (int x = startX; x < startX + 16; x++) {
+                    for (int z = startZ; z < startZ + 16; z++) {
+                        for (int y = minY; y < maxY; y++) {
+                            candidate.set(x, y, z);
+                            if (!candidate.equals(getBlockPos()) && level.getBlockState(candidate).getBlock() == getBlockState().getBlock()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean canSeeSky(BlockPos pos) {
+        return level != null && level.getFluidState(pos).isEmpty() && level.canSeeSky(pos);
+    }
+
     @Override
     public void setLevel(@NotNull Level world) {
         super.setLevel(world);
         // Check the blacklist and force an update if we're in the blacklist. Otherwise, we'll never send
         // an initial activity status and the client (in MP) will show the windmills turning while not
         // generating any power
-        updateMaxOutputRaw(MekanismGeneratorsConfig.generators.windGenerationMax.get());
+        updateMaxOutput();
         isBlacklistDimension = world.dimensionTypeRegistration().is(MekanismAPITags.DimensionTypes.NO_WIND);
         if (isBlacklistDimension) {
             setActive(false);
         }
     }
 
+    private void updateMaxOutput() {
+        updateMaxOutputRaw(MathUtils.multiplyClamped(MoreMachineConfig.generators.largeWindGenerationMax.get(), 2));
+    }
+
     @ComputerMethod(nameOverride = "isBlacklistedDimension")
     public boolean isBlacklistDimension() {
         return isBlacklistDimension;
+    }
+
+    @ComputerMethod(nameOverride = "hasSameGeneratorNearby")
+    public boolean hasSameGeneratorNearby() {
+        return hasSameBlockNearby;
     }
 
     @Override
@@ -203,6 +267,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         super.addContainerTrackers(container);
         container.track(SyncableDouble.create(this::getCurrentMultiplier, v -> currentMultiplier = v));
         container.track(SyncableBoolean.create(this::isBlacklistDimension, v -> isBlacklistDimension = v));
+        container.track(SyncableBoolean.create(this::hasSameGeneratorNearby, v -> hasSameBlockNearby = v));
     }
 
     @Override

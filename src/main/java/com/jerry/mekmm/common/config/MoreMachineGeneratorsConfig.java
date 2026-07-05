@@ -20,6 +20,8 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
     public final CachedIntValue largeHeatGenerationFluidRate;
 
     public final CachedLongValue LGBGTankCapacity;
+    public final CachedLongValue largeWindGenerationMin;
+    public final CachedLongValue largeWindGenerationMax;
     public final CachedLongValue solarHeatGeneration;
     public final CachedDoubleValue solarHeatMaxTemperature;
     public final CachedDoubleValue solarHeatTargetConversionTemperature;
@@ -46,6 +48,11 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
         MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS.applyToBuilder(builder).push("gas_generator");
         LGBGTankCapacity = CachedLongValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_GAS_TANK_CAPACITY.applyToBuilder(builder)
                 .defineInRange("tankCapacity", 180L * FluidType.BUCKET_VOLUME, 1, Long.MAX_VALUE));
+        builder.pop();
+
+        MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND.applyToBuilder(builder).push("large_wind_generator");
+        largeWindGenerationMin = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND_GEN_MIN, "generationMin", 2_250_000L);
+        largeWindGenerationMax = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_LARGE_WIND_GEN_MAX, "generationMax", 3_750_000L);
         builder.pop();
 
         MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT.applyToBuilder(builder).push("solar_heat_generator");

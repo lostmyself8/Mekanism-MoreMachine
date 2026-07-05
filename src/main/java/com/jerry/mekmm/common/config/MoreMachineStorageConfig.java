@@ -29,6 +29,7 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
     public final CachedLongValue largeAntiprotonicNucleosynthesizer;
     public final CachedLongValue largePigmentMixer;
     public final CachedLongValue largeHeatGenerator;
+    public final CachedLongValue largeWindGenerator;
     public final CachedLongValue solarHeatGenerator;
 
     MoreMachineStorageConfig() {
@@ -58,6 +59,7 @@ public class MoreMachineStorageConfig extends BaseMekanismConfig {
         largeAntiprotonicNucleosynthesizer = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, "largeAntiprotonicNucleosynthesizer", 51_200_000_000L, 1);
         largePigmentMixer = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_PIGMENT_MIXER, "largePigmentMixer", 4_096_000L, 1);
         largeHeatGenerator = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_HEAT_GENERATOR, "largeHeatGenerator", 256_600_000L, 1);
+        largeWindGenerator = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_LARGE_WIND_GENERATOR, "largeWindGenerator", 256_600_000L, 1);
         solarHeatGenerator = CachedLongValue.definedMin(this, builder, MoreMachineConfigTranslations.ENERGY_STORAGE_SOLAR_HEAT_GENERATOR, "solarHeatGenerator", 256_600_000L, 1);
 
         configSpec = builder.build();
