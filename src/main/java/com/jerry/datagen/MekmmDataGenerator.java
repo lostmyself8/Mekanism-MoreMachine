@@ -102,7 +102,6 @@ public class MekmmDataGenerator {
         List<ModContainer> mods = new ArrayList<>();
         DeferredWorkQueue enqueueIMC = new DeferredWorkQueue("IMC Bootstrap: Enqueue IMC");
         for (ModContainer mod : ModList.get().getSortedMods()) {
-            // Handle all our modules
             if (mod.getModId().startsWith(Mekmm.MOD_ID)) {
                 mods.add(mod);
                 Objects.requireNonNull(mod.getEventBus()).post(new InterModEnqueueEvent(mod, enqueueIMC));
