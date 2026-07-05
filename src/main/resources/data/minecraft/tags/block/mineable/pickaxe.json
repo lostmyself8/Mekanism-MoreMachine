@@ -138,10 +138,16 @@
 		{ "id": "mekmm:dense_crystallizing_factory", "required": false },
 		{ "id": "mekmm:multiversal_crystallizing_factory", "required": false },
 		{ "id": "mekmm:creative_crystallizing_factory", "required": false },
-		{ "id": "mekmm:overclocked_pressurised_reacting_factory", "required": false },
+		{
+			"id": "mekmm:overclocked_pressurised_reacting_factory",
+			"required": false
+		},
 		{ "id": "mekmm:quantum_pressurised_reacting_factory", "required": false },
 		{ "id": "mekmm:dense_pressurised_reacting_factory", "required": false },
-		{ "id": "mekmm:multiversal_pressurised_reacting_factory", "required": false },
+		{
+			"id": "mekmm:multiversal_pressurised_reacting_factory",
+			"required": false
+		},
 		{ "id": "mekmm:creative_pressurised_reacting_factory", "required": false },
 		{ "id": "mekmm:overclocked_centrifuging_factory", "required": false },
 		{ "id": "mekmm:quantum_centrifuging_factory", "required": false },
