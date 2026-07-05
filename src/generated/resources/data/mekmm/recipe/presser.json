@@ -1,0 +1,21 @@
+{
+  "type": "mekanism:mek_data",
+  "category": "misc",
+  "key": {
+    "#": [
+      "minecraft:piston",
+      "minecraft:sticky_piston"
+    ],
+    "A": "#c:alloys/elite",
+    "C": "#c:circuits/elite",
+    "M": "mekmm:cnc_stamper"
+  },
+  "pattern": [
+    "A#A",
+    "CMC",
+    "A#A"
+  ],
+  "result": {
+    "id": "mekmm:presser"
+  }
+}

@@ -118,7 +118,6 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Nullable
     private List<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> leftOutputCaches;
     @Nullable
-    @SuppressWarnings("removal")
     private List<BlockCapabilityCache<ResourceHandler<FluidResource>, @Nullable Direction>> rightOutputCaches;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
@@ -200,8 +199,8 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Override
     public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.LEFT);
-        builder.addTank(chemicalTank = BasicChemicalTank.create(CAPACITY, (gas, automationType) -> automationType == AutomationType.MANUAL || mode,
-                (gas, automationType) -> automationType == AutomationType.INTERNAL || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
+        builder.addTank(chemicalTank = BasicChemicalTank.create(CAPACITY, (_, automationType) -> automationType == AutomationType.MANUAL || mode,
+                (_, automationType) -> automationType == AutomationType.INTERNAL || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
                 recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
         return builder.build();
     }
@@ -214,8 +213,8 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     @Override
     protected IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.RIGHT);
-        builder.addTank(fluidTank = BasicFluidTank.create(CAPACITY, (fluid, automationType) -> automationType == AutomationType.MANUAL || !mode,
-                (fluid, automationType) -> automationType == AutomationType.INTERNAL || mode, this::isValidFluid, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
+        builder.addTank(fluidTank = BasicFluidTank.create(CAPACITY, (_, automationType) -> automationType == AutomationType.MANUAL || !mode,
+                (_, automationType) -> automationType == AutomationType.INTERNAL || mode, this::isValidFluid, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         return builder.build();
     }
 
