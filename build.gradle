@@ -4,7 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     alias libs.plugins.modDevGradle
-    alias libs.plugins.spotless
+//    alias libs.plugins.spotless
     alias libs.plugins.lombok
 }
 
