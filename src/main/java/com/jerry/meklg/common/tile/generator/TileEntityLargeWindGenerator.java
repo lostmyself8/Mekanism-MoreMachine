@@ -39,13 +39,20 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
     private static final float SPEED = 32.0F;
     public static final int TOP_Y = 36;
     public static final int CHUNK_RADIUS = 2;
+    // TODO: Re-enable after TeaCon and validate the indexed nearby-generator detection on a live server.
+    private static final boolean SAME_BLOCK_NEARBY_DETECTION_ENABLED = false;
     private static final int DETECTION_COOLDOWN_MIN = 20;
     private static final int DETECTION_COOLDOWN_MAX = 200;
     private static final int DETECTION_COOLDOWN_STEP = 20;
@@ -89,11 +96,15 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         if (isBlacklistDimension) {
             return sendUpdatePacket;
         }
-        detectionTicker = Math.min(detectionTicker + 1, detectionCooldown);
-        if (detectionTicker >= detectionCooldown && canFunction()) {
-            detectionTicker = 0;
-            hasSameBlockNearby = checkSameBlockNearby();
-            detectionCooldown = hasSameBlockNearby ? DETECTION_COOLDOWN_MIN : Math.min(detectionCooldown + DETECTION_COOLDOWN_STEP, DETECTION_COOLDOWN_MAX);
+        if (SAME_BLOCK_NEARBY_DETECTION_ENABLED) {
+            detectionTicker = Math.min(detectionTicker + 1, detectionCooldown);
+            if (detectionTicker >= detectionCooldown && canFunction()) {
+                detectionTicker = 0;
+                hasSameBlockNearby = checkSameBlockNearby();
+                detectionCooldown = hasSameBlockNearby ? DETECTION_COOLDOWN_MIN : Math.min(detectionCooldown + DETECTION_COOLDOWN_STEP, DETECTION_COOLDOWN_MAX);
+            }
+        } else {
+            hasSameBlockNearby = false;
         }
         if (ticker % SharedConstants.TICKS_PER_SECOND == 0) {
             // Recalculate the current multiplier once a second
@@ -190,31 +201,27 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     private boolean checkSameBlockNearby() {
-        if (level == null) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return false;
         }
+        LargeWindGeneratorIndex.register(serverLevel, worldPosition);
         int selfChunkX = getBlockPos().getX() >> 4;
         int selfChunkZ = getBlockPos().getZ() >> 4;
-        int minY = level.getMinY();
-        int maxY = level.getMaxY() + 1;
 
-        BlockPos.MutableBlockPos candidate = new BlockPos.MutableBlockPos();
         for (int cx = selfChunkX - CHUNK_RADIUS; cx <= selfChunkX + CHUNK_RADIUS; cx++) {
             for (int cz = selfChunkZ - CHUNK_RADIUS; cz <= selfChunkZ + CHUNK_RADIUS; cz++) {
-                if (!level.isLoaded(candidate.set(cx << 4, getBlockPos().getY(), cz << 4))) {
+                if (!serverLevel.hasChunk(cx, cz)) {
                     continue;
                 }
-                int startX = cx << 4;
-                int startZ = cz << 4;
-                for (int x = startX; x < startX + 16; x++) {
-                    for (int z = startZ; z < startZ + 16; z++) {
-                        for (int y = minY; y < maxY; y++) {
-                            candidate.set(x, y, z);
-                            if (!candidate.equals(getBlockPos()) && level.getBlockState(candidate).getBlock() == getBlockState().getBlock()) {
-                                return true;
-                            }
-                        }
+                Set<BlockPos> candidates = LargeWindGeneratorIndex.snapshot(serverLevel, cx, cz);
+                for (BlockPos candidate : candidates) {
+                    if (candidate.equals(worldPosition)) {
+                        continue;
                     }
+                    if (serverLevel.getBlockEntity(candidate) instanceof TileEntityLargeWindGenerator tile && !tile.isRemoved()) {
+                        return true;
+                    }
+                    LargeWindGeneratorIndex.unregister(serverLevel, candidate);
                 }
             }
         }
@@ -228,6 +235,9 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     @Override
     public void setLevel(@NotNull Level world) {
         super.setLevel(world);
+        if (SAME_BLOCK_NEARBY_DETECTION_ENABLED && world instanceof ServerLevel serverLevel) {
+            LargeWindGeneratorIndex.register(serverLevel, worldPosition);
+        }
         // Check the blacklist and force an update if we're in the blacklist. Otherwise, we'll never send
         // an initial activity status and the client (in MP) will show the windmills turning while not
         // generating any power
@@ -236,6 +246,22 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         if (isBlacklistDimension) {
             setActive(false);
         }
+    }
+
+    @Override
+    public void onAdded(@NotNull Level level) {
+        super.onAdded(level);
+        if (SAME_BLOCK_NEARBY_DETECTION_ENABLED && level instanceof ServerLevel serverLevel) {
+            LargeWindGeneratorIndex.register(serverLevel, worldPosition);
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        if (SAME_BLOCK_NEARBY_DETECTION_ENABLED && level instanceof ServerLevel serverLevel) {
+            LargeWindGeneratorIndex.unregister(serverLevel, worldPosition);
+        }
+        super.setRemoved();
     }
 
     private void updateMaxOutput() {
@@ -344,4 +370,54 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         return getActive() ? getCurrentGeneration() : 0L;
     }
     // End methods IComputerTile
+
+    private static final class LargeWindGeneratorIndex {
+
+        private static final Map<ServerLevel, Map<Long, Set<BlockPos>>> INDEX = new WeakHashMap<>();
+
+        private static synchronized void register(ServerLevel level, BlockPos pos) {
+            int chunkX = pos.getX() >> 4;
+            int chunkZ = pos.getZ() >> 4;
+            INDEX.computeIfAbsent(level, ignored -> new HashMap<>())
+                    .computeIfAbsent(chunkKey(chunkX, chunkZ), ignored -> new HashSet<>())
+                    .add(pos.immutable());
+        }
+
+        private static synchronized void unregister(ServerLevel level, BlockPos pos) {
+            Map<Long, Set<BlockPos>> chunks = INDEX.get(level);
+            if (chunks == null) {
+                return;
+            }
+            int chunkX = pos.getX() >> 4;
+            int chunkZ = pos.getZ() >> 4;
+            long chunkKey = chunkKey(chunkX, chunkZ);
+            Set<BlockPos> positions = chunks.get(chunkKey);
+            if (positions == null) {
+                return;
+            }
+            positions.remove(pos);
+            if (positions.isEmpty()) {
+                chunks.remove(chunkKey);
+            }
+            if (chunks.isEmpty()) {
+                INDEX.remove(level);
+            }
+        }
+
+        private static synchronized Set<BlockPos> snapshot(ServerLevel level, int chunkX, int chunkZ) {
+            Map<Long, Set<BlockPos>> chunks = INDEX.get(level);
+            if (chunks == null) {
+                return Set.of();
+            }
+            Set<BlockPos> positions = chunks.get(chunkKey(chunkX, chunkZ));
+            if (positions == null || positions.isEmpty()) {
+                return Set.of();
+            }
+            return new HashSet<>(positions);
+        }
+
+        private static long chunkKey(int chunkX, int chunkZ) {
+            return ((long) chunkX & 0xFFFFFFFFL) | (((long) chunkZ & 0xFFFFFFFFL) << 32);
+        }
+    }
 }
