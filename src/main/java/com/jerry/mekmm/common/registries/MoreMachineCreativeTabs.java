@@ -25,7 +25,8 @@ public class MoreMachineCreativeTabs {
                 CreativeTabDeferredRegister.addToDisplay(AdvancedFactoryBlocks.AF_BLOCKS, output);
                 CreativeTabDeferredRegister.addToDisplay(LargeMachineBlocks.LM_BLOCKS, output);
                 if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
-                    CreativeTabDeferredRegister.addToDisplay(LargeGeneratorBlocks.LG_BLOCKS, output);
+                    CreativeTabDeferredRegister.addToDisplay(output, LargeGeneratorBlocks.LG_BLOCKS.getSecondaryEntries(),
+                            LargeGeneratorBlocks.LARGE_WIND_GENERATOR_PROXY::secondaryKeyMatches);
                 }
             }));
 }

@@ -27,6 +27,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
+import com.jerry.meklg.common.registries.LargeGeneratorCapabilityRegistration;
 import com.jerry.meklg.common.registries.LargeGeneratorContainerTypes;
 import com.jerry.meklg.common.registries.LargeGeneratorTileEntityTypes;
 import org.apache.logging.log4j.LogManager;
@@ -111,6 +112,7 @@ public class Mekmm implements IModModule {
             LargeGeneratorBlocks.LG_BLOCKS.register(modEventBus);
             LargeGeneratorTileEntityTypes.LG_TILE_ENTITY_TYPES.register(modEventBus);
             LargeGeneratorContainerTypes.LG_CONTAINER_TYPES.register(modEventBus);
+            modEventBus.addListener(LargeGeneratorCapabilityRegistration::register);
         }
     }
 

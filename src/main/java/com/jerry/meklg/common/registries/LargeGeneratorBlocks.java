@@ -2,6 +2,7 @@ package com.jerry.meklg.common.registries;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
+import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.datamaps.IMekanismDataMapTypes;
@@ -19,8 +20,11 @@ import mekanism.common.resource.BlockResourceInfo;
 import mekanism.generators.common.content.blocktype.Generator;
 
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.material.MapColor;
 
+import com.jerry.meklg.common.block.BlockLargeWindGenerator;
+import com.jerry.meklg.common.block.BlockLargeWindGeneratorProxy;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeHeatGenerator;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeWindGenerator;
@@ -54,7 +58,14 @@ public class LargeGeneratorBlocks {
                             .addEnergy()
                             .build()));
 
-    public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntityLargeWindGenerator, Generator<TileEntityLargeWindGenerator>>>> LARGE_WIND_GENERATOR = LG_BLOCKS.registerDetails("large_wind_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.LARGE_WIND_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
+    public static final BlockRegistryObject<@NotNull BlockLargeWindGeneratorProxy, @NotNull BlockItem> LARGE_WIND_GENERATOR_PROXY = LG_BLOCKS.register("large_wind_generator_proxy",
+            properties -> new BlockLargeWindGeneratorProxy(BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)));
+
+    static {
+        MoreMachineBounding.LARGE_WIND_GENERATOR.withProxyBlock(LARGE_WIND_GENERATOR_PROXY);
+    }
+
+    public static final BlockRegistryObject<@NotNull BlockLargeWindGenerator, @NotNull ItemBlockTooltip<BlockLargeWindGenerator>> LARGE_WIND_GENERATOR = LG_BLOCKS.registerDetails("large_wind_generator", properties -> new BlockLargeWindGenerator(LargeGeneratorBlockTypes.LARGE_WIND_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder().addEnergy().build()));
 
     public static final BlockRegistryObject<@NotNull BlockTileModel<TileEntitySolarHeatGenerator, Generator<TileEntitySolarHeatGenerator>>, @NotNull ItemBlockTooltip<BlockTileModel<TileEntitySolarHeatGenerator, Generator<TileEntitySolarHeatGenerator>>>> SOLAR_HEAT_GENERATOR = LG_BLOCKS.registerDetails("solar_heat_generator", properties -> new BlockTileModel<>(LargeGeneratorBlockTypes.SOLAR_HEAT_GENERATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)))

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class LargeGeneratorBlockShapes {
 
@@ -61,6 +62,13 @@ public class LargeGeneratorBlockShapes {
             return null;
         }
         return LARGE_WIND_GENERATOR_PARTS[facing.ordinal() - 2].get(offset);
+    }
+
+    public static Set<BlockPos> getLargeWindGeneratorPartOffsets(Direction facing) {
+        if (!facing.getAxis().isHorizontal()) {
+            return Set.of();
+        }
+        return LARGE_WIND_GENERATOR_PARTS[facing.ordinal() - 2].keySet();
     }
 
     private static void setSplitShapes(VoxelShape shape, Map<BlockPos, VoxelShape>[] dest) {

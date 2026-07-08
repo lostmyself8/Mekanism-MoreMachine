@@ -1,5 +1,6 @@
 package com.jerry.meklg.common.tile.generator;
 
+import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
 
@@ -65,6 +66,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     private double currentMultiplier = 0.0F;
     private boolean isBlacklistDimension;
     private boolean hasSameBlockNearby;
+    private boolean checkedProxyBlocks;
     private int detectionCooldown = DETECTION_COOLDOWN_MIN;
     private int detectionTicker = 0;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = { "getEnergyItem" }, docPlaceholder = "energy item slot")
@@ -73,6 +75,13 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     public TileEntityLargeWindGenerator(BlockPos pos, BlockState state) {
         super(LargeGeneratorBlocks.LARGE_WIND_GENERATOR, pos, state);
         updateMaxOutput();
+    }
+
+    @Override
+    public void resyncMasterToBounding() {
+        if (level instanceof ServerLevel) {
+            MoreMachineBounding.LARGE_WIND_GENERATOR.syncMasterPosition(level, worldPosition, getBlockState());
+        }
     }
 
     @NotNull
@@ -91,6 +100,10 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     @Override
     protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
+        if (!checkedProxyBlocks) {
+            checkedProxyBlocks = true;
+            resyncMasterToBounding();
+        }
         energySlot.drainContainerIntoSlot(null);
         // If we're in a blacklisted dimension, there's nothing more to do
         if (isBlacklistDimension) {
