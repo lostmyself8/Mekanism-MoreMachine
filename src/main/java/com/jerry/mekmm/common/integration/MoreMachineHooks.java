@@ -31,6 +31,7 @@ public final class MoreMachineHooks {
     }
 
     public final IntegrationInfo evolvedMekanism;
+    public final IntegrationInfo distantHorizons;
     public final IntegrationInfo mekanismgenerators;
 
     public MoreMachineHooks() {
@@ -38,6 +39,7 @@ public final class MoreMachineHooks {
         // Note: The modList is null when running tests
         Predicate<String> loadedCheck = modList == null ? modId -> false : modList::isLoaded;
         evolvedMekanism = new IntegrationInfo("evolvedmekanism", loadedCheck);
+        distantHorizons = new IntegrationInfo("distanthorizons", loadedCheck);
         mekanismgenerators = new IntegrationInfo("mekanismgenerators", loadedCheck);
     }
 }

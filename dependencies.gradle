@@ -30,6 +30,7 @@ dependencies {
 
     compileOnly(forge.sodium)
     compileOnly(forge.iris)
+    compileOnly(forge.distanthorizons)
     // FTB
 //    compileOnly(forge.architectury)
 
@@ -95,6 +96,7 @@ dependencies {
     // Client-only runtime mods //
     clientLocalRuntime(forge.sodium)
     clientLocalRuntime(forge.iris)
+    clientLocalRuntime(forge.distanthorizons)
 //    clientLocalRuntime(forge.modernui) // not yet for 26.1
 
     //////////////////////////////////////////////////////
