@@ -61,7 +61,7 @@ import java.util.Set;
 
 public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactory<FluidChemicalToChemicalRecipe> implements IHasDumpButton, FluidChemicalRecipeLookupHandler<FluidChemicalToChemicalRecipe> {
 
-    protected static final DoubleInputRecipeCache.CheckRecipeType<FluidStack, ChemicalStack, FluidChemicalToChemicalRecipe, ChemicalStack> OUTPUT_CHECK = (recipe, fluidInput, chemicalInput, output) -> ChemicalStack.isSameChemical(recipe.getOutput(fluidInput, chemicalInput), output);
+    protected static final DoubleInputRecipeCache.CheckRecipeType<FluidStack, ChemicalStack, FluidChemicalToChemicalRecipe, ChemicalStack> OUTPUT_CHECK = (recipe, fluidInput, chemicalInput, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(fluidInput, chemicalInput), output);
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE,

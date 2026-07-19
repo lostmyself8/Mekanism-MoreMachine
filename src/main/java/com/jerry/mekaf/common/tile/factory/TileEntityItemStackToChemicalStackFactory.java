@@ -37,7 +37,7 @@ import java.util.Set;
 
 public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToChemicalFactory<ItemStackToChemicalRecipe> implements ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
 
-    private static final TriPredicate<ItemStackToChemicalRecipe, ItemStack, ChemicalStack> OUTPUT_CHECK = (recipe, input, output) -> ChemicalStack.isSameChemical(recipe.getOutput(input), output);
+    private static final TriPredicate<ItemStackToChemicalRecipe, ItemStack, ChemicalStack> OUTPUT_CHECK = (recipe, input, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(input), output);
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_INPUT,

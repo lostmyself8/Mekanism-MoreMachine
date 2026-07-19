@@ -33,7 +33,7 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
 import mekanism.common.recipe.lookup.IDoubleRecipeLookupHandler.ItemChemicalRecipeLookupHandler;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler.ConstantUsageRecipeLookupHandler;
-import mekanism.common.recipe.lookup.cache.DoubleInputRecipeCache;
+import mekanism.common.recipe.lookup.cache.DoubleInputRecipeCache.CheckRecipeType;
 import mekanism.common.recipe.lookup.cache.InputRecipeCache;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.tile.component.config.ConfigInfo;
@@ -65,7 +65,7 @@ import java.util.Set;
 public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory<ChemicalDissolutionRecipe> implements IHasDumpButton, ConstantUsageRecipeLookupHandler,
                                          ItemChemicalRecipeLookupHandler<ChemicalDissolutionRecipe> {
 
-    private static final DoubleInputRecipeCache.CheckRecipeType<ItemStack, ChemicalStack, ChemicalDissolutionRecipe, ChemicalStack> OUTPUT_CHECK = (recipe, input, extra, output) -> ChemicalStack.isSameChemical(recipe.getOutput(input, extra), output);
+    private static final CheckRecipeType<ItemStack, ChemicalStack, ChemicalDissolutionRecipe, ChemicalStack> OUTPUT_CHECK = (recipe, input, extra, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(input, extra), output);
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE,

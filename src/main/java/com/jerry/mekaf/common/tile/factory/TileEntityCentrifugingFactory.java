@@ -41,7 +41,7 @@ import java.util.Set;
 
 public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalFactory<ChemicalToChemicalRecipe> implements IBoundingBlock, ChemicalRecipeLookupHandler<ChemicalToChemicalRecipe> {
 
-    protected static final TriPredicate<ChemicalToChemicalRecipe, ChemicalStack, ChemicalStack> OUTPUT_CHECK = (recipe, input, output) -> ChemicalStack.isSameChemical(recipe.getOutput(input), output);
+    protected static final TriPredicate<ChemicalToChemicalRecipe, ChemicalStack, ChemicalStack> OUTPUT_CHECK = (recipe, input, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(input), output);
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE,
