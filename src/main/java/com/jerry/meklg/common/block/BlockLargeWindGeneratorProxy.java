@@ -108,6 +108,10 @@ public class BlockLargeWindGeneratorProxy extends Block implements IStateFluidLo
         return getMainBlockPos(world.getBlockState(pos), pos);
     }
 
+    public static boolean hasValidMainBlock(BlockGetter world, BlockState state, BlockPos pos) {
+        return getValidMainPos(world, state, pos, false) != null;
+    }
+
     public static void removeProxyBlock(Level level, BlockPos pos) {
         Set<BlockPos> suppressed = SUPPRESSED_REMOVALS.get();
         BlockPos immutablePos = pos.immutable();
@@ -222,6 +226,9 @@ public class BlockLargeWindGeneratorProxy extends Block implements IStateFluidLo
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         level.invalidateCapabilities(pos);
+        if (!level.isClientSide() && !hasValidMainBlock(level, state, pos)) {
+            removeProxyBlock(level, pos);
+        }
     }
 
     @Override
@@ -310,7 +317,9 @@ public class BlockLargeWindGeneratorProxy extends Block implements IStateFluidLo
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
         if (!level.isClientSide()) {
             BlockPos mainPos = getValidMainPos(level, state, pos, false);
-            if (mainPos != null) {
+            if (mainPos == null) {
+                removeProxyBlock(level, pos);
+            } else {
                 BlockState mainState = level.getBlockState(mainPos);
                 mainState.handleNeighborChanged(level, mainPos, mainState.getBlock(), orientation, movedByPiston);
                 BlockEntity mainTile = WorldUtils.getTileEntity(level, mainPos);

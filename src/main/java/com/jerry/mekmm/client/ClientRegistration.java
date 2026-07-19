@@ -18,6 +18,7 @@ import com.jerry.mekmm.client.gui.GuiWirelessChargingStation;
 import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStation;
 import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStationConfig;
 import com.jerry.mekmm.client.gui.machine.*;
+import com.jerry.mekmm.client.integration.DistantHorizonsIntegration;
 import com.jerry.mekmm.client.render.RenderTickHandler;
 import com.jerry.mekmm.client.render.tileentity.RenderWirelessTransmissionStation;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
@@ -60,6 +61,9 @@ public class ClientRegistration {
     public static void init(FMLClientSetupEvent event) {
         NeoForge.EVENT_BUS.register(new ClientTickHandler());
         NeoForge.EVENT_BUS.register(new RenderTickHandler());
+        if (Mekmm.hooks.distantHorizons.isLoaded()) {
+            DistantHorizonsIntegration.register();
+        }
     }
 
     @SubscribeEvent

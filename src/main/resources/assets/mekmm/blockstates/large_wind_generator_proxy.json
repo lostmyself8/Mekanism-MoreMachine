@@ -1,7 +1,9 @@
 {
-	"variants": {
-		"": {
-			"model": "mekmm:block/empty"
+	"multipart": [
+		{
+			"apply": {
+				"model": "mekmm:block/empty"
+			}
 		}
-	}
+	]
 }

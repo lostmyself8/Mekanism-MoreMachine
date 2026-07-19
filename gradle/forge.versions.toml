@@ -19,6 +19,7 @@ jade = "26.0.10+neoforge"
 jer = "1.6.0.17"
 ferritecore = "9.0.0-neoforge"
 modernfix = "5.27.0+mc26.1"
+distanthorizons = "3.2.0-b-26.1.2"
 modernui = "RM220vWV" #3.12.0.2 - not yet for 26.1
 
 ## curseforge maven ##
@@ -57,6 +58,7 @@ sodium              = { module = "maven.modrinth:sodium", version.ref = "sodium"
 iris                = { module = "maven.modrinth:iris", version.ref = "iris" }
 ferritecore         = { module = "maven.modrinth:uXXizFIs", version.ref = "ferritecore" }
 modernfix           = { module = "maven.modrinth:modernfix", version.ref = "modernfix" }
+distanthorizons     = { module = "maven.modrinth:uCdwusMi", version.ref = "distanthorizons" }
 modernui            = { module = "maven.modrinth:modern-ui", version.ref = "modernui" }
 
 mekanismcovers      = { module = "curse.maven:mekanism-covers-1119874", version.ref = "mekanismcovers" }
