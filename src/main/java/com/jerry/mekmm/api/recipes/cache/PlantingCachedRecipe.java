@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
@@ -34,8 +33,8 @@ import java.util.function.*;
 public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
 
     protected final Predicate<ChanceOutput> outputEmptyCheck;
-    protected final IOutputHandler<@NotNull ChanceOutput> outputHandler;
-    protected final IInputHandler<Item, @NotNull ItemStack> itemInputHandler;
+    protected final IOutputHandler<ChanceOutput> outputHandler;
+    protected final IInputHandler<Item, ItemStack> itemInputHandler;
     protected final IInputHandler<Chemical, ChemicalStack> chemicalInputHandler;
     protected final ChemicalUsageMultiplier chemicalUsage;
     protected final IntConsumer chemicalUsedSoFarChanged;
@@ -61,9 +60,9 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
      * @param chemicalUsedSoFarChanged Called when the number chemical usage so far changes.
      * @param outputHandler            Output handler.
      */
-    public PlantingCachedRecipe(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
+    public PlantingCachedRecipe(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, ItemStack> itemInputHandler,
                                 IInputHandler<Chemical, ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage, IntConsumer chemicalUsedSoFarChanged,
-                                IOutputHandler<@NotNull ChanceOutput> outputHandler, Predicate<ChanceOutput> outputEmptyCheck) {
+                                IOutputHandler<ChanceOutput> outputHandler, Predicate<ChanceOutput> outputEmptyCheck) {
         super(recipe, recheckAllErrors);
         this.itemInputHandler = Objects.requireNonNull(itemInputHandler, "Item input handler cannot be null.");
         this.chemicalInputHandler = Objects.requireNonNull(chemicalInputHandler, "Chemical input handler cannot be null.");
@@ -173,15 +172,14 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
     @Override
     protected boolean finishProcessing(int operations, TransactionContext transaction) {
         if (recipeChemical != null && output != null && !recipeItem.isEmpty() && !recipeChemical.isEmpty() && !outputEmptyCheck.test(output)) {
-            return itemInputHandler.use(recipeItem, operations, transaction) &&
-                    chemicalInputHandler.use(recipeChemical, operations * chemicalUsageMultiplier, transaction) &&
+            return chemicalInputHandler.use(recipeChemical, operations * chemicalUsageMultiplier, transaction) &&
                     outputHandler.handleOutput(output, operations, transaction);
         }
         return false;
     }
 
-    public static PlantingCachedRecipe planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
-                                                IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
+    public static PlantingCachedRecipe planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors, IInputHandler<Item, ItemStack> itemInputHandler,
+                                                IInputHandler<Chemical, ChemicalStack> chemicalInputHandler, ChemicalUsageMultiplier chemicalUsage,
                                                 IntConsumer chemicalUsedSoFarChanged, IOutputHandler<ChanceOutput> outputHandler) {
         return new PlantingCachedRecipe(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, chemicalUsage,
                 chemicalUsedSoFarChanged, outputHandler, ConstantPredicates.alwaysFalse());

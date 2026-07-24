@@ -30,8 +30,8 @@ import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.single.BasicSingleHolder;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
-import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -71,6 +71,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -161,9 +162,9 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Chemica
     @Override
     public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> side == RelativeSide.FRONT);
-        builder.addTank(leftInputTank = BasicChemicalTank.input(MAX_INPUT_PIGMENT, (pigment, automationType) -> containsRecipe(pigment, rightInputTank.resource()),
+        builder.addTank(leftInputTank = BasicChemicalTank.input(MAX_INPUT_PIGMENT, (pigment, _) -> containsRecipe(pigment, rightInputTank.resource()),
                 this::containsRecipe, recipeCacheListener), RelativeSide.LEFT);
-        builder.addTank(rightInputTank = BasicChemicalTank.input(MAX_INPUT_PIGMENT, (pigment, automationType) -> containsRecipe(pigment, leftInputTank.resource()),
+        builder.addTank(rightInputTank = BasicChemicalTank.input(MAX_INPUT_PIGMENT, (pigment, _) -> containsRecipe(pigment, leftInputTank.resource()),
                 this::containsRecipe, recipeCacheListener), RelativeSide.RIGHT);
         builder.addTank(outputTank = BasicChemicalTank.output(MAX_OUTPUT_PIGMENT, recipeCacheUnpauseListener), RelativeSide.FRONT);
         return builder.build();
@@ -173,7 +174,7 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Chemica
     @Override
     protected ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener);
-        return SingleConfigHolder.energy(energyContainer, this);
+        return new BasicSingleHolder<>(energyContainer, facingSupplier, EnumSet.of(RelativeSide.BACK));
     }
 
     @NotNull

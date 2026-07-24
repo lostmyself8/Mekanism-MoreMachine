@@ -31,8 +31,8 @@ import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.single.BasicSingleHolder;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
-import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
@@ -73,6 +73,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -136,8 +137,8 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     @NotNull
     @Override
     public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> false);
-        builder.addTank(gasTank = BasicChemicalTank.input(MAX_GAS, (gas, automationType) -> containsRecipeBA(inputSlot.resource(), gas), this::containsRecipeB, recipeCacheListener), RelativeSide.BACK);
+        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, _ -> false);
+        builder.addTank(gasTank = BasicChemicalTank.input(MAX_GAS, (gas, _) -> containsRecipeBA(inputSlot.resource(), gas), this::containsRecipeB, recipeCacheListener), RelativeSide.BACK);
         return builder.build();
     }
 
@@ -145,7 +146,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     @Override
     protected ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener);
-        return SingleConfigHolder.energy(energyContainer, this);
+        return new BasicSingleHolder<>(energyContainer, facingSupplier, EnumSet.of(RelativeSide.BACK));
     }
 
     @NotNull
@@ -153,7 +154,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.BACK);
         builder.addContainer(gasInputSlot = ChemicalInventorySlot.fillOrConvert(gasTank, this::getLevel, listener, 6, 69), RelativeSide.BACK);
-        builder.addContainer(inputSlot = InputInventorySlot.at((item, automationType) -> containsRecipeAB(item, gasTank.resource()), this::containsRecipeA, recipeCacheListener, 26, 40), RelativeSide.BACK)
+        builder.addContainer(inputSlot = InputInventorySlot.at((item, _) -> containsRecipeAB(item, gasTank.resource()), this::containsRecipeA, recipeCacheListener, 26, 40), RelativeSide.BACK)
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT)));
         builder.addContainer(outputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 152, 40), RelativeSide.BACK)
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE)));

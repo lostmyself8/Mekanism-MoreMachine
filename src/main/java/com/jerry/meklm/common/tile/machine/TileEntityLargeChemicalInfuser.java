@@ -31,8 +31,8 @@ import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.single.BasicSingleHolder;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
-import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
@@ -72,6 +72,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -159,8 +160,8 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     @Override
     public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT || side == RelativeSide.BACK, side -> side == RelativeSide.FRONT);
-        builder.addTank(leftTank = BasicChemicalTank.input(MAX_GAS, (gas, automationType) -> containsRecipe(gas, rightTank.resource()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
-        builder.addTank(rightTank = BasicChemicalTank.input(MAX_GAS, (gas, automationType) -> containsRecipe(gas, leftTank.resource()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
+        builder.addTank(leftTank = BasicChemicalTank.input(MAX_GAS, (gas, _) -> containsRecipe(gas, rightTank.resource()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
+        builder.addTank(rightTank = BasicChemicalTank.input(MAX_GAS, (gas, _) -> containsRecipe(gas, leftTank.resource()), this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         builder.addTank(centerTank = BasicChemicalTank.output(2 * MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
         return builder.build();
     }
@@ -169,7 +170,7 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
     @Override
     protected ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         energyContainer = MachineEnergyContainer.input(this, recipeCacheUnpauseListener);
-        return SingleConfigHolder.energy(energyContainer, this);
+        return new BasicSingleHolder<>(energyContainer, facingSupplier, EnumSet.of(RelativeSide.BACK));
     }
 
     @NotNull

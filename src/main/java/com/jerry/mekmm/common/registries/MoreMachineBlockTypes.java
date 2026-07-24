@@ -43,7 +43,7 @@ public class MoreMachineBlockTypes {
             .createMoreMachineFactoryMachine(() -> MoreMachineTileEntityTypes.RECYCLER, MoreMachineLang.DESCRIPTION_RECYCLER, MoreMachineFactoryType.RECYCLING)
             .withGui(() -> MoreMachineContainerTypes.RECYCLER)
             .withSound(MekanismSounds.PRECISION_SAWMILL)
-            .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.recycler.get()), MoreMachineConfig.storage.recycler::get)
+            .withEnergyConfig(MoreMachineConfig.usage.recycler::get, MoreMachineConfig.storage.recycler::get)
             .with(AttributeSideConfig.ELECTRIC_MACHINE)
             .withComputerSupport("recycler")
             .build();

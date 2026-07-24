@@ -31,8 +31,8 @@ import mekanism.common.capabilities.energy.FixedUsageEnergyContainer;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
+import mekanism.common.capabilities.holder.single.BasicSingleHolder;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
-import mekanism.common.capabilities.holder.single.SingleConfigHolder;
 import mekanism.common.component.containers.type.ContainerType;
 import mekanism.common.component.containers.type.IContainerType;
 import mekanism.common.config.MekanismConfig;
@@ -91,6 +91,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -211,7 +212,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @NotNull
     @Override
     protected IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK || side == RelativeSide.LEFT || side == RelativeSide.RIGHT, side -> false);
+        AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK || side == RelativeSide.LEFT || side == RelativeSide.RIGHT, _ -> false);
         builder.addTank(fluidTank = BasicFluidTank.input(MAX_FLUID, this::containsRecipe, recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT, RelativeSide.RIGHT);
         return builder.build();
     }
@@ -229,7 +230,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @Override
     protected ISingleContainerHolder<IEnergyContainer> getInitialEnergyContainer(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         energyContainer = FixedUsageEnergyContainer.input(this, BASE_ENERGY_CALCULATOR, recipeCacheUnpauseListener);
-        return SingleConfigHolder.energy(energyContainer, this);
+        return new BasicSingleHolder<>(energyContainer, facingSupplier, EnumSet.of(RelativeSide.BACK));
     }
 
     @NotNull
