@@ -306,7 +306,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Nullable
-    protected PressurizedReactionRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, IInventorySlot outputSlot, @NotNull IChemicalTank inputTank) {
+    protected PressurizedReactionRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, IInventorySlot outputSlot, @NotNull IChemicalTank outputTank) {
         return getRecipeType().getInputCache().findFirstRecipe(level, fallbackInput, inputFluidTank.getFluid(), inputChemicalTank.getStack());
     }
 
