@@ -51,7 +51,7 @@ mysticalagriculture = { module = "com.blakebr0.mysticalagriculture:MysticalAgric
 architectury        = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury" }
 
 ftblibrary          = { module = "dev.ftb.mods:ftb-library-neoforge", version.ref = "ftblibrary" }
-ftbultimine            = { module = "dev.ftb.mods:ftb-ultimine-neoforge", version.ref = "ftbultimine" }
+ftbultimine         = { module = "dev.ftb.mods:ftb-ultimine-neoforge", version.ref = "ftbultimine" }
 
 jade                = { module = "maven.modrinth:jade", version.ref = "jade" }
 sodium              = { module = "maven.modrinth:sodium", version.ref = "sodium" }
