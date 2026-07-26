@@ -49,7 +49,7 @@ public class GuiLargeRotaryCondensentrator extends GuiMekanismTile<TileEntityLar
                 .warning(WarningType.NOT_ENOUGH_ENERGY, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY))
                 .warning(WarningType.NOT_ENOUGH_ENERGY_REDUCED_RATE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE));
         addRenderableWidget(new GuiEnergyTab(this, () -> java.util.List.of(MekanismLang.USING.translate(EnergyDisplay.of(tile.getEnergyUsed())),
-                MekanismLang.NEEDED.translate(EnergyDisplay.of(tile.getEnergyContainer().getNeededAsLong())))));
+                MekanismLang.NEEDED.translate(EnergyDisplay.of(tile.energyContainer())))));
         addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, tile::getFluidTanks, GaugeType.STANDARD, this, 133, 13))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_FLUID_INPUT_ERROR))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityLargeRotaryCondensentrator.NOT_ENOUGH_SPACE_FLUID_OUTPUT_ERROR));
@@ -83,7 +83,7 @@ public class GuiLargeRotaryCondensentrator extends GuiMekanismTile<TileEntityLar
         }, ProgressType.LARGE_LEFT, this, 64, 39).recipeViewerCategories(RecipeViewerRecipeType.DECONDENSENTRATING))
                 .warning(WarningType.INPUT_DOESNT_PRODUCE_OUTPUT, tile.getWarningCheck(RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT));
         addRenderableWidget(new ToggleButton(this, 4, 4, tile::getMode,
-                (element, mouseX, mouseY) -> PacketUtils.sendToServer(new PacketGuiInteract(GuiInteraction.NEXT_MODE, ((GuiLargeRotaryCondensentrator) element.gui()).tile))))
+                (element, _, _) -> PacketUtils.sendToServer(new PacketGuiInteract(GuiInteraction.NEXT_MODE, ((GuiLargeRotaryCondensentrator) element.gui()).tile))))
                 .setTooltip(MekanismLang.CONDENSENTRATOR_TOGGLE);
     }
 

@@ -102,7 +102,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     public static final RecipeError NOT_ENOUGH_GAS_INPUT_ERROR = RecipeError.create();
     public static final RecipeError NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR = RecipeError.create();
     public static final RecipeError NOT_ENOUGH_SPACE_FLUID_OUTPUT_ERROR = RecipeError.create();
-    public static final int CAPACITY = 10 * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
+
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,
             RecipeError.NOT_ENOUGH_ENERGY_REDUCED_RATE,
@@ -111,10 +111,13 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
             NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR,
             NOT_ENOUGH_SPACE_FLUID_OUTPUT_ERROR,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
-    private final IOutputHandler<@NotNull ChemicalStackTemplate> chemicalOutputHandler;
-    private final IOutputHandler<@NotNull FluidStackTemplate> fluidOutputHandler;
-    private final IInputHandler<Fluid, @NotNull FluidStack> fluidInputHandler;
-    private final IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler;
+
+    public static final int CAPACITY = 10 * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
+
+    private final IOutputHandler<ChemicalStackTemplate> chemicalOutputHandler;
+    private final IOutputHandler<FluidStackTemplate> fluidOutputHandler;
+    private final IInputHandler<Fluid, FluidStack> fluidInputHandler;
+    private final IInputHandler<Chemical, ChemicalStack> chemicalInputHandler;
 
     @Nullable
     private List<BlockCapabilityCache<ResourceHandler<ChemicalResource>, @Nullable Direction>> leftOutputCaches;
@@ -357,6 +360,10 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     public RotaryRecipe getRecipe(int cacheIndex) {
         RotaryInputRecipeCache inputCache = getRecipeType().getInputCache();
         return mode ? inputCache.findFirstRecipe(level, fluidInputHandler.getInput()) : inputCache.findFirstRecipe(level, chemicalInputHandler.getInput());
+    }
+
+    public MachineEnergyContainer<TileEntityLargeRotaryCondensentrator> energyContainer() {
+        return energyContainer;
     }
 
     @NotNull
