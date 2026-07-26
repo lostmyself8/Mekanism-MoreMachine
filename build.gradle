@@ -69,7 +69,7 @@ apply from: "$rootDir/gradle/scripts/repositories.gradle"
 apply from: "$rootDir/dependencies.gradle"
 apply from: "$rootDir/gradle/scripts/resources.gradle"
 apply from: "$rootDir/gradle/scripts/publishing.gradle"
-apply from: "$rootDir/gradle/scripts/spotless.gradle"
+//apply from: "$rootDir/gradle/scripts/spotless.gradle"
 
 
 tasks.withType(JavaCompile).configureEach {
