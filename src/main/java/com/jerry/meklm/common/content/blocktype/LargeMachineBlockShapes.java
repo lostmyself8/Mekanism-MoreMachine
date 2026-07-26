@@ -60,8 +60,7 @@ public class LargeMachineBlockShapes {
                 box(15.01, 4, 4.5, 15.01, 12, 11.5),
                 box(0.99, 4, 4.5, 0.99, 12, 11.5),
                 box(4.5, 4, 0.99, 11.5, 12, 0.99),
-                box(4.5, 4, 15.01, 11.5, 12, 15.01)
-        ).move(0, 1, 0), MAX_CHEMICAL_TANK);
+                box(4.5, 4, 15.01, 11.5, 12, 15.01)).move(0, 1, 0), MAX_CHEMICAL_TANK);
 
         VoxelShape twoHighLargeMachine = box(-16, 0, -16, 32, 32, 32);
         VoxelShape threeHighLargeMachine = box(-16, 0, -16, 32, 48, 32);

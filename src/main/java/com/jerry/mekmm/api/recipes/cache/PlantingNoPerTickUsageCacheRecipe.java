@@ -10,9 +10,9 @@ import mekanism.api.recipes.ingredients.InputIngredient;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
 
+import net.minecraft.core.TypedInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.TypedInstance;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import org.jspecify.annotations.NullMarked;

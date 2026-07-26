@@ -151,7 +151,7 @@ public class LargeMachineBlocks {
                                     .build()));
 
     private static BlockRegistryObject<BlockTileModel<TileEntityMidChemicalTank, Machine<TileEntityMidChemicalTank>>, ItemBlockMidChemicalTank> registerMidChemicalTank(
-                                                                                                                                                                                          Machine<TileEntityMidChemicalTank> type) {
+                                                                                                                                                                        Machine<TileEntityMidChemicalTank> type) {
         return registerTieredBlock(type, "_mid_chemical_tank", (properties, color) -> new BlockTileModel<>(type, BlockTile.defaultProperties(properties).mapColor(color)), ItemBlockMidChemicalTank::new)
                 .forItemHolder(holder -> holder
                         .addAttachedContainerCapabilities(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
@@ -163,7 +163,7 @@ public class LargeMachineBlocks {
     }
 
     private static BlockRegistryObject<BlockTileModel<TileEntityMaxChemicalTank, Machine<TileEntityMaxChemicalTank>>, ItemBlockMaxChemicalTank> registerMaxChemicalTank(
-                                                                                                                                                                                          Machine<TileEntityMaxChemicalTank> type) {
+                                                                                                                                                                        Machine<TileEntityMaxChemicalTank> type) {
         return registerTieredBlock(type, "_max_chemical_tank", (properties, color) -> new BlockTileModel<>(type, BlockTile.defaultProperties(properties).mapColor(color)), ItemBlockMaxChemicalTank::new)
                 .forItemHolder(holder -> holder
                         .addAttachedContainerCapabilities(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()

@@ -1,6 +1,6 @@
 {
-  "model": {
-    "type": "minecraft:model",
-    "model": "mekmm:item/silver_ore"
-  }
+	"model": {
+		"type": "minecraft:model",
+		"model": "mekmm:item/silver_ore"
+	}
 }
