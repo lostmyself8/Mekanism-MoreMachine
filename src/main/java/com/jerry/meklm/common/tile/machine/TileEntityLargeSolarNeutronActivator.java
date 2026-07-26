@@ -423,5 +423,4 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
         // 所有端口都可以与物品管道交互
         return notChemicalPort(side, offset);
     }
-
 }

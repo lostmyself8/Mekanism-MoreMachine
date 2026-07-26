@@ -1,7 +1,7 @@
 package com.jerry.mekmm.common.util;
 
-import mekanism.common.util.WorldUtils;
 import mekanism.common.util.MekanismUtils;
+import mekanism.common.util.WorldUtils;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
