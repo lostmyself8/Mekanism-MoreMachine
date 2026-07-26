@@ -4,7 +4,7 @@ import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTan
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 import com.jerry.meklm.common.tile.INotNeedConfig;
 
-import com.jerry.mekmm.common.util.WorldUtil;
+import com.jerry.mekmm.common.util.WorldUtil.CachedSolarCheck;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
@@ -57,13 +57,11 @@ import mekanism.common.util.ChemicalUtil;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
-import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
@@ -83,8 +81,8 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             RecipeError.NOT_ENOUGH_OUTPUT_SPACE,
             RecipeError.INPUT_DOESNT_PRODUCE_OUTPUT);
     public static final long MAX_GAS = 10L * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
-    protected LargeSNA solarCheck;
-    private final LargeSNA[] solarChecks = new LargeSNA[8];
+    protected CachedSolarCheck solarCheck;
+    private final CachedSolarCheck[] solarChecks = new CachedSolarCheck[8];
 
     @Nullable
     private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalOutputCaches;
@@ -168,16 +166,16 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             return;
         }
         BlockPos topPos = worldPosition.above(2);
-        solarCheck = new LargeSNA(level, topPos);
+        solarCheck = new CachedSolarCheck(level, topPos);
         for (int i = 0; i < solarChecks.length; i++) {
             if (i < 3) {
-                solarChecks[i] = new LargeSNA(level, topPos.offset(-1, 0, i - 1));
+                solarChecks[i] = new CachedSolarCheck(level, topPos.offset(-1, 0, i - 1));
             } else if (i == 3) {
-                solarChecks[i] = new LargeSNA(level, topPos.offset(0, 0, -1));
+                solarChecks[i] = new CachedSolarCheck(level, topPos.offset(0, 0, -1));
             } else if (i == 4) {
-                solarChecks[i] = new LargeSNA(level, topPos.offset(0, 0, 1));
+                solarChecks[i] = new CachedSolarCheck(level, topPos.offset(0, 0, 1));
             } else {
-                solarChecks[i] = new LargeSNA(level, topPos.offset(1, 0, i - 6));
+                solarChecks[i] = new CachedSolarCheck(level, topPos.offset(1, 0, i - 6));
             }
         }
     }
@@ -219,7 +217,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     private void updateSeeSunCount() {
         solarCheck.recheckCanSeeSun();
         byte count = solarCheck.canSeeSun() ? (byte) 1 : 0;
-        for (LargeSNA check : solarChecks) {
+        for (CachedSolarCheck check : solarChecks) {
             check.recheckCanSeeSun();
             if (check.canSeeSun()) {
                 count++;
@@ -292,7 +290,7 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
             return 0;
         }
         float generationMultiplier = solarCheck.getProductionMultiplier();
-        for (LargeSNA check : solarChecks) {
+        for (CachedSolarCheck check : solarChecks) {
             generationMultiplier += check.getProductionMultiplier();
         }
         generationMultiplier /= solarChecks.length + 1;
@@ -424,51 +422,5 @@ public class TileEntityLargeSolarNeutronActivator extends TileEntityRecipeMachin
     private boolean notItemPort(Direction side, Vec3i offset) {
         // 所有端口都可以与物品管道交互
         return notChemicalPort(side, offset);
-    }
-
-    protected static class LargeSNA extends WorldUtil.SolarCheck {
-
-        private final int recheckFrequency;
-        private long lastCheckedSun;
-
-        public LargeSNA(Level world, BlockPos pos) {
-            super(world, pos);
-            // Recheck between every 10-30 ticks, to not end up checking each position each tick
-            recheckFrequency = Mth.nextInt(world.random, MekanismUtils.TICKS_PER_HALF_SECOND, MekanismUtils.TICKS_PER_HALF_SECOND + SharedConstants.TICKS_PER_SECOND);
-        }
-
-        @Override
-        public void recheckCanSeeSun() {
-            if (!world.dimensionType().hasSkyLight() || world.getSkyDarken() >= 4) {
-                // Inline of most of WorldUtils#canSeeSun so that we can exit early if it is not day or there is no
-                // skylight
-                // We start with the basic dimension checks and always run those, as they are simple and quick checks,
-                // and
-                // we want to be able to stop quickly when it gets too dark
-                canSeeSun = false;
-                return;
-            }
-            long time = world.getGameTime();
-            if (time < lastCheckedSun + recheckFrequency) {
-                // If we have checked for blocks above the solar panel in the past recheckFrequency
-                // number of ticks, skip checking for now for performance reasons
-                return;
-            }
-            // otherwise, mark that we checked and actually check
-            lastCheckedSun = time;
-            if (world.getFluidState(pos).isEmpty()) {
-                // If the top isn't fluid logged we can just quickly check if the top can see the sun
-                canSeeSun = world.canSeeSky(pos);
-            } else {
-                BlockPos above = pos.above();
-                if (world.canSeeSky(above)) {
-                    // If the spot above can see the sun, check to make sure we can see through the block there
-                    BlockState state = world.getBlockState(above);
-                    canSeeSun = !state.liquid() && state.getLightBlock(world, above) <= 0;
-                } else {
-                    canSeeSun = false;
-                }
-            }
-        }
     }
 }

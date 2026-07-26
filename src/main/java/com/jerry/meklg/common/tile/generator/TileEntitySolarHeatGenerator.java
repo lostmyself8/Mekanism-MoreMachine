@@ -8,7 +8,8 @@ import com.jerry.mekmm.api.datamaps.SolarHeatFluid;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.item.ItemReflector;
 import com.jerry.mekmm.common.tile.prefab.TileEntityMoreMachineGenerator;
-import com.jerry.mekmm.common.util.WorldUtil.SolarCheck;
+import com.jerry.mekmm.common.util.WorldUtil;
+import com.jerry.mekmm.common.util.WorldUtil.CachedSolarCheck;
 
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -49,10 +50,8 @@ import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.BasicInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
-import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
-import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -61,9 +60,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -165,7 +162,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     private double solarVisibility;
     private boolean hasSolarExposure;
     private long lastSolarAreaCheck;
-    private SolarHeatCheck[] solarChecks;
+    private CachedSolarCheck[] solarChecks;
     private double clientTemperature;
 
     public TileEntitySolarHeatGenerator(BlockPos pos, BlockState state) {
@@ -352,11 +349,11 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             return;
         }
         BlockPos center = getBlockPos().above(3);
-        solarChecks = new SolarHeatCheck[(SOLAR_CLEAR_RADIUS * 2 + 1) * (SOLAR_CLEAR_RADIUS * 2 + 1)];
+        solarChecks = new CachedSolarCheck[(SOLAR_CLEAR_RADIUS * 2 + 1) * (SOLAR_CLEAR_RADIUS * 2 + 1)];
         int index = 0;
         for (int x = -SOLAR_CLEAR_RADIUS; x <= SOLAR_CLEAR_RADIUS; x++) {
             for (int z = -SOLAR_CLEAR_RADIUS; z <= SOLAR_CLEAR_RADIUS; z++) {
-                solarChecks[index++] = new SolarHeatCheck(level, center.offset(x, 0, z));
+                solarChecks[index++] = new CachedSolarCheck(level, center.offset(x, 0, z));
             }
         }
     }
@@ -369,7 +366,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             return;
         }
         int visible = 0;
-        for (SolarHeatCheck check : solarChecks) {
+        for (CachedSolarCheck check : solarChecks) {
             check.recheckCanSeeSun();
             if (check.canSeeSun()) {
                 visible++;
@@ -388,14 +385,14 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             return 0;
         }
         double productionMultiplier = 0;
-        for (SolarHeatCheck check : solarChecks) {
+        for (CachedSolarCheck check : solarChecks) {
             productionMultiplier += check.getProductionMultiplier();
         }
         productionMultiplier /= solarChecks.length;
         double sunBrightness = WorldUtils.getSunBrightness(level, 1.0F);
         double directionMultiplier;
         if (isEastWestFacing()) {
-            double angle = calculateSunRayGroundAngle(getBlockPos().above(3));
+            double angle = WorldUtil.calculateSunRayGroundAngle(level, getBlockPos().above(3));
             directionMultiplier = angle <= 0 ? 0 : Math.sin(Math.toRadians(angle));
         } else {
             directionMultiplier = NORTH_SOUTH_HEAT_GAIN_MULTIPLIER;
@@ -532,24 +529,14 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     private void updateAngle() {
-        sunRayGroundAngle = calculateSunRayGroundAngle(getBlockPos().above(3));
+        if (level == null) {
+            sunRayGroundAngle = 0F;
+            return;
+        }
+        sunRayGroundAngle = WorldUtil.calculateSunRayGroundAngle(level, getBlockPos().above(3));
         if (sunRayGroundAngle > 0F) {
             angle = calculateSunTrackingReflectorAngle();
         }
-    }
-
-    // 计算太阳到目标方块的直线与地面的夹角度数
-    private float calculateSunRayGroundAngle(BlockPos targetPos) {
-        if (level == null || !level.dimensionType().hasSkyLight()) {
-            return 0F;
-        }
-        double dayProgress = Math.floorMod(level.getDayTime(), 24_000L) / 24_000D;
-        double sunRadians = dayProgress * Math.PI * 2D;
-        Vec3 target = Vec3.atCenterOf(targetPos);
-        Vec3 sun = target.add(Math.cos(sunRadians) * 1024D, Math.sin(sunRadians) * 1024D, 0D);
-        Vec3 ray = target.subtract(sun);
-        double horizontalLength = Math.sqrt(ray.x * ray.x + ray.z * ray.z);
-        return (float) Math.toDegrees(Math.atan2(-ray.y, horizontalLength));
     }
 
     private float clampAngle(float angle) {
@@ -767,41 +754,6 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
 
     private boolean notItemPort(Direction side, Vec3i offset) {
         return notEnergyPort(side, offset) && notChemicalPort(side, offset) && notFluidPort(side, offset);
-    }
-
-    private static class SolarHeatCheck extends SolarCheck {
-
-        private final int recheckFrequency;
-        private long lastCheckedSun;
-
-        private SolarHeatCheck(Level world, BlockPos pos) {
-            super(world, pos);
-            recheckFrequency = Mth.nextInt(world.random, MekanismUtils.TICKS_PER_HALF_SECOND, MekanismUtils.TICKS_PER_HALF_SECOND + SharedConstants.TICKS_PER_SECOND);
-        }
-
-        @Override
-        public void recheckCanSeeSun() {
-            if (!world.dimensionType().hasSkyLight() || world.getSkyDarken() >= 4) {
-                canSeeSun = false;
-                return;
-            }
-            long time = world.getGameTime();
-            if (time < lastCheckedSun + recheckFrequency) {
-                return;
-            }
-            lastCheckedSun = time;
-            if (world.getFluidState(pos).isEmpty()) {
-                canSeeSun = world.canSeeSky(pos);
-            } else {
-                BlockPos above = pos.above();
-                if (world.canSeeSky(above)) {
-                    BlockState state = world.getBlockState(above);
-                    canSeeSun = !state.liquid() && state.getLightBlock(world, above) <= 0;
-                } else {
-                    canSeeSun = false;
-                }
-            }
-        }
     }
 
     @Override

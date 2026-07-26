@@ -5,18 +5,14 @@
       "modid": "data_energistics"
     }
   ],
-  "type": "mekmm:pressing",
-  "primary_input": {
+  "type": "mekmm:stamper",
+  "input": {
     "count": 1,
-    "tag": "c:dusts/certus_quartz"
+    "tag": "c:gems/data_crystal"
   },
-  "secondary_input": {
+  "mold": {
     "count": 1,
     "item": "data_energistics:data_inscriber_template"
-  },
-  "tertiary_input": {
-    "count": 1,
-    "tag": "c:dusts/data_dust"
   },
   "output": {
     "count": 1,
