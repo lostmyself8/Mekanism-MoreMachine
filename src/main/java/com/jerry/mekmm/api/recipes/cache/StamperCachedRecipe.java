@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
@@ -83,10 +82,10 @@ public class StamperCachedRecipe extends CachedRecipe<StamperRecipe> {
      * @param outputHandler     Output handler.
      */
     public static StamperCachedRecipe createCache(StamperRecipe recipe,
-                                                  BooleanSupplier recheckAllErrors, IInputHandler<Item, @NotNull ItemStack> inputHandler, IInputHandler<Item, @NotNull ItemStack> extraInputHandler,
-                                                  IOutputHandler<@NotNull ItemStackTemplate> outputHandler) {
+                                                  BooleanSupplier recheckAllErrors, IInputHandler<Item, ItemStack> inputHandler, IInputHandler<Item, ItemStack> extraInputHandler,
+                                                  IOutputHandler<ItemStackTemplate> outputHandler) {
         return new StamperCachedRecipe(recipe, recheckAllErrors, inputHandler, extraInputHandler, outputHandler, recipe::getInput, recipe::getMold,
-                recipe::getOutput, ItemStack::isEmpty, ItemStack::isEmpty, Objects::isNull);
+                recipe::getOutput, ItemStack::isEmpty, ItemStack::isEmpty, _ -> false);
     }
 
     @Override

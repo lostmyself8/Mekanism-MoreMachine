@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.config;
 
 import mekanism.common.config.BaseMekanismConfig;
+import mekanism.common.config.value.CachedIntValue;
 import mekanism.common.config.value.CachedLongValue;
 
 import net.neoforged.fml.config.ModConfig;
@@ -10,7 +11,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
 
     private final ModConfigSpec configSpec;
 
-    public final CachedLongValue recycler;
+    public final CachedIntValue recycler;
     public final CachedLongValue plantingStation;
     public final CachedLongValue cnc_stamper;
     public final CachedLongValue cnc_lathe;
@@ -28,7 +29,7 @@ public class MoreMachineUsageConfig extends BaseMekanismConfig {
     MoreMachineUsageConfig() {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
-        recycler = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_RECYCLER, "recycler", 50L);
+        recycler = CachedIntValue.wrap(this, MoreMachineConfigTranslations.ENERGY_USAGE_RECYCLER.applyToBuilder(builder).defineInRange("recycler", 50, 0, Integer.MAX_VALUE));
         plantingStation = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_PLANTING_STATION, "plantingStation", 50L);
         cnc_stamper = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_CNC_STAMPER, "cnc_stamper", 50L);
         cnc_lathe = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.ENERGY_USAGE_CNC_LATHE, "cnc_lathe", 50L);

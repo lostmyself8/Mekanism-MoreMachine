@@ -34,7 +34,8 @@ public class GuiMoreMachineFactory extends GuiConfigurableTile<TileEntityMoreMac
         int imageHeight = DEFAULT_IMAGE_HEIGHT;
         if (tile.hasSecondaryResourceBar()) {
             imageHeight += 11;
-        } else if (tile instanceof TileEntityPlantingFactory) {
+        }
+        if (tile instanceof TileEntityPlantingFactory) {
             imageHeight += 20;
         }
         return imageHeight;

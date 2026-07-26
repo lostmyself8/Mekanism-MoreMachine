@@ -12,13 +12,15 @@ import mekanism.api.recipes.outputs.IOutputHandler;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.TypedInstance;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.*;
 
-public class PlantingNoPerTickUsageCacheRecipe<HOLDER_A, INPUT_A extends net.minecraft.core.TypedInstance<HOLDER_A>, HOLDER_B, INPUT_B extends net.minecraft.core.TypedInstance<HOLDER_B>, OUTPUT, RECIPE extends MekanismRecipe<?> & BiPredicate<INPUT_A, INPUT_B>> extends MoreMachineTwoInputCachedRecipe<HOLDER_A, INPUT_A, HOLDER_B, INPUT_B, OUTPUT, RECIPE> {
+@NullMarked
+public class PlantingNoPerTickUsageCacheRecipe<HOLDER_A, INPUT_A extends TypedInstance<HOLDER_A>, HOLDER_B, INPUT_B extends TypedInstance<HOLDER_B>, OUTPUT, RECIPE extends MekanismRecipe<?> & BiPredicate<INPUT_A, INPUT_B>> extends MoreMachineTwoInputCachedRecipe<HOLDER_A, INPUT_A, HOLDER_B, INPUT_B, OUTPUT, RECIPE> {
 
     /**
      * @param recipe                   Recipe.
@@ -40,19 +42,18 @@ public class PlantingNoPerTickUsageCacheRecipe<HOLDER_A, INPUT_A extends net.min
     }
 
     public static PlantingNoPerTickUsageCacheRecipe<Item, ItemStack, Chemical, ChemicalStack, ChanceOutput, PlantingRecipe> planting(PlantingRecipe recipe, BooleanSupplier recheckAllErrors,
-                                                                                                                                     IInputHandler<Item, @NotNull ItemStack> itemInputHandler,
-                                                                                                                                     IInputHandler<Chemical, @NotNull ChemicalStack> chemicalInputHandler,
+                                                                                                                                     IInputHandler<Item, ItemStack> itemInputHandler,
+                                                                                                                                     IInputHandler<Chemical, ChemicalStack> chemicalInputHandler,
                                                                                                                                      IOutputHandler<ChanceOutput> outputHandler) {
         return new PlantingNoPerTickUsageCacheRecipe<>(recipe, recheckAllErrors, itemInputHandler, chemicalInputHandler, outputHandler, recipe::getItemInput, recipe::getChemicalInput, recipe::getOutput,
-                ItemStack::isEmpty, ChemicalStack::isEmpty, output -> false);
+                ItemStack::isEmpty, ChemicalStack::isEmpty, _ -> false);
     }
 
     @Override
     protected boolean finishProcessing(int operations, TransactionContext transaction) {
         if (input != null && secondaryInput != null && output != null && !inputEmptyCheck.test(input) && !secondaryInputEmptyCheck.test(secondaryInput) &&
                 !outputEmptyCheck.test(output)) {
-            return inputHandler.use(input, operations, transaction) &&
-                    secondaryInputHandler.use(secondaryInput, operations, transaction) &&
+            return secondaryInputHandler.use(secondaryInput, operations, transaction) &&
                     outputHandler.handleOutput(output, operations, transaction);
         }
         return false;
