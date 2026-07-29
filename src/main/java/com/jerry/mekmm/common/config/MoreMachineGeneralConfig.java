@@ -23,6 +23,7 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
     public final CachedConfigValue<List<? extends String>> itemReplicatorRecipe;
     public final CachedConfigValue<List<? extends String>> fluidReplicatorRecipe;
 
+    public final CachedConfigValue<List<? extends String>> dimensionGasMappings;
     public final CachedIntValue gasCollectAmount;
     public final CachedFloatingLongValue wirelessChargingStationChargingRate;
 
@@ -39,6 +40,15 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
 
         gasCollectAmount = CachedIntValue.wrap(this, builder.comment("mB of Unstable Dimensional Gas collected by the Ambient Gas Collector.")
                 .defineInRange("gasCollectAmount", 1, 1, FluidType.BUCKET_VOLUME));
+
+        dimensionGasMappings = CachedConfigValue.wrap(this, builder.comment(
+                "Dimension → Gas mappings for the Ambient Gas Collector.",
+                "Format: \"dimensionId|gasId|amount\" (one entry per dimension)",
+                "When the collector is placed in a matching dimension,",
+                "it produces the configured gas instead of unstable_dimensional_gas.",
+                "Example: [\"ad_astra:moon_orbit|mekanismgenerators:deuterium|10\",",
+                "          \"ad_astra:mars_orbit|mekanismgenerators:tritium|8\"]",
+                "Unlisted dimensions fall back to unstable_dimensional_gas.").defineListAllowEmpty("dimensionGasMappings", ArrayList::new, e -> e instanceof String));
 
         wirelessChargingStationChargingRate = CachedFloatingLongValue.define(this, builder, "Amount of Energy(joules) an item can receive per tick from a Wireless Charging Station.",
                 "wirelessChargingStationChargingRate", FloatingLong.createConst(100_000L));

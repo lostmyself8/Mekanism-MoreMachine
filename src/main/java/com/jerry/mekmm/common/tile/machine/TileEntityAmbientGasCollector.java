@@ -1,5 +1,6 @@
 package com.jerry.mekmm.common.tile.machine;
 
+import com.jerry.mekmm.common.config.AtmosphereConfig;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
@@ -34,6 +35,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
@@ -151,7 +153,22 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
             BlockState blockState = state.get();
             Block block = blockState.getBlock();
             if (isAir(block)) {
-                GasStack gasStack = new GasStack(MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS, estimateIncrementAmount());
+                // 查询维度大气配置：若当前维度有自定义大气成分，使用该气体
+                ResourceLocation dim = this.level.dimension().location();
+                AtmosphereConfig.AtmosphereEntry entry = AtmosphereConfig.getEntry(dim);
+
+                Gas outputGas;
+                int amount;
+                if (entry != null) {
+                    Gas configured = Gas.getFromRegistry(entry.gasId());
+                    outputGas = (configured != null && !configured.isEmptyType()) ? configured : MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.get();
+                    amount = entry.amount();
+                } else {
+                    outputGas = MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.get();
+                    amount = estimateIncrementAmount();
+                }
+
+                GasStack gasStack = new GasStack(outputGas, amount);
                 chemicalTank.insert(gasStack, Action.EXECUTE, AutomationType.INTERNAL);
                 return true;
             }
