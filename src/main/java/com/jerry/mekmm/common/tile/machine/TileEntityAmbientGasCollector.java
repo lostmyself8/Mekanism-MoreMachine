@@ -161,9 +161,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
                 int amount;
                 if (entry != null) {
                     Gas configured = Gas.getFromRegistry(entry.gasId());
-                    outputGas = (configured != null && !configured.isEmptyType())
-                        ? configured
-                        : MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.get();
+                    outputGas = (configured != null && !configured.isEmptyType()) ? configured : MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.get();
                     amount = entry.amount();
                 } else {
                     outputGas = MoreMachineGas.UNSTABLE_DIMENSIONAL_GAS.get();

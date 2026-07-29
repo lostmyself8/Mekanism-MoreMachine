@@ -1,13 +1,13 @@
 package com.jerry.mekmm.common.config;
 
+import com.jerry.mekmm.Mekmm;
+
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.jerry.mekmm.Mekmm;
-
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * Parses the {@code dimensionGasMappings} config list into a lookup table
@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
  * Each config entry has the format {@code dimensionId|gasId|amount}.
  * <p>
  * Example:
+ * 
  * <pre>{@code
  * "ad_astra:moon_orbit|mekanismgenerators:deuterium|10"
  * "ad_astra:mars_orbit|mekanismgenerators:tritium|8"

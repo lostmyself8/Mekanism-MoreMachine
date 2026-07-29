@@ -48,8 +48,7 @@ public class MoreMachineGeneralConfig extends BaseMekanismConfig {
                 "it produces the configured gas instead of unstable_dimensional_gas.",
                 "Example: [\"ad_astra:moon_orbit|mekanismgenerators:deuterium|10\",",
                 "          \"ad_astra:mars_orbit|mekanismgenerators:tritium|8\"]",
-                "Unlisted dimensions fall back to unstable_dimensional_gas."
-        ).defineListAllowEmpty("dimensionGasMappings", ArrayList::new, e -> e instanceof String));
+                "Unlisted dimensions fall back to unstable_dimensional_gas.").defineListAllowEmpty("dimensionGasMappings", ArrayList::new, e -> e instanceof String));
 
         wirelessChargingStationChargingRate = CachedFloatingLongValue.define(this, builder, "Amount of Energy(joules) an item can receive per tick from a Wireless Charging Station.",
                 "wirelessChargingStationChargingRate", FloatingLong.createConst(100_000L));
