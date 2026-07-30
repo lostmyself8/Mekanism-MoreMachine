@@ -13,8 +13,8 @@ ftblibrary = "2101.1.31"
 ftbultimine  = "2101.1.13"
 
 ## modrinth maven ##
-sodium = "mc26.1.2-0.8.12-neoforge"
-iris = "1.10.9+26.1-neoforge"
+sodium = "mc26.1.2-0.9.1-neoforge"
+iris = "1.11.2+26.1-neoforge"
 jade = "26.0.10+neoforge"
 jer = "1.6.0.17"
 ferritecore = "9.0.0-neoforge"
