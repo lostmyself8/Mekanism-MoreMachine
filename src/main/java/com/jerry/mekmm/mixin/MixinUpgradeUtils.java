@@ -16,9 +16,9 @@ public abstract class MixinUpgradeUtils {
 
     @Inject(method = "getItem", at = @At(value = "HEAD"))
     private static void getItem(Upgrade upgrade, CallbackInfoReturnable<Holder<Item>> cir) {
-        switch (upgrade.toString()) {
-            // case "THREAD" -> cir.setReturnValue(MMItems.THREAD_UPGRADE);
-            // default -> throw new IllegalStateException(String.valueOf(ExtraUpgrade.STACK.ordinal()));
-        }
+        // switch (upgrade.toString()) {
+        // case "THREAD" -> cir.setReturnValue(MMItems.THREAD_UPGRADE);
+        // default -> throw new IllegalStateException(String.valueOf(ExtraUpgrade.STACK.ordinal()));
+        // }
     }
 }

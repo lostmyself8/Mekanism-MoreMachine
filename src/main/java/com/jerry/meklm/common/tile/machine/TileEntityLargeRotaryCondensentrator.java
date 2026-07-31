@@ -204,7 +204,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     public IContainerHolder<IChemicalTank> getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.LEFT);
         builder.addTank(chemicalTank = BasicChemicalTank.create(CAPACITY, (_, automationType) -> !automationType.isExternal() || mode,
-            (_, automationType) -> automationType.isInternal() || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
+                (_, automationType) -> automationType.isInternal() || !mode, this::isValidChemical, ChemicalAttributeValidator.ALWAYS_ALLOW,
                 recipeCacheListener), RelativeSide.BACK, RelativeSide.LEFT);
         return builder.build();
     }
@@ -218,7 +218,7 @@ public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachin
     protected IContainerHolder<IFluidTank> getInitialFluidTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         AdjustableFluidTankHelper builder = AdjustableFluidTankHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.RIGHT);
         builder.addTank(fluidTank = BasicFluidTank.create(CAPACITY, (_, automationType) -> !automationType.isExternal() || !mode,
-            (_, automationType) -> automationType.isInternal() || mode, this::isValidFluid, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
+                (_, automationType) -> automationType.isInternal() || mode, this::isValidFluid, recipeCacheListener), RelativeSide.BACK, RelativeSide.RIGHT);
         return builder.build();
     }
 
