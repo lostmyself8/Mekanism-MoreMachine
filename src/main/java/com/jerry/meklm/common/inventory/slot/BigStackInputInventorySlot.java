@@ -3,13 +3,16 @@ package com.jerry.meklm.common.inventory.slot;
 import mekanism.api.IContentsListener;
 import mekanism.api.functions.ConstantPredicates;
 import mekanism.common.inventory.slot.InputInventorySlot;
+
 import net.minecraft.world.item.ItemStack;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class BigStackInputInventorySlot extends InputInventorySlot {
@@ -23,7 +26,7 @@ public class BigStackInputInventorySlot extends InputInventorySlot {
     }
 
     public static BigStackInputInventorySlot at(Predicate<@NotNull ItemStack> insertPredicate, Predicate<@NotNull ItemStack> isItemValid, @Nullable IContentsListener listener,
-                                        int x, int y) {
+                                                int x, int y) {
         Objects.requireNonNull(insertPredicate, "Insertion check cannot be null");
         Objects.requireNonNull(isItemValid, "Item validity check cannot be null");
         return new BigStackInputInventorySlot(insertPredicate, isItemValid, listener, x, y);
