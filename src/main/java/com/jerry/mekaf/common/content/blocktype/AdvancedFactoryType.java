@@ -17,7 +17,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 @NothingNullByDefault
-public enum AdvancedFactoryType implements IHasEnumNameTranslationKey {
+public enum AdvancedFactoryType implements IAdvancedFactoryType<MoreMachineFactoryMachine<?>>, IHasEnumNameTranslationKey {
 
     OXIDIZING("oxidizing", MoreMachineLang.OXIDIZING, () -> AdvancedFactoryBlockTypes.CHEMICAL_OXIDIZER, () -> MekanismBlocks.CHEMICAL_OXIDIZER),
     DISSOLVING("dissolving", MoreMachineLang.DISSOLVING, () -> AdvancedFactoryBlockTypes.CHEMICAL_DISSOLUTION_CHAMBER, () -> MekanismBlocks.CHEMICAL_DISSOLUTION_CHAMBER),
@@ -47,6 +47,7 @@ public enum AdvancedFactoryType implements IHasEnumNameTranslationKey {
         return name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
     }
 
+    @Override
     public MoreMachineFactoryMachine<?> getBaseMachine() {
         return baseMachine.get();
     }

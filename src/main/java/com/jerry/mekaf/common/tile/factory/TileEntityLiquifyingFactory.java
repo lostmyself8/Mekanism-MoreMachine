@@ -1,5 +1,7 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
+import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.inventory.slot.AdvancedFactoryInputInventorySlot;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 import com.jerry.mekaf.common.upgrade.NutritionLiquifyingUpgradeData;
@@ -23,6 +25,7 @@ import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
+import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
@@ -65,7 +68,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.ToIntBiFunction;
 
-public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<BasicItemStackToFluidOptionalItemRecipe> implements ItemRecipeLookupHandler<BasicItemStackToFluidOptionalItemRecipe> {
+public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<BasicItemStackToFluidOptionalItemRecipe, AdvancedFactoryType> implements ItemRecipeLookupHandler<BasicItemStackToFluidOptionalItemRecipe> {
 
     public static final RecipeError NOT_ENOUGH_SPACE_ITEM_OUTPUT_ERROR = RecipeError.create();
     // 单个槽位报错，例如输入槽和输出槽
@@ -94,7 +97,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     protected final List<IInventorySlot> outputItemSlots;
 
     public TileEntityLiquifyingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
-        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
+        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES, Attribute.getOrThrow(blockProvider, AttributeAdvancedFactoryType.class).getAdvancedFactoryType());
         inputItemSlots = new ArrayList<>();
         outputItemSlots = new ArrayList<>();
 

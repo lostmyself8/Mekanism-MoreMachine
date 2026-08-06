@@ -1,5 +1,7 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
+import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
 import com.jerry.mekaf.common.upgrade.ItemToChemicalUpgradeData;
 
@@ -12,6 +14,7 @@ import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.OneInputCachedRecipe;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
+import mekanism.common.block.attribute.Attribute;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.recipe.MekanismRecipeType;
@@ -35,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToChemicalFactory<ItemStackToChemicalRecipe> implements ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
+public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToChemicalFactory<ItemStackToChemicalRecipe, AdvancedFactoryType> implements ItemRecipeLookupHandler<ItemStackToChemicalRecipe> {
 
     private static final TriPredicate<ItemStackToChemicalRecipe, ItemStack, ChemicalStack> OUTPUT_CHECK = (recipe, input, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(input), output);
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
@@ -46,7 +49,7 @@ public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToC
     private static final Set<RecipeError> GLOBAL_ERROR_TYPES = Set.of(RecipeError.NOT_ENOUGH_ENERGY);
 
     public TileEntityItemStackToChemicalStackFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
-        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
+        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES, Attribute.getOrThrow(blockProvider, AttributeAdvancedFactoryType.class).getAdvancedFactoryType());
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.CHEMICAL);

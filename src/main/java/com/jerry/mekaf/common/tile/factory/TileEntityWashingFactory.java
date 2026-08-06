@@ -1,5 +1,7 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
+import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityChemicalToChemicalFactory;
 import com.jerry.mekaf.common.upgrade.FluidChemicalToChemicalUpgradeData;
 
@@ -19,6 +21,7 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.Mekanism;
+import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.fluid.BasicFluidTank;
 import mekanism.common.capabilities.holder.fluid.FluidTankHelper;
 import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
@@ -59,7 +62,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactory<FluidChemicalToChemicalRecipe> implements IHasDumpButton, FluidChemicalRecipeLookupHandler<FluidChemicalToChemicalRecipe> {
+public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactory<FluidChemicalToChemicalRecipe, AdvancedFactoryType> implements IHasDumpButton, FluidChemicalRecipeLookupHandler<FluidChemicalToChemicalRecipe> {
 
     protected static final DoubleInputRecipeCache.CheckRecipeType<FluidStack, ChemicalStack, FluidChemicalToChemicalRecipe, ChemicalStack> OUTPUT_CHECK = (recipe, fluidInput, chemicalInput, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(fluidInput, chemicalInput), output);
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
@@ -87,7 +90,7 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
     OutputInventorySlot fluidOutputSlot;
 
     public TileEntityWashingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
-        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
+        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES, Attribute.getOrThrow(blockProvider, AttributeAdvancedFactoryType.class).getAdvancedFactoryType());
         ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
         if (itemConfig != null) {
             itemConfig.addSlotInfo(DataType.INPUT, new InventorySlotInfo(true, false, fluidSlot));

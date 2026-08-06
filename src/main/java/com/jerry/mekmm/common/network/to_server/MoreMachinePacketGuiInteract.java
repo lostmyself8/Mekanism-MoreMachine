@@ -150,7 +150,7 @@ public class MoreMachinePacketGuiInteract implements IMekanismPacket {
             if (tile instanceof TileEntityMoreMachineFactory<?> factory) {
                 factory.toggleSorting();
             }
-            if (tile instanceof TileEntityAdvancedFactoryBase<?> advancedFactory) {
+            if (tile instanceof TileEntityAdvancedFactoryBase<?, ?> advancedFactory) {
                 advancedFactory.toggleSorting();
             }
         }),

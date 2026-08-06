@@ -1,5 +1,7 @@
 package com.jerry.mekaf.common.tile.factory;
 
+import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
+import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
 import com.jerry.mekaf.common.upgrade.ItemChemicalToChemicalUpgradeData;
 
@@ -22,6 +24,7 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.Mekanism;
+import mekanism.common.block.attribute.Attribute;
 import mekanism.common.capabilities.holder.chemical.ChemicalTankHelper;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
@@ -62,7 +65,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory<ChemicalDissolutionRecipe> implements IHasDumpButton, ConstantUsageRecipeLookupHandler,
+public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory<ChemicalDissolutionRecipe, AdvancedFactoryType> implements IHasDumpButton, ConstantUsageRecipeLookupHandler,
                                          ItemChemicalRecipeLookupHandler<ChemicalDissolutionRecipe> {
 
     private static final CheckRecipeType<ItemStack, ChemicalStack, ChemicalDissolutionRecipe, ChemicalStack> OUTPUT_CHECK = (recipe, input, extra, output) -> output.isEmpty() || ChemicalStack.isSameChemical(recipe.getOutput(input, extra), output);
@@ -94,7 +97,7 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
     ChemicalInventorySlot chemicalInputSlot;
 
     public TileEntityDissolvingFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
-        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES);
+        super(blockProvider, pos, state, TRACKED_ERROR_TYPES, GLOBAL_ERROR_TYPES, Attribute.getOrThrow(blockProvider, AttributeAdvancedFactoryType.class).getAdvancedFactoryType());
 
         ConfigInfo chemicalConfig = configComponent.getConfig(TransmissionType.CHEMICAL);
         if (chemicalConfig != null) {

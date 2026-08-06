@@ -1,8 +1,7 @@
 package com.jerry.mekaf.common.tile.factory.base;
 
-import com.jerry.mekaf.common.block.attribute.AttributeAdvancedFactoryType;
 import com.jerry.mekaf.common.capabilities.energy.AdvancedFactoryEnergyContainer;
-import com.jerry.mekaf.common.content.blocktype.AdvancedFactoryType;
+import com.jerry.mekaf.common.content.blocktype.IAdvancedFactoryType;
 import com.jerry.mekaf.common.tile.IFactoryStyle;
 
 import com.jerry.mekmm.common.util.MoreMachineUtils;
@@ -70,9 +69,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
-public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecipe<?>> extends TileEntityConfigurableMachine implements IRecipeLookupHandler<RECIPE>, IFactoryStyle {
+public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecipe<?>, TYPE extends IAdvancedFactoryType<?>> extends TileEntityConfigurableMachine implements IRecipeLookupHandler<RECIPE>, IFactoryStyle {
 
     /**
      * How many ticks it takes, by default, to run an operation.
@@ -108,7 +108,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
      * This machine's factory type.
      */
     @NotNull
-    protected final AdvancedFactoryType type;
+    protected final TYPE type;
 
     // 为了加压工厂而更改
     @Getter
@@ -123,9 +123,9 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     protected IInputHandler<@NotNull FluidStack>[] fluidInputHandlers;
     protected IOutputHandler<@NotNull FluidStack>[] fluidOutputHandlers;
 
-    protected TileEntityAdvancedFactoryBase(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes) {
+    protected TileEntityAdvancedFactoryBase(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes, @NotNull TYPE type) {
         super(blockProvider, pos, state);
-        type = Attribute.getOrThrow(blockProvider, AttributeAdvancedFactoryType.class).getAdvancedFactoryType();
+        this.type = Objects.requireNonNull(type, "IAdvancedFactoryType can not be null.");
 
         configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
 
@@ -232,7 +232,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         return null;
     }
 
-    public AdvancedFactoryType getAdvancedFactoryType() {
+    public TYPE getAdvancedFactoryType() {
         return type;
     }
 
