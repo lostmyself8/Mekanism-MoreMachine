@@ -1,5 +1,6 @@
 package com.jerry.mekaf.common.tile.factory.base;
 
+import com.jerry.mekaf.common.content.blocktype.IAdvancedFactoryType;
 import com.jerry.mekaf.common.inventory.slot.AdvancedFactoryInputInventorySlot;
 
 import mekanism.api.Action;
@@ -43,15 +44,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.ToIntBiFunction;
 
-public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends MekanismRecipe<?>> extends TileEntityAdvancedFactoryBase<RECIPE> {
+public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends MekanismRecipe<?>, TYPE extends IAdvancedFactoryType<?>> extends TileEntityAdvancedFactoryBase<RECIPE, TYPE> {
 
     private IIProcessInfo[] processInfoSlots;
 
     protected final List<IInventorySlot> inputItemSlots;
     protected final List<IInventorySlot> outputItemSlots;
 
-    protected TileEntityItemToItemAdvancedFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes) {
-        super(blockProvider, pos, state, errorTypes, globalErrorTypes);
+    protected TileEntityItemToItemAdvancedFactory(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<RecipeError> errorTypes, Set<RecipeError> globalErrorTypes, @NotNull TYPE type) {
+        super(blockProvider, pos, state, errorTypes, globalErrorTypes, type);
         inputItemSlots = new ArrayList<>();
         outputItemSlots = new ArrayList<>();
 
@@ -175,7 +176,7 @@ public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends Mekanis
 
     @Override
     protected void sortInventoryOrTank() {
-        Map<ItemStack, IIRecipeProcessInfo<RECIPE>> processes = ItemStackMap.createTypeAndTagMap();
+        Map<ItemStack, IIRecipeProcessInfo<RECIPE, TYPE>> processes = ItemStackMap.createTypeAndTagMap();
         List<IIProcessInfo> emptyProcesses = new ArrayList<>();
         for (IIProcessInfo processInfo : processInfoSlots) {
             IInventorySlot inputSlot = processInfo.inputSlot();
@@ -183,7 +184,7 @@ public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends Mekanis
                 emptyProcesses.add(processInfo);
             } else {
                 ItemStack inputStack = inputSlot.getStack();
-                IIRecipeProcessInfo<RECIPE> recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new IIRecipeProcessInfo<>());
+                IIRecipeProcessInfo<RECIPE, TYPE> recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new IIRecipeProcessInfo<>());
                 recipeProcessInfo.processes.add(processInfo);
                 recipeProcessInfo.totalCount += inputStack.getCount();
                 if (recipeProcessInfo.lazyMinPerSlot == null && !CommonWorldTickHandler.flushTagAndRecipeCaches) {
@@ -205,8 +206,8 @@ public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends Mekanis
             // If all input slots are empty, just exit
             return;
         }
-        for (Map.Entry<ItemStack, IIRecipeProcessInfo<RECIPE>> entry : processes.entrySet()) {
-            IIRecipeProcessInfo<RECIPE> recipeProcessInfo = entry.getValue();
+        for (Map.Entry<ItemStack, IIRecipeProcessInfo<RECIPE, TYPE>> entry : processes.entrySet()) {
+            IIRecipeProcessInfo<RECIPE, TYPE> recipeProcessInfo = entry.getValue();
             if (recipeProcessInfo.lazyMinPerSlot == null) {
                 recipeProcessInfo.item = entry.getKey();
                 // If we don't have a lazy initializer for our minPerSlot setup, that means that there is
@@ -238,9 +239,9 @@ public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends Mekanis
         distributeItems(processes);
     }
 
-    private void addEmptySlotsAsTargets(Map<ItemStack, IIRecipeProcessInfo<RECIPE>> processes, List<IIProcessInfo> emptyProcesses) {
-        for (Map.Entry<ItemStack, IIRecipeProcessInfo<RECIPE>> entry : processes.entrySet()) {
-            IIRecipeProcessInfo<RECIPE> recipeProcessInfo = entry.getValue();
+    private void addEmptySlotsAsTargets(Map<ItemStack, IIRecipeProcessInfo<RECIPE, TYPE>> processes, List<IIProcessInfo> emptyProcesses) {
+        for (Map.Entry<ItemStack, IIRecipeProcessInfo<RECIPE, TYPE>> entry : processes.entrySet()) {
+            IIRecipeProcessInfo<RECIPE, TYPE> recipeProcessInfo = entry.getValue();
             int minPerSlot = recipeProcessInfo.getMinPerSlot(this);
             int maxSlots = recipeProcessInfo.totalCount / minPerSlot;
             if (maxSlots <= 1) {
@@ -281,9 +282,9 @@ public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends Mekanis
         }
     }
 
-    private void distributeItems(Map<ItemStack, IIRecipeProcessInfo<RECIPE>> processes) {
-        for (Map.Entry<ItemStack, IIRecipeProcessInfo<RECIPE>> entry : processes.entrySet()) {
-            IIRecipeProcessInfo<RECIPE> recipeProcessInfo = entry.getValue();
+    private void distributeItems(Map<ItemStack, IIRecipeProcessInfo<RECIPE, TYPE>> processes) {
+        for (Map.Entry<ItemStack, IIRecipeProcessInfo<RECIPE, TYPE>> entry : processes.entrySet()) {
+            IIRecipeProcessInfo<RECIPE, TYPE> recipeProcessInfo = entry.getValue();
             int processCount = recipeProcessInfo.processes.size();
             if (processCount == 1) {
                 // If there is only one process with the item in it; short-circuit, no balancing is needed
@@ -388,17 +389,17 @@ public abstract class TileEntityItemToItemAdvancedFactory<RECIPE extends Mekanis
     public record IIProcessInfo(int process, @NotNull AdvancedFactoryInputInventorySlot inputSlot,
                                 @NotNull IInventorySlot outputSlot) {}
 
-    protected static class IIRecipeProcessInfo<RECIPE extends MekanismRecipe<?>> {
+    protected static class IIRecipeProcessInfo<RECIPE extends MekanismRecipe<?>, TYPE extends IAdvancedFactoryType<?>> {
 
         private final List<IIProcessInfo> processes = new ArrayList<>();
         @Nullable
-        private ToIntBiFunction<IIRecipeProcessInfo<RECIPE>, TileEntityItemToItemAdvancedFactory<RECIPE>> lazyMinPerSlot;
+        private ToIntBiFunction<IIRecipeProcessInfo<RECIPE, TYPE>, TileEntityItemToItemAdvancedFactory<RECIPE, TYPE>> lazyMinPerSlot;
         private Object item;
         private RECIPE recipe;
         private int minPerSlot = 1;
         private int totalCount;
 
-        public int getMinPerSlot(TileEntityItemToItemAdvancedFactory<RECIPE> factory) {
+        public int getMinPerSlot(TileEntityItemToItemAdvancedFactory<RECIPE, TYPE> factory) {
             if (lazyMinPerSlot != null) {
                 // Get the value lazily
                 minPerSlot = Math.max(1, lazyMinPerSlot.applyAsInt(this, factory));

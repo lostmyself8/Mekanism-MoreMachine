@@ -15,10 +15,10 @@ public class AdvancedFactoryContainerTypes {
 
     public static final ContainerTypeDeferredRegister AF_CONTAINER_TYPES = new ContainerTypeDeferredRegister(Mekmm.MOD_ID);
 
-    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityAdvancedFactoryBase<?>>> ADVANCED_FACTORY = AF_CONTAINER_TYPES.register("advanced_factory", factoryClass(), AdvancedFactoryContainer::new);
+    public static final ContainerTypeRegistryObject<MekanismTileContainer<TileEntityAdvancedFactoryBase<?, ?>>> ADVANCED_FACTORY = AF_CONTAINER_TYPES.register("advanced_factory", factoryClass(), AdvancedFactoryContainer::new);
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static Class<TileEntityAdvancedFactoryBase<?>> factoryClass() {
+    private static Class<TileEntityAdvancedFactoryBase<?, ?>> factoryClass() {
         return (Class) TileEntityAdvancedFactoryBase.class;
     }
 }

@@ -15,7 +15,6 @@ import mekanism.common.registries.MekanismDataComponents;
 import mekanism.common.tier.FactoryTier;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -53,7 +52,7 @@ public class ItemBlockAdvancedFactory extends ItemBlockTooltip<BlockTile<?, ?>> 
     }
 
     @Override
-    protected void addTypeDetails(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
+    protected void addTypeDetails(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltip, @NotNull TooltipFlag flag) {
         // Should always be present but validate it just in case
         AttributeAdvancedFactoryType factoryType = Attribute.get(getBlock(), AttributeAdvancedFactoryType.class);
         if (factoryType != null) {

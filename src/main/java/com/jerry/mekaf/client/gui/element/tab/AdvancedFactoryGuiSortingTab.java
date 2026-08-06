@@ -17,9 +17,9 @@ import net.minecraft.client.gui.GuiGraphics;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AdvancedFactoryGuiSortingTab extends GuiInsetElement<TileEntityAdvancedFactoryBase<?>> {
+public class AdvancedFactoryGuiSortingTab extends GuiInsetElement<TileEntityAdvancedFactoryBase<?, ?>> {
 
-    public AdvancedFactoryGuiSortingTab(IGuiWrapper gui, TileEntityAdvancedFactoryBase<?> tile) {
+    public AdvancedFactoryGuiSortingTab(IGuiWrapper gui, TileEntityAdvancedFactoryBase<?, ?> tile) {
         super(MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "sorting.png"), gui, tile, -26, 62, 35, 18, true);
         setTooltip(MekanismLang.AUTO_SORT);
     }

@@ -25,7 +25,7 @@ public class BlockAdvancedFactoryMachine<TILE extends TileEntityMekanism, MACHIN
         }
     }
 
-    public static class BlockAdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> extends MMBlockAdvancedFactoryMachineModel<TILE, AdvancedFactory<TILE>> {
+    public static class BlockAdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?, ?>> extends MMBlockAdvancedFactoryMachineModel<TILE, AdvancedFactory<TILE>> {
 
         public BlockAdvancedFactory(AdvancedFactory<TILE> factoryType) {
             super(factoryType, properties -> properties.mapColor(BlockResourceInfo.STEEL.getMapColor()));

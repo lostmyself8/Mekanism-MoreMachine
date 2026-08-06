@@ -5,7 +5,7 @@ import com.jerry.mekaf.common.registries.AdvancedFactoryBlocks;
 import com.jerry.mekaf.common.registries.AdvancedFactoryContainerTypes;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 
-import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine;
+import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.math.MathUtils;
@@ -22,7 +22,7 @@ import net.minecraft.core.particles.ParticleTypes;
 
 import java.util.function.Supplier;
 
-public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> extends MoreMachineMachine.MoreMachineFactoryMachine<TILE> {
+public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?, ?>> extends MoreMachineFactoryMachine<TILE> {
 
     private final MoreMachineFactoryMachine<?> origMachine;
 
@@ -47,7 +47,7 @@ public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> exte
         }
     }
 
-    public static class AdvancedFactoryBuilder<FACTORY extends AdvancedFactory<TILE>, TILE extends TileEntityAdvancedFactoryBase<?>, T extends MoreMachineMachineBuilder<FACTORY, TILE, T>>
+    public static class AdvancedFactoryBuilder<FACTORY extends AdvancedFactory<TILE>, TILE extends TileEntityAdvancedFactoryBase<?, ?>, T extends MoreMachineMachineBuilder<FACTORY, TILE, T>>
                                               extends BlockTileBuilder<FACTORY, TILE, T> {
 
         protected AdvancedFactoryBuilder(FACTORY holder) {
@@ -55,8 +55,8 @@ public class AdvancedFactory<TILE extends TileEntityAdvancedFactoryBase<?>> exte
         }
 
         @SuppressWarnings("unchecked")
-        public static <TILE extends TileEntityAdvancedFactoryBase<?>> AdvancedFactoryBuilder<AdvancedFactory<TILE>, TILE, ?> createAdvancedFactory(Supplier<?> tileEntityRegistrar, AdvancedFactoryType type,
-                                                                                                                                                   FactoryTier tier) {
+        public static <TILE extends TileEntityAdvancedFactoryBase<?, ?>> AdvancedFactoryBuilder<AdvancedFactory<TILE>, TILE, ?> createAdvancedFactory(Supplier<?> tileEntityRegistrar, AdvancedFactoryType type,
+                                                                                                                                                      FactoryTier tier) {
             // this is dirty but unfortunately necessary for things to play right
             AdvancedFactoryBuilder<AdvancedFactory<TILE>, TILE, ?> builder = new AdvancedFactoryBuilder<>(new AdvancedFactory<>((Supplier<TileEntityTypeRegistryObject<TILE>>) tileEntityRegistrar,
                     () -> AdvancedFactoryContainerTypes.ADVANCED_FACTORY, type.getBaseMachine(), tier));

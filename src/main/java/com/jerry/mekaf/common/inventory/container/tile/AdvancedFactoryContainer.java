@@ -12,9 +12,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 
-public class AdvancedFactoryContainer extends MekanismTileContainer<TileEntityAdvancedFactoryBase<?>> {
+public class AdvancedFactoryContainer extends MekanismTileContainer<TileEntityAdvancedFactoryBase<?, ?>> {
 
-    public AdvancedFactoryContainer(int id, Inventory inv, TileEntityAdvancedFactoryBase<?> tile) {
+    public AdvancedFactoryContainer(int id, Inventory inv, TileEntityAdvancedFactoryBase<?, ?> tile) {
         super(AdvancedFactoryContainerTypes.ADVANCED_FACTORY, id, inv, tile);
     }
 
