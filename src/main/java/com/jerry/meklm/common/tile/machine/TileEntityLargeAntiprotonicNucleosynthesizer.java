@@ -1,12 +1,13 @@
 package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
+import com.jerry.meklm.common.inventory.slot.BigStackInputInventorySlot;
+import com.jerry.meklm.common.inventory.slot.BigStackOutputInventorySlot;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.SerializationConstants;
-import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
@@ -43,8 +44,6 @@ import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
-import mekanism.common.inventory.slot.InputInventorySlot;
-import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker;
 import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.recipe.IMekanismRecipeTypeProvider;
@@ -96,7 +95,6 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     public IChemicalTank gasTank;
 
     private final ChemicalUsageMultiplier chemicalUsageMultiplier = ChemicalUsageMultiplier.constantUse(() -> ticksRequired, this::getTicksRequired);
-    private int baselineMaxOperations = 1;
     private long usedSoFar;
     private int numPowering;
 
@@ -108,9 +106,9 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputChemicalItem", docPlaceholder = "input gas item slot")
     ChemicalInventorySlot gasInputSlot;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input item slot")
-    InputInventorySlot inputSlot;
+    BigStackInputInventorySlot inputSlot;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutputItem", docPlaceholder = "output slot")
-    OutputInventorySlot outputSlot;
+    BigStackOutputInventorySlot outputSlot;
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
@@ -154,9 +152,9 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     protected IContainerHolder<IInventorySlot> getInitialInventory(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
         MekContainerHelper<IInventorySlot> builder = MekContainerHelper.forSide(facingSupplier, side -> side == RelativeSide.BACK, side -> side == RelativeSide.BACK);
         builder.addContainer(gasInputSlot = ChemicalInventorySlot.fillOrConvert(gasTank, this::getLevel, listener, 6, 69), RelativeSide.BACK);
-        builder.addContainer(inputSlot = InputInventorySlot.at((item, _) -> containsRecipeAB(item, gasTank.resource()), this::containsRecipeA, recipeCacheListener, 26, 40), RelativeSide.BACK)
+        builder.addContainer(inputSlot = BigStackInputInventorySlot.at((item, _) -> containsRecipeAB(item, gasTank.resource()), this::containsRecipeA, recipeCacheListener, 26, 40), RelativeSide.BACK)
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_MATCHING_RECIPE, getWarningCheck(RecipeError.NOT_ENOUGH_INPUT)));
-        builder.addContainer(outputSlot = OutputInventorySlot.at(recipeCacheUnpauseListener, 152, 40), RelativeSide.BACK)
+        builder.addContainer(outputSlot = BigStackOutputInventorySlot.at(recipeCacheUnpauseListener, 152, 40), RelativeSide.BACK)
                 .tracksWarnings(slot -> slot.warning(WarningTracker.WarningType.NO_SPACE_IN_OUTPUT, getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE)));
         builder.addContainer(energySlot = EnergyInventorySlot.fillOrConvert(energyContainer, this::getLevel, listener, 173, 69), RelativeSide.BACK);
         gasInputSlot.setSlotOverlay(SlotOverlay.MINUS);
@@ -221,16 +219,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
                 .setRequiredTicks(this::getTicksRequired)
                 .setOnFinish(this::markForSave)
                 .setOperatingTicksChanged(this::setOperatingTicks)
-                .setBaselineMaxOperations(() -> 2 * baselineMaxOperations);
-    }
-
-    @Override
-    public void recalculateUpgrades(Upgrade upgrade) {
-        super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED) {
-            int upgradeCount = getUpgrades(Upgrade.SPEED);
-            baselineMaxOperations = 4 * (upgradeCount > 0 ? upgradeCount : upgradeCount + 1);
-        }
+                .setBaselineMaxOperations(() -> 64);
     }
 
     @Override

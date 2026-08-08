@@ -40,10 +40,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.ToIntBiFunction;
 
 public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends MekanismRecipe<?>> extends TileEntityAdvancedFactoryBase<RECIPE> {
@@ -103,7 +100,7 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
             outputTank[i] = BasicChemicalTank.output(MAX_CHEMICAL * tier.processes, updateSortingAndUnpause);
             inputTank[i] = BasicChemicalTank.create(MAX_CHEMICAL * tier.processes,
                     // 这个type似乎没什么用，就不增加isValidInputChemical的参数了
-                    MekContainerHelper.radioactiveInputTankPredicate(() -> outputTank[index]), (stack, type) -> isValidInputChemical(stack),
+                    MekContainerHelper.radioactiveInputTankPredicate(() -> outputTank[index]), (stack, _) -> isValidInputChemical(stack),
                     stack -> isChemicalValidForTank(stack) && inputProducesOutput(index, stack, outputTank[index], false),
                     ChemicalAttributeValidator.ALWAYS_ALLOW, recipeCacheLookupMonitors[index]);
             builder.addContainer(inputTank[i]);
@@ -227,7 +224,7 @@ public abstract class TileEntityChemicalToChemicalFactory<RECIPE extends Mekanis
 
     @Override
     protected void sortInventoryOrTank() {
-        Map<ChemicalResource, CCRecipeProcessInfo<ChemicalResource, RECIPE>> processes = new java.util.HashMap<>();
+        Map<ChemicalResource, CCRecipeProcessInfo<ChemicalResource, RECIPE>> processes = new HashMap<>();
         List<CCProcessInfo> emptyProcesses = new ArrayList<>();
         for (CCProcessInfo processInfo : processInfoSlots) {
             IChemicalTank inputTank = processInfo.inputTank();
