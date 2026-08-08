@@ -30,6 +30,7 @@ public class MoreMachineBlockShapes {
     public static final VoxelShape[] WIRELESS_TRANSMISSION_STATION = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
     // Doll
     public static final VoxelShape[] AUTHOR_DOLL = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
+    public static final VoxelShape[] FUMO = new VoxelShape[EnumUtils.HORIZONTAL_DIRECTIONS.length];
 
     static {
         VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
@@ -359,6 +360,15 @@ public class MoreMachineBlockShapes {
                 box(6, 0.1, 4, 8, 2.1, 10), // right_leg
                 box(5.6, 0.2, 9.6, 10.4, 6.2, 12.4) // body
         ), AUTHOR_DOLL);
+
+        VoxelShapeUtils.setShape(VoxelShapeUtils.combine(
+                box(4.1, 5.9, 7, 11.8, 13.5, 14.7), // head and hat layer
+                box(2.4, -0.1, 9.9, 6.9, 6.6, 12.2), // left arm and layer
+                box(8.9, 0.1, 9.8, 13.5, 6.8, 12.1), // right arm and layer
+                box(8.2, -0.2, 4.4, 12.7, 2, 11), // left leg and layer
+                box(3.3, -0.2, 4.4, 7.8, 2, 11), // right leg and layer
+                box(5.5, -0.1, 9.5, 10.5, 6.1, 12.5) // body and layer
+        ), FUMO);
     }
 
     public static VoxelShape[] getShape(MoreMachineFactoryType type) {

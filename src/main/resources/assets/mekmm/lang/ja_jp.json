@@ -184,6 +184,10 @@
 	"block.mekmm.wireless_transmission_station": "Wireless Transmission Station",
 	"block.mekmm.author_doll": "LostMyself",
 	"block.mekmm.modeler_doll": "TedXenon",
+	"block.mekmm.gtrixy_fumo": "GTriXy Fumo",
+	"block.mekmm.suika_hinata_fumo": "Suika_Hinata Fumo",
+	"block.mekmm.lex_eden_fumo": "Lex_Eden Fumo",
+	"block.mekmm.qiuyeqaq2024_fumo": "QiuYeQAQ2024 Fumo",
 
 	"block.mekmm.basic_mid_chemical_tank": "Basic Mid Chemical Tank",
 	"block.mekmm.advanced_mid_chemical_tank": "Advanced Mid Chemical Tank",
@@ -424,6 +428,10 @@
 	"description.mekmm.wireless_transmission_station": "A machine capable of wirelessly transmitting five types of substances.",
 	"description.mekmm.author_doll": "このModの作者のスキンを纏った人形です。愛でましょう。(Just decorations)",
 	"description.mekmm.modeler_doll": "A doll with the modeler's skin.(Thanks to everyone who provided textures and models for mekmm)",
+	"description.mekmm.gtrixy_fumo": "GTriXy の現在の Minecraft スキンを元にした装飾用 Fumo です。",
+	"description.mekmm.suika_hinata_fumo": "Suika_Hinata の現在の Minecraft スキンを元にした装飾用 Fumo です。",
+	"description.mekmm.lex_eden_fumo": "Lex_Eden の現在の Minecraft スキンを元にした装飾用 Fumo です。",
+	"description.mekmm.qiuyeqaq2024_fumo": "QiuYeQAQ2024 の現在の Minecraft スキンを元にした装飾用 Fumo です。",
 
 	"tooltip.mekmm.is_blocking": "機械の上部が塞がれています",
 	"tooltip.mekmm.no_blocking": "機械の上部は塞がれていません",

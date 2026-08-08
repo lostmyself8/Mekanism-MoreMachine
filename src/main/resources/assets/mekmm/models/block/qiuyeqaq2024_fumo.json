@@ -1,0 +1,7 @@
+{
+	"parent": "mekmm:block/fumo",
+	"textures": {
+		"1": "mekmm:block/fumo/qiuyeqaq2024",
+		"particle": "mekmm:block/fumo/qiuyeqaq2024"
+	}
+}

@@ -1,0 +1,7 @@
+{
+	"parent": "mekmm:block/fumo",
+	"textures": {
+		"1": "mekmm:block/fumo/suika_hinata",
+		"particle": "mekmm:block/fumo/suika_hinata"
+	}
+}

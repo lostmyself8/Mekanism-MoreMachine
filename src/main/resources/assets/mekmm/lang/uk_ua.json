@@ -184,6 +184,10 @@
 	"block.mekmm.wireless_transmission_station": "Бездротова передавальна станція",
 	"block.mekmm.author_doll": "LostMyself",
 	"block.mekmm.modeler_doll": "TedXenon",
+	"block.mekmm.gtrixy_fumo": "Фумо GTriXy",
+	"block.mekmm.suika_hinata_fumo": "Фумо Suika_Hinata",
+	"block.mekmm.lex_eden_fumo": "Фумо Lex_Eden",
+	"block.mekmm.qiuyeqaq2024_fumo": "Фумо QiuYeQAQ2024",
 
 	"block.mekmm.basic_mid_chemical_tank": "Базовий середній хімічний резервуар",
 	"block.mekmm.advanced_mid_chemical_tank": "Покращений середній хімічний резервуар",
@@ -424,6 +428,10 @@
 	"description.mekmm.wireless_transmission_station": "Машина, здатна бездротовим способом передавати п'ять типів ресурсів.",
 	"description.mekmm.author_doll": "Лялька зі шкірою автора (суто декорація).",
 	"description.mekmm.modeler_doll": "Лялька зі шкірою моделювальника (Дякуємо всім, хто створює текстури та моделі для mekmm).",
+	"description.mekmm.gtrixy_fumo": "Декоративне фумо на основі поточного скіна Minecraft гравця GTriXy.",
+	"description.mekmm.suika_hinata_fumo": "Декоративне фумо на основі поточного скіна Minecraft гравця Suika_Hinata.",
+	"description.mekmm.lex_eden_fumo": "Декоративне фумо на основі поточного скіна Minecraft гравця Lex_Eden.",
+	"description.mekmm.qiuyeqaq2024_fumo": "Декоративне фумо на основі поточного скіна Minecraft гравця QiuYeQAQ2024.",
 
 	"tooltip.mekmm.is_blocking": "Заблоковано зверху над машиною",
 	"tooltip.mekmm.no_blocking": "Не заблоковано зверху над машиною",

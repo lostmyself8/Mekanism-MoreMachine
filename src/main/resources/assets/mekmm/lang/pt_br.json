@@ -184,6 +184,10 @@
 	"block.mekmm.wireless_transmission_station": "Estação de Transmissão Sem Fio",
 	"block.mekmm.author_doll": "LostMyself",
 	"block.mekmm.modeler_doll": "TedXenon",
+	"block.mekmm.gtrixy_fumo": "GTriXy Fumo",
+	"block.mekmm.suika_hinata_fumo": "Suika_Hinata Fumo",
+	"block.mekmm.lex_eden_fumo": "Lex_Eden Fumo",
+	"block.mekmm.qiuyeqaq2024_fumo": "QiuYeQAQ2024 Fumo",
 
 	"block.mekmm.basic_mid_chemical_tank": "Tanque Químico Médio Básico",
 	"block.mekmm.advanced_mid_chemical_tank": "Tanque Químico Médio Avançado",
@@ -424,6 +428,10 @@
 	"description.mekmm.wireless_transmission_station": "Uma máquina capaz de transmitir cinco tipos de substâncias sem fio.",
 	"description.mekmm.author_doll": "Um boneco com a skin do autor.",
 	"description.mekmm.modeler_doll": "Um boneco com a skin do modelador. (Agradecimentos a todos que forneceram texturas e modelos para o mekmm)",
+	"description.mekmm.gtrixy_fumo": "Um Fumo decorativo baseado na skin atual do Minecraft de GTriXy.",
+	"description.mekmm.suika_hinata_fumo": "Um Fumo decorativo baseado na skin atual do Minecraft de Suika_Hinata.",
+	"description.mekmm.lex_eden_fumo": "Um Fumo decorativo baseado na skin atual do Minecraft de Lex_Eden.",
+	"description.mekmm.qiuyeqaq2024_fumo": "Um Fumo decorativo baseado na skin atual do Minecraft de QiuYeQAQ2024.",
 
 	"tooltip.mekmm.is_blocking": "Bloqueado acima da máquina",
 	"tooltip.mekmm.no_blocking": "Não bloqueado acima da máquina",

@@ -62,6 +62,10 @@ public enum MoreMachineLang implements ILangEntry {
     DESCRIPTION_WIRELESS_TRANSMISSION_STATION("description", "wireless_transmission_station"),
     AUTHOR_DOLL("description", "author_doll"),
     MODELER_DOLL("description", "modeler_doll"),
+    GTRIXY_FUMO("description", "gtrixy_fumo"),
+    SUIKA_HINATA_FUMO("description", "suika_hinata_fumo"),
+    LEX_EDEN_FUMO("description", "lex_eden_fumo"),
+    QIUYEQAQ2024_FUMO("description", "qiuyeqaq2024_fumo"),
     // JEI
     RECIPE_VIEWER_INFO_UNSTABLE_DIMENSIONAL_GAS("info", "jei.unstable_dimensional_gas"),
     // Tooltip stuff

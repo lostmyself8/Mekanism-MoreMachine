@@ -184,6 +184,10 @@
 	"block.mekmm.wireless_transmission_station": "无线传输站",
 	"block.mekmm.author_doll": "LostMyself",
 	"block.mekmm.modeler_doll": "TedXenon",
+	"block.mekmm.gtrixy_fumo": "GTriXy Fumo",
+	"block.mekmm.suika_hinata_fumo": "Suika_Hinata Fumo",
+	"block.mekmm.lex_eden_fumo": "Lex_Eden Fumo",
+	"block.mekmm.qiuyeqaq2024_fumo": "秋叶 Fumo",
 
 	"block.mekmm.basic_mid_chemical_tank": "基础中型化学品储罐",
 	"block.mekmm.advanced_mid_chemical_tank": "高级中型化学品储罐",
@@ -424,6 +428,10 @@
 	"description.mekmm.wireless_transmission_station": "一种可以无线传输五种物质类型的机器",
 	"description.mekmm.author_doll": "一个有着作者皮肤的玩偶（只是装饰品）",
 	"description.mekmm.modeler_doll": "一个有着模型师皮肤的玩偶（感谢所有为mekmm提供纹理和模型的人）",
+	"description.mekmm.gtrixy_fumo": "一个基于 GTriXy 当前 Minecraft 皮肤制作的 Fumo 装饰玩偶。",
+	"description.mekmm.suika_hinata_fumo": "一个基于 Suika_Hinata 当前 Minecraft 皮肤制作的 Fumo 装饰玩偶。",
+	"description.mekmm.lex_eden_fumo": "一个基于 Lex_Eden 当前 Minecraft 皮肤制作的 Fumo 装饰玩偶。",
+	"description.mekmm.qiuyeqaq2024_fumo": "一个基于 QiuYeQAQ2024（秋叶）当前 Minecraft 皮肤制作的 Fumo 装饰玩偶。",
 
 	"tooltip.mekmm.is_blocking": "机器上方有阻挡物",
 	"tooltip.mekmm.no_blocking": "机器上方无阻挡物",

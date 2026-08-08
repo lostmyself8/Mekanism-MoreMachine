@@ -4,8 +4,12 @@ import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.datamaps.IMoreMachineDataMapTypes;
 import com.jerry.mekmm.common.attachments.component.MoreMachineAttachedSideConfig;
 import com.jerry.mekmm.common.block.BlockAuthorDoll;
+import com.jerry.mekmm.common.block.BlockGTriXyFumo;
+import com.jerry.mekmm.common.block.BlockLexEdenFumo;
 import com.jerry.mekmm.common.block.BlockModelerDoll;
 import com.jerry.mekmm.common.block.BlockMoreMachineResource;
+import com.jerry.mekmm.common.block.BlockQiuYeQAQ2024Fumo;
+import com.jerry.mekmm.common.block.BlockSuikaHinataFumo;
 import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine.BlockMoreMachineFactory;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactory;
@@ -316,6 +320,18 @@ public class MoreMachineBlocks {
 
     public static final BlockRegistryObject<@NotNull BlockModelerDoll, @NotNull ItemBlockModelerDoll> MODELER_DOLL = MM_BLOCKS.register("modeler_doll",
             properties -> new BlockModelerDoll(MoreMachineBlockTypes.MODELER_DOLL, BlockTile.defaultProperties(properties).sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockModelerDoll::new);
+
+    public static final BlockRegistryObject<@NotNull BlockGTriXyFumo, @NotNull ItemBlockGTriXyFumo> GTRIXY_FUMO = MM_BLOCKS.register("gtrixy_fumo",
+            properties -> new BlockGTriXyFumo(MoreMachineBlockTypes.GTRIXY_FUMO, BlockTile.defaultProperties(properties).sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockGTriXyFumo::new);
+
+    public static final BlockRegistryObject<@NotNull BlockSuikaHinataFumo, @NotNull ItemBlockSuikaHinataFumo> SUIKA_HINATA_FUMO = MM_BLOCKS.register("suika_hinata_fumo",
+            properties -> new BlockSuikaHinataFumo(MoreMachineBlockTypes.SUIKA_HINATA_FUMO, BlockTile.defaultProperties(properties).sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockSuikaHinataFumo::new);
+
+    public static final BlockRegistryObject<@NotNull BlockLexEdenFumo, @NotNull ItemBlockLexEdenFumo> LEX_EDEN_FUMO = MM_BLOCKS.register("lex_eden_fumo",
+            properties -> new BlockLexEdenFumo(MoreMachineBlockTypes.LEX_EDEN_FUMO, BlockTile.defaultProperties(properties).sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockLexEdenFumo::new);
+
+    public static final BlockRegistryObject<@NotNull BlockQiuYeQAQ2024Fumo, @NotNull ItemBlockQiuYeQAQ2024Fumo> QIUYEQAQ2024_FUMO = MM_BLOCKS.register("qiuyeqaq2024_fumo",
+            properties -> new BlockQiuYeQAQ2024Fumo(MoreMachineBlockTypes.QIUYEQAQ2024_FUMO, BlockTile.defaultProperties(properties).sound(SoundType.WOOL).mapColor(BlockResourceInfo.STEEL.getMapColor())), ItemBlockQiuYeQAQ2024Fumo::new);
 
     private static <BLOCK extends Block, ITEM extends BlockItem> BlockRegistryObject<BLOCK, ITEM> registerTieredBlock(ITier tier, String suffix,
                                                                                                                       Function<BlockBehaviour.Properties, ? extends BLOCK> blockSupplier, BiFunction<BLOCK, Item.Properties, ITEM> itemCreator) {

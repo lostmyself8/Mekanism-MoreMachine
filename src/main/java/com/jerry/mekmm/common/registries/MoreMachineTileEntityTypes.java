@@ -5,7 +5,11 @@ import com.jerry.mekmm.common.block.prefab.BlockMoreFactoryMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.item.block.machine.ItemBlockMoreMachineFactory;
 import com.jerry.mekmm.common.tile.TileEntityAuthorDoll;
+import com.jerry.mekmm.common.tile.TileEntityGTriXyFumo;
+import com.jerry.mekmm.common.tile.TileEntityLexEdenFumo;
 import com.jerry.mekmm.common.tile.TileEntityModelerDoll;
+import com.jerry.mekmm.common.tile.TileEntityQiuYeQAQ2024Fumo;
+import com.jerry.mekmm.common.tile.TileEntitySuikaHinataFumo;
 import com.jerry.mekmm.common.tile.factory.*;
 import com.jerry.mekmm.common.tile.machine.*;
 import com.jerry.mekmm.common.tile.machine.TileEntityWirelessChargingStation;
@@ -144,6 +148,22 @@ public class MoreMachineTileEntityTypes {
 
     public static final TileEntityTypeRegistryObject<TileEntityModelerDoll> MODELER_DOLL = MM_TILE_ENTITY_TYPES
             .builder(MoreMachineBlocks.MODELER_DOLL, TileEntityModelerDoll::new)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntityGTriXyFumo> GTRIXY_FUMO = MM_TILE_ENTITY_TYPES
+            .builder(MoreMachineBlocks.GTRIXY_FUMO, TileEntityGTriXyFumo::new)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntitySuikaHinataFumo> SUIKA_HINATA_FUMO = MM_TILE_ENTITY_TYPES
+            .builder(MoreMachineBlocks.SUIKA_HINATA_FUMO, TileEntitySuikaHinataFumo::new)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntityLexEdenFumo> LEX_EDEN_FUMO = MM_TILE_ENTITY_TYPES
+            .builder(MoreMachineBlocks.LEX_EDEN_FUMO, TileEntityLexEdenFumo::new)
+            .build();
+
+    public static final TileEntityTypeRegistryObject<TileEntityQiuYeQAQ2024Fumo> QIUYEQAQ2024_FUMO = MM_TILE_ENTITY_TYPES
+            .builder(MoreMachineBlocks.QIUYEQAQ2024_FUMO, TileEntityQiuYeQAQ2024Fumo::new)
             .build();
 
     public static TileEntityTypeRegistryObject<? extends TileEntityMoreMachineFactory<?>> getMoreMachineFactoryTile(FactoryTier tier, MoreMachineFactoryType type) {

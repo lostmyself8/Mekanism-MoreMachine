@@ -184,6 +184,10 @@
 	"block.mekmm.wireless_transmission_station": "Беспроводная передающая станция",
 	"block.mekmm.author_doll": "Кукла автора (LostMyself)",
 	"block.mekmm.modeler_doll": "Кукла модельера (TedXenon)",
+	"block.mekmm.gtrixy_fumo": "Фумо GTriXy",
+	"block.mekmm.suika_hinata_fumo": "Фумо Suika_Hinata",
+	"block.mekmm.lex_eden_fumo": "Фумо Lex_Eden",
+	"block.mekmm.qiuyeqaq2024_fumo": "Фумо QiuYeQAQ2024",
 
 	"block.mekmm.basic_mid_chemical_tank": "Базовая средняя хим. цистерна",
 	"block.mekmm.advanced_mid_chemical_tank": "Продвинутая средняя хим. цистерна",
@@ -424,6 +428,10 @@
 	"description.mekmm.wireless_transmission_station": "A machine capable of wirelessly transmitting five types of substances.",
 	"description.mekmm.author_doll": "Кукла со скином автора (Просто украшение)",
 	"description.mekmm.modeler_doll": "Кукла со скином модельера (Спасибо всем, кто предоставил текстуры и модели для mekmm)",
+	"description.mekmm.gtrixy_fumo": "Декоративная фумо по текущему скину Minecraft игрока GTriXy.",
+	"description.mekmm.suika_hinata_fumo": "Декоративная фумо по текущему скину Minecraft игрока Suika_Hinata.",
+	"description.mekmm.lex_eden_fumo": "Декоративная фумо по текущему скину Minecraft игрока Lex_Eden.",
+	"description.mekmm.qiuyeqaq2024_fumo": "Декоративная фумо по текущему скину Minecraft игрока QiuYeQAQ2024.",
 
 	"tooltip.mekmm.is_blocking": "Заблокировано над машиной",
 	"tooltip.mekmm.no_blocking": "Не заблокировано над машиной",

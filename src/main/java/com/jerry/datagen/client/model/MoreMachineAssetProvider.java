@@ -48,7 +48,7 @@ public class MoreMachineAssetProvider implements DataProvider {
     };
     private static final String[] FACING_MACHINES = {
             "replicator", "fluid_replicator", "chemical_replicator", "ambient_gas_collector", "wireless_charging_station",
-            "wireless_transmission_station", "author_doll", "modeler_doll"
+            "wireless_transmission_station", "author_doll", "modeler_doll", "gtrixy_fumo", "suika_hinata_fumo", "lex_eden_fumo", "qiuyeqaq2024_fumo"
     };
     private static final String[] LARGE_MACHINES = {
             "large_rotary_condensentrator", "large_chemical_infuser", "large_electrolytic_separator", "large_solar_neutron_activator",

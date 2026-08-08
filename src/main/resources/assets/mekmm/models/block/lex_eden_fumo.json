@@ -1,0 +1,7 @@
+{
+	"parent": "mekmm:block/fumo",
+	"textures": {
+		"1": "mekmm:block/fumo/lex_eden",
+		"particle": "mekmm:block/fumo/lex_eden"
+	}
+}

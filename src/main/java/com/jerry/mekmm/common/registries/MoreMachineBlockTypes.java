@@ -10,7 +10,11 @@ import com.jerry.mekmm.common.content.blocktype.MoreMachineFactoryType;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineFactoryMachine;
 import com.jerry.mekmm.common.content.blocktype.MoreMachineMachine.MoreMachineMachineBuilder;
 import com.jerry.mekmm.common.tile.TileEntityAuthorDoll;
+import com.jerry.mekmm.common.tile.TileEntityGTriXyFumo;
+import com.jerry.mekmm.common.tile.TileEntityLexEdenFumo;
 import com.jerry.mekmm.common.tile.TileEntityModelerDoll;
+import com.jerry.mekmm.common.tile.TileEntityQiuYeQAQ2024Fumo;
+import com.jerry.mekmm.common.tile.TileEntitySuikaHinataFumo;
 import com.jerry.mekmm.common.tile.machine.*;
 import com.jerry.mekmm.common.tile.machine.TileEntityWirelessChargingStation;
 import com.jerry.mekmm.common.tile.machine.TileEntityWirelessTransmissionStation;
@@ -192,6 +196,34 @@ public class MoreMachineBlockTypes {
             .createBlock(() -> MoreMachineTileEntityTypes.MODELER_DOLL, MoreMachineLang.MODELER_DOLL)
             .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
             .withCustomShape(MoreMachineBlockShapes.AUTHOR_DOLL)
+            .with(AttributeCustomSelectionBox.JSON)
+            .build();
+
+    public static final BlockTypeTile<TileEntityGTriXyFumo> GTRIXY_FUMO = BlockTypeTile.BlockTileBuilder
+            .createBlock(() -> MoreMachineTileEntityTypes.GTRIXY_FUMO, MoreMachineLang.GTRIXY_FUMO)
+            .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
+            .withCustomShape(MoreMachineBlockShapes.FUMO)
+            .with(AttributeCustomSelectionBox.JSON)
+            .build();
+
+    public static final BlockTypeTile<TileEntitySuikaHinataFumo> SUIKA_HINATA_FUMO = BlockTypeTile.BlockTileBuilder
+            .createBlock(() -> MoreMachineTileEntityTypes.SUIKA_HINATA_FUMO, MoreMachineLang.SUIKA_HINATA_FUMO)
+            .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
+            .withCustomShape(MoreMachineBlockShapes.FUMO)
+            .with(AttributeCustomSelectionBox.JSON)
+            .build();
+
+    public static final BlockTypeTile<TileEntityLexEdenFumo> LEX_EDEN_FUMO = BlockTypeTile.BlockTileBuilder
+            .createBlock(() -> MoreMachineTileEntityTypes.LEX_EDEN_FUMO, MoreMachineLang.LEX_EDEN_FUMO)
+            .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
+            .withCustomShape(MoreMachineBlockShapes.FUMO)
+            .with(AttributeCustomSelectionBox.JSON)
+            .build();
+
+    public static final BlockTypeTile<TileEntityQiuYeQAQ2024Fumo> QIUYEQAQ2024_FUMO = BlockTypeTile.BlockTileBuilder
+            .createBlock(() -> MoreMachineTileEntityTypes.QIUYEQAQ2024_FUMO, MoreMachineLang.QIUYEQAQ2024_FUMO)
+            .with(new AttributeStateFacing(BlockStateProperties.HORIZONTAL_FACING))
+            .withCustomShape(MoreMachineBlockShapes.FUMO)
             .with(AttributeCustomSelectionBox.JSON)
             .build();
 
