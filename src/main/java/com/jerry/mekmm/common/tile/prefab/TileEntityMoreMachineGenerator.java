@@ -75,7 +75,7 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
                 outputCaches = new ArrayList<>(portCount(energySides.length));
                 for (RelativeSide energySide : energySides) {
                     Direction side = energySide.getDirection(direction);
-                    for (BlockPos ejectPos : offSetOutput(worldPosition, side)) {
+                    for (BlockPos ejectPos : offsetOutput(worldPosition, side)) {
                         outputCaches.add(BlockEnergyCapabilityCache.create((ServerLevel) level, ejectPos, side.getOpposite()));
                     }
                 }
@@ -104,7 +104,7 @@ public abstract class TileEntityMoreMachineGenerator extends TileEntityMekanism 
      *
      * @return 偏移后的位置集合
      */
-    protected BlockPos[] offSetOutput(BlockPos from, Direction side) {
+    protected BlockPos[] offsetOutput(BlockPos from, Direction side) {
         return new BlockPos[] { from.relative(side) };
     }
 

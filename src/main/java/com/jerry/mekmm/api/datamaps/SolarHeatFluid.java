@@ -8,22 +8,22 @@ import net.minecraft.resources.ResourceLocation;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-public record SolarHeatFluid(double efficiency, double usage) {
+public record SolarHeatFluid(int consumption, double generationModifier) {
 
     public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "solar_heat_fluid");
 
-    private static final Codec<Double> EFFICIENCY_CODEC = Codec.doubleRange(0, 3);
-    private static final Codec<Double> USAGE_CODEC = Codec.doubleRange(0, 1);
+    private static final Codec<Integer> CONSUMPTION_CODEC = Codec.intRange(1, Integer.MAX_VALUE);
+    private static final Codec<Double> GENERATION_MODIFIER_CODEC = Codec.doubleRange(Double.MIN_VALUE, Double.MAX_VALUE);
 
     public static final Codec<SolarHeatFluid> CODEC = RecordCodecBuilder.create(in -> in.group(
-            EFFICIENCY_CODEC.fieldOf(MoreMachineSerializationConstants.EFFICIENCY).forGetter(SolarHeatFluid::efficiency),
-            USAGE_CODEC.fieldOf(MoreMachineSerializationConstants.USAGE).forGetter(SolarHeatFluid::usage)).apply(in, SolarHeatFluid::new));
+            CONSUMPTION_CODEC.fieldOf(MoreMachineSerializationConstants.CONSUMPTION).forGetter(SolarHeatFluid::consumption),
+            GENERATION_MODIFIER_CODEC.fieldOf(MoreMachineSerializationConstants.GENERATION_MODIFIER).forGetter(SolarHeatFluid::generationModifier)).apply(in, SolarHeatFluid::new));
 
     public SolarHeatFluid {
-        if (efficiency < 0 || efficiency > 3) {
-            throw new IllegalArgumentException("Solar heat fluid efficiency must be between zero and three inclusive");
-        } else if (usage < 0 || usage > 1) {
-            throw new IllegalArgumentException("Solar heat fluid usage must be between zero and one inclusive");
+        if (consumption <= 0) {
+            throw new IllegalArgumentException("Solar heat fluid consumption must be positive");
+        } else if (!Double.isFinite(generationModifier) || generationModifier <= 0) {
+            throw new IllegalArgumentException("Solar heat fluid generation modifier must be finite and positive");
         }
     }
 }
