@@ -1,5 +1,7 @@
 package com.jerry.meklg.client.gui.generator;
 
+import com.jerry.mekmm.common.MoreMachineLang;
+
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiInnerScreen;
@@ -17,6 +19,7 @@ import mekanism.common.inventory.warning.IWarningTracker;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.UnitDisplayUtils;
 import mekanism.common.util.text.EnergyDisplay;
+import mekanism.common.util.text.TextUtils;
 import mekanism.generators.common.GeneratorsLang;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -45,14 +48,15 @@ public class GuiSolarHeatGenerator extends GuiMekanismTile<TileEntitySolarHeatGe
         super.addGuiElements();
         addRenderableWidget(new GuiInnerScreen(this, 47, 14, 110, 40, () -> List.of(
                 MekanismLang.TEMPERATURE.translate(MekanismUtils.getTemperatureDisplay(tile.getTotalTemperature(), UnitDisplayUtils.TemperatureUnit.KELVIN, true)),
-                MekanismLang.TEMPERATURE.translate(tile.getCoolantConversionEfficiency()))));
+                MoreMachineLang.SOLAR_HEAT_COOLANT_CONVERSION_RATE.translate(
+                        MekanismLang.GENERIC_PER_TICK.translate(MekanismLang.GENERIC_MB.translate(TextUtils.format(tile.getLastCoolantConverted())))),
+                MoreMachineLang.SOLAR_HEAT_REFLECTOR_DAMAGE.translate(TextUtils.format(tile.getReflectorDamagePerTick())))));
         addRenderableWidget(new GuiChemicalGauge(() -> tile.cooledCoolantTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 27, 14));
         addRenderableWidget(new GuiChemicalGauge(() -> tile.superheatedCoolantTank, () -> tile.getChemicalTanks(null), GaugeType.STANDARD, this, 159, 14));
         addRenderableWidget(new GuiFluidGauge(() -> tile.fluidTank, () -> tile.getFluidTanks(null), GaugeType.STANDARD, this, 7, 14));
         addRenderableWidget(new GuiEnergyTab(this, () -> List.of(
                 GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(tile.getProductionRate())),
                 MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())))));
-        // addRenderableWidget(new GuiEnergyGauge(tile.getEnergyContainer(), GaugeType.SMALL_MED, this, 179, 14));
         addRenderableWidget(new GuiEnergyGauge(new GuiEnergyGauge.IEnergyInfoHandler() {
 
             @Override

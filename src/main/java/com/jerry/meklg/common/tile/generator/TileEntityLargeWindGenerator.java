@@ -107,7 +107,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
-    protected BlockPos[] offSetOutput(BlockPos from, Direction side) {
+    protected BlockPos[] offsetOutput(BlockPos from, Direction side) {
         Direction front = getDirection();
         Direction back = getOppositeDirection();
         Direction left = getLeftSide();
@@ -170,7 +170,7 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
                 int maxLevelHeight = Math.min(level.getMaxBuildHeight(), minBuildHeight + level.dimensionType().logicalHeight()) - 1;
                 int minY = Math.max(MekanismGeneratorsConfig.generators.windGenerationMinY.get(), minBuildHeight);
                 int maxY = Math.min(MekanismGeneratorsConfig.generators.windGenerationMaxY.get(), maxLevelHeight);
-                int clampedY = Math.min(maxY, Math.max(minY, top.getY()));
+                int clampedY = Math.clamp(minY, top.getY(), maxY);
                 long minG = MoreMachineConfig.generators.largeWindGenerationMin.get();
                 long maxG = MoreMachineConfig.generators.largeWindGenerationMax.get();
                 double slope = ((double) (maxG - minG)) / (maxY - minY);

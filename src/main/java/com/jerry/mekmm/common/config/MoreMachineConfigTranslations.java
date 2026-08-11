@@ -96,11 +96,10 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     SERVER_GENERATOR_LARGE_WIND_GEN_MAX("server.generator.wind.gen.max", "Max Energy Generation", "Maximum energy generation in Joules/t that the Large Wind Generator can produce."),
 
     SERVER_GENERATOR_SOLAR_HEAT("server.generator.solar_heat", "Solar Heat Generator", "Settings for configuring Solar Heat Generators", true),
-    SERVER_GENERATOR_SOLAR_HEAT_GENERATION("server.generator.solar_heat.gen", "Max Energy Generation", "Peak energy generation in Joules/t that the Solar Heat Generator can produce."),
-    SERVER_GENERATOR_SOLAR_HEAT_MAX_TEMPERATURE("server.generator.solar_heat.max_temperature", "Max Temperature", "Maximum temperature in Kelvin that reflectors can heat the Solar Heat Generator to."),
     SERVER_GENERATOR_SOLAR_HEAT_TARGET_CONVERSION_TEMPERATURE("server.generator.solar_heat.target_conversion_temperature", "Target Conversion Temperature", "Temperature in Kelvin where coolant heat transfer starts."),
-    SERVER_GENERATOR_SOLAR_HEAT_OPTIMAL_GENERATION_TEMPERATURE("server.generator.solar_heat.optimal_generation_temperature", "Optimal Generation Temperature", "Temperature in Kelvin where generation reaches its peak temperature factor."),
-    SERVER_GENERATOR_SOLAR_HEAT_CRITICAL_GENERATION_TEMPERATURE("server.generator.solar_heat.critical_generation_temperature", "Critical Reflector Temperature", "Temperature in Kelvin where reflector damage starts accelerating heavily."),
+    SERVER_GENERATOR_SOLAR_HEAT_RATED_GENERATION_TEMPERATURE("server.generator.solar_heat.rated_temperature", "Rated Generation Temperature", "Temperature in Kelvin where the generation thermal factor reaches one."),
+    SERVER_GENERATOR_SOLAR_HEAT_REFLECTOR_DAMAGE_THRESHOLD("server.generator.solar_heat.reflector_damage_threshold", "Reflector Damage Threshold", "Temperature in Kelvin where reflector durability starts being consumed."),
+    SERVER_GENERATOR_SOLAR_HEAT_REFLECTOR_DAMAGE_RATE("server.generator.solar_heat.reflector_damage_rate", "Reflector Damage Rate", "Reflector durability consumed each tick per Kelvin above the reflector damage threshold."),
     SERVER_GENERATOR_SOLAR_HEAT_HEAT_GAIN_PER_REFLECTOR("server.generator.solar_heat.heat_gain_per_reflector", "Heat Gain Per Reflector", "Heat gained per tick from each reflector at full sun.");
 
     private final String key;

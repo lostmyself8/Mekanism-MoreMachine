@@ -23,11 +23,10 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
 
     public final CachedLongValue largeWindGenerationMin;
     public final CachedLongValue largeWindGenerationMax;
-    public final CachedLongValue solarHeatGeneration;
-    public final CachedDoubleValue solarHeatMaxTemperature;
     public final CachedDoubleValue solarHeatTargetConversionTemperature;
-    public final CachedDoubleValue solarHeatOptimalGenerationTemperature;
-    public final CachedDoubleValue solarHeatCriticalGenerationTemperature;
+    public final CachedDoubleValue solarHeatRatedGenerationTemperature;
+    public final CachedDoubleValue solarHeatReflectorDamageThreshold;
+    public final CachedDoubleValue solarHeatReflectorDamageRate;
     public final CachedDoubleValue solarHeatHeatGainPerReflector;
 
     MoreMachineGeneratorsConfig() {
@@ -58,15 +57,14 @@ public class MoreMachineGeneratorsConfig extends BaseMekanismConfig {
         builder.pop();
 
         MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT.applyToBuilder(builder).push("solar_heat_generator");
-        solarHeatGeneration = CachedLongValue.definePositive(this, builder, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_GENERATION, "generation", 2_500_000L);
-        solarHeatMaxTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_MAX_TEMPERATURE.applyToBuilder(builder)
-                .defineInRange("maxTemperature", 4_000_000D, 1D, 10_000_000D));
         solarHeatTargetConversionTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_TARGET_CONVERSION_TEMPERATURE.applyToBuilder(builder)
-                .defineInRange("targetConversionTemperature", 1_400D, 1D, 10_000_000D));
-        solarHeatOptimalGenerationTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_OPTIMAL_GENERATION_TEMPERATURE.applyToBuilder(builder)
-                .defineInRange("optimalGenerationTemperature", 3_500_000D, 1D, 10_000_000D));
-        solarHeatCriticalGenerationTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_CRITICAL_GENERATION_TEMPERATURE.applyToBuilder(builder)
-                .defineInRange("criticalGenerationTemperature", 3_000_000D, 1D, 10_000_000D));
+                .defineInRange("targetConversionTemperature", 1_400D, 1D, Double.MAX_VALUE));
+        solarHeatRatedGenerationTemperature = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_RATED_GENERATION_TEMPERATURE.applyToBuilder(builder)
+                .defineInRange("ratedGenerationTemperature", 242_820D, 1D, Double.MAX_VALUE));
+        solarHeatReflectorDamageThreshold = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_REFLECTOR_DAMAGE_THRESHOLD.applyToBuilder(builder)
+                .defineInRange("reflectorDamageThreshold", 50_000D, 1D, Double.MAX_VALUE));
+        solarHeatReflectorDamageRate = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_REFLECTOR_DAMAGE_RATE.applyToBuilder(builder)
+                .defineInRange("reflectorDamageRate", 0.0000005D, 0D, Double.MAX_VALUE));
         solarHeatHeatGainPerReflector = CachedDoubleValue.wrap(this, MoreMachineConfigTranslations.SERVER_GENERATOR_SOLAR_HEAT_HEAT_GAIN_PER_REFLECTOR.applyToBuilder(builder)
                 .defineInRange("heatGainPerReflector", 15D, 0D, Double.MAX_VALUE));
         builder.pop();

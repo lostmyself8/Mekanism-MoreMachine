@@ -22,6 +22,7 @@ public class MoreMachineSerializationConstants {
     public static final String INPUT_AMOUNT = "input_amount";
     public static final String UU_AMOUNT = "uu_amount";
     public static final String OUTPUT_AMOUNT = "output_amount";
-    public static final String EFFICIENCY = "efficiency";
-    public static final String USAGE = "usage";
+    public static final String CONSUMPTION = "consumption";
+    public static final String GENERATION_MODIFIER = "generation_modifier";
+    public static final String REFLECTOR_DAMAGE_PROGRESS = "reflector_damage_progress";
 }
