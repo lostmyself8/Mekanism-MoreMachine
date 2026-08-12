@@ -10,7 +10,9 @@ import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 import com.jerry.mekmm.common.tile.interfaces.ITileConnectHolder;
 import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
 
+import lombok.Getter;
 import mekanism.api.Action;
+import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.BasicChemicalTank;
@@ -63,9 +65,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -86,10 +88,15 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
 
     public final WirelessConnectionManager connectionManager = new WirelessConnectionManager(this);
 
+    @Getter
     private long energyRate;
+    @Getter
     private int fluidsRate;
+    @Getter
     private long chemicalsRate;
+    @Getter
     private int itemsRate;
+    @Getter
     private double heatRate;
 
     public static final long MAX_CHEMICAL = 10_000;
@@ -99,7 +106,9 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     public static final double INVERSE_INSULATION_COEFFICIENT = 100;
     public static final double MAX_MULTIPLIER_TEMP = 10_000;
 
+    @Getter
     private double lastTransferLoss;
+    @Getter
     private double lastEnvironmentLoss;
 
     @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class, methodNames = { "getFluid", "getFluidCapacity", "getFluidNeeded", "getFluidFilledPercentage" }, docPlaceholder = "fluid tank")
@@ -239,24 +248,63 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
 
     private void transportItems() {
         if (itemsRate <= 0) return;
-        // TODO:在某种情况下可以平分，希望可以做到不需要给定面即可输出
-        // 获取自身的弹出能力
-        IItemHandler selfHandler = Capabilities.ITEM.createCache((ServerLevel) level, getBlockPos(), Direction.DOWN).getCapability();
-        if (selfHandler == null) return;
-
         for (BlockCapabilityCache<IItemHandler, Direction> cache : connectionManager.getItemCaches()) {
             IItemHandler target = cache.getCapability();
             if (target != null) {
-                TransitRequest request = TransitRequest.definedItem(selfHandler, 1, itemsRate, Finder.ANY);
+                TransitRequest request = TransitRequest.definedItem(wirelessItemHandler(), 1, itemsRate, Finder.ANY);
                 if (!request.isEmpty()) {
                     TransitResponse response = request.eject(this, getBlockPos(), target, 0, LogisticalTransporterBase::getColor);
                     if (!response.isEmpty()) {
-                        int amount = response.getSendingAmount();
-                        MekanismUtils.logMismatchedStackSize(inventorySlot.shrinkStack(amount, Action.EXECUTE), amount);
+                        response.useAll();
                     }
                 }
             }
         }
+    }
+
+    private IItemHandler wirelessItemHandler() {
+        return new IItemHandler() {
+            @Override
+            public int getSlots() {
+                return 1;
+            }
+
+            @Override
+            public @NotNull ItemStack getStackInSlot(int slot) {
+                validateSlot(slot);
+                return inventorySlot.getStack().copy();
+            }
+
+            @Override
+            public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+                validateSlot(slot);
+                return inventorySlot.insertItem(stack, simulate ? Action.SIMULATE : Action.EXECUTE, AutomationType.INTERNAL);
+            }
+
+            @Override
+            public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+                validateSlot(slot);
+                return inventorySlot.extractItem(amount, simulate ? Action.SIMULATE : Action.EXECUTE, AutomationType.INTERNAL);
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                validateSlot(slot);
+                return inventorySlot.getLimit(ItemStack.EMPTY);
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+                validateSlot(slot);
+                return inventorySlot.isItemValid(stack);
+            }
+
+            private void validateSlot(int slot) {
+                if (slot != 0) {
+                    throw new IndexOutOfBoundsException("Wireless item handler only contains slot 0, requested " + slot);
+                }
+            }
+        };
     }
 
     /**
@@ -362,26 +410,6 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
         return energyContainer;
     }
 
-    public long getEnergyRate() {
-        return energyRate;
-    }
-
-    public int getFluidsRate() {
-        return fluidsRate;
-    }
-
-    public long getChemicalsRate() {
-        return chemicalsRate;
-    }
-
-    public int getItemsRate() {
-        return itemsRate;
-    }
-
-    public double getHeatRate() {
-        return heatRate;
-    }
-
     public void setEnergyRateFromPacket(long newRate) {
         setEnergyRate(Mth.clamp(newRate, 0, MoreMachineConfig.general.energyRate.get()));
     }
@@ -434,14 +462,6 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
 
     public double getTemperature() {
         return heatCapacitor.getTemperature();
-    }
-
-    public double getLastTransferLoss() {
-        return lastTransferLoss;
-    }
-
-    public double getLastEnvironmentLoss() {
-        return lastEnvironmentLoss;
     }
 
     @Override
