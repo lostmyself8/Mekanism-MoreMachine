@@ -10,7 +10,6 @@ import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 import com.jerry.mekmm.common.tile.interfaces.ITileConnectHolder;
 import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
 
-import lombok.Getter;
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
@@ -72,6 +71,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,8 +99,8 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     @Getter
     private double heatRate;
 
-    public static final long MAX_CHEMICAL = 10_000;
-    public static final int MAX_FLUID = 10_000;
+    public static final long MAX_CHEMICAL = MoreMachineConfig.startup.wtsChemicalTankCapacity.get();
+    public static final int MAX_FLUID = MoreMachineConfig.startup.wtsFluidTankCapacity.get();
     public static final double HEAT_CAPACITY = 10;
     public static final double INVERSE_CONDUCTION_COEFFICIENT = 2;
     public static final double INVERSE_INSULATION_COEFFICIENT = 100;
@@ -264,6 +264,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
 
     private IItemHandler wirelessItemHandler() {
         return new IItemHandler() {
+
             @Override
             public int getSlots() {
                 return 1;
