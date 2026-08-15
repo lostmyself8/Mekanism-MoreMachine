@@ -19,6 +19,7 @@ public class MoreMachineConfig {
 
     private static final Map<IConfigSpec, IMekanismConfig> KNOWN_CONFIGS = new HashMap<>();
     public static final MoreMachineGeneralConfig general = new MoreMachineGeneralConfig();
+    public static final MoreMachineStartupConfig startup = new MoreMachineStartupConfig();
     public static final MoreMachineStorageConfig storage = new MoreMachineStorageConfig();
     public static final MoreMachineUsageConfig usage = new MoreMachineUsageConfig();
     public static final MoreMachineTierConfig tier = new MoreMachineTierConfig();
@@ -26,6 +27,7 @@ public class MoreMachineConfig {
 
     public static void registerConfigs(ModContainer modContainer) {
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, general);
+        MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, startup);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, storage);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, tier);
         MoreMachineHelper.registerConfig(KNOWN_CONFIGS, modContainer, usage);

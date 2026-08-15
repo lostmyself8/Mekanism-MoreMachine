@@ -76,6 +76,14 @@ public enum MoreMachineConfigTranslations implements IConfigTranslation {
     GAS_COLLECT_AMOUNT("general.collect.amount", "Gas Collect Amount", "mB of Unstable Dimensional Gas collected by the Ambient Gas Collector."),
     WIRELESS_CHARGING_STATION_CHARGING_RATE("general.charging.rate", "Charge Rate", "Amount of Energy(joules) an item can receive per tick from a Wireless Charging Station."),
 
+    // Startup Config
+    STARTUP_WTS_TANK_CAPACITY("startup.wireless_transmission_station.tank_capacity", "Tank Capacity",
+            "Settings for configuring the Wireless Transmission Station tank capacities", true),
+    STARTUP_WTS_CHEMICAL_TANK_CAPACITY("startup.wireless_transmission_station.chemical_tank_capacity", "Wireless Transmission Station Chemical Tank Capacity",
+            "The capacity in mB of the chemical tank in the Wireless Transmission Station.", "Edit Wireless Transmission Station Chemical Tank Capacity"),
+    STARTUP_WTS_FLUID_TANK_CAPACITY("startup.wireless_transmission_station.fluid_tank_capacity", "Wireless Transmission Station Fluid Tank Capacity",
+            "The capacity in mB of the fluid tank in the Wireless Transmission Station.", "Edit Wireless Transmission Station Fluid Tank Capacity"),
+
     // Generator Config
     SERVER_GENERATOR_LARGE_HEAT("server.generator.heat", "Large Heat Generator", "Settings for configuring Large Heat Generators", true),
     SERVER_GENERATOR_LARGE_HEAT_GENERATION("server.generator.heat.gen", "Energy Generation",
