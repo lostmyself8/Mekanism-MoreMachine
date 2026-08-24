@@ -34,8 +34,8 @@ jech = "4.5.22"
 
 [libraries]
 jei-common-api      = { module = "mezz.jei:jei-1.21.1-common-api", version.ref = "jei" }
-jei-neoforge-api       = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
-jei-neoforge-impl      = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
+jei-neoforge-api    = { module = "mezz.jei:jei-1.21.1-neoforge-api", version.ref = "jei" }
+jei-neoforge-impl    = { module = "mezz.jei:jei-1.21.1-neoforge", version.ref = "jei" }
 emi                 = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
 jer                 = { module = "maven.modrinth:just-enough-resources-jer", version.ref = "jer" }
 
