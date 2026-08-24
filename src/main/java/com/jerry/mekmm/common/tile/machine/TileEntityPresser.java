@@ -95,6 +95,7 @@ public class TileEntityPresser extends TileEntityProgressMachine<TripleItemToIte
             itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, tertiaryItemInputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
         }
+        configComponent.setupInputConfig(TransmissionType.ENERGY, energyContainer);
 
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM);
