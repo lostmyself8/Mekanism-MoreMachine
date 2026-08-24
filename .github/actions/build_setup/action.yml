@@ -6,10 +6,6 @@ inputs:
     description: If cache should be updated
     required: false
     default: 'false'
-  disable-cache:
-    description: If Gradle cache should be disabled
-    required: false
-    default: 'false'
   ref:
     description: 'Ref to checkout'
     required: false
@@ -31,7 +27,6 @@ runs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
-        cache-disabled: ${{ inputs.disable-cache }}
         cache-write-only: ${{ inputs.update-cache }}
         cache-read-only: ${{ github.ref != 'refs/heads/26.1' && github.ref != 'refs/heads/1.21.1' && github.ref != 'refs/heads/1.20.1' }}
         add-job-summary: 'on-failure'
