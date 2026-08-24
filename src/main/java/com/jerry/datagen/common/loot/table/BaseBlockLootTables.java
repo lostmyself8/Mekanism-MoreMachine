@@ -93,13 +93,13 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
 
     protected Builder createOreDrop(Block block, ItemLike item) {
         return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.asItem())
-                .apply(ApplyBonusCount.addOreBonusCount(registries.holderOrThrow(Enchantments.FORTUNE)))));
+                .apply(ApplyBonusCount.addOreBonusCount(this.registries.holderOrThrow(Enchantments.FORTUNE)))));
     }
 
     protected Builder droppingWithFortuneOrRandomly(Block block, ItemLike item, UniformGenerator range) {
         return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(item.asItem())
                 .apply(SetItemCountFunction.setCount(range))
-                .apply(ApplyBonusCount.addOreBonusCount(registries.holderOrThrow(Enchantments.FORTUNE)))));
+                .apply(ApplyBonusCount.addOreBonusCount(this.registries.holderOrThrow(Enchantments.FORTUNE)))));
     }
 
     // Holder<Block> versions of BlockLootTable methods, modified to support varargs
