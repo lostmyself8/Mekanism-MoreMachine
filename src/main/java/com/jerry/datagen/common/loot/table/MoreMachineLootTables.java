@@ -6,6 +6,11 @@ import com.jerry.meklm.common.registries.LargeMachineBlocks;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+import com.jerry.mekmm.common.registries.MoreMachineItems;
+import com.jerry.mekmm.common.resource.MoreMachineResource;
+import com.jerry.mekmm.common.resource.ore.MoreMachineOreType;
+
+import mekanism.common.resource.ResourceType;
 
 import net.minecraft.core.HolderLookup;
 
@@ -19,6 +24,7 @@ public class MoreMachineLootTables extends BaseBlockLootTables {
 
     @Override
     protected void generate() {
+        add(block -> createOreDrop(block, MoreMachineItems.PROCESSED_RESOURCES.get(ResourceType.RAW, MoreMachineResource.SILVER)), MoreMachineBlocks.ORES.get(MoreMachineOreType.SILVER));
         dropSelfWithContents(MoreMachineBlocks.MM_BLOCKS.getPrimaryEntries());
         dropSelfWithContents(AdvancedFactoryBlocks.AF_BLOCKS.getPrimaryEntries());
         dropSelfWithContents(LargeMachineBlocks.LM_BLOCKS.getPrimaryEntries());
