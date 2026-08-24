@@ -135,6 +135,7 @@ jobs:
         with:
           curseforge-id: 1275257
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          environment: 'client | server'
           files: |
             ./mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar
             ./!(mekmm-${{ env.MC_VERSION }}-${{ needs.build.outputs.ver }}.jar)
