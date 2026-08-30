@@ -241,6 +241,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     public boolean inputProducesOutput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IExtendedFluidTank outputTank, boolean updateCache) {
+        // 使用outputTank.isEmpty()偶现升级后槽位不可以的情况（具体表现在储罐内液体时升级时出现）
         return outputSlot.isEmpty() || getRecipeForInput(process, fallbackInput, outputSlot, outputTank, updateCache) != null;
     }
 

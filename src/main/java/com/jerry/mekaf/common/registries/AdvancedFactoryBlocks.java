@@ -147,7 +147,7 @@ public class AdvancedFactoryBlocks {
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 .addEnergy()
                                 .build());
-                // 偶现升级后槽位不可以的情况
+                // 没问题
                 case LIQUIFYING -> holder
                         .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
                                 .addBasic(TileEntityLiquifyingFactory.MAX_FLUID * processes)
