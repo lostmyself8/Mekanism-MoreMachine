@@ -16,7 +16,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 import dev.emi.emi.api.widget.WidgetHolder;
 
-// 虽然可以直接使用融合机的EmiRecipe，但复制一份应该更好
 public class StamperEmiRecipe extends MekanismEmiHolderRecipe<StamperRecipe> {
 
     public StamperEmiRecipe(MekanismEmiRecipeCategory category, RecipeHolder<StamperRecipe> recipeHolder) {
