@@ -6,13 +6,15 @@ import com.jerry.mekaf.common.inventory.slot.AdvancedFactoryInputInventorySlot;
 import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 import com.jerry.mekaf.common.upgrade.NutritionLiquifyingUpgradeData;
 
+import com.jerry.mekmm.Mekmm;
+
 import mekanism.api.Action;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.fluid.IExtendedFluidTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
-import mekanism.api.recipes.ItemStackToFluidOptionalItemRecipe;
+import mekanism.api.recipes.ItemStackToFluidOptionalItemRecipe.FluidOptionalItemOutput;
 import mekanism.api.recipes.basic.BasicItemStackToFluidOptionalItemRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
@@ -33,8 +35,11 @@ import mekanism.common.capabilities.holder.fluid.IFluidTankHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
+import mekanism.common.inventory.container.slot.SlotOverlay;
+import mekanism.common.inventory.slot.FluidInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.inventory.warning.WarningTracker.WarningType;
 import mekanism.common.lib.transmitter.TransmissionType;
@@ -44,9 +49,11 @@ import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookup
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.recipe.lookup.monitor.FactoryRecipeCacheLookupMonitor;
 import mekanism.common.registries.MekanismFluids;
+import mekanism.common.tier.FactoryTier;
 import mekanism.common.tile.component.ITileComponent;
 import mekanism.common.tile.component.TileComponentEjector;
 import mekanism.common.upgrade.IUpgradeData;
+import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
 
 import net.minecraft.core.BlockPos;
@@ -58,6 +65,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.ItemStackMap;
 
+import fr.iglee42.evolvedmekanism.tiers.EMFactoryTier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,7 +99,12 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                             docPlaceholder = "output tank")
     public IExtendedFluidTank fluidTank;
 
-    protected IOutputHandler<ItemStackToFluidOptionalItemRecipe.@NotNull FluidOptionalItemOutput>[] liquifiesOutputHandler;
+    protected IOutputHandler<@NotNull FluidOptionalItemOutput>[] liquifiesOutputHandler;
+
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidDrainItem", docPlaceholder = "drainable fluid slot")
+    FluidInventorySlot fluidDrainSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getFluidOutputItem", docPlaceholder = "drained fluid output slot")
+    OutputInventorySlot fluidOutputSlot;
 
     protected final List<IInventorySlot> inputItemSlots;
     protected final List<IInventorySlot> outputItemSlots;
@@ -106,7 +119,12 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
             outputItemSlots.add(info.outputSlot());
         }
 
-        configComponent.setupItemIOConfig(inputItemSlots, outputItemSlots, energySlot, false);
+        List<IInventorySlot> inputSlots = inputItemSlots;
+        // 将流体槽位放置在最前面，在使用安装器升级时槽位里的物品就不会错位
+        inputSlots.addFirst(fluidDrainSlot);
+        List<IInventorySlot> outputSlots = outputItemSlots;
+        outputSlots.addFirst(fluidOutputSlot);
+        configComponent.setupItemIOConfig(inputSlots, outputSlots, energySlot, false);
         configComponent.setupOutputConfig(TransmissionType.FLUID, fluidTank, RelativeSide.RIGHT);
 
         ejectorComponent = new TileComponentEjector(this);
@@ -129,6 +147,8 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         itemInputHandlers = new IInputHandler[tier.processes];
         liquifiesOutputHandler = new IOutputHandler[tier.processes];
         processInfoSlots = new NLProcessInfo[tier.processes];
+        builder.addSlot(fluidDrainSlot = FluidInventorySlot.drain(fluidTank, listener, slotX(), 71));
+        builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, slotX(), 102));
         for (int i = 0; i < tier.processes; i++) {
             FactoryRecipeCacheLookupMonitor<BasicItemStackToFluidOptionalItemRecipe> lookupMonitor = recipeCacheLookupMonitors[i];
             IContentsListener updateSortingAndUnpause = () -> {
@@ -146,6 +166,14 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
             liquifiesOutputHandler[i] = OutputHelper.getOutputHandler(fluidTank, RecipeError.NOT_ENOUGH_OUTPUT_SPACE, outputSlot, NOT_ENOUGH_SPACE_ITEM_OUTPUT_ERROR);
             processInfoSlots[i] = new NLProcessInfo(i, inputSlot, outputSlot);
         }
+        fluidDrainSlot.setSlotOverlay(SlotOverlay.PLUS);
+    }
+
+    private int slotX() {
+        if (Mekmm.hooks.evolvedMekanism.isLoaded() && tier.ordinal() >= EMFactoryTier.OVERCLOCKED.ordinal()) {
+            return 214 + 38 * (tier.ordinal() - 3);
+        }
+        return tier == FactoryTier.ULTIMATE ? 214 : 180;
     }
 
     public static boolean isValidInputStatic(ItemStack stack) {
@@ -156,6 +184,16 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     public boolean isValidInputItem(ItemStack stack) {
         FoodProperties food = stack.getFoodProperties(null);
         return food != null && food.nutrition() > 0;
+    }
+
+    @Override
+    public boolean hasSideSlots() {
+        return true;
+    }
+
+    @Override
+    protected void handleSecondaryFuel() {
+        fluidDrainSlot.drainTank(fluidOutputSlot);
     }
 
     @Override
@@ -203,7 +241,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     public boolean inputProducesOutput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IExtendedFluidTank outputTank, boolean updateCache) {
-        return outputTank.isEmpty() || getRecipeForInput(process, fallbackInput, outputSlot, outputTank, updateCache) != null;
+        return outputSlot.isEmpty() || getRecipeForInput(process, fallbackInput, outputSlot, outputTank, updateCache) != null;
     }
 
     @Contract("null, _ -> false")
@@ -237,8 +275,17 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     }
 
     @Nullable
-    protected BasicItemStackToFluidOptionalItemRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, IInventorySlot outputSlot, @NotNull IExtendedFluidTank inputTank) {
-        return null;
+    protected BasicItemStackToFluidOptionalItemRecipe findRecipe(int process, @NotNull ItemStack fallbackInput, IInventorySlot outputSlot, @NotNull IExtendedFluidTank outputTank) {
+        // 虽然原始机器这里返回null，但工厂这里需要做特殊处理
+        BasicItemStackToFluidOptionalItemRecipe recipe = getRecipe(fallbackInput);
+        if (recipe == null) {
+            return null;
+        }
+        FluidOptionalItemOutput output = recipe.getOutput(fallbackInput);
+        if (!outputTank.isEmpty() && !outputTank.isFluidEqual(output.fluid())) {
+            return null;
+        }
+        return InventoryUtils.areItemsStackable(output.optionalItem(), outputSlot.getStack()) ? recipe : null;
     }
 
     protected int getNeededInput(BasicItemStackToFluidOptionalItemRecipe recipe, ItemStack inputStack) {
@@ -269,6 +316,8 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
                 component.read(data.components, provider);
             }
             fluidTank.deserializeNBT(provider, data.fluidTank.serializeNBT(provider));
+            fluidDrainSlot.deserializeNBT(provider, data.fluidInputSlot.serializeNBT(provider));
+            fluidOutputSlot.deserializeNBT(provider, data.fluidOutputSlot.serializeNBT(provider));
         } else {
             super.parseUpgradeData(provider, upgradeData);
         }
@@ -277,7 +326,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     @Override
     public @Nullable NutritionLiquifyingUpgradeData getUpgradeData(HolderLookup.Provider provider) {
         return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress,
-                energySlot, inputItemSlots, outputItemSlots, fluidTank, isSorting(), getComponents());
+                energySlot, fluidDrainSlot, fluidOutputSlot, inputItemSlots, outputItemSlots, fluidTank, isSorting(), getComponents());
     }
 
     // Methods relating to IComputerTile
@@ -290,7 +339,7 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
     @ComputerMethod
     ItemStack getOutput(int process) throws ComputerException {
         validateValidProcess(process);
-        return processInfoSlots[process].inputSlot().getStack();
+        return processInfoSlots[process].outputSlot().getStack();
     }
     // End methods IComputerTile
 

@@ -23,8 +23,8 @@ public class TileEntityFluidReplicator$ComputerHandler extends ComputerMethodFac
         register(MethodData.builder("getUUCapacity", TileEntityFluidReplicator$ComputerHandler::uuTank$getChemicalCapacity).returnType(long.class).methodDescription("Get the capacity of the uu tank."));
         register(MethodData.builder("getUUNeeded", TileEntityFluidReplicator$ComputerHandler::uuTank$getChemicalNeeded).returnType(long.class).methodDescription("Get the amount needed to fill the uu tank."));
         register(MethodData.builder("getUUFilledPercentage", TileEntityFluidReplicator$ComputerHandler::uuTank$getChemicalFilledPercentage).returnType(double.class).methodDescription("Get the filled percentage of the uu tank."));
-        register(MethodData.builder("getInputTankOutputSlot", TileEntityFluidReplicator$ComputerHandler::inputTankOutputSlot$getInputTankOutputSlot).returnType(ItemStack.class).methodDescription("Get the contents of the input tank output slot."));
-        register(MethodData.builder("getOutputTankOutputSlot", TileEntityFluidReplicator$ComputerHandler::outputTankOutputSlot$getOutputTankOutputSlot).returnType(ItemStack.class).methodDescription("Get the contents of the output tank output slot."));
+        register(MethodData.builder("getInputTankDrainSlot", TileEntityFluidReplicator$ComputerHandler::inputTankOutputSlot$getInputTankDrainSlot).returnType(ItemStack.class).methodDescription("Get the contents of the input tank drain slot."));
+        register(MethodData.builder("getOutputTankDrainSlot", TileEntityFluidReplicator$ComputerHandler::outputTankOutputSlot$getOutputTankDrainSlot).returnType(ItemStack.class).methodDescription("Get the contents of the output tank drain slot."));
         register(MethodData.builder("getInputSlot", TileEntityFluidReplicator$ComputerHandler::inputSlot$getInputSlot).returnType(ItemStack.class).methodDescription("Get the contents of the input slot."));
         register(MethodData.builder("getOutputSlot", TileEntityFluidReplicator$ComputerHandler::outputSlot$getOutputSlot).returnType(ItemStack.class).methodDescription("Get the contents of the output slot."));
         register(MethodData.builder("getUUSlot", TileEntityFluidReplicator$ComputerHandler::uuSlot$getUUSlot).returnType(ItemStack.class).methodDescription("Get the contents of the uu slot."));
@@ -80,12 +80,12 @@ public class TileEntityFluidReplicator$ComputerHandler extends ComputerMethodFac
         return helper.convert(SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.getFilledPercentage(subject.uuTank));
     }
 
-    public static Object inputTankOutputSlot$getInputTankOutputSlot(TileEntityFluidReplicator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.inputTankOutputSlot));
+    public static Object inputTankOutputSlot$getInputTankDrainSlot(TileEntityFluidReplicator subject, BaseComputerHelper helper) throws ComputerException {
+        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.inputTankDrainSlot));
     }
 
-    public static Object outputTankOutputSlot$getOutputTankOutputSlot(TileEntityFluidReplicator subject, BaseComputerHelper helper) throws ComputerException {
-        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.outputTankOutputSlot));
+    public static Object outputTankOutputSlot$getOutputTankDrainSlot(TileEntityFluidReplicator subject, BaseComputerHelper helper) throws ComputerException {
+        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.outputTankDrainSlot));
     }
 
     public static Object inputSlot$getInputSlot(TileEntityFluidReplicator subject, BaseComputerHelper helper) throws ComputerException {

@@ -119,7 +119,7 @@ public class MoreMachineBlocks {
                     .addBasic(TileEntityPlantingStation.MAX_GAS, MoreMachineRecipeType.PLANTING_STATION, ItemChemical::containsInputB)
                     .build()).addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                             .addInput(MoreMachineRecipeType.PLANTING_STATION, ItemChemical::containsInputA)
-                            .addChemicalFillOrConvertSlot(1)
+                            .addChemicalFillOrConvertSlot(0)
                             .addOutput()
                             .addOutput()// Secondary output
                             .addEnergy()
@@ -193,14 +193,14 @@ public class MoreMachineBlocks {
                             .addBasic(TileEntityFluidReplicator.MAX_FLUID)
                             .build())
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
-                            .addBasic(() -> TileEntityReplicator.MAX_GAS, TileEntityFluidReplicator::isValidChemicalInput)
+                            .addBasic(() -> TileEntityFluidReplicator.MAX_GAS, TileEntityFluidReplicator::isValidChemicalInput)
                             .build())
                     .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                             .addFluidFillSlot(0)// 右侧上槽
                             .addOutput()// 右侧下槽
-                            .addFluidDrainSlot(2)// 左侧液体槽
-                            .addOutput()// 右侧液体槽
-                            .addChemicalFillOrConvertSlot(4)// uu物质槽
+                            .addFluidDrainSlot(0)// 左侧液体槽
+                            .addFluidDrainSlot(1)// 右侧液体槽
+                            .addChemicalFillOrConvertSlot(0)// uu物质槽
                             .addEnergy()
                             .build()));
 
@@ -217,7 +217,7 @@ public class MoreMachineBlocks {
                     .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                             .addChemicalFillOrConvertSlot(0)
                             .addChemicalFillOrConvertSlot(1)
-                            .addOutput()
+                            .addChemicalDrainSlot(2)
                             .addEnergy()
                             .build()));
 
@@ -254,7 +254,7 @@ public class MoreMachineBlocks {
                                 .build())
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
                                 .addBasicFactorySlots(processes, recipeInputPredicate, true)
-                                .addChemicalFillOrConvertSlot(1)
+                                .addChemicalFillOrConvertSlot(0)
                                 .addEnergy()
                                 .build());
                 case PRESSING -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()

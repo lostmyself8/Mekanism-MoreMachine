@@ -153,6 +153,8 @@ public class AdvancedFactoryBlocks {
                                 .addBasic(TileEntityLiquifyingFactory.MAX_FLUID * processes)
                                 .build())
                         .addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
+                                .addFluidDrainSlot(0)
+                                .addOutput()
                                 .addBasicFactorySlots(processes, recipeItemInputPredicate)
                                 .addEnergy()
                                 .build());
