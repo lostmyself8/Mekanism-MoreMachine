@@ -7,6 +7,7 @@ import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.recipe.lookup.TripleItemRecipeLookupHandler;
 import com.jerry.mekmm.common.recipe.lookup.cache.MoreMachineInputRecipeCache.TripleItem;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
+import com.jerry.mekmm.common.upgrade.TripleItemToItemUpgradeData;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IContentsListener;
@@ -41,6 +42,7 @@ import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.Block;
@@ -165,6 +167,12 @@ public class TileEntityPresser extends TileEntityProgressMachine<TripleItemToIte
                 .setOnFinish(this::markForSave)
                 .setOperatingTicksChanged(this::setOperatingTicks)
                 .setBaselineMaxOperations(this::getOperationsPerTick);
+    }
+
+    @Override
+    public @NotNull TripleItemToItemUpgradeData getUpgradeData(@NotNull Provider provider) {
+        return new TripleItemToItemUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
+                energySlot, primaryItemInputSlot, secondaryItemInputSlot, tertiaryItemInputSlot, outputSlot, getComponents());
     }
 
     @Override

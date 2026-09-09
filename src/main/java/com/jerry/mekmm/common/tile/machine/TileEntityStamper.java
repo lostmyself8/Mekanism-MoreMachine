@@ -39,7 +39,7 @@ import mekanism.common.tile.prefab.TileEntityProgressMachine;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.Block;
@@ -152,7 +152,7 @@ public class TileEntityStamper extends TileEntityProgressMachine<StamperRecipe> 
 
     @NotNull
     @Override
-    public StamperUpgradeData getUpgradeData(HolderLookup.Provider provider) {
+    public StamperUpgradeData getUpgradeData(Provider provider) {
         return new StamperUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(), energySlot, moldInputSlot, itemInputSlot, outputSlot, getComponents());
     }
 
