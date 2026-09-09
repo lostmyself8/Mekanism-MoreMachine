@@ -21,7 +21,7 @@
       "from": [4, 4, 16.01],
       "to": [12, 12, 16.01],
       "faces": {
-        "south": {"uv": [8, 8, 16, 16], "texture": "#0", "neoforge_data": {"block_light": 15, "sky_light": 15}}
+        "south": {"uv": [8, 8, 16, 16], "texture": "#0", "cullface": "south", "neoforge_data": {"block_light": 15, "sky_light": 15}}
       }
     },
     {
@@ -247,7 +247,7 @@
       "to": [1, 5, 6],
       "faces": {
         "south": {"uv": [11, 11, 10, 13], "texture": "#side"},
-        "west": {"uv": [14, 11, 10, 13], "texture": "#side", "cullface": "east"}
+        "west": {"uv": [14, 11, 10, 13], "texture": "#side", "cullface": "west"}
       }
     },
     {
@@ -266,7 +266,7 @@
       "to": [16, 5, 2],
       "faces": {
         "north": {"uv": [16, 11, 12, 13], "texture": "#front", "cullface": "north"},
-        "east": {"uv": [14, 11, 16, 13], "texture": "#side", "cullface": "west"},
+        "east": {"uv": [14, 11, 16, 13], "texture": "#side", "cullface": "east"},
         "west": {"uv": [16, 11, 14, 13], "texture": "#2"}
       }
     },
@@ -299,23 +299,27 @@
     {
       "name": "port_leds",
       "origin": [0, 0, 0],
+      "scope": 0,
       "color": 0,
       "children": [0]
     },
     {
       "name": "lights",
       "origin": [0, 0, 0],
+      "scope": 0,
       "color": 0,
       "children": [1, 2, 3, 4, 5, 6]
     },
     {
       "name": "ports",
       "origin": [0, 0, 0],
+      "scope": 0,
       "color": 0,
       "children": [
         {
           "name": "port_back",
           "origin": [5, 8, 13],
+          "scope": 0,
           "color": 0,
           "children": [7]
         }
