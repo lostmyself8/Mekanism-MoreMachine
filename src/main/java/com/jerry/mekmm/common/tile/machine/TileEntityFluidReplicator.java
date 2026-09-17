@@ -108,10 +108,10 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
     private final IOutputHandler<@NotNull FluidStack> fluidOutputHandler;
     private final ILongInputHandler<ChemicalStack> chemicalInputHandler;
 
-    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputTankOutputSlot", docPlaceholder = "input tank output slot")
-    FluidInventorySlot inputTankOutputSlot;
-    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutputTankOutputSlot", docPlaceholder = "output tank output slot")
-    FluidInventorySlot outputTankOutputSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputTankDrainSlot", docPlaceholder = "input tank drain slot")
+    FluidInventorySlot inputTankDrainSlot;
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getOutputTankDrainSlot", docPlaceholder = "output tank drain slot")
+    FluidInventorySlot outputTankDrainSlot;
     // 流体储罐输入输出物品槽(GUI外的两个槽)
     @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputSlot", docPlaceholder = "input slot")
     FluidInventorySlot fluidInputSlot;
@@ -124,10 +124,15 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
 
     public TileEntityFluidReplicator(BlockPos pos, BlockState state) {
         super(MoreMachineBlocks.FLUID_REPLICATOR, pos, state, TRACKED_ERROR_TYPES, BASE_TICKS_REQUIRED);
-        configComponent.setupItemIOConfig(List.of(fluidInputSlot, inputTankOutputSlot), List.of(outputTankOutputSlot, fluidOutputSlot), energySlot, false);
         ConfigInfo itemConfig = configComponent.getConfig(TransmissionType.ITEM);
         if (itemConfig != null) {
+            itemConfig.addSlotInfo(DataType.INPUT, new InventorySlotInfo(true, false, fluidInputSlot));
+            itemConfig.addSlotInfo(DataType.INPUT_1, new InventorySlotInfo(true, false, inputTankDrainSlot));
+            itemConfig.addSlotInfo(DataType.INPUT_2, new InventorySlotInfo(true, false, outputTankDrainSlot));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, List.of(outputTankDrainSlot, fluidOutputSlot)));
             itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, uuSlot));
+            itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, List.of(fluidInputSlot, inputTankDrainSlot, outputTankDrainSlot, fluidOutputSlot)));
+            itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
         }
         ConfigInfo fluidConfig = configComponent.getConfig(TransmissionType.FLUID);
         if (fluidConfig != null) {
@@ -177,8 +182,8 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         builder.addSlot(fluidInputSlot = FluidInventorySlot.fill(inputTank, listener, 180, 71));
         builder.addSlot(fluidOutputSlot = OutputInventorySlot.at(listener, 180, 102));
         // 输出
-        builder.addSlot(inputTankOutputSlot = FluidInventorySlot.drain(inputTank, listener, 29, 65));
-        builder.addSlot(outputTankOutputSlot = FluidInventorySlot.drain(outputTank, listener, 132, 65));
+        builder.addSlot(inputTankDrainSlot = FluidInventorySlot.drain(inputTank, listener, 29, 65));
+        builder.addSlot(outputTankDrainSlot = FluidInventorySlot.drain(outputTank, listener, 132, 65));
         // 化学品罐槽位置
         builder.addSlot(uuSlot = ChemicalInventorySlot.fillOrConvert(uuTank, this::getLevel, listener, 8, 65));
         // 能量槽位置
@@ -186,8 +191,8 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         // 化学品罐槽减号图标
         uuSlot.setSlotOverlay(SlotOverlay.MINUS);
         fluidInputSlot.setSlotOverlay(SlotOverlay.MINUS);
-        inputTankOutputSlot.setSlotOverlay(SlotOverlay.PLUS);
-        outputTankOutputSlot.setSlotOverlay(SlotOverlay.PLUS);
+        inputTankDrainSlot.setSlotOverlay(SlotOverlay.PLUS);
+        outputTankDrainSlot.setSlotOverlay(SlotOverlay.PLUS);
         return builder.build();
     }
 
@@ -205,8 +210,8 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         energySlot.fillContainerOrConvert();
         fluidInputSlot.fillTank(fluidOutputSlot);
         uuSlot.fillTankOrConvert();
-        inputTankOutputSlot.drainTank(fluidOutputSlot);
-        outputTankOutputSlot.drainTank(fluidOutputSlot);
+        inputTankDrainSlot.drainTank(fluidOutputSlot);
+        outputTankDrainSlot.drainTank(fluidOutputSlot);
         recipeCacheLookupMonitor.updateAndProcess();
         return sendUpdatePacket;
     }

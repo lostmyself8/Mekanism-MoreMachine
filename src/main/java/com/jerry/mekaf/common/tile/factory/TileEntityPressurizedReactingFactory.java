@@ -270,7 +270,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     public boolean inputProducesOutput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IChemicalTank outputTank, boolean updateCache) {
-        return outputTank.isEmpty() || getRecipeForInput(process, fallbackInput, outputSlot, outputTank, updateCache) != null;
+        return outputSlot.isEmpty() || getRecipeForInput(process, fallbackInput, outputSlot, outputTank, updateCache) != null;
     }
 
     @Contract("null, _ -> false")

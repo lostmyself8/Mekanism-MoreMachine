@@ -9,6 +9,7 @@ import mekanism.api.recipes.basic.BasicItemStackToFluidOptionalItemRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
+import mekanism.common.inventory.slot.FluidInventorySlot;
 import mekanism.common.inventory.slot.InputInventorySlot;
 import mekanism.common.inventory.slot.OutputInventorySlot;
 import mekanism.common.tile.machine.TileEntityNutritionalLiquifier;
@@ -37,6 +38,10 @@ public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProg
     @Shadow
     OutputInventorySlot outputSlot;
     @Shadow
+    FluidInventorySlot containerFillSlot;
+    @Shadow
+    OutputInventorySlot containerOutputSlot;
+    @Shadow
     EnergyInventorySlot energySlot;
 
     protected MixinTileEntityNutritionalLiquifier(Holder<Block> blockProvider, BlockPos pos, BlockState state, List<CachedRecipe.OperationTracker.RecipeError> errorTypes, int baseTicksRequired) {
@@ -55,6 +60,6 @@ public abstract class MixinTileEntityNutritionalLiquifier extends TileEntityProg
     @Override
     public @Nullable NutritionLiquifyingUpgradeData getUpgradeData(Provider provider) {
         return new NutritionLiquifyingUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), getOperatingTicks(),
-                energySlot, inputSlot, outputSlot, fluidTank, getComponents());
+                energySlot, containerFillSlot, containerOutputSlot, inputSlot, outputSlot, fluidTank, getComponents());
     }
 }

@@ -217,8 +217,8 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     /**
-     * 当你重写{@link #handleSecondaryFuel()}该方法才有用。
-     * 如果你覆写了{@link #handleSecondaryFuel()}但没有覆写该方法则可能会导致空指针异常。
+     * 当你重写{@link #hasExtraResourceBar()}该方法才有用。
+     * 如果你覆写了{@link #hasExtraResourceBar()}但没有覆写该方法则可能会导致空指针异常。
      * WashingFactory是个特殊情况，它只有流体储罐，所以不覆写这个方法不会造成空指针。
      *
      * @return chemicalTankBar
@@ -238,6 +238,10 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
 
     public long getRecipeEnergyRequired() {
         return 0;
+    }
+
+    public boolean hasSideSlots() {
+        return false;
     }
 
     @Override

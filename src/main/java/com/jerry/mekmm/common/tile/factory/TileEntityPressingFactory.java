@@ -7,6 +7,7 @@ import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.recipe.lookup.TripleItemRecipeLookupHandler;
 import com.jerry.mekmm.common.recipe.lookup.cache.MoreMachineInputRecipeCache.TripleItem;
 import com.jerry.mekmm.common.tile.machine.TileEntityPresser;
+import com.jerry.mekmm.common.upgrade.TripleItemToItemUpgradeData;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.inventory.IInventorySlot;
@@ -26,9 +27,11 @@ import mekanism.common.recipe.IMekanismRecipeTypeProvider;
 import mekanism.common.tile.component.config.ConfigInfo;
 import mekanism.common.tile.component.config.DataType;
 import mekanism.common.tile.component.config.slot.InventorySlotInfo;
+import mekanism.common.upgrade.IUpgradeData;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.Block;
@@ -155,5 +158,22 @@ public class TileEntityPressingFactory extends TileEntityMoreMachineItemToItemFa
                 .setOnFinish(this::markForSave)
                 .setOperatingTicksChanged(operatingTicks -> progress[cacheIndex] = operatingTicks)
                 .setBaselineMaxOperations(this::getOperationsPerTick);
+    }
+
+    @Override
+    public void parseUpgradeData(@NotNull Provider provider, @NotNull IUpgradeData upgradeData) {
+        if (upgradeData instanceof TripleItemToItemUpgradeData data) {
+            super.parseUpgradeData(provider, upgradeData);
+            secondarySlot.deserializeNBT(provider, data.secondarySlot.serializeNBT(provider));
+            tertiarySlot.deserializeNBT(provider, data.tertiarySlot.serializeNBT(provider));
+        } else {
+            super.parseUpgradeData(provider, upgradeData);
+        }
+    }
+
+    @Override
+    public @NotNull TripleItemToItemUpgradeData getUpgradeData(Provider provider) {
+        return new TripleItemToItemUpgradeData(provider, redstone, getControlType(), getEnergyContainer(), progress, energySlot,
+                secondarySlot, tertiarySlot, inputSlots, outputSlots, isSorting(), getComponents());
     }
 }

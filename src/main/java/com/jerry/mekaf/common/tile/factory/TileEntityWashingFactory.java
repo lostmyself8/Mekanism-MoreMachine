@@ -144,6 +144,11 @@ public class TileEntityWashingFactory extends TileEntityChemicalToChemicalFactor
     }
 
     @Override
+    public boolean hasSideSlots() {
+        return true;
+    }
+
+    @Override
     protected boolean isCachedRecipeValid(@Nullable CachedRecipe<FluidChemicalToChemicalRecipe> cached, @NotNull ChemicalStack stack) {
         if (cached != null) {
             FluidChemicalToChemicalRecipe cachedRecipe = cached.getRecipe();

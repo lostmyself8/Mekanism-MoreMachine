@@ -62,6 +62,7 @@ public class MoreMachineEMI implements EmiPlugin {
         addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.CHEMICAL_REPLICATOR, ChemicalReplicatorEmiRecipe::new, MMRecipeViewerUtils.getChemicalReplicatorRecipes());
 
         addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.STAMPING, StamperEmiRecipe::new);
+        addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.PRESSING, PresserEmiRecipe::new);
         addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.LATHE, ItemStackToItemStackEmiRecipe::new);
         addCategoryAndRecipes(registry, MoreMachineRecipeViewerRecipeType.ROLLING_MILL, ItemStackToItemStackEmiRecipe::new);
 

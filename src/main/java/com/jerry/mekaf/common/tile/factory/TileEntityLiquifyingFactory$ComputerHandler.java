@@ -14,12 +14,24 @@ public class TileEntityLiquifyingFactory$ComputerHandler extends ComputerMethodF
     private final Class[] TYPES_int = new Class[] { int.class };
 
     public TileEntityLiquifyingFactory$ComputerHandler() {
+        register(MethodData.builder("getFluidDrainItem", TileEntityLiquifyingFactory$ComputerHandler::fluidDrainSlot$getFluidDrainItem).returnType(ItemStack.class).methodDescription("Get the contents of the fluid drain slot."));
+        register(MethodData.builder("getFluidOutputItem", TileEntityLiquifyingFactory$ComputerHandler::fluidOutputSlot$getFluidOutputItem).returnType(ItemStack.class).methodDescription("Get the contents of the fluid output slot."));
         register(MethodData.builder("getFluidOutput", TileEntityLiquifyingFactory$ComputerHandler::fluidTank$getOutput).returnType(FluidStack.class).methodDescription("Get the contents of the output tank."));
         register(MethodData.builder("getFluidOutputCapacity", TileEntityLiquifyingFactory$ComputerHandler::fluidTank$getOutputCapacity).returnType(int.class).methodDescription("Get the capacity of the output tank."));
         register(MethodData.builder("getFluidOutputNeeded", TileEntityLiquifyingFactory$ComputerHandler::fluidTank$getOutputNeeded).returnType(int.class).methodDescription("Get the amount needed to fill the output tank."));
         register(MethodData.builder("getFluidOutputFilledPercentage", TileEntityLiquifyingFactory$ComputerHandler::fluidTank$getOutputFilledPercentage).returnType(double.class).methodDescription("Get the filled percentage of the output tank."));
         register(MethodData.builder("getInput", TileEntityLiquifyingFactory$ComputerHandler::getInput_1).returnType(ItemStack.class).arguments(NAMES_process, TYPES_int));
         register(MethodData.builder("getOutput", TileEntityLiquifyingFactory$ComputerHandler::getOutput_1).returnType(ItemStack.class).arguments(NAMES_process, TYPES_int));
+    }
+
+    public static Object fluidDrainSlot$getFluidDrainItem(TileEntityLiquifyingFactory subject,
+                                                          BaseComputerHelper helper) throws ComputerException {
+        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.fluidDrainSlot));
+    }
+
+    public static Object fluidOutputSlot$getFluidOutputItem(TileEntityLiquifyingFactory subject,
+                                                            BaseComputerHelper helper) throws ComputerException {
+        return helper.convert(SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.getStack(subject.fluidOutputSlot));
     }
 
     public static Object fluidTank$getOutput(TileEntityLiquifyingFactory subject,
