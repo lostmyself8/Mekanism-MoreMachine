@@ -37,3 +37,7 @@
 **Have you always felt that machines such as chemical oxidizer are relatively slow. Now they have factory versions, and advanced factories with multiple threads can greatly improve production efficiency.**
 
 **However, they are not yet compatible with Computer Craft, making it difficult to precisely control each slot or tank. But I don't have that much time to study CC's code. If you want to help adapt it, I would like to thank you in advance.**
+
+## Development
+
+For the supported large-machine hover outlines, see [Selection outline maintenance](docs/selection-outlines.md), including model conventions, extension steps, regression checks, and visual acceptance checks.

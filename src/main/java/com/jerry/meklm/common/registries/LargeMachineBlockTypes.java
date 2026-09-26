@@ -54,7 +54,6 @@ public class LargeMachineBlockTypes {
             .withEnergyConfig(MoreMachineConfig.usage.largeRotaryCondensentrator, MoreMachineConfig.storage.largeRotaryCondensentrator)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.FLUID, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ROTARY_CONDENSENTRATOR)
-            .with(AttributeCustomSelectionBox.JSON)
             .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeRotaryCondensentrator")
             .build();
@@ -67,7 +66,6 @@ public class LargeMachineBlockTypes {
             .withEnergyConfig(MoreMachineConfig.usage.largeChemicalInfuser, MoreMachineConfig.storage.largeChemicalInfuser)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_CHEMICAL_INFUSER)
-            .with(AttributeCustomSelectionBox.JSON)
             .with(MoreMachineBounding.FULL_JAVA_ENTITY_BUT_TOP_BACK_2X3)
             .withComputerSupport("largeChemicalInfuser")
             .build();
@@ -80,7 +78,6 @@ public class LargeMachineBlockTypes {
             .withEnergyConfig(() -> MathUtils.multiplyClamped(2, ChemicalUtil.hydrogenEnergyDensity()), MoreMachineConfig.storage.largeElectrolyticSeparator)
             .withSideConfig(TransmissionType.FLUID, TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ELECTROLYTIC_SEPARATOR)
-            .with(AttributeCustomSelectionBox.JSON)
             .withBounding(new HandleBoundingBlock() {
 
                 @Override
@@ -111,7 +108,6 @@ public class LargeMachineBlockTypes {
             .without(AttributeParticleFX.class)
             .withSupportedUpgrades(Upgrade.SPEED, Upgrade.MUFFLING)
             .withCustomShape(LargeMachineBlockShapes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
-            .with(AttributeCustomSelectionBox.JSON)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM)
             .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeSolarNeutronActivator")
@@ -140,7 +136,6 @@ public class LargeMachineBlockTypes {
             .with(AttributeUpgradeSupport.DEFAULT_MACHINE_UPGRADES)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM, TransmissionType.ENERGY)
             .withCustomShape(LargeMachineBlockShapes.LARGE_PIGMENT_MIXER)
-            .with(AttributeCustomSelectionBox.JSON)
             .with(MoreMachineBounding.LARGE_PIGMENT_MIXER)
             .withComputerSupport("largePigmentMixer")
             .build();
