@@ -1,20 +1,21 @@
 # Maintaining large-machine selection outlines
 
-This feature changes the black outline shown while hovering the eight supported large
-machines. It does not change their targeting, collision, bounding-block layout, ports,
+This feature changes the black outline shown while hovering eight JSON-model machines and the wind generator base. It does not change their targeting, collision, bounding-block layout, ports,
 recipes, or model assets.
 
 ## Where the code lives
 
 | File | Responsibility |
 | --- | --- |
-| `MachineSelectionOutline` | Supported-machine list, hover event, main-block lookup, model/state caches, block-facing transform, and drawing. |
+| `MachineSelectionOutline` | Hover event, main-block lookup, model/state caches, block-facing transform, and drawing. |
+| `outline/ModelOutlineProfiles` | Explicit JSON-machine list, baked Y offsets, and optional inset-joining policy. |
+| `outline/ModelPartOutline` | Capture the wind generator base from its actual nested Java ModelParts and draw cached union edges. |
 | `outline/ModelOutlineLoader` | Read the existing JSON model elements and composite parents using the current resource manager. |
 | `outline/ModelOutlineGeometry` | Pure geometry: union rotated cuboids and extract exterior crease edges. No Minecraft classes. |
 | `ModelOutlineGeometryTest` in `src/outlineTest/java` | Analytical regression cases and checks against every supported on/off model. |
 | `ClientRegistration` | Register the hover listener and clear both caches after model baking. |
 
-The outline uses the model files as its coordinate source. Do not maintain another
+The outline uses JSON elements or Java ModelParts as its coordinate source. Do not maintain another
 handwritten list of keyboard or corner coordinates.
 
 ## Why a solid union is necessary
@@ -48,12 +49,14 @@ visibility when drawing, with the vanilla black colour and 0.4 alpha.
 - Input coordinates are **model pixels**, including negative values; 16 pixels are
   one block. Element rotation occurs about the JSON `origin`, with optional
   `rescale`.
-- These eight models all use north as the default orientation and a **+1 block Y**
-  translation in their baked-model wrappers. `toBlock` applies that translation
-  and the four horizontal facings around the block centre.
+- These eight JSON models use north as the default orientation. Seven wrappers
+  translate **+1 block Y**, but `LargeElectrolyticSeparatorBakedModel` applies
+  **no Y translation**. `ModelOutlineProfiles` records that distinction; `toBlock`
+  applies it along with the four horizontal facings around the block centre.
+  The model regression checks require every transformed base to meet Y=0.
 - A hit on a Mekanism bounding block is resolved to the main machine before
   choosing and translating the outline. Do not add the bounding block offset again.
-- Supported block types must omit `AttributeCustomSelectionBox`. Keeping the JSON
+- JSON-profile block types must omit `AttributeCustomSelectionBox`. Keeping the JSON
   attribute lets Mekanism draw a second wireframe before this handler.
 - The listener runs at LOWEST priority so Mekanism's configurator overlay still
   runs first. It does not receive already-cancelled highlight events.
@@ -62,6 +65,43 @@ visibility when drawing, with the vanilla black colour and 0.4 alpha.
   machine's static model enters the outline cache.
 - Seasonal transforms on the supported models currently replace textures only;
   they do not change the coordinates used here.
+
+## Nucleosynthesizer inset joins
+
+The chamber's rotated corner pieces are authored 0.01 model pixels thinner than
+its rectangular frame (for example, -14.99/-11.01 beside -15/-11). Exact union
+therefore leaves a shallow step, so the slant appears separate from the frame.
+Its profile enables `joinInsets` with a 0.011-pixel limit. Before clipping, it
+extends only the rotated element's unchanged-axis end planes to the matching
+outer planes of overlapping unrotated neighbours. It does not round coordinates,
+change the rotation, or modify the actual mesh/collision. Comparisons use the
+original planes to prevent chained expansion. All other JSON profiles disable it.
+
+This is an explicit cosmetic simplification of a known modelling inset, separate
+from the clipper's numerical epsilon. The recessed-corner regression requires a
+continuous bevel; a smaller tolerance must preserve the original geometry.
+
+## Wind generator base
+
+The wind generator uses a Java model for its structure and an OBJ for screen
+textures. Keep its existing JAVA selection attribute and renderer: the separate
+JSON hover handler does not intercept it. `ModelLargeWindGenerator` replaces only
+its static BASE subtree's wireframe with union edges; the fan, tower, and top use
+their existing renderer and animation. Screen texture quads remain with Mekanism's
+combined outline path.
+
+`ModelPartOutline` visits that subtree with an identity pose, including nested
+part rotations and offsets. It converts its eight cube corners to local pixel
+coordinates and reuses the same union helper. It then draws beneath the existing
+wind renderer's world/facing pose. Capture happens once on first hover and the
+model instance is recreated on resource reload. A failed capture logs once and
+falls back to the original base wireframe.
+
+The adapter is scoped to the base's visible, undeformed, positively scaled cubes.
+It reads cube bounds, not UVs or cube deformation; if this model starts using
+nonzero CubeDeformation, hidden parts, or negative scaling, extend the adapter
+before reusing it. Do not cache an animated subtree in this way. The regression
+runner bakes the actual wind model layer and checks its floor and rotated keyboard.
 
 ## Model support and deliberate exclusions
 
@@ -91,11 +131,11 @@ The failed result is cached to avoid repeated work and log spam on every frame.
 1. Reproduce the problem and identify whether it is a visual outline error or an
    actual targeting/collision error. This handler addresses the visual outline.
 2. Verify the model uses `mekmm:block/large_machine/<block_registry_path>/off`
-   and `on`, the +1 Y baked translation, and the same horizontal facing convention.
+   and `on`, its baked Y translation, and the same horizontal facing convention.
    Inspect any animated renderer and composite children as well.
-3. Add the registry path to `SUPPORTED_MACHINES` in `MachineSelectionOutline`.
+3. Add the registry path and its Y offset to `ModelOutlineProfiles.MACHINES`.
    Remove its `AttributeCustomSelectionBox` registration to prevent double drawing.
-4. Add both model variants to the regression runner's model list. If the machine
+4. The regression runner checks both variants of every profile automatically. If the machine
    needs another transform or loader, implement and test that support explicitly;
    do not broaden the allowlist to every MekMM block.
 5. Run the checks below and capture matching before/after screenshots in game.
@@ -120,7 +160,8 @@ does not add a test framework.
 
 The automated checks cover touching and overlapping cuboids, containment, duplicate
 solids, T-junctions, the sloped panel join, keyboard rotation, all rotation axes with
-rescale, inherited/composite models, unsupported resources, and all 16 supplied
+rescale, inset joins, inherited/composite models, unsupported resources, the wind
+base/keyboard transform, and all 16 supplied
 machine variants. Model checks reject non-finite or zero-length edges and sample
 each output edge to ensure it is not buried inside another solid.
 

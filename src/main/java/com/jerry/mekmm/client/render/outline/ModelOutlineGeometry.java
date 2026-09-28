@@ -99,6 +99,50 @@ public final class ModelOutlineGeometry {
         }
     }
 
+    /**
+     * Weld authored shallow insets only along a rotated element's unchanged axis.
+     * The nucleosynthesizer corners are 0.01 pixels thinner than their frame to
+     * avoid coplanar texture overlap. Exact solid union preserves that unwanted
+     * step. Extend those end planes to nearby, overlapping unrotated neighbours
+     * for the outline only. Zero disables this policy for all other JSON models.
+     */
+    public static List<Cuboid> joinInsets(List<Cuboid> cuboids, double tolerance) {
+        if (tolerance <= 0) return cuboids;
+        return cuboids.stream().map(cuboid -> {
+            if (cuboid.rotation == null || cuboid.rotation.degrees == 0) return cuboid;
+            String axis = cuboid.rotation.axis;
+            double low = coordinate(cuboid.from, axis);
+            double high = coordinate(cuboid.to, axis);
+            Solid bounds = Solid.of(cuboid);
+            for (Cuboid neighbour : cuboids) {
+                if (neighbour.rotation != null && neighbour.rotation.degrees != 0) continue;
+                if (!bounds.overlaps(Solid.of(neighbour))) continue;
+                double candidateLow = coordinate(neighbour.from, axis);
+                double candidateHigh = coordinate(neighbour.to, axis);
+                // Compare with the ORIGINAL planes: never chain tiny adjustments.
+                if (candidateLow < low && coordinate(cuboid.from, axis) - candidateLow <= tolerance) low = candidateLow;
+                if (candidateHigh > high && candidateHigh - coordinate(cuboid.to, axis) <= tolerance) high = candidateHigh;
+            }
+            return new Cuboid(withCoordinate(cuboid.from, axis, low), withCoordinate(cuboid.to, axis, high), cuboid.rotation);
+        }).toList();
+    }
+
+    private static double coordinate(Point point, String axis) {
+        return switch (axis) {
+            case "x" -> point.x;
+            case "y" -> point.y;
+            default -> point.z;
+        };
+    }
+
+    private static Point withCoordinate(Point point, String axis, double value) {
+        return switch (axis) {
+            case "x" -> new Point(value, point.y, point.z);
+            case "y" -> new Point(point.x, value, point.z);
+            default -> new Point(point.x, point.y, value);
+        };
+    }
+
     private record Face(List<Point> vertices, Point normal, double distance) {}
 
     private record Solid(List<Face> faces, Point min, Point max) {
@@ -111,6 +155,11 @@ public final class ModelOutlineGeometry {
                         (i & 4) == 0 ? cuboid.from.z : cuboid.to.z);
                 vertices.add(cuboid.rotation == null ? p : cuboid.rotation.apply(p));
             }
+            return ofCorners(vertices);
+        }
+
+        static Solid ofCorners(List<Point> vertices) {
+            if (vertices.size() != 8) throw new IllegalArgumentException("A transformed box needs eight ordered corners");
             List<Face> faces = new ArrayList<>(6);
             for (int[] indices : FACE_CORNERS) {
                 List<Point> polygon = new ArrayList<>(4);
@@ -132,6 +181,15 @@ public final class ModelOutlineGeometry {
 
     public static List<Line> build(List<Cuboid> cuboids) {
         List<Solid> solids = cuboids.stream().filter(Cuboid::hasVolume).distinct().map(Solid::of).toList();
+        return buildSolids(solids);
+    }
+
+    /** Corners use bit 0 = high X, bit 1 = high Y, bit 2 = high Z, before transformation. */
+    public static List<Line> buildTransformedBoxes(List<List<Point>> boxes) {
+        return buildSolids(boxes.stream().map(Solid::ofCorners).toList());
+    }
+
+    private static List<Line> buildSolids(List<Solid> solids) {
         List<Face> boundary = new ArrayList<>();
         for (int i = 0; i < solids.size(); i++) {
             Solid solid = solids.get(i);

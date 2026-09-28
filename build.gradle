@@ -86,7 +86,10 @@ tasks.register('verifySelectionOutlines', JavaExec) {
     dependsOn tasks.named('outlineTestClasses')
     classpath = sourceSets.outlineTest.runtimeClasspath
     mainClass = 'com.jerry.mekmm.client.render.outline.ModelOutlineGeometryTest'
-    workingDir = projectDir
+    // Model-layer checks may initialize logging; keep those files in build/.
+    workingDir = layout.buildDirectory.dir('outline-test').get().asFile
+    args projectDir.absolutePath
+    doFirst { workingDir.mkdirs() }
 }
 tasks.named('check') {
     dependsOn tasks.named('verifySelectionOutlines')

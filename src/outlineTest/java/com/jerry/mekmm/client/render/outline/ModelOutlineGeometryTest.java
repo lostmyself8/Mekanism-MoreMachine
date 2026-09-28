@@ -54,9 +54,36 @@ public final class ModelOutlineGeometryTest {
             check(ModelOutlineGeometry.build(List.of(new Cuboid(cube.from(), cube.to(), rotation))).size() == 12,
                     "Rescaled rotation must preserve cuboid topology");
         }
+        // The chamber corners have a real 0.01-pixel inset. Only the explicit
+        // per-model join policy may weld this; larger steps must remain intact.
+        Cuboid insetCorner = new Cuboid(new Point(-1, -1, 0.01), new Point(1, 1, 0.99),
+                new Rotation(new Point(0, 0, 0), "z", 45, false));
+        List<Cuboid> insetJoin = List.of(box(-2, -2, 0, 0, 2, 1), box(0, -2, 0, 2, 0, 1), insetCorner);
+        check(ModelOutlineGeometry.build(ModelOutlineGeometry.joinInsets(insetJoin, 0.011)).size() == 21,
+                "Recessed chamber corner must blend into the adjacent panels");
+        check(ModelOutlineGeometry.joinInsets(insetJoin, 0).equals(insetJoin), "Other model profiles must not change geometry");
+        check(ModelOutlineGeometry.joinInsets(insetJoin, 0.001).equals(insetJoin), "Do not weld steps outside the declared tolerance");
         verifyLoader();
-        verifyModels();
+        verifyModels(Path.of(args[0]));
+        verifyWindBase();
         System.out.println("Selection outline geometry checks passed");
+    }
+
+    private static void verifyWindBase() {
+        var base = com.jerry.meklg.client.model.ModelLargeWindGenerator.createLayerDefinition().bakeRoot().getChild("base");
+        List<Line> lines = ModelPartOutline.buildGeometry(base);
+        check(!lines.isEmpty() && lines.size() < 5_000, "Wind base outline must be bounded and nonempty");
+        double lowest = lines.stream().flatMap(line -> java.util.stream.Stream.of(line.start(), line.end()))
+                .mapToDouble(Point::y).max().orElseThrow();
+        check(Math.abs(1.5 - lowest / 16) < TOLERANCE, "Wind Java-model pose must place the base at ground level");
+        // Controller keyboard, expressed through its real nested part pose.
+        // This catches losing BASE's +24 Y or applying part rotation twice.
+        double angle = -0.3927F;
+        Point keyboardFront = new Point(-7, 12 + (-3.2F) * Math.cos(angle) - Math.sin(angle),
+                51 + (-3.2F) * Math.sin(angle) + Math.cos(angle));
+        check(lines.stream().anyMatch(line -> near(line.start(), keyboardFront) || near(line.end(), keyboardFront)),
+                "Wind keyboard front corner must use its rotated model pose");
+        System.out.printf("large_wind_generator/base: %d lines, nested pose and keyboard checks passed%n", lines.size());
     }
 
     private static void verifyLoader() throws IOException {
@@ -86,19 +113,22 @@ public final class ModelOutlineGeometryTest {
         }
     }
 
-    private static void verifyModels() throws IOException {
-        Path assets = Path.of("src/main/resources/assets");
+    private static void verifyModels(Path project) throws IOException {
+        Path assets = project.resolve("src/main/resources/assets");
         ModelOutlineLoader.Source source = id -> {
             String[] parts = id.split(":", 2);
             return Files.newBufferedReader(assets.resolve(parts[0]).resolve("models").resolve(parts[1] + ".json"));
         };
-        for (String machine : List.of("large_heat_generator", "large_gas_burning_generator", "large_solar_neutron_activator",
-                "large_antiprotonic_nucleosynthesizer", "large_chemical_infuser", "large_electrolytic_separator",
-                "large_rotary_condensentrator", "large_pigment_mixer")) {
+        for (String machine : ModelOutlineProfiles.MACHINES.keySet()) {
+            var profile = ModelOutlineProfiles.MACHINES.get(machine);
             for (String state : List.of("off", "on")) {
                 long started = System.nanoTime();
                 List<Cuboid> cuboids = ModelOutlineLoader.load(source, "mekmm:block/large_machine/" + machine + "/" + state);
+                cuboids = ModelOutlineGeometry.joinInsets(cuboids, profile.insetJoinPixels());
                 List<Line> lines = ModelOutlineGeometry.build(cuboids);
+                double floor = lines.stream().flatMap(line -> java.util.stream.Stream.of(line.start(), line.end()))
+                        .mapToDouble(Point::y).min().orElseThrow() / 16 + profile.yOffsetBlocks();
+                check(Math.abs(floor) < TOLERANCE, "Model outline must meet the main-block floor: " + machine);
                 double buildMillis = (System.nanoTime() - started) / 1_000_000.0;
                 check(!lines.isEmpty() && lines.size() < 5_000, "Invalid outline complexity for " + machine);
                 for (Line line : lines) {

@@ -5,6 +5,8 @@ import com.jerry.mekmm.client.render.outline.ModelOutlineGeometry;
 import com.jerry.mekmm.client.render.outline.ModelOutlineGeometry.Line;
 import com.jerry.mekmm.client.render.outline.ModelOutlineGeometry.Point;
 import com.jerry.mekmm.client.render.outline.ModelOutlineLoader;
+import com.jerry.mekmm.client.render.outline.ModelOutlineProfiles;
+import com.jerry.mekmm.client.render.outline.ModelOutlineProfiles.Profile;
 
 import mekanism.client.render.tileentity.IWireFrameRenderer;
 import mekanism.common.block.BlockBounding;
@@ -33,7 +35,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Cosmetic selection outlines for the reported large machines. Geometry comes
@@ -43,14 +44,6 @@ import java.util.Set;
 public class MachineSelectionOutline {
 
     public static final MachineSelectionOutline INSTANCE = new MachineSelectionOutline();
-
-    // These machines share the model path convention and +1 block Y transform.
-    // Keep this an explicit allowlist: other models may have different transforms.
-    private static final Set<String> SUPPORTED_MACHINES = Set.of(
-            "large_heat_generator", "large_gas_burning_generator",
-            "large_solar_neutron_activator", "large_antiprotonic_nucleosynthesizer",
-            "large_chemical_infuser", "large_electrolytic_separator",
-            "large_rotary_condensentrator", "large_pigment_mixer");
 
     private final Map<String, List<Line>> modelLines = new HashMap<>();
     private final Map<BlockState, List<RenderLine>> stateLines = new HashMap<>();
@@ -71,14 +64,15 @@ public class MachineSelectionOutline {
             state = level.getBlockState(mainPos);
         }
         ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(state.getBlock());
-        if (!blockId.getNamespace().equals(Mekmm.MOD_ID) || !SUPPORTED_MACHINES.contains(blockId.getPath())) return;
+        if (!blockId.getNamespace().equals(Mekmm.MOD_ID) || !ModelOutlineProfiles.MACHINES.containsKey(blockId.getPath())) return;
         AttributeStateFacing attribute = Attribute.get(state, AttributeStateFacing.class);
         if (attribute == null) return;
         Direction facing = attribute.getDirection(state);
         if (!facing.getAxis().isHorizontal()) return;
+        Profile profile = ModelOutlineProfiles.MACHINES.get(blockId.getPath());
         List<RenderLine> lines = stateLines.computeIfAbsent(state, key -> {
             String model = Mekmm.MOD_ID + ":block/large_machine/" + blockId.getPath() + "/" + (Attribute.isActive(key) ? "on" : "off");
-            return modelLines.computeIfAbsent(model, this::loadLines).stream().map(line -> RenderLine.of(line, facing)).toList();
+            return modelLines.computeIfAbsent(model, id -> loadLines(id, profile)).stream().map(line -> RenderLine.of(line, facing, profile.yOffsetBlocks())).toList();
         });
         // Unsupported resource-pack geometry or a failed load retains vanilla's
         // voxel outline. Cache the failure too, so it is not retried every frame.
@@ -100,13 +94,14 @@ public class MachineSelectionOutline {
         event.setCanceled(true);
     }
 
-    private List<Line> loadLines(String model) {
+    private List<Line> loadLines(String model, Profile profile) {
         try {
-            return ModelOutlineGeometry.build(ModelOutlineLoader.load(id -> {
+            var cuboids = ModelOutlineLoader.load(id -> {
                 ResourceLocation location = ResourceLocation.parse(id);
                 return Minecraft.getInstance().getResourceManager().getResourceOrThrow(
                         location.withPath("models/" + location.getPath() + ".json")).openAsReader();
-            }, model));
+            }, model);
+            return ModelOutlineGeometry.build(ModelOutlineGeometry.joinInsets(cuboids, profile.insetJoinPixels()));
         } catch (IOException | RuntimeException exception) {
             Mekmm.LOGGER.warn("Could not build selection outline for {}; using voxel outline", model, exception);
             return List.of();
@@ -119,9 +114,9 @@ public class MachineSelectionOutline {
         stateLines.clear();
     }
 
-    private static Vec3 toBlock(Point point, Direction facing) {
+    private static Vec3 toBlock(Point point, Direction facing, double yOffset) {
         double x = point.x() / 16;
-        double y = point.y() / 16 + 1;
+        double y = point.y() / 16 + yOffset;
         double z = point.z() / 16;
         return switch (facing) {
             case NORTH -> new Vec3(x, y, z);
@@ -134,9 +129,9 @@ public class MachineSelectionOutline {
 
     private record RenderLine(Vec3 start, Vec3 end, Vec3 direction) {
 
-        static RenderLine of(Line line, Direction facing) {
-            Vec3 start = toBlock(line.start(), facing);
-            Vec3 end = toBlock(line.end(), facing);
+        static RenderLine of(Line line, Direction facing, double yOffset) {
+            Vec3 start = toBlock(line.start(), facing, yOffset);
+            Vec3 end = toBlock(line.end(), facing, yOffset);
             return new RenderLine(start, end, end.subtract(start).normalize());
         }
 
