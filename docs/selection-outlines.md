@@ -75,11 +75,26 @@ Its profile enables `joinInsets` with a 0.011-pixel limit. Before clipping, it
 extends only the rotated element's unchanged-axis end planes to the matching
 outer planes of overlapping unrotated neighbours. It does not round coordinates,
 change the rotation, or modify the actual mesh/collision. Comparisons use the
-original planes to prevent chained expansion. All other JSON profiles disable it.
+original planes to prevent chained expansion. The heat generator uses the separate alignment option below; all other JSON
+profiles disable joining.
 
 This is an explicit cosmetic simplification of a known modelling inset, separate
 from the clipper's numerical epsilon. The recessed-corner regression requires a
 continuous bevel; a smaller tolerance must preserve the original geometry.
+
+## Heat generator shifted joins
+
+The top and side cover corners are shifted by 0.001 pixels along their rotation
+axis: side X=-14.999/-13.999 versus panel X=-15/-14, and top Y=27.999/28.999
+versus panel Y=28/29. Expansion alone cannot remove the small step on both faces.
+The heat profile enables `alignShiftedFaces` with a 0.0011-pixel limit, selecting
+the nearest matching end plane of an overlapping unrotated neighbour. This can
+move an outline plane inward or outward. It keeps the original rotation and
+compares original coordinates to avoid cumulative adjustments.
+
+The chamber profile retains expansion-only joining. Neither policy edits model
+assets or collision. Tests cover both signs of the shift, preserve larger steps,
+and verify that precisely the two heat cover corners change in both model states.
 
 ## Wind generator base
 

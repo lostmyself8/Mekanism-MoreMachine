@@ -107,12 +107,24 @@ public final class ModelOutlineGeometry {
      * for the outline only. Zero disables this policy for all other JSON models.
      */
     public static List<Cuboid> joinInsets(List<Cuboid> cuboids, double tolerance) {
+        return joinInsets(cuboids, tolerance, false);
+    }
+
+    /**
+     * With alignShiftedFaces enabled, either end plane may move inward as well
+     * as outward to its nearest matching neighbour plane. This handles the heat
+     * generator's translated (rather than narrowed) 0.001-pixel corner pieces.
+     * The default expansion-only behavior is preserved for the chamber frame.
+     */
+    public static List<Cuboid> joinInsets(List<Cuboid> cuboids, double tolerance, boolean alignShiftedFaces) {
         if (tolerance <= 0) return cuboids;
         return cuboids.stream().map(cuboid -> {
             if (cuboid.rotation == null || cuboid.rotation.degrees == 0) return cuboid;
             String axis = cuboid.rotation.axis;
             double low = coordinate(cuboid.from, axis);
             double high = coordinate(cuboid.to, axis);
+            double lowDistance = tolerance + EPSILON;
+            double highDistance = tolerance + EPSILON;
             Solid bounds = Solid.of(cuboid);
             for (Cuboid neighbour : cuboids) {
                 if (neighbour.rotation != null && neighbour.rotation.degrees != 0) continue;
@@ -120,8 +132,21 @@ public final class ModelOutlineGeometry {
                 double candidateLow = coordinate(neighbour.from, axis);
                 double candidateHigh = coordinate(neighbour.to, axis);
                 // Compare with the ORIGINAL planes: never chain tiny adjustments.
-                if (candidateLow < low && coordinate(cuboid.from, axis) - candidateLow <= tolerance) low = candidateLow;
-                if (candidateHigh > high && candidateHigh - coordinate(cuboid.to, axis) <= tolerance) high = candidateHigh;
+                if (alignShiftedFaces) {
+                    double dl = Math.abs(coordinate(cuboid.from, axis) - candidateLow);
+                    double dh = Math.abs(coordinate(cuboid.to, axis) - candidateHigh);
+                    if (dl <= tolerance && (dl < lowDistance || dl == lowDistance && candidateLow < low)) {
+                        low = candidateLow;
+                        lowDistance = dl;
+                    }
+                    if (dh <= tolerance && (dh < highDistance || dh == highDistance && candidateHigh < high)) {
+                        high = candidateHigh;
+                        highDistance = dh;
+                    }
+                } else {
+                    if (candidateLow < low && coordinate(cuboid.from, axis) - candidateLow <= tolerance) low = candidateLow;
+                    if (candidateHigh > high && candidateHigh - coordinate(cuboid.to, axis) <= tolerance) high = candidateHigh;
+                }
             }
             return new Cuboid(withCoordinate(cuboid.from, axis, low), withCoordinate(cuboid.to, axis, high), cuboid.rotation);
         }).toList();

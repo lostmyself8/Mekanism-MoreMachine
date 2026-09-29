@@ -101,7 +101,7 @@ public class MachineSelectionOutline {
                 return Minecraft.getInstance().getResourceManager().getResourceOrThrow(
                         location.withPath("models/" + location.getPath() + ".json")).openAsReader();
             }, model);
-            return ModelOutlineGeometry.build(ModelOutlineGeometry.joinInsets(cuboids, profile.insetJoinPixels()));
+            return ModelOutlineGeometry.build(ModelOutlineGeometry.joinInsets(cuboids, profile.insetJoinPixels(), profile.alignShiftedFaces()));
         } catch (IOException | RuntimeException exception) {
             Mekmm.LOGGER.warn("Could not build selection outline for {}; using voxel outline", model, exception);
             return List.of();

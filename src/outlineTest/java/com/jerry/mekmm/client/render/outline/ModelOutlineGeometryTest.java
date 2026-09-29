@@ -63,6 +63,16 @@ public final class ModelOutlineGeometryTest {
                 "Recessed chamber corner must blend into the adjacent panels");
         check(ModelOutlineGeometry.joinInsets(insetJoin, 0).equals(insetJoin), "Other model profiles must not change geometry");
         check(ModelOutlineGeometry.joinInsets(insetJoin, 0.001).equals(insetJoin), "Do not weld steps outside the declared tolerance");
+        // Heat corners are translated across the panel depth, not narrowed.
+        for (double shift : new double[] { -0.001, 0.001 }) {
+            Cuboid shiftedCorner = new Cuboid(new Point(-1, -1, shift), new Point(1, 1, 1 + shift), insetCorner.rotation());
+            List<Cuboid> shiftedJoin = List.of(insetJoin.get(0), insetJoin.get(1), shiftedCorner);
+            List<Line> welded = ModelOutlineGeometry.build(ModelOutlineGeometry.joinInsets(shiftedJoin, 0.0011, true));
+            check(welded.size() == 21 && contains(welded, new Point(0, rootTwo, 0), new Point(rootTwo, 0, 0)),
+                    "Shifted heat-panel corner must keep the bevel without a triangular step");
+            check(ModelOutlineGeometry.joinInsets(shiftedJoin, 0.0001, true).equals(shiftedJoin),
+                    "Translated corners outside tolerance must remain unchanged");
+        }
         verifyLoader();
         verifyModels(Path.of(args[0]));
         verifyWindBase();
@@ -124,7 +134,9 @@ public final class ModelOutlineGeometryTest {
             for (String state : List.of("off", "on")) {
                 long started = System.nanoTime();
                 List<Cuboid> cuboids = ModelOutlineLoader.load(source, "mekmm:block/large_machine/" + machine + "/" + state);
-                cuboids = ModelOutlineGeometry.joinInsets(cuboids, profile.insetJoinPixels());
+                List<Cuboid> original = cuboids;
+                cuboids = ModelOutlineGeometry.joinInsets(cuboids, profile.insetJoinPixels(), profile.alignShiftedFaces());
+                if (machine.equals("large_heat_generator")) verifyHeatCorners(original, cuboids);
                 List<Line> lines = ModelOutlineGeometry.build(cuboids);
                 double floor = lines.stream().flatMap(line -> java.util.stream.Stream.of(line.start(), line.end()))
                         .mapToDouble(Point::y).min().orElseThrow() / 16 + profile.yOffsetBlocks();
@@ -145,6 +157,18 @@ public final class ModelOutlineGeometryTest {
                         machine, state, cuboids.size(), lines.size(), buildMillis);
             }
         }
+    }
+
+    private static void verifyHeatCorners(List<Cuboid> original, List<Cuboid> welded) {
+        int changed = 0;
+        for (int i = 0; i < original.size(); i++) {
+            if (!original.get(i).equals(welded.get(i))) changed++;
+        }
+        check(changed == 2, "Heat weld must affect only the two reported cover corners");
+        check(welded.stream().anyMatch(c -> c.rotation() != null && c.rotation().axis().equals("x") && c.rotation().degrees() == -45 && c.from().x() == -15 && c.to().x() == -14),
+                "Heat side corner must align with the -15/-14 panel faces");
+        check(welded.stream().anyMatch(c -> c.rotation() != null && c.rotation().axis().equals("y") && c.rotation().degrees() == 45 && c.from().y() == 28 && c.to().y() == 29),
+                "Heat top corner must align with the 28/29 panel faces");
     }
 
     private static boolean strictlyInside(Point point, Cuboid cuboid) {
