@@ -1,5 +1,11 @@
 {
   "type": "minecraft:block",
+  "forge:conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanismgenerators"
+    }
+  ],
   "pools": [
     {
       "bonus_rolls": 0.0,

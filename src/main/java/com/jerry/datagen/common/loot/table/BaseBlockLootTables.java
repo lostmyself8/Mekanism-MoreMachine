@@ -1,5 +1,7 @@
 package com.jerry.datagen.common.loot.table;
 
+import com.jerry.datagen.common.loot.builder.ConditionalLootTableBuilder;
+
 import mekanism.api.NBTConstants;
 import mekanism.api.annotations.NothingNullByDefault;
 import mekanism.api.annotations.ParametersAreNotNullByDefault;
@@ -45,6 +47,7 @@ import net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.items.IItemHandler;
 
 import it.unimi.dsi.fastutil.objects.ReferenceArraySet;
@@ -136,6 +139,14 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
     }
 
     protected void dropSelfWithContents(List<IBlockProvider> blockProviders) {
+        dropSelfWithContents(blockProviders, List.of());
+    }
+
+    protected void dropSelfWithContents(ICondition condition, List<IBlockProvider> blockProviders) {
+        dropSelfWithContents(blockProviders, List.of(condition));
+    }
+
+    private void dropSelfWithContents(List<IBlockProvider> blockProviders, List<? extends ICondition> conditions) {
         // TODO: See if there is other stuff we want to be transferring which we currently do not
         // For example, when writing this we added dump mode for chemical tanks to getting transferred to the item
         for (IBlockProvider blockProvider : blockProviders) {
@@ -223,7 +234,9 @@ public abstract class BaseBlockLootTables extends BlockLootSubProvider {
             for (LootItemCondition.Builder condition : delayedPool.conditions) {
                 itemLootPool.when(condition);
             }
-            add(block, LootTable.lootTable().withPool(applyExplosionCondition(hasContents, LootPool.lootPool()
+            LootTable.Builder tableBuilder = conditions.isEmpty() ? LootTable.lootTable() : ConditionalLootTableBuilder.lootTable()
+                    .addConditions(conditions);
+            add(block, tableBuilder.withPool(applyExplosionCondition(hasContents, LootPool.lootPool()
                     .name("main")
                     .setRolls(ConstantValue.exactly(1))
                     .add(itemLootPool))));

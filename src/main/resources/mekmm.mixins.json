@@ -6,6 +6,9 @@
   "refmap": "mekmm.refmap.json",
   "mixins": [
     "MixinItemConfigurator",
+    "MixinForgeHooks",
+    "MixinLootTable",
+    "MixinLootTableSerializer",
     "MixinMekanismBlocks",
     "MixinRecipeCacheLookupMonitor",
     "MixinTileEntityMekanism",
