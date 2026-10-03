@@ -92,7 +92,7 @@ public class TileEntityPresser extends TileEntityProgressMachine<TripleItemToIte
         if (itemConfig != null) {
             itemConfig.addSlotInfo(DataType.INPUT_1, new InventorySlotInfo(true, false, primaryItemInputSlot));
             itemConfig.addSlotInfo(DataType.INPUT_2, new InventorySlotInfo(true, false, secondaryItemInputSlot));
-            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(true, false, outputSlot));
+            itemConfig.addSlotInfo(DataType.OUTPUT, new InventorySlotInfo(false, true, outputSlot));
             itemConfig.addSlotInfo(DataType.INPUT_OUTPUT, new InventorySlotInfo(true, true, primaryItemInputSlot, secondaryItemInputSlot, outputSlot));
             itemConfig.addSlotInfo(DataType.EXTRA, new InventorySlotInfo(true, true, tertiaryItemInputSlot));
             itemConfig.addSlotInfo(DataType.ENERGY, new InventorySlotInfo(true, true, energySlot));
