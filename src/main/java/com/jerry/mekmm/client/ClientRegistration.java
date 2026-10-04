@@ -19,6 +19,7 @@ import com.jerry.mekmm.client.gui.GuiWirelessChargingStation;
 import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStation;
 import com.jerry.mekmm.client.gui.GuiWirelessTransmissionStationConfig;
 import com.jerry.mekmm.client.gui.machine.*;
+import com.jerry.mekmm.client.render.MachineSelectionOutline;
 import com.jerry.mekmm.client.render.RenderTickHandler;
 import com.jerry.mekmm.client.render.tileentity.RenderWirelessTransmissionStation;
 import com.jerry.mekmm.common.item.ItemConnector;
@@ -72,6 +73,7 @@ public class ClientRegistration {
     public static void init(FMLClientSetupEvent event) {
         NeoForge.EVENT_BUS.register(new ClientTickHandler());
         NeoForge.EVENT_BUS.register(new RenderTickHandler());
+        NeoForge.EVENT_BUS.register(MachineSelectionOutline.INSTANCE);
 
         addCustomModel(MoreMachineBlocks.WIRELESS_CHARGING_STATION, (orig, evt) -> new TransformedBakedModel<Void>(orig,
                 QuadTransformation.translate(0, 1, 0)));
@@ -183,6 +185,7 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void onModelBake(BakingCompleted event) {
         LargeMachineModelCache.INSTANCE.onBake(event);
+        MachineSelectionOutline.INSTANCE.clearCache();
     }
 
     @SubscribeEvent

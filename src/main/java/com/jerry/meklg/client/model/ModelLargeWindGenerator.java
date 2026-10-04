@@ -1,6 +1,7 @@
 package com.jerry.meklg.client.model;
 
 import com.jerry.mekmm.Mekmm;
+import com.jerry.mekmm.client.render.outline.ModelPartOutline;
 
 import mekanism.client.model.MekanismJavaModel;
 import mekanism.client.model.ModelPartData;
@@ -464,12 +465,18 @@ public class ModelLargeWindGenerator extends MekanismJavaModel {
     private final RenderType RENDER_TYPE = renderType(LARGE_WIND_GENERATOR_TEXTURE);
     private final List<ModelPart> parts;
     private final ModelPart fans;
+    private final ModelPart base;
+    private final List<ModelPart> upperOutlineParts;
+    private ModelPartOutline baseOutline;
+    private boolean baseOutlineAttempted;
 
     public ModelLargeWindGenerator(EntityModelSet entityModelSet) {
         super(RenderType::entitySolid);
         ModelPart root = entityModelSet.bakeLayer(LARGE_WIND_GENERATOR_LAYER);
         parts = getRenderableParts(root, FAN, BODY, TOP, BASE);
         fans = FAN.getFromRoot(root);
+        base = BASE.getFromRoot(root);
+        upperOutlineParts = getRenderableParts(root, FAN, BODY, TOP);
     }
 
     public void render(@NotNull PoseStack matrix, @NotNull MultiBufferSource renderer, double angle, int light, int overlayLight, boolean hasEffect) {
@@ -487,8 +494,20 @@ public class ModelLargeWindGenerator extends MekanismJavaModel {
     public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, double angle) {
         float baseRotation = getAbsoluteRotation(angle);
         setRotation(fans, 0F, 0F, baseRotation);
-        // 渲染线框
-        renderPartsAsWireFrame(parts, matrix, vertexBuilder);
+        // The controller/keyboard belongs to the static base. Derive its union
+        // from these same ModelParts, avoiding a second set of coordinates.
+        // The model instance (and this cache) is recreated on resource reload.
+        if (!baseOutlineAttempted) {
+            baseOutlineAttempted = true;
+            try {
+                baseOutline = ModelPartOutline.capture(base);
+            } catch (RuntimeException exception) {
+                Mekmm.LOGGER.warn("Could not build wind generator base outline; using original wireframe", exception);
+            }
+        }
+        renderPartsAsWireFrame(upperOutlineParts, matrix, vertexBuilder);
+        if (baseOutline == null) renderPartsAsWireFrame(List.of(base), matrix, vertexBuilder);
+        else baseOutline.render(matrix, vertexBuilder);
     }
 
     private float getAbsoluteRotation(double angle) {

@@ -9,7 +9,7 @@ spotless {
         endWithNewline()
     }
     java {
-        target 'src/main/java/**/*.java', 'src/test/java/**/*.java'
+        target 'src/main/java/**/*.java', 'src/test/java/**/*.java', 'src/outlineTest/java/**/*.java'
 
         def orderFile = file("$rootDir/gradle/spotless/spotless.importorder")
         def formatFile = file("$rootDir/gradle/spotless/spotless.eclipseformat.xml")
