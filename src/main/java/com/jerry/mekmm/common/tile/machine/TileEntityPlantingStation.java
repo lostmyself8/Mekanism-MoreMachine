@@ -7,6 +7,7 @@ import com.jerry.mekmm.client.recipe_viewer.MoreMachineRecipeViewerRecipeType;
 import com.jerry.mekmm.common.recipe.MoreMachineRecipeType;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.upgrade.PlantingUpgradeData;
+import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
@@ -270,7 +271,7 @@ public class TileEntityPlantingStation extends TileEntityProgressMachine<Plantin
 
     @Override
     public boolean isConfigurationDataCompatible(Block blockType) {
-        return super.isConfigurationDataCompatible(blockType) || MekanismUtils.isSameTypeFactory(getBlockHolder(), blockType);
+        return super.isConfigurationDataCompatible(blockType) || MoreMachineUtils.isSameMMTypeFactory(getBlockHolder(), blockType);
     }
 
     @Override

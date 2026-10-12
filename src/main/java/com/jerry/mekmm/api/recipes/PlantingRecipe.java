@@ -35,7 +35,7 @@ import java.util.function.BiPredicate;
 public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRecipeInput> implements BiPredicate<@NotNull ItemStack, ChemicalStack> {
 
     protected static final RandomSource RANDOM = RandomSource.create();
-    private static final Holder<Item> PLANTING_STATION = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "plating_station"));
+    private static final Holder<Item> PLANTING_STATION = DeferredHolder.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Mekmm.MOD_ID, "planting_station"));
 
     @Override
     public abstract boolean test(ItemStack itemStack, ChemicalStack chemicalStack);

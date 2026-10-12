@@ -41,6 +41,6 @@ public class ChemicalReplicatorIRecipeSingle extends MMBasicChemicalChemicalToCh
 
     @Override
     public ItemStack getToastSymbol() {
-        return new ItemStack(MoreMachineBlocks.FLUID_REPLICATOR);
+        return new ItemStack(MoreMachineBlocks.CHEMICAL_REPLICATOR);
     }
 }

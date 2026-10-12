@@ -125,8 +125,9 @@ public class LargeMachineBlockTypes {
             .withEnergyConfig(MoreMachineConfig.usage.largeAntiprotonicNucleosynthesizer, MoreMachineConfig.storage.largeAntiprotonicNucleosynthesizer)
             .withSound(MekanismSounds.ANTIPROTONIC_NUCLEOSYNTHESIZER)
             .with(AttributeUpgradeSupport.MUFFLING_ONLY)
-            .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
             .withCustomShape(LargeMachineBlockShapes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER)
+            .with(AttributeCustomSelectionBox.JSON)
+            .with(AttributeSideConfig.ADVANCED_ELECTRIC_MACHINE)
             .with(MoreMachineBounding.FULL_JAVA_ENTITY)
             .withComputerSupport("largeAntiprotonicNucleosynthesizer")
             .build();
