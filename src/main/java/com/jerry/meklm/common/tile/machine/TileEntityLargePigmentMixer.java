@@ -86,7 +86,7 @@ public class TileEntityLargePigmentMixer extends TileEntityRecipeMachine<Chemica
     @Nullable
     private List<BlockCapabilityCache<IChemicalHandler, @Nullable Direction>> chemicalOutputCaches;
 
-    public static final long MAX_INPUT_PIGMENT = FluidType.BUCKET_VOLUME;
+    public static final long MAX_INPUT_PIGMENT = 10 * FluidType.BUCKET_VOLUME * FluidType.BUCKET_VOLUME;
     public static final long MAX_OUTPUT_PIGMENT = 2 * MAX_INPUT_PIGMENT;
 
     @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
