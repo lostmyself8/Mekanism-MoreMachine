@@ -35,7 +35,9 @@ import mekanism.common.capabilities.holder.slot.IInventorySlotHolder;
 import mekanism.common.capabilities.holder.slot.InventorySlotHelper;
 import mekanism.common.config.MekanismConfig;
 import mekanism.common.integration.computer.ComputerException;
-import mekanism.common.integration.computer.SpecialComputerMethodWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
+import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.SyntheticComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
@@ -124,7 +126,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     /**
      * This separator's water slot.
      */
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerFluidTankWrapper.class,
+    @WrappingComputerMethod(wrapper = ComputerFluidTankWrapper.class,
                             methodNames = { "getInput", "getInputCapacity", "getInputNeeded",
                                     "getInputFilledPercentage" },
                             docPlaceholder = "input tank")
@@ -132,7 +134,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     /**
      * The amount of oxygen this block is storing.
      */
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getLeftOutput", "getLeftOutputCapacity", "getLeftOutputNeeded",
                                     "getLeftOutputFilledPercentage" },
                             docPlaceholder = "left output tank")
@@ -140,7 +142,7 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     /**
      * The amount of hydrogen this block is storing.
      */
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerChemicalTankWrapper.class,
+    @WrappingComputerMethod(wrapper = ComputerChemicalTankWrapper.class,
                             methodNames = { "getRightOutput", "getRightOutputCapacity", "getRightOutputNeeded",
                                     "getRightOutputFilledPercentage" },
                             docPlaceholder = "right output tank")
@@ -149,13 +151,13 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     public GasMode dumpLeft = GasMode.IDLE;
     @SyntheticComputerMethod(getter = "getRightOutputDumpingMode")
     public GasMode dumpRight = GasMode.IDLE;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getInputItem", docPlaceholder = "input item slot")
     FluidInventorySlot fluidSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getLeftOutputItem", docPlaceholder = "left output item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getLeftOutputItem", docPlaceholder = "left output item slot")
     ChemicalInventorySlot leftOutputSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getRightOutputItem", docPlaceholder = "right output item slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getRightOutputItem", docPlaceholder = "right output item slot")
     ChemicalInventorySlot rightOutputSlot;
-    @WrappingComputerMethod(wrapper = SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
+    @WrappingComputerMethod(wrapper = ComputerIInventorySlotWrapper.class, methodNames = "getEnergyItem", docPlaceholder = "energy slot")
     EnergyInventorySlot energySlot;
 
     private int numPowering;
@@ -219,9 +221,9 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
     @NotNull
     @Override
     public IChemicalTankHolder getInitialChemicalTanks(IContentsListener listener, IContentsListener recipeCacheListener, IContentsListener recipeCacheUnpauseListener) {
-        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, null, side -> side == RelativeSide.FRONT);
-        builder.addTank(leftTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
-        builder.addTank(rightTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.FRONT);
+        AdjustableChemicalTankHelper builder = AdjustableChemicalTankHelper.forSide(facingSupplier, null, side -> side == RelativeSide.LEFT || side == RelativeSide.RIGHT);
+        builder.addTank(leftTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.LEFT);
+        builder.addTank(rightTank = BasicChemicalTank.output(MAX_GAS, recipeCacheUnpauseListener), RelativeSide.RIGHT);
         return builder.build();
     }
 
@@ -478,11 +480,29 @@ public class TileEntityLargeElectrolyticSeparator extends TileEntityRecipeMachin
         } else if (capability == Capabilities.FLUID.block()) {
             return Objects.requireNonNull(fluidHandlerManager, "Expected to have fluid handler").resolve(capability, side);
         } else if (capability == Capabilities.CHEMICAL.block()) {
-            return Objects.requireNonNull(chemicalHandlerManager, "Expected to have chemical handler").resolve(capability, side);
+            Direction chemicalSide = getChemicalSide(side, offset);
+            return Objects.requireNonNull(chemicalHandlerManager, "Expected to have chemical handler").resolve(capability, chemicalSide);
         } else if (capability == Capabilities.ITEM.block()) {
             return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
         }
         return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);
+    }
+
+    private Direction getChemicalSide(@Nullable Direction side, @NotNull Vec3i offset) {
+        // The two front chemical ports share the machine's FRONT direction. Select
+        // the tank by the bounding-block offset so each port exposes only its own tank.
+        Direction chemicalSide = side;
+        Direction front = getDirection();
+        Direction left = getLeftSide();
+        Direction right = left.getOpposite();
+        Vec3i frontLeftOffset = new Vec3i(front.getStepX() + left.getStepX(), 0, front.getStepZ() + left.getStepZ());
+        Vec3i frontRightOffset = new Vec3i(front.getStepX() + right.getStepX(), 0, front.getStepZ() + right.getStepZ());
+        if (offset.equals(frontLeftOffset)) {
+            chemicalSide = left;
+        } else if (offset.equals(frontRightOffset)) {
+            chemicalSide = right;
+        }
+        return chemicalSide;
     }
 
     @Override

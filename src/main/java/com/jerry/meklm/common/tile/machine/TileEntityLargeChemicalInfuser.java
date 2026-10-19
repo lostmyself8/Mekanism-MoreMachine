@@ -315,11 +315,30 @@ public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<Chem
         if (capability == Capabilities.ENERGY.block()) {
             return Objects.requireNonNull(energyHandlerManager, "Expected to have energy handler").resolve(capability, side);
         } else if (capability == Capabilities.CHEMICAL.block()) {
-            return Objects.requireNonNull(chemicalHandlerManager, "Expected to have chemical handler").resolve(capability, side);
+            Direction chemicalSide = getChemicalSide(side, offset);
+            return Objects.requireNonNull(chemicalHandlerManager, "Expected to have chemical handler").resolve(capability, chemicalSide);
         } else if (capability == Capabilities.ITEM.block()) {
             return Objects.requireNonNull(itemHandlerManager, "Expected to have item handler").resolve(capability, side);
         }
         return WorldUtils.getCapability(level, capability, worldPosition, null, this, side);
+    }
+
+    private Direction getChemicalSide(@Nullable Direction side, @NotNull Vec3i offset) {
+        // The two rear chemical ports share the machine's BACK direction. Select the
+        // tank by the bounding-block offset so that the rear-left and rear-right
+        // ports do not both resolve to the BACK handler (which contains both tanks).
+        Direction chemicalSide = side;
+        Direction back = getOppositeDirection();
+        Direction left = getLeftSide();
+        Direction right = left.getOpposite();
+        Vec3i rearLeftOffset = new Vec3i(back.getStepX() + left.getStepX(), 0, back.getStepZ() + left.getStepZ());
+        Vec3i rearRightOffset = new Vec3i(back.getStepX() + right.getStepX(), 0, back.getStepZ() + right.getStepZ());
+        if (offset.equals(rearLeftOffset)) {
+            chemicalSide = left;
+        } else if (offset.equals(rearRightOffset)) {
+            chemicalSide = right;
+        }
+        return chemicalSide;
     }
 
     @Override
