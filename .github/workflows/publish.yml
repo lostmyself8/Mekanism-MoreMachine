@@ -98,7 +98,7 @@ jobs:
           LOADER: ${{ inputs.branch == '1.20.1' && 'forge' || 'neoforge' }}
           JAVA: ${{ inputs.branch == '26.1' && '25' || inputs.branch == '1.21.1' && '21' || '17' }}
           VERSION_TYPE: 'release'
-        uses: Kir-Antipov/mc-publish@v3.3.0
+        uses: Kira-NT/mc-publish@v3.3.1
         with:
           modrinth-id: qDJXZJTz
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -131,7 +131,7 @@ jobs:
           LOADER: ${{ inputs.branch == '1.20.1' && 'forge' || 'neoforge' }}
           JAVA: ${{ inputs.branch == '26.1' && '25' || inputs.branch == '1.21.1' && '21' || '17' }}
           VERSION_TYPE: 'release'
-        uses: Kir-Antipov/mc-publish@v3.3.0
+        uses: Kira-NT/mc-publish@v3.3.1
         with:
           curseforge-id: 1275257
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
