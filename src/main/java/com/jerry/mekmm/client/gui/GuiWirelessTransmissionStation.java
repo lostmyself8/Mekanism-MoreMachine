@@ -72,7 +72,7 @@ public class GuiWirelessTransmissionStation extends GuiConfigurableTile<TileEnti
             }
         }, 27, 80, 119, 9));
         // 配置按钮
-        addRenderableWidget(new MekanismImageButton(this, 151, 77, 18, 18, getButtonLocation("config"),
+        addRenderableWidget(new MekanismImageButton(this, 151, 77, 18, 18, com.jerry.mekmm.Mekmm.rl("button/config"),
                 (element, mouseX, mouseY) -> PacketUtils.sendToServer(new MoreMachinePacketTileButtonPress(MoreMachineClickedTileButton.WIRELESS_TRANSMISSION_STATION_CONFIG, ((GuiWirelessTransmissionStation) element.gui()).tile))))
                 .setTooltip(TooltipUtils.create(MoreMachineLang.CONFIGURATION));
         addRenderableWidget(new GuiHeatTab(this, () -> {

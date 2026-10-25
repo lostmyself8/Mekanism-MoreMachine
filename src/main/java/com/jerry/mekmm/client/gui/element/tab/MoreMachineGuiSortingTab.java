@@ -1,5 +1,6 @@
 package com.jerry.mekmm.client.gui.element.tab;
 
+import com.jerry.mekmm.client.LegacyTextures;
 import com.jerry.mekmm.common.network.to_server.MoreMachinePacketGuiInteract;
 import com.jerry.mekmm.common.network.to_server.MoreMachinePacketGuiInteract.MoreMachineGuiInteraction;
 import com.jerry.mekmm.common.tile.factory.TileEntityMoreMachineFactory;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class MoreMachineGuiSortingTab extends GuiInsetElement<TileEntityMoreMachineFactory<?>> {
 
     public MoreMachineGuiSortingTab(IGuiWrapper gui, TileEntityMoreMachineFactory<?> tile) {
-        super(MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "sorting.png"), gui, tile, -26, 62, 35, 18, true);
+        super(mekanism.common.Mekanism.rl("button/sorting"), gui, tile, -26, 62, 35, 18, true);
         setTooltip(MekanismLang.AUTO_SORT);
     }
 
@@ -32,8 +33,8 @@ public class MoreMachineGuiSortingTab extends GuiInsetElement<TileEntityMoreMach
     }
 
     @Override
-    protected int getTabColor(GuiGraphicsExtractor guiGraphics) {
-        return MekanismRenderer.color(SpecialColors.TAB_FACTORY_SORT);
+    protected int getTabColor() {
+        return SpecialColors.TAB_FACTORY_SORT.argb();
     }
 
     @Override

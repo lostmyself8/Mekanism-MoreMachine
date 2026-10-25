@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class ItemBlockLargeChemicalTank<TILE extends TileEntityLargeChemicalTank<?>> extends ItemBlockTooltip<BlockTileModel<TILE, Machine<TILE>>> {
+public abstract class ItemBlockLargeChemicalTank<TILE extends TileEntityLargeChemicalTank<?>> extends ItemBlockTooltip<BlockTileModel<TILE, Machine<TILE>>> {
 
     public static final LightConfigInfo ITEM = Util.make(() -> {
         Map<RelativeSide, DataType> sideConfig = new EnumMap<>(RelativeSide.class);
@@ -45,10 +45,12 @@ public class ItemBlockLargeChemicalTank<TILE extends TileEntityLargeChemicalTank
     });
 
     public ItemBlockLargeChemicalTank(BlockTileModel<TILE, Machine<TILE>> block, Properties properties) {
-        super(block, true, properties
+        super(block, properties
                 .component(MekanismDataComponents.DUMP_MODE, TileEntityChemicalTank.GasMode.IDLE)
                 .component(MekanismDataComponents.SIDE_CONFIG, SIDE_CONFIG));
     }
+
+    public abstract com.jerry.meklm.api.tier.ILargeChemicalTankTier getTier();
 
     @Override
     public boolean isBarVisible(@NotNull ItemStack stack) {

@@ -1,13 +1,13 @@
 package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.api.recipes.TripleItemToItemRecipe;
+import com.jerry.mekmm.client.recipe_viewer.jei.PortHolderRecipeCategory;
 
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.recipe_viewer.RecipeViewerUtils;
-import mekanism.client.recipe_viewer.jei.HolderRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 
@@ -20,7 +20,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import org.jetbrains.annotations.NotNull;
 
-public class PresserRecipeCategory extends HolderRecipeCategory<TripleItemToItemRecipe> {
+public class PresserRecipeCategory extends PortHolderRecipeCategory<TripleItemToItemRecipe> {
 
     private final GuiSlot primaryInput;
     private final GuiSlot secondaryInput;

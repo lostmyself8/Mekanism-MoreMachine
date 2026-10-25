@@ -66,12 +66,17 @@ public abstract class MMBasicItemStackChemicalToItemStackRecipe extends ItemStac
     }
 
     @Override
-    public List<@NotNull ItemStackTemplate> getOutputDefinition() {
+    public List<@NotNull ItemStackTemplate> getOutputDefinition(net.minecraft.util.context.ContextMap contextMap) {
         return Collections.singletonList(output);
     }
 
     @Override
     public ItemStackTemplate getOutputRaw() {
         return output;
+    }
+
+    @Override
+    public net.minecraft.world.item.crafting.display.SlotDisplay getOutputDisplay() {
+        return new net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay(output);
     }
 }

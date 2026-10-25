@@ -1,5 +1,7 @@
 package com.jerry.mekmm.client.gui.element.button;
 
+import com.jerry.mekmm.client.LegacyTextures;
+import com.jerry.mekmm.client.LegacyTextures.ResourceType;
 import com.jerry.mekmm.common.attachments.component.ConnectionConfig;
 import com.jerry.mekmm.common.attachments.component.WirelessConnectionManager;
 
@@ -12,7 +14,6 @@ import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.common.util.MekanismUtils;
-import mekanism.common.util.MekanismUtils.ResourceType;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -33,7 +34,7 @@ import java.util.function.ObjIntConsumer;
 
 public class ConnectListButton extends MekanismButton {
 
-    private static final Identifier TEXTURE = MekanismUtils.getResource(ResourceType.GUI_BUTTON, "lists_holder.png");
+    private static final Identifier TEXTURE = LegacyTextures.getResource(ResourceType.GUI_BUTTON, "lists_holder.png");
 
     protected static final int TEXTURE_WIDTH = 131;// 156
     protected static final int TEXTURE_HEIGHT = 58;
@@ -68,7 +69,7 @@ public class ConnectListButton extends MekanismButton {
         this.onPress = onPress;
         this.level = level;
         slot = addChild(new GuiSlot(SlotType.NORMAL, gui, relativeX + 2, relativeY + 2));
-        slotDisplay = addChild(new GuiSequencedSlotDisplay(gui, relativeX + 3, relativeY + 3, () -> renderStackSupplier.apply(getConnection())));
+        slotDisplay = addChild(new GuiSequencedSlotDisplay(gui, relativeX + 3, relativeY + 3, () -> com.jerry.mekmm.client.PortDisplays.of(renderStackSupplier.apply(getConnection()))));
         setButtonBackground(ButtonBackground.NONE);
     }
 

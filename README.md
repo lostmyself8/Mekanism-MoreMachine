@@ -6,6 +6,12 @@
 [badge_modrinth]: https://img.shields.io/modrinth/dt/qDJXZJTz?color=5da545&label=Modrinth&style=for-the-badge&logo=modrinth
 [modrinth]: https://modrinth.com/mod/mekanismmoremachine
 
+
+## Minecraft 26.2 development
+
+This branch targets Minecraft 26.2, NeoForge 26.2.0.93, Java 25 and Mekanism 10.8.0.
+See [the 26.2 build notes](docs/BUILDING-26.2.md) for dependency setup, optional crop compatibility and validation.
+
 ## Brief Introduction
 
 **This mod adds a planting station and a replicator to Mekanism ( of course there are others ).**
@@ -22,7 +28,7 @@
 
 ## Planting Station
 
-**Consuming nutrient solution to produce crops, it is compatible with most of the things that can be grown in vanilla and fully compatible with mysticalagriculture.**
+**Consuming nutrient solution to produce crops, it supports vanilla plants and optional Croparium / HBM crop recipes on the 26.2 branch. Seeds and saplings are retained as templates.**
 
 ## Replicator
 

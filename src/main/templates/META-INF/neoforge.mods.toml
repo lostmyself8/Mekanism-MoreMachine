@@ -9,7 +9,7 @@ license = "${mod_license}"
     displayName = "${mod_name}"
     authors = "Lost Myself"
     description = "${mod_description}"
-    logoFile = "logo.png"
+    iconFile = "logo.png"
     displayURL = "${mod_url}"
     credits="Thank you to all those who have made any contributions to this mod"
 
@@ -28,7 +28,7 @@ license = "${mod_license}"
 [[dependencies."${mod_id}"]]
     modId = "minecraft"
     type = "required"
-    versionRange = "${minecraft_version}"
+    versionRange = "${minecraft_version_range}"
     ordering = "NONE"
     side = "BOTH"
 
@@ -38,9 +38,3 @@ license = "${mod_license}"
     versionRange = "[10.8.0,)"
     ordering = "AFTER"
     side = "BOTH"
-
-#[[dependencies.${mod_id}]]
-#    modId = "evolvedmekanism"
-#    type = "optional"
-#    ordering = "AFTER"
-#    side = "BOTH"

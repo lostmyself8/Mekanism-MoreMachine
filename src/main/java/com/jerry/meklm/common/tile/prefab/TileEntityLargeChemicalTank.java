@@ -42,8 +42,8 @@ import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import mekanism.common.upgrade.ChemicalTankUpgradeData;
 import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.ChemicalUtils;
-import mekanism.common.util.NBTUtils;
 import mekanism.common.util.ResourceUtils;
+import mekanism.common.util.ValueUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -231,13 +231,13 @@ public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> ex
     @Override
     public void writeSustainedData(@NotNull ValueOutput output) {
         super.writeSustainedData(output);
-        NBTUtils.writeEnum(output, SerializationConstants.DUMP_MODE, dumping);
+        ValueUtils.writeEnum(output, SerializationConstants.DUMP_MODE, dumping);
     }
 
     @Override
     public void readSustainedData(@NotNull ValueInput input) {
         super.readSustainedData(input);
-        NBTUtils.setEnumIfPresent(input, SerializationConstants.DUMP_MODE, GasMode.BY_ID, mode -> dumping = mode);
+        ValueUtils.setEnumIfPresent(input, SerializationConstants.DUMP_MODE, GasMode.BY_ID, mode -> dumping = mode);
     }
 
     @Override

@@ -5,13 +5,12 @@ import com.jerry.mekaf.common.tile.factory.base.TileEntityAdvancedFactoryBase;
 import com.jerry.mekaf.common.upgrade.PRCUpgradeData;
 
 import mekanism.api.IContentsListener;
-import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.Chemical;
+import mekanism.api.chemical.ChemicalAttributeValidator;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
-import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.api.fluid.IFluidTank;
 import mekanism.api.inventory.IInventorySlot;
 import mekanism.api.math.MathUtils;
@@ -26,6 +25,8 @@ import mekanism.api.recipes.inputs.InputHelper;
 import mekanism.api.recipes.outputs.IOutputHandler;
 import mekanism.api.recipes.outputs.OutputHelper;
 import mekanism.api.recipes.vanilla_input.ReactionRecipeInput;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.CommonWorldTickHandler;
@@ -54,6 +55,7 @@ import mekanism.common.upgrade.IUpgradeData;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -155,7 +157,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
 
     @Override
     protected void addTanks(MekContainerHelper<IChemicalTank> builder, IContentsListener listener, IContentsListener updateSortingListener) {
-        builder.addContainer(inputChemicalTank = BasicChemicalTank.create(MAX_CHEMICAL * tier.processes, MekContainerHelper.radioactiveInputTankPredicate(() -> outputChemicalTank),
+        builder.addContainer(inputChemicalTank = BasicChemicalTank.create(MAX_CHEMICAL * tier.processes, MekContainerHelper.radioactiveInputTankPredicate(() -> outputChemicalTank, this::getLevel),
                 (chemicalType, automationType) -> containsRecipeCAB(ItemResource.EMPTY, inputFluidTank.resource(), chemicalType), this::containsRecipeC, ChemicalAttributeValidator.ALWAYS_ALLOW,
                 markAllMonitorsChanged(listener)));
         builder.addContainer(outputChemicalTank = BasicChemicalTank.output(MAX_CHEMICAL * tier.processes, markAllMonitorsChanged(listener)));
@@ -200,8 +202,8 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     }
 
     @Override
-    public void onCachedRecipeChanged(@Nullable CachedRecipe<PressurizedReactionRecipe> cachedRecipe, int cacheIndex) {
-        super.onCachedRecipeChanged(cachedRecipe, cacheIndex);
+    public void onCachedRecipeChanged(net.minecraft.core.HolderLookup.Provider registries, @Nullable CachedRecipe<PressurizedReactionRecipe> cachedRecipe, int cacheIndex) {
+        super.onCachedRecipeChanged(registries, cachedRecipe, cacheIndex);
         int recipeDuration;
         if (cachedRecipe == null) {
             recipeDuration = BASE_DURATION;
@@ -214,10 +216,10 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
         boolean update = getTicksRequired() != recipeDuration;
         setTicksRequired(recipeDuration);
         if (update) {
-            recalculateUpgrades(Upgrade.SPEED);
+            recalculateUpgrades(getUpgradeLookup(registries), getUpgradeLookup(registries).getOrThrow(UpgradeIds.SPEED), getUpgrades(getUpgradeLookup(registries).getOrThrow(UpgradeIds.SPEED)));
         }
         // Ensure we take our recipe's energy per tick into account
-        energyContainer.updateEnergyPerTick();
+        energyContainer.updateEnergyPerTick(getUpgradeLookup(registries));
     }
 
     @Override
@@ -284,7 +286,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
 
     @Nullable
     protected PressurizedReactionRecipe getRecipeForInput(int process, @NotNull ItemStack fallbackInput, @NotNull IInventorySlot outputSlot, @NotNull IChemicalTank outputTank, boolean updateCache) {
-        if (!CommonWorldTickHandler.flushTagAndRecipeCaches) {
+        if (!mekanism.common.Mekanism.worldTickHandler.flushTagAndRecipeCaches) {
             // If our recipe caches are valid, grab our cached recipe and see if it is still valid
             CachedRecipe<PressurizedReactionRecipe> cached = getCachedRecipe(process);
             if (isCachedRecipeValid(cached, fallbackInput)) {
@@ -369,7 +371,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
     @Override
     public void dump() {
         inputFluidTank.setContents(FluidResource.EMPTY, 0, null);
-        if (!isRemote() && IRadiationManager.INSTANCE.isRadiationEnabled() && shouldDumpRadiation()) {
+        if ((level != null && !level.isClientSide()) && IRadiationManager.INSTANCE.isRadiationEnabled() && shouldDumpRadiation()) {
             // If we are on a server and radiation is enabled dump all gas tanks with radioactive materials
             // Note: we handle clearing radioactive contents later in drop calculation due to when things are written to
             // NBT
@@ -408,7 +410,7 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
                 PRCRecipeProcessInfo recipeProcessInfo = processes.computeIfAbsent(inputStack, i -> new PRCRecipeProcessInfo());
                 recipeProcessInfo.processes.add(processInfo);
                 recipeProcessInfo.totalCount += inputSlot.amountAsLong();
-                if (recipeProcessInfo.lazyMinPerSlot == null && !CommonWorldTickHandler.flushTagAndRecipeCaches) {
+                if (recipeProcessInfo.lazyMinPerSlot == null && !mekanism.common.Mekanism.worldTickHandler.flushTagAndRecipeCaches) {
                     // If we don't have a lazily initialized min per slot calculation set for it yet
                     // and our cache is not invalid/out of date due to a reload
                     CachedRecipe<PressurizedReactionRecipe> cachedRecipe = getCachedRecipe(processInfo.process());

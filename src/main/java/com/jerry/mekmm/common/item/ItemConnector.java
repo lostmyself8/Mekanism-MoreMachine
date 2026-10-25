@@ -2,6 +2,7 @@ package com.jerry.mekmm.common.item;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.MoreMachineItemAbilities;
+import com.jerry.mekmm.client.LegacyTextures;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
@@ -258,7 +259,7 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
             if (transmissionType == null) {
                 this.icon = Objects.requireNonNull(icon, "Icon should only be null if there is a transmission type present.");
             } else {
-                this.icon = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, transmissionType.getTransmission() + ".png");
+                this.icon = LegacyTextures.getResource(LegacyTextures.ResourceType.GUI, transmissionType.getTransmission() + ".png");
             }
         }
 

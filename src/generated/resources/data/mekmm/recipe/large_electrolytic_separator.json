@@ -1,6 +1,5 @@
 {
   "type": "mekanism:mek_data",
-  "category": "misc",
   "key": {
     "B": "#c:storage_blocks/steel",
     "E": "mekmm:advanced_electrolysis_core",

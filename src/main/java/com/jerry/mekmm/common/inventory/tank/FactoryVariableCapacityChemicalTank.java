@@ -2,8 +2,8 @@ package com.jerry.mekmm.common.inventory.tank;
 
 import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
+import mekanism.api.chemical.ChemicalAttributeValidator;
 import mekanism.api.chemical.ChemicalResource;
-import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.common.capabilities.chemical.VariableCapacityChemicalTank;
 
 import org.jetbrains.annotations.NotNull;

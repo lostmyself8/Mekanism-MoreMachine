@@ -76,8 +76,13 @@ public abstract class TripleItemToItemRecipe extends MekanismRecipe<RecipeInput>
         return MoreMachineRecipeTypes.TYPE_PRESSING.value();
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(PRESSER);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                new net.minecraft.world.item.crafting.display.SlotDisplay.Composite(java.util.List.of(getFirstInput().display(), getSecondInput().display(), getThirdInput().display())), PortRecipeDisplays.items(getOutputDefinition()), PortRecipeDisplays.station(getToastSymbol())));
     }
 }

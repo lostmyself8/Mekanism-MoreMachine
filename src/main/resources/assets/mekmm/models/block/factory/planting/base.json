@@ -17,7 +17,7 @@
 		"10": "mekmm:block/factory/planting/planting_factory_top_2",
 		"11": "minecraft:block/farmland_moist",
 		"12": "minecraft:block/dirt",
-		"13": "mekmm:block/planting_station/example_plant",
+		"13": "mekmm:block/planting_station/crops",
 		"14": "mekmm:block/planting_station/light_off"
 	},
 	"elements": [

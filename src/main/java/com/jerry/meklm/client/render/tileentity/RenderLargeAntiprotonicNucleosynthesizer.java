@@ -6,10 +6,10 @@ import com.jerry.meklm.common.tile.machine.TileEntityLargeAntiprotonicNucleosynt
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
 import mekanism.api.text.EnumColor;
-import mekanism.client.model.ModelEnergyCore;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.client.render.tileentity.RenderEnergyCube;
 
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
@@ -29,11 +29,11 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntityRenderer<@NotNull TileEntityLargeAntiprotonicNucleosynthesizer, LargeAntiprotonicNucleosynthesizerRenderState> {
 
-    private final ModelEnergyCore core;
+    private final ModelPart core;
 
     public RenderLargeAntiprotonicNucleosynthesizer(Context context) {
         super(context);
-        core = new ModelEnergyCore(context.entityModelSet());
+        core = context.bakeLayer(RenderEnergyCube.CORE_LAYER);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class RenderLargeAntiprotonicNucleosynthesizer extends MekanismTileEntity
         matrix.scale(0.5F, 0.5F, 0.5F);
         matrix.mulPose(Axis.YP.rotationDegrees(scaledTicks));
         matrix.mulPose(RenderEnergyCube.coreVec.rotationDegrees(36F + scaledTicks));
-        core.collect(EnumColor.PURPLE.getPackedColor(), matrix, nodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, false);
+        nodeCollector.submitModelPart(core, matrix, RenderEnergyCube.RENDER_TYPE, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, null, EnumColor.PURPLE.getPackedColor(), null);
         matrix.popPose();
     }
 

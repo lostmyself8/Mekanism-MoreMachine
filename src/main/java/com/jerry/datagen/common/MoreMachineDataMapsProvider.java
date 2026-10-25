@@ -43,8 +43,8 @@ public class MoreMachineDataMapsProvider extends DataMapProvider {
                 .add(Fluids.WATER.builtInRegistryHolder(), new SolarHeatFluid(0.5, 0.02), false);
 
         builder(IMoreMachineDataMapTypes.INSTANCE.chemicalReplicatorRecipe())
-                .add(MekanismChemicals.FISSILE_FUEL, new ChemicalReplicatorRecipe(1, 1, 100), false)
-                .add(MekanismChemicals.ANTIMATTER, new ChemicalReplicatorRecipe(1, 249, 1), false);
+                .add(mekanism.api.chemical.ChemicalIds.FISSILE_FUEL, new ChemicalReplicatorRecipe(1, 1, 100), false)
+                .add(mekanism.api.chemical.ChemicalIds.ANTIMATTER, new ChemicalReplicatorRecipe(1, 249, 1), false);
     }
 
     private static Identifier common(String path) {

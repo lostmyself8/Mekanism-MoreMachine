@@ -1,5 +1,6 @@
 package com.jerry.mekmm.client.gui;
 
+import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.client.gui.element.GuiWirelessChargingStationSwitch;
 import com.jerry.mekmm.client.gui.element.GuiWirelessChargingStationSwitch.SwitchType;
 import com.jerry.mekmm.common.MoreMachineLang;
@@ -18,7 +19,6 @@ import mekanism.client.gui.element.tab.GuiSecurityTab;
 import mekanism.common.MekanismLang;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.network.PacketUtils;
-import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.text.EnergyDisplay;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -32,9 +32,9 @@ import java.util.List;
 
 public class GuiWirelessChargingStation extends GuiConfigurableTile<TileEntityWirelessChargingStation, MekanismTileContainer<TileEntityWirelessChargingStation>> {
 
-    private static final Identifier EQUIPS = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/equips.png");
-    private static final Identifier INVENTORY = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/inventory.png");
-    private static final Identifier CURIOS = MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "switch/curios.png");
+    private static final Identifier EQUIPS = Mekmm.rl("switch/equips");
+    private static final Identifier INVENTORY = Mekmm.rl("switch/inventory");
+    private static final Identifier CURIOS = Mekmm.rl("switch/curios");
 
     public GuiWirelessChargingStation(MekanismTileContainer<TileEntityWirelessChargingStation> container, Inventory inv, Component title) {
         super(container, inv, title);

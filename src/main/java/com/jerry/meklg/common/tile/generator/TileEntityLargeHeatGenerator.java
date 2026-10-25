@@ -129,6 +129,11 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
     }
 
     @Override
+    public long getMaxOutput() {
+        return MathUtils.multiplyClamped(MAX_PRODUCTION.getAsLong(), 200L);
+    }
+
+    @Override
     protected boolean onUpdateServer(ServerLevel level) {
         boolean sendUpdatePacket = super.onUpdateServer(level);
         try (Transaction transaction = Transaction.openRoot()) {
@@ -310,6 +315,8 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
 
     @Override
     public int getBoundingComparatorSignal(Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         Direction back = getOppositeDirection();
         if (offset.equals(new Vec3i(back.getStepX(), 0, back.getStepZ())) || offset.equals(new Vec3i(back.getStepX(), 1, back.getStepZ())) || offset.equals(new Vec3i(back.getStepX(), 2, back.getStepZ()))) {
             return getCurrentRedstoneLevel();
@@ -333,6 +340,8 @@ public class TileEntityLargeHeatGenerator extends TileEntityMoreMachineGenerator
 
     @Override
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         if (capability == Capabilities.FLUID.block()) {
             return notFluidPort(side, offset);
         } else if (capability == Capabilities.ENERGY.block()) {

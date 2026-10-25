@@ -1,6 +1,5 @@
 {
   "type": "mekanism:mek_data",
-  "category": "misc",
   "key": {
     "#": "mekanism:bio_fuel",
     "A": "#mekanism:alloys/reinforced",

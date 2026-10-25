@@ -27,7 +27,7 @@ public class ItemBlockWirelessChargingStation extends ItemBlockTooltip<BlockTile
     });
 
     public ItemBlockWirelessChargingStation(BlockTileModel<TileEntityWirelessChargingStation, Machine<TileEntityWirelessChargingStation>> block, Properties properties) {
-        super(block, true, properties
+        super(block, properties
                 .component(MoreMachineDataComponents.CHARGE_EQUIPMENT, false)
                 .component(MoreMachineDataComponents.CHARGE_INVENTORY, false)
                 .component(MoreMachineDataComponents.CHARGE_CURIOS, false)

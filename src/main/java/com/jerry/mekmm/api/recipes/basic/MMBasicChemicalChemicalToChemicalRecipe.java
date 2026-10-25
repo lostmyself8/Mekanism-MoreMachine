@@ -58,7 +58,7 @@ public abstract class MMBasicChemicalChemicalToChemicalRecipe extends ChemicalCh
     }
 
     @Override
-    public List<ChemicalStackTemplate> getOutputDefinition() {
+    public List<ChemicalStackTemplate> getOutputDefinition(net.minecraft.util.context.ContextMap contextMap) {
         return Collections.singletonList(output);
     }
 
@@ -82,5 +82,10 @@ public abstract class MMBasicChemicalChemicalToChemicalRecipe extends ChemicalCh
     @Override
     public int hashCode() {
         return Objects.hash(leftInput, rightInput, output);
+    }
+
+    @Override
+    public net.minecraft.world.item.crafting.display.SlotDisplay getOutputDisplay() {
+        return new mekanism.api.recipes.ingredients.chemical.display.ChemicalStackSlotDisplay(output);
     }
 }

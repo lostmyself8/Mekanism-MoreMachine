@@ -34,11 +34,11 @@ import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.capabilities.holder.single.BasicSingleHolder;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
+import mekanism.common.integration.computer.ComputerConstants;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableLong;
@@ -171,8 +171,8 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
     }
 
     @Override
-    public void onCachedRecipeChanged(@Nullable CachedRecipe<NucleosynthesizingRecipe> cachedRecipe, int cacheIndex) {
-        super.onCachedRecipeChanged(cachedRecipe, cacheIndex);
+    public void onCachedRecipeChanged(net.minecraft.core.HolderLookup.Provider registries, @Nullable CachedRecipe<NucleosynthesizingRecipe> cachedRecipe, int cacheIndex) {
+        super.onCachedRecipeChanged(registries, cachedRecipe, cacheIndex);
         // Note: Because we don't support speed upgrades we can do this in a much cleaner way than how we have to do it
         // for the PRC
         ticksRequired = cachedRecipe == null ? BASE_TICKS_REQUIRED : cachedRecipe.getRecipe().getDuration();
@@ -183,7 +183,7 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
         boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.fillContainerOrConvert(null);
         gasInputSlot.fillTankOrConvert(null);
-        clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(energyContainer);
+        clientEnergyUsed = recipeCacheLookupMonitor.updateAndProcess(level.registryAccess(), energyContainer);
         return sendUpdatePacket;
     }
 
@@ -263,6 +263,8 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
 
     @Override
     public int getBoundingComparatorSignal(Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         Direction back = getOppositeDirection();
         Direction left = getLeftSide();
         Direction right = left.getOpposite();
@@ -304,6 +306,8 @@ public class TileEntityLargeAntiprotonicNucleosynthesizer extends TileEntityProg
 
     @Override
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         if (capability == Capabilities.CHEMICAL.block()) {
             return notChemicalPort(side, offset);
         } else if (capability == Capabilities.ENERGY.block()) {

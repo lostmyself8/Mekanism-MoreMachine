@@ -312,20 +312,20 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<SolarHeatGenerato
     }
 
     @Override
-    public void collect(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
-        collectItem(state, matrix, submitNodeCollector, light, overlayLight, hasEffect);
+    public void collect(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, FoilRendering foil, int outlineColor) {
+        collectItem(state, matrix, submitNodeCollector, light, overlayLight, foil, outlineColor);
     }
 
-    public void collectItem(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
+    public void collectItem(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, FoilRendering foil, int outlineColor) {
         setPanelVisibility(ALL_PANELS);
         setupAnim(state);
-        collectParts(parts, matrix, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, hasEffect);
+        collectParts(parts, matrix, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, foil, outlineColor, 0);
     }
 
     public void collectBlock(SolarHeatGeneratorRotationRenderState state, @NotNull PoseStack matrix, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean[] renderPanels) {
         setPanelVisibility(renderPanels);
         setupAnim(state);
-        collectParts(parts, matrix, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, false);
+        collectParts(parts, matrix, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, FoilRendering.NONE, 0, 0);
     }
 
     @Override
@@ -334,10 +334,18 @@ public class ModelSolarHeatGenerator extends MekanismJavaModel<SolarHeatGenerato
         top.setRotation(getAbsoluteRotation(state.angle), 0F, 0F);
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, SolarHeatGeneratorRotationRenderState state, boolean[] renderPanels, boolean isHighContrast) {
+    public java.util.Collection<mekanism.client.render.outline.Outlines.Line> outlines(SolarHeatGeneratorRotationRenderState state, boolean[] renderPanels) {
         setPanelVisibility(renderPanels);
         setupAnim(state);
-        renderPartsAsWireFrame(parts, matrix, vertexBuilder, isHighContrast);
+        return com.jerry.mekmm.client.render.ModelOutlines.extract(parts);
+    }
+
+    public void collect(SolarHeatGeneratorRotationRenderState state, PoseStack pose, SubmitNodeCollector collector, int light, int overlay, boolean foil) {
+        collect(state, pose, collector, light, overlay, FoilRendering.ITEM.foil(foil), 0);
+    }
+
+    public void collectItem(SolarHeatGeneratorRotationRenderState state, PoseStack pose, SubmitNodeCollector collector, int light, int overlay, boolean foil) {
+        collectItem(state, pose, collector, light, overlay, FoilRendering.ITEM.foil(foil), 0);
     }
 
     private void setPanelVisibility(boolean[] renderPanels) {

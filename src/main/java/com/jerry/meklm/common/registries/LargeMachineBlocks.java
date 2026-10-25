@@ -54,7 +54,7 @@ public class LargeMachineBlocks {
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityLargeRotaryCondensentrator, Machine<TileEntityLargeRotaryCondensentrator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeRotaryCondensentrator, Machine<TileEntityLargeRotaryCondensentrator>>>> LARGE_ROTARY_CONDENSENTRATOR = LM_BLOCKS.register("large_rotary_condensentrator",
             properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ROTARY_CONDENSENTRATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.ROTARY_MODE, false)))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.FLUID, () -> FluidTanksBuilder.builder()
@@ -73,7 +73,7 @@ public class LargeMachineBlocks {
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityLargeChemicalInfuser, Machine<TileEntityLargeChemicalInfuser>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeChemicalInfuser, Machine<TileEntityLargeChemicalInfuser>>>> LARGE_CHEMICAL_INFUSER = LM_BLOCKS.register("large_chemical_infuser",
             properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_CHEMICAL_INFUSER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties))
+            (block, properties) -> new ItemBlockTooltip<>(block, properties))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                             .addBasic(TileEntityLargeChemicalInfuser.MAX_GAS, MekanismRecipeType.CHEMICAL_INFUSING, InputRecipeCache.EitherSideChemical::containsInput)
@@ -89,7 +89,7 @@ public class LargeMachineBlocks {
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityLargeElectrolyticSeparator, Machine<TileEntityLargeElectrolyticSeparator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeElectrolyticSeparator, Machine<TileEntityLargeElectrolyticSeparator>>>> LARGE_ELECTROLYTIC_SEPARATOR = LM_BLOCKS.register("large_electrolytic_separator",
             properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ELECTROLYTIC_SEPARATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.DUMP_MODE, TileEntityChemicalTank.GasMode.IDLE)
                     .component(MekanismDataComponents.SECONDARY_DUMP_MODE, TileEntityChemicalTank.GasMode.IDLE)))
             .forItemHolder(holder -> holder
@@ -109,7 +109,7 @@ public class LargeMachineBlocks {
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityLargeSolarNeutronActivator, Machine<TileEntityLargeSolarNeutronActivator>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeSolarNeutronActivator, Machine<TileEntityLargeSolarNeutronActivator>>>> LARGE_SOLAR_NEUTRON_ACTIVATOR = LM_BLOCKS.register("large_solar_neutron_activator",
             properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, BlockTile.defaultProperties(properties).mapColor(MapColor.COLOR_BLUE)),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties))
+            (block, properties) -> new ItemBlockTooltip<>(block, properties))
             .forItemHolder(holder -> holder
                     .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                             .addBasic(TileEntityLargeSolarNeutronActivator.MAX_GAS, MekanismRecipeType.ACTIVATING, InputRecipeCache.SingleChemical::containsInput)
@@ -122,7 +122,7 @@ public class LargeMachineBlocks {
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargeAntiprotonicNucleosynthesizer, Machine<TileEntityLargeAntiprotonicNucleosynthesizer>>>> LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER = LM_BLOCKS.register("large_antiprotonic_nucleosynthesizer",
             properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER, BlockTile.defaultProperties(properties).mapColor(MapColor.METAL)),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties)).forItemHolder(
+            (block, properties) -> new ItemBlockTooltip<>(block, properties)).forItemHolder(
                     holder -> holder
                             .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                                     .addBasic(TileEntityAntiprotonicNucleosynthesizer.MAX_GAS, MekanismRecipeType.NUCLEOSYNTHESIZING, InputRecipeCache.ItemChemical::containsInputB)
@@ -136,7 +136,7 @@ public class LargeMachineBlocks {
 
     public static final BlockRegistryObject<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>, ItemBlockTooltip<BlockTileModel<TileEntityLargePigmentMixer, Machine<TileEntityLargePigmentMixer>>>> LARGE_PIGMENT_MIXER = LM_BLOCKS.register("large_pigment_mixer",
             properties -> new BlockTileModel<>(LargeMachineBlockTypes.LARGE_PIGMENT_MIXER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties)).forItemHolder(
+            (block, properties) -> new ItemBlockTooltip<>(block, properties)).forItemHolder(
                     holder -> holder
                             .addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
                                     .addBasic(TileEntityLargePigmentMixer.MAX_INPUT_PIGMENT, MekanismRecipeType.PIGMENT_MIXING, InputRecipeCache.EitherSideChemical::containsInput)

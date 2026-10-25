@@ -35,12 +35,12 @@ import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
 import mekanism.common.capabilities.holder.single.SingleConfigHolder;
+import mekanism.common.integration.computer.ComputerConstants;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerFluidTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
@@ -209,7 +209,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         uuSlot.fillTankOrConvert(null);
         inputTankOutputSlot.drainTankIntoSlot(fluidOutputSlot, null);
         outputTankOutputSlot.drainTankIntoSlot(fluidOutputSlot, null);
-        recipeCacheLookupMonitor.updateAndProcess();
+        recipeCacheLookupMonitor.updateAndProcess(level.registryAccess());
         return sendUpdatePacket;
     }
 
@@ -255,7 +255,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         // if (amount == 0) return null;
         // return new FluidReplicatorIRecipeSingle(
         // IngredientCreatorAccess.fluid().fromHolder(fluidHolder, 1000),
-        // IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
+        // IngredientCreatorAccess.chemicalStack().fromHolder(chemicalStack.typeHolder(), amount),
         // new FluidStack(fluidHolder, FluidType.BUCKET_VOLUME));
         // }
 
@@ -264,7 +264,7 @@ public class TileEntityFluidReplicator extends TileEntityProgressMachine<BasicFl
         if (recipe != null) {
             return new FluidReplicatorIRecipeSingle(
                     IngredientCreatorAccess.fluid().fromHolder(fluidHolder, recipe.inputAmount()),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, Math.toIntExact(recipe.UUAmount())),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(chemicalStack.typeHolder(), Math.toIntExact(recipe.UUAmount())),
                     new FluidStackTemplate(fluidHolder, recipe.outputAmount()));
         }
         return null;

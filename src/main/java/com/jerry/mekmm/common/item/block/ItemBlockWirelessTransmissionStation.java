@@ -41,7 +41,7 @@ public class ItemBlockWirelessTransmissionStation extends ItemBlockTooltip<Block
     });
 
     public ItemBlockWirelessTransmissionStation(BlockTileModel<TileEntityWirelessTransmissionStation, Machine<TileEntityWirelessTransmissionStation>> block, Properties properties) {
-        super(block, true, properties
+        super(block, properties
                 .component(MoreMachineDataComponents.ENERGY_RATE, TileEntityWirelessTransmissionStation.DEFAULT_ENERGY_RATE)
                 .component(MoreMachineDataComponents.FLUIDS_RATE, TileEntityWirelessTransmissionStation.DEFAULT_FLUIDS_RATE)
                 .component(MoreMachineDataComponents.CHEMICALS_RATE, TileEntityWirelessTransmissionStation.DEFAULT_CHEMICALS_RATE)

@@ -31,7 +31,7 @@ public class MoreMachineDataMapTypes implements IMoreMachineDataMapTypes {
     private static final DataMapType<Item, ItemReplicatorRecipe> ITEM_REPLICATOR_RECIPE = REGISTER.registerSimple(ItemReplicatorRecipe.ID, Registries.ITEM, ItemReplicatorRecipe.CODEC);
     private static final DataMapType<Fluid, FluidReplicatorRecipe> FLUID_REPLICATOR_RECIPE = REGISTER.registerSimple(FluidReplicatorRecipe.ID, Registries.FLUID, FluidReplicatorRecipe.CODEC);
     private static final DataMapType<Fluid, SolarHeatFluid> SOLAR_HEAT_FLUID = REGISTER.registerSimple(SolarHeatFluid.ID, Registries.FLUID, SolarHeatFluid.CODEC);
-    private static final DataMapType<Chemical, ChemicalReplicatorRecipe> CHEMICAL_REPLICATOR_RECIPE = REGISTER.registerSimple(ChemicalReplicatorRecipe.ID, MekanismAPI.CHEMICAL_REGISTRY_NAME, ChemicalReplicatorRecipe.CODEC);
+    private static final DataMapType<Chemical, ChemicalReplicatorRecipe> CHEMICAL_REPLICATOR_RECIPE = REGISTER.registerSimple(ChemicalReplicatorRecipe.ID, mekanism.api.MekanismRegistries.Keys.CHEMICAL, ChemicalReplicatorRecipe.CODEC);
 
     @Override
     public DataMapType<Item, ItemReplicatorRecipe> itemReplicatorRecipe() {

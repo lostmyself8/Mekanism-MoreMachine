@@ -27,7 +27,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
@@ -35,7 +34,6 @@ import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
-import java.util.function.BiFunction;
 
 @NullMarked
 public class MoreMachineRecipeProvider extends BaseRecipeProvider {
@@ -66,30 +64,8 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
             RecipePattern.TripleLine.of(Pattern.ALLOY, Pattern.PREVIOUS, Pattern.ALLOY),
             RecipePattern.TripleLine.of(Pattern.HDPE_CHAR, Pattern.HDPE_CHAR, Pattern.HDPE_CHAR));
 
-    private final List<ISubRecipeProvider> compatProviders = new ArrayList<>();
-    private final Set<String> disabledCompats;
-
-    public MoreMachineRecipeProvider(Provider registries, RecipeOutput output, Set<String> disabledCompats) {
+    public MoreMachineRecipeProvider(Provider registries, RecipeOutput output) {
         super(output, registries);
-
-        // Mod Compat Recipe providers
-        this.disabledCompats = disabledCompats;
-        // checkCompat("mysticalagriculture", MysticalRecipeProvider::new);
-        // checkCompat("immersiveengineering", IERecipeProvider::new);
-        // checkCompat("evolvedmekanism", EMMoreMachineRecipeProvider::new);
-        // checkCompat("evolvedmekanism", EMAdvancedFactoryRecipeProvider::new);
-    }
-
-    private void checkCompat(String modid, BiFunction<Provider, String, ISubRecipeProvider> providerCreator) {
-        if (ModList.get().isLoaded(modid)) {
-            compatProviders.add(providerCreator.apply(registries, modid));
-        } else {
-            disabledCompats.add(modid);
-        }
-    }
-
-    public Set<String> getDisabledCompats() {
-        return Collections.unmodifiableSet(disabledCompats);
     }
 
     @Override
@@ -98,9 +74,6 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
         addChemicalTankRecipes();
         addGearModuleRecipes();
         addLateGameRecipes();
-        for (ISubRecipeProvider compatProvider : compatProviders) {
-            compatProvider.addRecipes(output, registries);
-        }
     }
 
     @Override
@@ -202,7 +175,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, 'W'),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK)))
-                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                 .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
@@ -215,7 +188,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK)))
-                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                 .key(Pattern.CIRCUIT, items, MekanismTags.Items.CIRCUITS_ULTIMATE)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
@@ -227,7 +200,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, 'E', Pattern.BLOCK),
                         RecipePattern.TripleLine.of('W', Pattern.ROBIT, Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, 'E', Pattern.BLOCK)))
-                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                 .key('E', MoreMachineItems.ADVANCED_ELECTROLYSIS_CORE)
                 .key('W', MekanismBlocks.ULTIMATE_FLUID_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
@@ -240,18 +213,18 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.PREVIOUS),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK)))
-                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                 .key(Pattern.CIRCUIT, items, MekanismTags.Items.PELLETS_ANTIMATTER)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
-                .key(Pattern.PREVIOUS, items, MekanismTags.Items.PERSONAL_STORAGE)
+                .key(Pattern.PREVIOUS, items, MekanismTags.BlockItems.PERSONAL_STORAGE.item())
                 .save(output);
         MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeMachineBlocks.LARGE_PIGMENT_MIXER)
                 .pattern(RecipePattern.createPattern(
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.CIRCUIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.TANK, Pattern.BLOCK)))
-                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                 .key(Pattern.CIRCUIT, MekanismItems.HDPE_ROD)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
@@ -262,7 +235,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                         RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.ROBIT, Pattern.BLOCK),
                         RecipePattern.TripleLine.of(Pattern.TANK, 'L', Pattern.TANK)))
                 .key('S', GeneratorsBlocks.ADVANCED_SOLAR_GENERATOR)
-                .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                 .key(Pattern.ROBIT, MekanismItems.ROBIT)
                 .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                 .key('L', MekanismBlocks.LASER)
@@ -271,12 +244,23 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .save(output);
         // 大热力
         if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
+            MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeGeneratorBlocks.LARGE_WIND_GENERATOR)
+                    .pattern(RecipePattern.createPattern(
+                            RecipePattern.TripleLine.of(Pattern.BLOCK, 'W', Pattern.BLOCK),
+                            RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.ROBIT, Pattern.BLOCK),
+                            RecipePattern.TripleLine.of(Pattern.BLOCK, Pattern.TANK, Pattern.BLOCK)))
+                    .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
+                    .key('W', GeneratorsBlocks.WIND_GENERATOR)
+                    .key(Pattern.ROBIT, MekanismItems.ROBIT)
+                    .key(Pattern.TANK, MekanismBlocks.ULTIMATE_INDUCTION_CELL)
+                    .addCondition(new ModLoadedCondition("mekanismgenerators"))
+                    .save(output);
             MoreMachineDataShapedRecipeBuilder.shapedRecipe(LargeGeneratorBlocks.LARGE_HEAT_GENERATOR)
                     .pattern(RecipePattern.createPattern(
                             RecipePattern.TripleLine.of(Pattern.BLOCK, 'S', Pattern.BLOCK),
                             RecipePattern.TripleLine.of(Pattern.TANK, Pattern.ROBIT, Pattern.TANK),
                             RecipePattern.TripleLine.of(Pattern.BLOCK, 'S', Pattern.BLOCK)))
-                    .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                    .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                     .key('S', MekanismBlocks.SUPERHEATING_ELEMENT)
                     .key(Pattern.TANK, MekanismBlocks.ULTIMATE_FLUID_TANK)
                     .key(Pattern.ROBIT, MekanismItems.ROBIT)
@@ -291,7 +275,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                             RecipePattern.TripleLine.of(Pattern.TANK, 'E', Pattern.TANK)))
                     .key(Pattern.TANK, LargeMachineBlocks.ULTIMATE_MAX_CHEMICAL_TANK)
                     .key('E', MoreMachineItems.ADVANCED_ELECTROLYSIS_CORE)
-                    .key(Pattern.BLOCK, items, MekanismTags.Items.STORAGE_BLOCKS_STEEL)
+                    .key(Pattern.BLOCK, items, MekanismTags.BlockItems.STORAGE_BLOCKS_STEEL.item())
                     .key(Pattern.ROBIT, MekanismItems.ROBIT)
                     .addCondition(new ModLoadedCondition("mekanismgenerators"))
                     // .save(consumer, Mekmm.rl("large_gas_burning_generator"));
@@ -399,7 +383,7 @@ public class MoreMachineRecipeProvider extends BaseRecipeProvider {
                 .key(Pattern.CONSTANT, MekanismBlocks.ULTIMATE_PRESSURIZED_TUBE)
                 .key(Pattern.TANK, MekanismBlocks.ULTIMATE_CHEMICAL_TANK)
                 .key(Pattern.STEEL_CASING, MekanismBlocks.STEEL_CASING)
-                .key(Pattern.OSMIUM, items, MekanismTags.Items.PROCESSED_RESOURCE_BLOCKS.get(PrimaryResource.OSMIUM))
+                .key(Pattern.OSMIUM, items, MekanismTags.BlockItems.PROCESSED_RESOURCE_BLOCKS.get(PrimaryResource.OSMIUM).item())
                 // .save(consumer, Mekmm.rl("ambient_gas_collector"));
                 .save(output);
         // 无线充电站

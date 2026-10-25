@@ -40,8 +40,13 @@ public class BasicRollingMillRecipe extends BasicItemStackToItemStackRecipe {
         return "cnc_rolling_mill";
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(CNC_ROLLING_MILL);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                getInput().display(), getOutputDisplay(), com.jerry.mekmm.api.recipes.PortRecipeDisplays.station(getToastSymbol())));
     }
 }

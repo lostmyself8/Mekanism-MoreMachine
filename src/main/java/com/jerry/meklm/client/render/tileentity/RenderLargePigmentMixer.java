@@ -5,8 +5,8 @@ import com.jerry.meklm.common.tile.machine.TileEntityLargePigmentMixer;
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
 import mekanism.client.render.RenderTickHandler;
-import mekanism.client.render.lib.Outlines.Line;
-import mekanism.client.render.tileentity.IWireFrameRenderer;
+import mekanism.client.render.outline.IWireFrameRenderer;
+import mekanism.client.render.outline.Outlines.Line;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 import mekanism.common.block.attribute.Attribute;
 
@@ -68,13 +68,12 @@ public class RenderLargePigmentMixer extends MekanismTileEntityRenderer<TileEnti
     }
 
     @Override
-    public void renderWireFrame(BlockEntity tile, BlockState blockState, float partialTick, PoseStack poseStack, VertexConsumer buffer, boolean isHighContrast) {
+    public java.util.Collection<Line> applyTransformAndGetFrame(BlockEntity tile, float partialTick, PoseStack poseStack, net.minecraft.client.renderer.state.level.LevelRenderState levelRenderState) {
         if (tile instanceof TileEntityLargePigmentMixer mixer) {
             setupRenderer(mixer.getDirection(), (tile.getLevel().getGameTime() + partialTick) * SHAFT_SPEED % 360, poseStack);
-            Pose pose = poseStack.last();
-            RenderTickHandler.renderVertexWireFrame(lines, buffer, pose.pose(), pose.normal(), isHighContrast);
-            poseStack.popPose();
+            return lines == null ? java.util.List.of() : lines;
         }
+        return java.util.List.of();
     }
 
     @Override

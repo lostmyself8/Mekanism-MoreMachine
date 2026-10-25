@@ -40,7 +40,7 @@ public class WorldUtil {
         }
 
         public void recheckCanSeeSun() {
-            canSeeSun = WorldUtils.canSeeSun(world, pos);
+            canSeeSun = mekanism.common.util.LightLevelUtils.canSeeSun(world, pos);
         }
 
         public boolean canSeeSun() {

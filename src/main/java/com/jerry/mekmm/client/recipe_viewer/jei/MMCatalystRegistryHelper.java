@@ -35,17 +35,19 @@ public class MMCatalystRegistryHelper {
         }
     }
 
-    public static void register(IRecipeCatalystRegistration registry, IRecipeType<?> recipeType, List<ItemLike> workstations, boolean needOrdinary) {
-        for (ItemLike workstation : workstations) {
-            Item item = workstation.asItem();
-            if (needOrdinary) {
-                registry.addCraftingStation(recipeType, item);
-            }
-            if (item instanceof BlockItem blockItem) {
-                MoreMachineAttributeFactoryType factoryType = Attribute.get(blockItem.getBlock(), MoreMachineAttributeFactoryType.class);
-                if (factoryType != null) {
-                    for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
-                        registry.addCraftingStation(recipeType, MoreMachineBlocks.getMoreMachineFactory(tier, factoryType.getMoreMachineFactoryType()));
+    public static void register(IRecipeCatalystRegistration registry, IRecipeType<?> recipeType, List<net.minecraft.world.item.crafting.display.SlotDisplay> workstations, boolean needOrdinary) {
+        for (var display : workstations) {
+            for (var stack : display.resolveForStacks(net.minecraft.world.item.crafting.display.SlotDisplayContext.fromLevel(net.minecraft.client.Minecraft.getInstance().level))) {
+                Item item = stack.getItem();
+                if (needOrdinary) {
+                    registry.addCraftingStation(recipeType, item);
+                }
+                if (item instanceof BlockItem blockItem) {
+                    MoreMachineAttributeFactoryType factoryType = Attribute.get(blockItem.getBlock(), MoreMachineAttributeFactoryType.class);
+                    if (factoryType != null) {
+                        for (FactoryTier tier : MoreMachineUtils.getFactoryTier()) {
+                            registry.addCraftingStation(recipeType, MoreMachineBlocks.getMoreMachineFactory(tier, factoryType.getMoreMachineFactoryType()));
+                        }
                     }
                 }
             }

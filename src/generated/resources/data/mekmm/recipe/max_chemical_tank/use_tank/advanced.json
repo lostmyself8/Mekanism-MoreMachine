@@ -1,6 +1,5 @@
 {
   "type": "mekanism:mek_data",
-  "category": "misc",
   "key": {
     "A": "mekanism:dynamic_tank",
     "C": "mekmm:advanced_mid_chemical_tank"

@@ -132,7 +132,7 @@ public class AttributeLargeWindGeneratorProxy extends AttributeHasBounding {
     }
 
     @Override
-    public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+    public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate) {
         return super.handle(level, pos, state, data, predicate);
     }
 

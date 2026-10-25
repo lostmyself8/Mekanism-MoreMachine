@@ -73,7 +73,6 @@ public class Mekmm implements IModModule {
         MoreMachineTileEntityTypes.MM_TILE_ENTITY_TYPES.register(modEventBus);
         MoreMachineContainerTypes.MM_CONTAINER_TYPES.register(modEventBus);
         MoreMachineRecipeSerializersInternal.MM_RECIPE_SERIALIZERS.register(modEventBus);
-        MoreMachineChemicals.MM_CHEMICALS.register(modEventBus);
         MoreMachineCreativeTabs.MM_CREATIVE_TABS.register(modEventBus);
         MoreMachineDataComponents.MM_DATA_COMPONENTS.register(modEventBus);
         MoreMachineDataMapTypes.REGISTER.register(modEventBus);

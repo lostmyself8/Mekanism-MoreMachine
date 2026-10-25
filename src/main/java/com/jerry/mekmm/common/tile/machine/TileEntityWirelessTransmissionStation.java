@@ -273,7 +273,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
                     if (request.isEmpty()) {
                         continue;
                     }
-                    TransitResponse response = request.eject(this, getBlockPos(), target, 0, null, transaction);
+                    TransitResponse response = request.eject(this, level, getBlockPos(), target, 0, null, transaction);
                     if (!response.isEmpty()) {
                         response.useAll(transaction);
                         transaction.commit();
@@ -337,7 +337,7 @@ public class TileEntityWirelessTransmissionStation extends TileEntityConnectable
     @Override
     public ConnectStatus connectOrCut(BlockPos blockPos, Direction direction, TransmissionType type) {
         ConnectStatus status = connectionManager.linkOrCut(blockPos, direction, type);
-        if (status != ConnectStatus.CONNECT_FAIL && !isRemote()) {
+        if (status != ConnectStatus.CONNECT_FAIL && (level != null && !level.isClientSide())) {
             sendUpdatePacket();
             markForSave();
         }

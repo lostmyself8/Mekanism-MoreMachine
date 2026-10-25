@@ -190,7 +190,7 @@ public class TileEntityReplicatingFactory extends TileEntityMoreMachineItemToIte
         if (recipe != null) {
             return new ReplicatorIRecipeSingle(
                     IngredientCreatorAccess.item().fromHolder(itemHolder, 1),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, MathUtils.clampToInt(recipe.UUAmount())),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(chemicalStack.typeHolder(), MathUtils.clampToInt(recipe.UUAmount())),
                     new ItemStackTemplate(itemHolder, 1));
         }
         return null;

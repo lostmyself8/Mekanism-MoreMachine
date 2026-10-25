@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "hbm"
+    }
+  ],
+  "type": "mekmm:planting",
+  "chemical_input": {
+    "amount": 1,
+    "ingredient": "mekmm:nutrient_solution"
+  },
+  "item_input": {
+    "count": 1,
+    "ingredient": "hbm:plant_tall_cd2"
+  },
+  "main_output": {
+    "id": "hbm:plant_item_mustardwillow",
+    "count": 3
+  },
+  "per_tick_usage": true
+}

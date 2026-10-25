@@ -475,9 +475,9 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
     }
 
     @Override
-    public void collect(LargeWindGeneratorRotationRenderState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, boolean hasEffect) {
+    public void collect(LargeWindGeneratorRotationRenderState state, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector submitNodeCollector, int light, int overlayLight, FoilRendering foil, int outlineColor) {
         setupAnim(state);
-        collectParts(parts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, hasEffect);
+        collectParts(parts, poseStack, RENDER_TYPE, submitNodeCollector, light, overlayLight, -1, null, foil, outlineColor, 0);
     }
 
     @Override
@@ -486,9 +486,13 @@ public class ModelLargeWindGenerator extends MekanismJavaModel<LargeWindGenerato
         fans.setRotation(0F, 0F, getAbsoluteRotation(state.angle));
     }
 
-    public void renderWireFrame(PoseStack matrix, VertexConsumer vertexBuilder, LargeWindGeneratorRotationRenderState state, boolean isHighContrast) {
+    public java.util.Collection<mekanism.client.render.outline.Outlines.Line> outlines(LargeWindGeneratorRotationRenderState state) {
         setupAnim(state);
-        renderPartsAsWireFrame(parts, matrix, vertexBuilder, isHighContrast);
+        return com.jerry.mekmm.client.render.ModelOutlines.extract(parts);
+    }
+
+    public void collect(LargeWindGeneratorRotationRenderState state, PoseStack pose, SubmitNodeCollector collector, int light, int overlay, boolean foil) {
+        collect(state, pose, collector, light, overlay, FoilRendering.ITEM.foil(foil), 0);
     }
 
     private float getAbsoluteRotation(float angle) {

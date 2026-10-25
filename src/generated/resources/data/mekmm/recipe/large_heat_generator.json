@@ -6,7 +6,6 @@
     }
   ],
   "type": "mekanism:mek_data",
-  "category": "misc",
   "key": {
     "B": "#c:storage_blocks/steel",
     "R": "mekanism:robit",

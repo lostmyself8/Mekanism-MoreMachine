@@ -23,7 +23,7 @@ public class MoreMachineBounding {
     public static final AttributeHasBounding VERTICAL_THREE_BLOCK = new AttributeHasBounding(new HandleBoundingBlock() {
 
         @Override
-        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> consumer) {
+        public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> consumer) {
             return consumer.accept(level, pos.above(), data) && consumer.accept(level, pos.above().above(), data);
         }
     });
@@ -31,7 +31,7 @@ public class MoreMachineBounding {
     public static final AttributeHasBounding FULL_JAVA_ENTITY = new AttributeHasBounding(new HandleBoundingBlock() {
 
         @Override
-        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+        public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate) {
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             for (int x = -1; x <= 1; x++) {
                 for (int y = 0; y <= 2; y++) {
@@ -59,7 +59,7 @@ public class MoreMachineBounding {
     public static final AttributeHasBounding FULL_JAVA_ENTITY_BUT_TOP_BACK_2X3 = new AttributeHasBounding(new HandleBoundingBlock() {
 
         @Override
-        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+        public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate) {
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             for (int x = -1; x <= 1; x++) {
                 for (int y = 0; y <= 1; y++) {
@@ -92,7 +92,7 @@ public class MoreMachineBounding {
     public static final AttributeHasBounding LARGE_PIGMENT_MIXER = new AttributeHasBounding(new HandleBoundingBlock() {
 
         @Override
-        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+        public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate) {
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             for (int x = -1; x <= 1; x++) {
                 for (int y = 0; y <= 1; y++) {
@@ -119,7 +119,7 @@ public class MoreMachineBounding {
     public static final AttributeLargeWindGeneratorProxy LARGE_WIND_GENERATOR = new AttributeLargeWindGeneratorProxy(new HandleBoundingBlock() {
 
         @Override
-        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+        public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate) {
             Direction facing = Attribute.getFacing(state);
             if (facing == null || !facing.getAxis().isHorizontal()) {
                 return false;
@@ -136,7 +136,7 @@ public class MoreMachineBounding {
     public static final AttributeHasBounding SOLAR_HEAT_GENERATOR = new AttributeHasBounding(new HandleBoundingBlock() {
 
         @Override
-        public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate) {
+        public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate) {
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             Direction facing = Attribute.getFacing(state);
             if (facing == null) {
@@ -188,8 +188,8 @@ public class MoreMachineBounding {
             return predicate.accept(level, mutable, data);
         }
 
-        private <DATA> boolean handlePanel(Level level, BlockPos pos, DATA data, TriBooleanFunction<Level, BlockPos, DATA> predicate,
-                                           BlockPos.MutableBlockPos mutable, Direction side, int offset) {
+        private <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handlePanel(LEVEL level, BlockPos pos, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> predicate,
+                                                                                                BlockPos.MutableBlockPos mutable, Direction side, int offset) {
             Vec3i forward = side.getUnitVec3i();
             Vec3i axis = side.getClockWise().getUnitVec3i();
             mutable.setWithOffset(pos, forward.getX() * 3 + axis.getX() * offset, 2, forward.getZ() * 3 + axis.getZ() * offset);

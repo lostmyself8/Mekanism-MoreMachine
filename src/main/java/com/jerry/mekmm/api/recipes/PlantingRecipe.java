@@ -35,7 +35,7 @@ import java.util.function.BiPredicate;
 public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRecipeInput> implements BiPredicate<@NotNull ItemStack, ChemicalStack> {
 
     protected static final RandomSource RANDOM = RandomSource.create();
-    private static final Holder<Item> PLANTING_STATION = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "plating_station"));
+    private static final Holder<Item> PLANTING_STATION = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "planting_station"));
 
     @Override
     public abstract boolean test(ItemStack itemStack, ChemicalStack chemicalStack);
@@ -114,8 +114,13 @@ public abstract class PlantingRecipe extends MekanismRecipe<SingleItemChemicalRe
         return MoreMachineRecipeTypes.TYPE_PLANTING.value();
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(PLANTING_STATION);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                new net.minecraft.world.item.crafting.display.SlotDisplay.Composite(java.util.List.of(getItemInput().display(), getChemicalInput().display())), new net.minecraft.world.item.crafting.display.SlotDisplay.Composite(java.util.List.of(PortRecipeDisplays.items(getMainOutputDefinition()), mekanism.api.recipes.display.slot.ChanceSlotDisplay.create(PortRecipeDisplays.items(getSecondaryOutputDefinition()), getSecondaryChance()))), PortRecipeDisplays.station(getToastSymbol())));
     }
 }

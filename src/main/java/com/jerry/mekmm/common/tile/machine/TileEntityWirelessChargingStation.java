@@ -22,7 +22,7 @@ import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.curios.CuriosIntegration;
+import mekanism.common.integration.curios.ICuriosHelper;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
@@ -169,17 +169,19 @@ public class TileEntityWirelessChargingStation extends TileEntityConfigurableMac
     }
 
     private void chargeCurios(Player player, long toCharge) {
-        if (Mekanism.hooks.curios.isLoaded()) {
-            ResourceHandler<ItemResource> handler = CuriosIntegration.getCuriosInventory(player);
-            if (handler == null) {
-                return;
-            }
-            for (int slot = 0, slots = handler.size(); slot < slots; slot++) {
-                toCharge = chargeCurio(handler, slot, toCharge);
-                if (toCharge == 0L) {
-                    return;
+        ICuriosHelper helper = ICuriosHelper.INSTANCE;
+        if (helper != null && toCharge > 0) {
+            long[] remaining = { toCharge };
+            helper.findFirstCurio(player, access -> {
+                if (remaining[0] > 0) {
+                    try (net.neoforged.neoforge.transfer.transaction.Transaction transaction = net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                        int charged = mekanism.common.util.EnergyUtils.charge(energyContainer, access, mekanism.api.math.MathUtils.clampToInt(remaining[0]), transaction);
+                        remaining[0] -= charged;
+                        transaction.commit();
+                    }
                 }
-            }
+                return false;
+            });
         }
     }
 

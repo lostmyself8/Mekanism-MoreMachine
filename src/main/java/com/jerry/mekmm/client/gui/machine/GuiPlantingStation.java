@@ -36,7 +36,7 @@ public class GuiPlantingStation extends GuiConfigurableTile<TileEntityPlantingSt
 
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainerTyped(), tile::getActive));
 
-        addRenderableWidget(new GuiSlot(SlotType.OUTPUT_WIDE, this, 111, 30))
+        addRenderableWidget(new GuiSlot(SlotType.OUTPUT, this, 111, 30))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(RecipeError.NOT_ENOUGH_OUTPUT_SPACE))
                 .warning(WarningType.NO_SPACE_IN_OUTPUT, tile.getWarningCheck(TileEntityPlantingStation.NOT_ENOUGH_SPACE_SECONDARY_OUTPUT_ERROR));
 

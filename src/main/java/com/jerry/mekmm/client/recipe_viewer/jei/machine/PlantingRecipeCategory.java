@@ -1,6 +1,7 @@
 package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.api.recipes.PlantingRecipe;
+import com.jerry.mekmm.client.recipe_viewer.jei.PortHolderRecipeCategory;
 import com.jerry.mekmm.common.tile.machine.TileEntityPlantingStation;
 
 import mekanism.api.chemical.ChemicalStack;
@@ -11,7 +12,6 @@ import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.recipe_viewer.RecipeViewerUtils;
-import mekanism.client.recipe_viewer.jei.HolderRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.util.text.TextUtils;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe> {
+public class PlantingRecipeCategory extends PortHolderRecipeCategory<PlantingRecipe> {
 
     private final GuiBar<?> chemicalInput;
     private final GuiSlot input;
@@ -43,7 +43,7 @@ public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe>
         input = addSlot(SlotType.INPUT, 56, 17);
         extra = addSlot(SlotType.EXTRA, 56, 53);
         addSlot(SlotType.POWER, 31, 35).with(SlotOverlay.POWER);
-        output = addSlot(SlotType.OUTPUT_WIDE, 112, 31);
+        output = addSlot(SlotType.OUTPUT, 112, 31);
         addElement(new GuiVerticalPowerBar(this, RecipeViewerUtils.FULL_BAR, 164, 15));
         chemicalInput = addElement(new GuiEmptyBar(this, 60, 36, 6, 12));
         addSimpleProgress(ProgressType.BAR, 78, 38);
@@ -56,7 +56,7 @@ public class PlantingRecipeCategory extends HolderRecipeCategory<PlantingRecipe>
         if (secondaryChance > 0) {
             builder.addText(TextUtils.getPercent(secondaryChance), output.getWidth() - 2, font().lineHeight)
                     // Perform the same translations as super does
-                    .setPosition(getGuiLeft() + output.getRelativeX() + 1, getGuiTop() + output.getRelativeBottom() + 1)
+                    .setPosition(getLeftPos() + output.getRelativeX() + 1, getTopPos() + output.getRelativeBottom() + 1)
                     .setTextAlignment(HorizontalAlignment.RIGHT)
                     .setColor(titleTextColor());
         }

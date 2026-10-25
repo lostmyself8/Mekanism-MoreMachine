@@ -1,6 +1,5 @@
 package com.jerry.meklg.client.gui.generator;
 
-import mekanism.api.math.MathUtils;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiSideHolder;
@@ -35,13 +34,30 @@ public class GuiLargeGasGenerator extends GuiMekanismTile<TileEntityLargeGasGene
         addRenderableWidget(GuiSideHolder.create(this, -26, 6, 98, true, true, SpecialColors.TAB_ARMOR_SLOTS));
         super.addGuiElements();
         addRenderableWidget(new GuiEnergyTab(this, () -> {
-            // 燃料消耗和发电量都受效率乘数影响
-            long productionAmount = MathUtils.clampToLong(tile.getUsed());
             return List.of(
-                    GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(productionAmount)),
+                    GeneratorsLang.PRODUCING_AMOUNT.translate(EnergyDisplay.of(tile.getProductionRate())),
                     MekanismLang.MAX_OUTPUT.translate(EnergyDisplay.of(tile.getMaxOutput())));
         }));
-        addRenderableWidget(new GuiChemicalGauge(() -> tile.fuelTank, tile::getChemicalTanks, GaugeType.WIDE, this, 55, 18));
+        addRenderableWidget(new GuiChemicalGauge(() -> tile.fuelTank, tile::getChemicalTanks, GaugeType.WIDE, this, 55, 18) {
+
+            @Override
+            protected List<Component> getContentsTooltips(mekanism.api.chemical.ChemicalResource resource, long amount,
+                                                          net.minecraft.world.item.Item.TooltipContext context, net.minecraft.world.entity.player.Player player,
+                                                          net.minecraft.world.item.TooltipFlag flag) {
+                List<Component> tooltips = super.getContentsTooltips(resource, amount, context, player, flag);
+                var fuel = tile.getCachedFuel();
+                if (fuel != null) {
+                    var standardFuel = resource.getFuel(tile.getLevel().registryAccess());
+                    if (standardFuel != null) {
+                        List<Component> standardTooltips = new java.util.ArrayList<>();
+                        standardFuel.collectTooltips(context, standardTooltips, flag);
+                        tooltips.removeAll(standardTooltips);
+                    }
+                    fuel.collectTooltips(context, tooltips, flag);
+                }
+                return tooltips;
+            }
+        });
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), 164, 15));
     }
 

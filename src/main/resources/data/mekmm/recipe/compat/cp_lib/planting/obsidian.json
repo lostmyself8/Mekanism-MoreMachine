@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cp_lib"
+    }
+  ],
+  "type": "mekmm:planting",
+  "chemical_input": {
+    "amount": 1,
+    "ingredient": "mekmm:nutrient_solution"
+  },
+  "item_input": {
+    "count": 1,
+    "ingredient": "cp_lib:obsidian_seeds"
+  },
+  "main_output": {
+    "count": 1,
+    "id": "cp_lib:obsidian_shards"
+  },
+  "per_tick_usage": true
+}

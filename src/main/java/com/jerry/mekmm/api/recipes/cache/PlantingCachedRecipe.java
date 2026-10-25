@@ -172,6 +172,7 @@ public class PlantingCachedRecipe extends CachedRecipe<PlantingRecipe> {
     @Override
     protected boolean finishProcessing(int operations, TransactionContext transaction) {
         if (recipeChemical != null && output != null && !recipeItem.isEmpty() && !recipeChemical.isEmpty() && !outputEmptyCheck.test(output)) {
+            // Seeds and saplings select what to grow; they remain in the input slot.
             return chemicalInputHandler.use(recipeChemical, operations * chemicalUsageMultiplier, transaction) &&
                     outputHandler.handleOutput(output, operations, transaction);
         }

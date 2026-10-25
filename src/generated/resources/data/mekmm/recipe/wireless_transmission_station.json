@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "#": "mekanism:supercharged_coil",
     "H": "mekanism:hdpe_sheet",

@@ -3,7 +3,7 @@ package com.jerry.meklg.client.render;
 import com.jerry.mekmm.common.base.MoreMachineProfilerConstants;
 
 import mekanism.client.render.MekanismRenderer;
-import mekanism.client.render.tileentity.IWireFrameRenderer;
+import mekanism.client.render.outline.IWireFrameRenderer;
 import mekanism.client.render.tileentity.MekanismTileEntityRenderer;
 
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -40,15 +40,14 @@ public class RenderSolarHeatGenerator extends MekanismTileEntityRenderer<TileEnt
     }
 
     @Override
-    public void renderWireFrame(BlockEntity tile, BlockState blockState, float partialTick, PoseStack poseStack, VertexConsumer buffer, boolean isHighContrast) {
-        if (tile instanceof TileEntitySolarHeatGenerator solarHeatGenerator) {
-            poseStack.pushPose();
+    public java.util.Collection<mekanism.client.render.outline.Outlines.Line> applyTransformAndGetFrame(BlockEntity tile, float partialTick, PoseStack poseStack, net.minecraft.client.renderer.state.level.LevelRenderState levelRenderState) {
+        if (tile instanceof TileEntitySolarHeatGenerator generator) {
             poseStack.translate(0.5, 1.5, 0.5);
-            MekanismRenderer.rotate(poseStack, solarHeatGenerator.getDirection(), 0, 180, 90, 270);
+            MekanismRenderer.rotate(poseStack, generator.getDirection(), 0, 180, 90, 270);
             poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-            model.renderWireFrame(poseStack, buffer, new SolarHeatGeneratorRotationRenderState(solarHeatGenerator.getAngle()), getPanelVisibility(solarHeatGenerator), isHighContrast);
-            poseStack.popPose();
+            return model.outlines(new SolarHeatGeneratorRotationRenderState(generator.getAngle()), getPanelVisibility(generator));
         }
+        return java.util.List.of();
     }
 
     @Override

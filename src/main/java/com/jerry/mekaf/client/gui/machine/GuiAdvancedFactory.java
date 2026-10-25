@@ -10,12 +10,12 @@ import com.jerry.mekaf.common.tile.factory.base.TileEntityItemToChemicalFactory;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiConfigurableTile;
-import mekanism.client.gui.element.GuiDownArrow;
-import mekanism.client.gui.element.GuiDumpButton;
 import mekanism.client.gui.element.GuiSideHolder;
+import mekanism.client.gui.element.GuiTexturedElement;
 import mekanism.client.gui.element.bar.GuiChemicalBar;
 import mekanism.client.gui.element.bar.GuiFluidBar;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
+import mekanism.client.gui.element.button.GuiDumpButton;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiChemicalGauge;
 import mekanism.client.gui.element.gauge.GuiFluidGauge;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFactoryBase<?>, MekanismTileContainer<TileEntityAdvancedFactoryBase<?>>> {
 
     @Nullable
-    private GuiDumpButton<?> dumpButton;
+    private GuiDumpButton dumpButton;
     private final int tankCount;
 
     public GuiAdvancedFactory(MekanismTileContainer<TileEntityAdvancedFactoryBase<?>> container, Inventory inv, Component title) {
@@ -92,7 +92,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
         }
         super.addGuiElements();
         if (tile instanceof TileEntityWashingFactory) {
-            addRenderableWidget(new GuiDownArrow(this, imageWidth + 8, 90));
+            addRenderableWidget(GuiTexturedElement.downArrow(this, imageWidth + 8, 90));
         }
         addRenderableWidget(new AdvancedFactoryGuiSortingTab(this, tile));
         addRenderableWidget(new GuiVerticalPowerBar(this, tile.getEnergyContainer(), imageWidth - 12, 16, 13 * tankCount + 52))
@@ -104,7 +104,7 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
                 addRenderableWidget(new GuiFluidBar(this, GuiFluidBar.getProvider(factory.getFluidTankBar(), tile.getFluidTanks()), 7, 102,
                         getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
-                dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 102));
+                dumpButton = addRenderableWidget(new GuiDumpButton(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 102));
             } else if (tile instanceof TileEntityPressurizedReactingFactory factory) {
                 // 出输出化学储罐
                 addRenderableWidget(new GuiChemicalGauge(() -> factory.outputChemicalTank, () -> tile.getChemicalTanks(), GaugeType.SMALL, this, 6, 44))
@@ -118,12 +118,12 @@ public class GuiAdvancedFactory extends GuiConfigurableTile<TileEntityAdvancedFa
                         getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
                 // dump按钮
-                dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 76));
+                dumpButton = addRenderableWidget(new GuiDumpButton(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 76));
             } else {
                 addRenderableWidget(new GuiChemicalBar(this, GuiChemicalBar.getProvider(tile.getChemicalTankBar(), tile.getChemicalTanks()),
                         7, 13 * tankCount + 76, getBarWidth(), 4, true))
                         .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_SECONDARY_INPUT, 0));
-                dumpButton = addRenderableWidget(new GuiDumpButton<>(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 13 * tankCount + 76));
+                dumpButton = addRenderableWidget(new GuiDumpButton(this, (TileEntityAdvancedFactoryBase<?> & IHasDumpButton) tile, getButtonX(), 13 * tankCount + 76));
             }
         }
 

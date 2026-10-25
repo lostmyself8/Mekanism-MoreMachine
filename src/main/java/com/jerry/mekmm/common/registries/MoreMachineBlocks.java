@@ -111,7 +111,7 @@ public class MoreMachineBlocks {
     }
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityRecycler, MoreMachineFactoryMachine<TileEntityRecycler>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityRecycler, MoreMachineFactoryMachine<TileEntityRecycler>>>> RECYCLER = MM_BLOCKS.register("recycler", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.RECYCLER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ELECTRIC_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -121,7 +121,7 @@ public class MoreMachineBlocks {
                     .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityPlantingStation, MoreMachineFactoryMachine<TileEntityPlantingStation>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityPlantingStation, MoreMachineFactoryMachine<TileEntityPlantingStation>>>> PLANTING_STATION = MM_BLOCKS.register("planting_station", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.PLANTING_STATION, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ADVANCED_MACHINE_INPUT_ONLY)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.CHEMICAL, () -> ChemicalTanksBuilder.builder()
@@ -135,7 +135,7 @@ public class MoreMachineBlocks {
                             .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityStamper, MoreMachineFactoryMachine<TileEntityStamper>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityStamper, MoreMachineFactoryMachine<TileEntityStamper>>>> CNC_STAMPER = MM_BLOCKS.register("cnc_stamper", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.CNC_STAMPER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.EXTRA_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -146,7 +146,7 @@ public class MoreMachineBlocks {
                     .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityLathe, MoreMachineFactoryMachine<TileEntityLathe>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityLathe, MoreMachineFactoryMachine<TileEntityLathe>>>> CNC_LATHE = MM_BLOCKS.register("cnc_lathe", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.CNC_LATHE, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ELECTRIC_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -156,7 +156,7 @@ public class MoreMachineBlocks {
                     .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityRollingMill, MoreMachineFactoryMachine<TileEntityRollingMill>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityRollingMill, MoreMachineFactoryMachine<TileEntityRollingMill>>>> CNC_ROLLING_MILL = MM_BLOCKS.register("cnc_rolling_mill", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.CNC_ROLLING_MILL, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ELECTRIC_MACHINE)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -166,7 +166,7 @@ public class MoreMachineBlocks {
                     .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityPresser, MoreMachineFactoryMachine<TileEntityPresser>>>> PRESSER = MM_BLOCKS.register("presser", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.PRESSER, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, MoreMachineAttachedSideConfig.PRESSER)))
             .forItemHolder(holder -> holder.addAttachmentOnlyContainers(ContainerType.ITEM, () -> ItemSlotsBuilder.builder()
@@ -178,7 +178,7 @@ public class MoreMachineBlocks {
                     .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityReplicator, MoreMachineFactoryMachine<TileEntityReplicator>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityReplicator, MoreMachineFactoryMachine<TileEntityReplicator>>>> REPLICATOR = MM_BLOCKS.register("replicator", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.REPLICATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, AttachedSideConfig.ADVANCED_MACHINE_INPUT_ONLY)))
             .forItemHolder(holder -> holder
@@ -193,7 +193,7 @@ public class MoreMachineBlocks {
                             .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityFluidReplicator, MoreMachineFactoryMachine<TileEntityFluidReplicator>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityFluidReplicator, MoreMachineFactoryMachine<TileEntityFluidReplicator>>>> FLUID_REPLICATOR = MM_BLOCKS.register("fluid_replicator", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.FLUID_REPLICATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, MoreMachineAttachedSideConfig.FLUID_REPLICATOR)))
             .forItemHolder(holder -> holder
@@ -214,7 +214,7 @@ public class MoreMachineBlocks {
                             .build()));
 
     public static final BlockRegistryObject<@NotNull BlockMoreFactoryMachine<TileEntityChemicalReplicator, MoreMachineFactoryMachine<TileEntityChemicalReplicator>>, @NotNull ItemBlockTooltip<BlockMoreFactoryMachine<TileEntityChemicalReplicator, MoreMachineFactoryMachine<TileEntityChemicalReplicator>>>> CHEMICAL_REPLICATOR = MM_BLOCKS.register("chemical_replicator", properties -> new BlockMoreFactoryMachine<>(MoreMachineBlockTypes.CHEMICAL_REPLICATOR, BlockTile.defaultProperties(properties).mapColor(BlockResourceInfo.STEEL.getMapColor())),
-            (block, properties) -> new ItemBlockTooltip<>(block, true, properties
+            (block, properties) -> new ItemBlockTooltip<>(block, properties
                     .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                     .component(MekanismDataComponents.SIDE_CONFIG, MoreMachineAttachedSideConfig.CHEMICAL_REPLICATOR)))
             .forItemHolder(holder -> holder

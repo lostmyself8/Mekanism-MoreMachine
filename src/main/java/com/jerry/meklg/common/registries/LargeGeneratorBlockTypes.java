@@ -5,7 +5,6 @@ import com.jerry.mekmm.common.config.MoreMachineConfig;
 
 import mekanism.api.math.MathUtils;
 import mekanism.common.block.attribute.*;
-import mekanism.common.lib.math.Pos3D;
 import mekanism.common.util.ChemicalUtils;
 import mekanism.generators.common.GeneratorsLang;
 import mekanism.generators.common.content.blocktype.Generator;
@@ -13,6 +12,7 @@ import mekanism.generators.common.content.blocktype.Generator.GeneratorBuilder;
 import mekanism.generators.common.registries.GeneratorsSounds;
 
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.Vec3;
 
 import com.jerry.meklg.common.content.blocktype.LargeGeneratorBlockShapes;
 import com.jerry.meklg.common.tile.generator.TileEntityLargeGasGenerator;
@@ -35,8 +35,8 @@ public class LargeGeneratorBlockTypes {
             .withComputerSupport("largeHeatGenerator")
             .replace(Attributes.ACTIVE_MELT_LIGHT)
             .with(new AttributeParticleFX()
-                    .add(ParticleTypes.SMOKE, rand -> new Pos3D(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, -0.52))
-                    .add(ParticleTypes.FLAME, rand -> new Pos3D(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, -0.52)))
+                    .add(ParticleTypes.SMOKE, rand -> new Vec3(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, -0.52))
+                    .add(ParticleTypes.FLAME, rand -> new Vec3(rand.nextFloat() * 0.6F - 0.3F, rand.nextFloat() * 6.0F / 16.0F, -0.52)))
             .build();
 
     // Gas Burning Generator

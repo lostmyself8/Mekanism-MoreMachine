@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.basic.MMBasicChemicalChemicalToChemicalRecipe;
+import com.jerry.mekmm.client.recipe_viewer.jei.PortRecipeCategory;
 import com.jerry.mekmm.common.recipe.impl.ChemicalReplicatorIRecipeSingle;
 
 import mekanism.api.MekanismAPI;
@@ -18,7 +19,6 @@ import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.recipe_viewer.RecipeViewerUtils;
-import mekanism.client.recipe_viewer.jei.BaseRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
@@ -42,7 +42,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasicChemicalChemicalToChemicalRecipe> {
+public class ChemicalReplicatorRecipeCategory extends PortRecipeCategory<MMBasicChemicalChemicalToChemicalRecipe> {
 
     // TODO: Re-evaluate
     private static final Codec<MMBasicChemicalChemicalToChemicalRecipe> RECIPE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -87,7 +87,7 @@ public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasic
         ContextMap slotDisplayContext = getSlotDisplayContext();
         initChemical(builder, RecipeIngredientRole.INPUT, firstGauge, recipe.getLeftInput().getRepresentations(slotDisplayContext));
         initChemical(builder, RecipeIngredientRole.INPUT, secondaryGauge, recipe.getRightInput().getRepresentations(slotDisplayContext));
-        initChemical(builder, outputGauge, recipe.getOutputDefinition());
+        initChemical(builder, outputGauge, recipe.getOutputDefinition(getSlotDisplayContext()));
         initItem(builder, RecipeIngredientRole.CRAFTING_STATION, extra, RecipeViewerUtils.getStacksFor(recipe.getRightInput(), true));
     }
 
@@ -95,7 +95,7 @@ public class ChemicalReplicatorRecipeCategory extends BaseRecipeCategory<MMBasic
     public @Nullable Identifier getIdentifier(MMBasicChemicalChemicalToChemicalRecipe recipe) {
         List<@NotNull ChemicalStack> representations = recipe.getLeftInput().getRepresentations(getSlotDisplayContext());
         if (representations.size() == 1) {
-            Identifier chemicalId = MekanismAPI.CHEMICAL_REGISTRY.getKey(representations.getFirst().getChemical());
+            Identifier chemicalId = net.minecraft.client.Minecraft.getInstance().level.registryAccess().lookupOrThrow(mekanism.api.MekanismRegistries.Keys.CHEMICAL).getKey(representations.getFirst().getChemical());
             return RegistryUtils.synthetic(chemicalId, "replicator", Mekmm.MOD_ID);
         }
         return null;

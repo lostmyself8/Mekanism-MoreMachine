@@ -5,8 +5,8 @@ import com.jerry.mekmm.common.tile.machine.TileEntityFluidReplicator;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.client.SpecialColors;
 import mekanism.client.gui.GuiConfigurableTile;
-import mekanism.client.gui.element.GuiDownArrow;
 import mekanism.client.gui.element.GuiSideHolder;
+import mekanism.client.gui.element.GuiTexturedElement;
 import mekanism.client.gui.element.gauge.GaugeType;
 import mekanism.client.gui.element.gauge.GuiChemicalGauge;
 import mekanism.client.gui.element.gauge.GuiEnergyGauge;
@@ -35,7 +35,7 @@ public class GuiFluidReplicator extends GuiConfigurableTile<TileEntityFluidRepli
     protected void addGuiElements() {
         addRenderableWidget(GuiSideHolder.create(this, imageWidth, 66, 57, false, true, SpecialColors.TAB_CHEMICAL_WASHER));
         super.addGuiElements();
-        addRenderableWidget(new GuiDownArrow(this, imageWidth + 8, 90));
+        addRenderableWidget(GuiTexturedElement.downArrow(this, imageWidth + 8, 90));
         addRenderableWidget(new GuiEnergyTab(this, tile.getEnergyContainerTyped(), tile::getActive));
         addRenderableWidget(new GuiFluidGauge(() -> tile.inputTank, tile::getFluidTanks, GaugeType.STANDARD, this, 28, 4))
                 .warning(WarningType.NO_MATCHING_RECIPE, tile.getWarningCheck(RecipeError.NOT_ENOUGH_INPUT));

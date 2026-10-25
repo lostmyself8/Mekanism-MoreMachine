@@ -10,7 +10,6 @@ import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.SerializationConstants;
-import mekanism.api.Upgrade;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.ChemicalStackTemplate;
@@ -22,6 +21,8 @@ import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.inputs.IInputHandler;
 import mekanism.api.recipes.outputs.IOutputHandler;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.common.CommonWorldTickHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.block.attribute.Attribute;
@@ -29,11 +30,11 @@ import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
 import mekanism.common.capabilities.holder.single.SingleConfigHolder;
+import mekanism.common.integration.computer.ComputerConstants;
 import mekanism.common.integration.computer.ComputerException;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.sync.SyncableBoolean;
 import mekanism.common.inventory.container.sync.SyncableInt;
@@ -53,6 +54,7 @@ import mekanism.common.util.UpgradeUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
@@ -274,7 +276,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
             // being required), we want to make sure we are able to fill those slots
             // with other items.
             sortInventoryOrTank();
-        } else if (!sortingNeeded && CommonWorldTickHandler.flushTagAndRecipeCaches) {
+        } else if (!sortingNeeded && mekanism.common.Mekanism.worldTickHandler.flushTagAndRecipeCaches) {
             // Otherwise, if sorting isn't currently needed and the recipe cache is invalid
             // Mark sorting as being needed again for the next check as recipes may
             // have changed so our current sort may be incorrect
@@ -286,7 +288,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         // we can then use minusEqual instead of subtract to remove an extra copy call
         long prev = energyContainer.getAmountAsLong();
         for (int i = 0; i < recipeCacheLookupMonitors.length; i++) {
-            if (!recipeCacheLookupMonitors[i].updateAndProcess()) {
+            if (!recipeCacheLookupMonitors[i].updateAndProcess(level.registryAccess())) {
                 // If we don't have a recipe in that slot make sure that our active state for that position is false
                 activeStates[i] = false;
             }
@@ -339,8 +341,8 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
         return getProgress(cacheIndex);
     }
 
-    public double getScaledProgress(int i, int process) {
-        return (double) getProgress(process) * i / ticksRequired;
+    public float getScaledProgress(int i, int process) {
+        return (float) getProgress(process) * i / ticksRequired;
     }
 
     public void toggleSorting() {
@@ -417,18 +419,18 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     }
 
     @Override
-    public void recalculateUpgrades(Upgrade upgrade) {
-        super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED) {
-            ticksRequired = MekanismUtils.getTicks(this, BASE_TICKS_REQUIRED);
-            operationsPerTick = MekanismUtils.getOperationsPerTick(this, BASE_TICKS_REQUIRED, 1);
+    public void recalculateUpgrades(HolderGetter<Upgrade> upgrades, Holder<Upgrade> upgrade, int totalInstalled) {
+        super.recalculateUpgrades(upgrades, upgrade, totalInstalled);
+        if (upgrade.is(UpgradeIds.SPEED)) {
+            ticksRequired = UpgradeUtils.getTicks(BASE_TICKS_REQUIRED, upgrade, totalInstalled);
+            operationsPerTick = UpgradeUtils.getOperationsPerTick(BASE_TICKS_REQUIRED, 1, upgrade, totalInstalled);
         }
     }
 
     @NotNull
     @Override
-    public List<Component> getInfo(@NotNull Upgrade upgrade) {
-        return UpgradeUtils.getMultScaledInfo(this, upgrade);
+    public List<Component> getUpgradeWindowInfo(Holder<Upgrade> upgrade) {
+        return super.getUpgradeWindowInfo(upgrade);
     }
 
     @Override

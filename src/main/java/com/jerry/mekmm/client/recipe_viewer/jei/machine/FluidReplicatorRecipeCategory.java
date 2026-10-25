@@ -2,6 +2,7 @@ package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.recipes.basic.BasicFluidChemicalToFluidRecipe;
+import com.jerry.mekmm.client.recipe_viewer.jei.PortRecipeCategory;
 import com.jerry.mekmm.common.recipe.impl.FluidReplicatorIRecipeSingle;
 
 import mekanism.api.SerializationConstants;
@@ -12,7 +13,6 @@ import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.recipe_viewer.RecipeViewerUtils;
-import mekanism.client.recipe_viewer.jei.BaseRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.tile.component.config.DataType;
@@ -39,7 +39,7 @@ import org.jspecify.annotations.NullMarked;
 import java.util.List;
 
 @NullMarked
-public class FluidReplicatorRecipeCategory extends BaseRecipeCategory<BasicFluidChemicalToFluidRecipe> {
+public class FluidReplicatorRecipeCategory extends PortRecipeCategory<BasicFluidChemicalToFluidRecipe> {
 
     // TODO: Re-evaluate
     private static final Codec<BasicFluidChemicalToFluidRecipe> RECIPE_CODEC = RecordCodecBuilder.create(instance -> instance.group(

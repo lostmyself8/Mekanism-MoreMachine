@@ -1,6 +1,5 @@
 {
   "type": "mekanism:mek_data",
-  "category": "misc",
   "key": {
     "#": "mekmm:uu_matter",
     "A": "#mekanism:alloys/atomic",

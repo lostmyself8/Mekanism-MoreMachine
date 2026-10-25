@@ -24,3 +24,9 @@ src/generated/resources/.cache/
 *.patch
 *.DS_Store
 
+# Local game instances, test worlds, and diagnostics
+run-*/
+repo/
+*.log
+*.hprof
+crash-reports/

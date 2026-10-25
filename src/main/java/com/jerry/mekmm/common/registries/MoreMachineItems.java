@@ -6,7 +6,8 @@ import com.jerry.mekmm.common.item.ItemReflector;
 import com.jerry.mekmm.common.resource.MoreMachineResource;
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 
-import mekanism.api.Upgrade;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.common.item.ItemUpgrade;
 import mekanism.common.registration.impl.ItemDeferredRegister;
 import mekanism.common.registration.impl.ItemRegistryObject;
@@ -14,6 +15,8 @@ import mekanism.common.resource.IResource;
 import mekanism.common.resource.ResourceType;
 import mekanism.common.util.EnumUtils;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
@@ -28,7 +31,7 @@ public class MoreMachineItems {
     public static final Table<ResourceType, MoreMachineResource, ItemRegistryObject<Item>> PROCESSED_RESOURCES = HashBasedTable.create();
 
     // 得在mods.toml设置：在mekanism之后加载，不然会导致空指针
-    // public static final ItemRegistryObject<ItemUpgrade> THREAD_UPGRADE = registerUpgrade(MMUpgrade.THREAD,
+    // public static final ItemRegistryObject<ItemUpgrade> THREAD_UPGRADE = registerUpgrade(MMUpgradeIds.THREAD,
     // Rarity.RARE);
 
     public static final ItemRegistryObject<Item> SCRAP = MM_ITEMS.register("scrap");
@@ -47,10 +50,6 @@ public class MoreMachineItems {
                 }
             }
         }
-    }
-
-    private static ItemRegistryObject<ItemUpgrade> registerUpgrade(Upgrade type, Rarity rarity) {
-        return MM_ITEMS.registerItem("upgrade_" + type.getSerializedName(), properties -> new ItemUpgrade(type, properties.rarity(rarity)));
     }
 
     private static ItemRegistryObject<Item> registerResource(ResourceType type, IResource resource) {

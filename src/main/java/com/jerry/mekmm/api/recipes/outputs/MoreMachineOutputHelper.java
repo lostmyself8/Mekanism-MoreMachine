@@ -55,7 +55,7 @@ public class MoreMachineOutputHelper {
 
     private static boolean handleOutput(IInventorySlot inventorySlot, ItemStack toOutput, int operations, TransactionContext transaction) {
         if (operations == 0 || toOutput.isEmpty()) {
-            return !toOutput.isEmpty();
+            return true;
         }
         ItemStack output = toOutput.copy();
         if (operations > 1) {
@@ -72,7 +72,7 @@ public class MoreMachineOutputHelper {
             // Make a copy of the stack we are outputting with its maximum size
             ItemStack output = toOutput.copyWithCount(toOutput.getMaxStackSize());
             int amountUsed;
-            try (Transaction transaction = Transaction.openRoot()) {
+            try (Transaction transaction = tracker.openSimulation()) {
                 amountUsed = slot.insert(ItemResource.of(output), output.getCount(), transaction, AutomationType.INTERNAL);
             }
             // Divide the amount we can actually use by the amount one output operation is equal to, capping it at the

@@ -1,14 +1,14 @@
 package com.jerry.mekmm.client.recipe_viewer.jei.machine;
 
 import com.jerry.mekmm.api.recipes.RecyclerRecipe;
+import com.jerry.mekmm.client.recipe_viewer.jei.PortHolderRecipeCategory;
 
-import mekanism.client.gui.element.GuiUpArrow;
+import mekanism.client.gui.element.GuiTexturedElement;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.element.progress.ProgressType;
 import mekanism.client.gui.element.slot.GuiSlot;
 import mekanism.client.gui.element.slot.SlotType;
 import mekanism.client.recipe_viewer.RecipeViewerUtils;
-import mekanism.client.recipe_viewer.jei.HolderRecipeCategory;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.util.text.TextUtils;
@@ -25,14 +25,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 
 @NullMarked
-public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe> {
+public class RecyclerRecipeCategory extends PortHolderRecipeCategory<RecyclerRecipe> {
 
     private final GuiSlot input;
     private final GuiSlot output;
 
     public RecyclerRecipeCategory(IGuiHelper helper, IRecipeViewerRecipeType<RecyclerRecipe> recipeType) {
         super(helper, recipeType);
-        addElement(new GuiUpArrow(this, 68, 38));
+        addElement(GuiTexturedElement.upArrow(this, 68, 38));
         input = addSlot(SlotType.INPUT, 64, 17);
         output = addSlot(SlotType.OUTPUT, 116, 35);
         addSlot(SlotType.POWER, 64, 53).with(SlotOverlay.POWER);
@@ -46,7 +46,7 @@ public class RecyclerRecipeCategory extends HolderRecipeCategory<RecyclerRecipe>
         double secondaryChance = recipeHolder.value().getOutputChance();
         if (secondaryChance > 0) {
             builder.addText(TextUtils.getPercent(secondaryChance), output.getWidth() + 1, font().lineHeight)
-                    .setPosition(getGuiLeft() + output.getRelativeX() + 1, getGuiTop() + output.getRelativeBottom() + 1)
+                    .setPosition(getLeftPos() + output.getRelativeX() + 1, getTopPos() + output.getRelativeBottom() + 1)
                     .setTextAlignment(HorizontalAlignment.RIGHT)
                     .setColor(titleTextColor());
         }

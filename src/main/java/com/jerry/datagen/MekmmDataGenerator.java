@@ -7,11 +7,15 @@ import com.jerry.datagen.common.recipe.MekmmRecipeRunner;
 import com.jerry.datagen.common.recipe.imp.MoreMachineRecipeProvider;
 
 import com.jerry.mekmm.Mekmm;
+import com.jerry.mekmm.common.registries.MoreMachineChemicals;
 
+import mekanism.api.MekanismRegistries;
+import mekanism.api.chemical.BasicChemical;
 import mekanism.common.Mekanism;
 import mekanism.common.lib.FieldReflectionHelper;
 
 import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -70,14 +74,23 @@ public class MekmmDataGenerator {
         bootstrapConfigs("mekanismtools");
         bootstrapConfigs(Mekmm.MOD_ID);
         bootstrapIMC();
+        event.createDatapackRegistryObjects(new RegistrySetBuilder().add(MekanismRegistries.Keys.CHEMICAL, context -> {
+            context.register(MoreMachineChemicals.NUTRIENT_SOLUTION, BasicChemical.builder().tint(0xFF265F0C).build());
+            context.register(MoreMachineChemicals.NUTRITIONAL_PASTE, BasicChemical.builder().tint(0xFFEB6CA3).build());
+            context.register(MoreMachineChemicals.UU_MATTER, BasicChemical.builder().tint(0xFFE19427).build());
+            context.register(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS, BasicChemical.builder().tint(0xFF530570).build());
+            for (var slurry : MoreMachineChemicals.PROCESSED_RESOURCES.values()) {
+                context.register(slurry.clean(), BasicChemical.cleanSlurry().tint(0xFFD9D9E6).build());
+                context.register(slurry.dirty(), BasicChemical.dirtySlurry().tint(0xFFD9D9E6).build());
+            }
+        }));
         DataGenerator gen = event.getGenerator();
         PackOutput output = gen.getPackOutput();
         CompletableFuture<Provider> lookupProvider = event.getLookupProvider();
         gen.addProvider(true, new MoreMachineAssetProvider(output));
         gen.addProvider(true, new MoreMachineLootProvider(output, lookupProvider));
         gen.addProvider(true, new MoreMachineDataMapsProvider(output, lookupProvider));
-        HashSet<String> disabledCompats = new HashSet<>();
-        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput, disabledCompats), Mekmm.MOD_ID));
+        gen.addProvider(true, new MekmmRecipeRunner(output, lookupProvider, (registries, recipeOutput) -> new MoreMachineRecipeProvider(registries, recipeOutput), Mekmm.MOD_ID));
     }
 
     @SuppressWarnings("UnstableApiUsage")

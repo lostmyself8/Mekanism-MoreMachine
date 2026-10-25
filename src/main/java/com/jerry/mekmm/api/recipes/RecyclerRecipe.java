@@ -89,7 +89,6 @@ public abstract class RecyclerRecipe extends MekanismRecipe<SingleRecipeInput> i
         return "recycler";
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(RECYCLER);
     }
@@ -127,5 +126,11 @@ public abstract class RecyclerRecipe extends MekanismRecipe<SingleRecipeInput> i
          * @implNote return a new copy or ItemStack.EMPTY
          */
         ItemStack nextChanceOutput();
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                getInput().display(), mekanism.api.recipes.display.slot.ChanceSlotDisplay.create(PortRecipeDisplays.items(getChanceOutputDefinition()), getOutputChance()), PortRecipeDisplays.station(getToastSymbol())));
     }
 }

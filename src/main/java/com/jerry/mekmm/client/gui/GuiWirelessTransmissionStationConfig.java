@@ -40,7 +40,7 @@ public class GuiWirelessTransmissionStationConfig extends GuiConnectListHolder<T
     @Override
     protected void addGuiElements() {
         super.addGuiElements();
-        addRenderableWidget(new MekanismImageButton(this, 5, 5, 11, 14, getButtonLocation("back"),
+        addRenderableWidget(new MekanismImageButton(this, 5, 5, 11, 14, mekanism.common.Mekanism.rl("button/back"),
                 (element, mouseX, mouseY) -> PacketUtils.sendToServer(new PacketTileButtonPress(PacketTileButtonPress.ClickedTileButton.BACK_BUTTON, ((GuiWirelessTransmissionStationConfig) element.gui()).tile))))
                 .setTooltip(TooltipUtils.BACK);
 

@@ -16,17 +16,28 @@ runs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ inputs.ref || github.ref }}
+    - name: Read Java version
+      id: java
+      shell: bash
+      run: |
+        if grep -Eq '^minecraft_version[[:space:]]*=[[:space:]]*26[.]2[[:space:]]*$' gradle.properties; then
+          echo "version=25" >> "$GITHUB_OUTPUT"
+        else
+          case '${{ inputs.ref || github.ref }}' in
+            *26.2*|*26.1*) echo "version=25" >> "$GITHUB_OUTPUT" ;;
+            *1.21.1*) echo "version=21" >> "$GITHUB_OUTPUT" ;;
+            *) echo "version=17" >> "$GITHUB_OUTPUT" ;;
+          esac
+        fi
     - name: Set up JDK
       uses: actions/setup-java@v4
-      env:
-        REF: ${{ inputs.ref || github.ref }}
       with:
         distribution: temurin
-        java-version: ${{ contains(env.REF, '26.1') && '25' || contains(env.REF, '1.21.1') && '21' || '17' }}
+        java-version: ${{ steps.java.outputs.version }}
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
       with:
         cache-write-only: ${{ inputs.update-cache }}
-        cache-read-only: ${{ github.ref != 'refs/heads/26.1' && github.ref != 'refs/heads/1.21.1' && github.ref != 'refs/heads/1.20.1' }}
+        cache-read-only: ${{ github.ref != 'refs/heads/26.2' && github.ref != 'refs/heads/26.1' && github.ref != 'refs/heads/1.21.1' && github.ref != 'refs/heads/1.20.1' }}
         add-job-summary: 'on-failure'

@@ -37,7 +37,7 @@ public class ItemBlockMidChemicalTank extends ItemBlockLargeChemicalTank<TileEnt
     @Deprecated
     public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, @NotNull TooltipFlag flag) {
         MidChemicalTankTier tier = getTier();
-        StorageUtils.addStoredSubstance(ItemAccessUtils.sideEffectFreeAccess(stack), tooltipAdder, false);
+        com.jerry.mekmm.common.util.PortTooltip.addStoredChemical(stack, tooltipAdder);
         tooltipAdder.accept(MekanismLang.CAPACITY_MB.translateColored(EnumColor.INDIGO, EnumColor.GRAY, TextUtils.format(tier.getStorage())));
         super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
     }

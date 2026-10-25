@@ -37,7 +37,7 @@ public class GuiViewConnection extends GuiWindow {
     private final Level level;
 
     public static GuiViewConnection create(IGuiWrapper gui, TileEntityWirelessTransmissionStation tile, Level level, ConnectionConfig config) {
-        return new GuiViewConnection(gui, (gui.getXSize() - MINER_FILTER_WIDTH) / 2, 30, tile, level, config);
+        return new GuiViewConnection(gui, (gui.getImageWidth() - MINER_FILTER_WIDTH) / 2, 30, tile, level, config);
     }
 
     private GuiViewConnection(IGuiWrapper gui, int x, int y, TileEntityWirelessTransmissionStation tile, Level level, ConnectionConfig config) {
@@ -94,7 +94,7 @@ public class GuiViewConnection extends GuiWindow {
             }
             return close(element, mouseX, mouseY);
         }));
-        slotDisplay = addChild(new GuiSequencedSlotDisplay(gui(), relativeX + 8, relativeY + getSlotOffset() + 1, this::getRenderStacks));
+        slotDisplay = addChild(new GuiSequencedSlotDisplay(gui(), relativeX + 8, relativeY + getSlotOffset() + 1, () -> com.jerry.mekmm.client.PortDisplays.of(getRenderStacks())));
         slotDisplay.updateStackList();
     }
 

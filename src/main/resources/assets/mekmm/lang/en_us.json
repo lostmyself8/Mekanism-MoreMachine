@@ -691,5 +691,5 @@
 	"mekmm.configuration.section.mekanismmoremachine.generators.toml.title": "Mekanism: MoreMachine - Generators Config",
 	"mekmm.configuration.title": "Mekanism: MoreMachine Config",
 
-	"fml.menu.mods.info.description.mekmm": "Add more machines and factories to mekanism"
+	"neoforge.screen.mods.info.description.mekmm": "Add more machines and factories to mekanism"
 }

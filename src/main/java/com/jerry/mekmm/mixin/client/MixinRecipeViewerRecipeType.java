@@ -2,6 +2,7 @@ package com.jerry.mekmm.mixin.client;
 
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
 
+import com.jerry.mekmm.client.LegacyTextures;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 
 import mekanism.api.recipes.*;
@@ -68,7 +69,7 @@ public abstract class MixinRecipeViewerRecipeType {
 
         NUCLEOSYNTHESIZING = new RVRecipeTypeWrapper<>(MekanismRecipeType.NUCLEOSYNTHESIZING, NucleosynthesizingRecipe.class, -6, -18, 182, 80, MekanismBlocks.ANTIPROTONIC_NUCLEOSYNTHESIZER, LargeMachineBlocks.LARGE_ANTIPROTONIC_NUCLEOSYNTHESIZER);
 
-        CHEMICAL_CONVERSION = new SimpleRVRecipeType<>(MekanismRecipeType.CHEMICAL_CONVERSION, ItemStackToChemicalRecipe.class, MekanismLang.CONVERSION_CHEMICAL, MekanismUtils.getResource(MekanismUtils.ResourceType.GUI, "chemicals.png"), -20, -12, 132, 62,
+        CHEMICAL_CONVERSION = new SimpleRVRecipeType<>(MekanismRecipeType.CHEMICAL_CONVERSION, ItemStackToChemicalRecipe.class, MekanismLang.CONVERSION_CHEMICAL, mekanism.common.Mekanism.rl("chemicals"), -20, -12, 132, 62,
                 MekanismBlocks.PURIFICATION_CHAMBER, MekanismBlocks.METALLURGIC_INFUSER, MekanismBlocks.OSMIUM_COMPRESSOR, MekanismBlocks.CHEMICAL_INJECTION_CHAMBER, MekanismBlocks.CHEMICAL_DISSOLUTION_CHAMBER, MekanismBlocks.ANTIPROTONIC_NUCLEOSYNTHESIZER,
                 // 这里的顺序会影响显示效果，这很奇怪
                 MoreMachineBlocks.REPLICATOR, MoreMachineBlocks.PLANTING_STATION);

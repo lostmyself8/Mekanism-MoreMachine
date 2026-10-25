@@ -34,11 +34,11 @@ import mekanism.common.capabilities.holder.container.IContainerHolder;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
 import mekanism.common.capabilities.holder.single.ISingleContainerHolder;
 import mekanism.common.capabilities.holder.single.SingleConfigHolder;
+import mekanism.common.integration.computer.ComputerConstants;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerChemicalTankWrapper;
 import mekanism.common.integration.computer.SpecialComputerMethodWrapper.ComputerIInventorySlotWrapper;
 import mekanism.common.integration.computer.annotation.ComputerMethod;
 import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
-import mekanism.common.integration.computer.computercraft.ComputerConstants;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
@@ -183,7 +183,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
         energySlot.fillContainerOrConvert(null);
         uuSlot.fillTankOrConvert(null);
         inputSlot.fillTankOrConvert(null);
-        recipeCacheLookupMonitor.updateAndProcess();
+        recipeCacheLookupMonitor.updateAndProcess(level.registryAccess());
         return sendUpdatePacket;
     }
 
@@ -228,7 +228,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
         // if (amount == 0) return null;
         // return new ChemicalReplicatorIRecipeSingle(
         // IngredientCreatorAccess.chemicalStack().fromHolder(chemicalHolder, 1000),
-        // IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, amount),
+        // IngredientCreatorAccess.chemicalStack().fromHolder(chemicalStack.typeHolder(), amount),
         // new ChemicalStack(chemicalHolder, 1000));
         // }
 
@@ -237,7 +237,7 @@ public class TileEntityChemicalReplicator extends TileEntityProgressMachine<MMBa
         if (recipe != null) {
             return new ChemicalReplicatorIRecipeSingle(
                     IngredientCreatorAccess.chemicalStack().fromHolder(chemicalHolder, Math.toIntExact(recipe.inputAmount())),
-                    IngredientCreatorAccess.chemicalStack().fromHolder(MoreMachineChemicals.UU_MATTER, Math.toIntExact(recipe.UUAmount())),
+                    IngredientCreatorAccess.chemicalStack().fromHolder(chemicalStack.typeHolder(), Math.toIntExact(recipe.UUAmount())),
                     new ChemicalStackTemplate(chemicalHolder, Math.toIntExact(recipe.outputAmount())));
         }
         return null;

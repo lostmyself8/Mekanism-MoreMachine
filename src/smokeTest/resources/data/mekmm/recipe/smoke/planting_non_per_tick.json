@@ -1,0 +1,16 @@
+{
+  "type": "mekmm:planting",
+  "item_input": {
+    "count": 1,
+    "ingredient": "minecraft:stick"
+  },
+  "chemical_input": {
+    "amount": 1,
+    "ingredient": "mekmm:nutrient_solution"
+  },
+  "main_output": {
+    "count": 6,
+    "id": "minecraft:oak_log"
+  },
+  "per_tick_usage": false
+}

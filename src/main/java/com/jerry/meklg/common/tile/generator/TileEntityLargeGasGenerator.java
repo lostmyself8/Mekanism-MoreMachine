@@ -27,9 +27,11 @@ import mekanism.common.integration.computer.annotation.WrappingComputerMethod;
 import mekanism.common.inventory.container.MekanismContainer;
 import mekanism.common.inventory.container.slot.SlotOverlay;
 import mekanism.common.inventory.container.sync.SyncableDouble;
+import mekanism.common.inventory.container.sync.SyncableLong;
 import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.interfaces.IBoundingBlock;
+import mekanism.common.util.ChemicalUtils;
 import mekanism.common.util.WorldUtils;
 
 import net.minecraft.core.BlockPos;
@@ -49,6 +51,7 @@ import java.util.function.Predicate;
 
 public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator implements IBoundingBlock {
 
+    public static final int BURN_RATE_MULTIPLIER = 64;
     public static final Predicate<ChemicalResource> HAS_FUEL = chemical -> chemical.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel()) != null;
     /**
      * The tank this block is storing fuel in.
@@ -62,6 +65,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Nullable
     private ChemicalFuel cachedFuel = null;
     private double gasUsedLastTick;
+    private long productionRate;
     private double efficiencyMultiplier = 1.0;
     private int numPowering;
 
@@ -99,12 +103,12 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     @Override
     protected boolean onUpdateServer(ServerLevel level) {
+        updateFuel();
         boolean sendUpdatePacket = super.onUpdateServer(level);
         energySlot.drainContainerIntoSlot(null);
         fuelSlot.fillTankFromSlot(null);
         gasUsedLastTick = 0;
-
-        // updateEfficiency();
+        productionRate = 0;
 
         if (!fuelTank.isEmpty() && canFunction() && cachedFuel != null) {
 
@@ -122,6 +126,7 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
                         int mbThisTick = Math.ceilDiv(inserted, energyDensity);
                         if (fuelTank.extract(fuel, mbThisTick, transaction, AutomationType.INTERNAL) == mbThisTick) {
                             gasUsedLastTick = mbThisTick;
+                            productionRate = inserted;
                             transaction.commit();
                         }
                     }
@@ -161,15 +166,26 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     @Override
     public void addContainerTrackers(MekanismContainer container) {
         super.addContainerTrackers(container);
-        // container.track(SyncableLong.create(this::getGenerationRate, v -> generationRate = v));
         container.track(SyncableDouble.create(this::getUsed, v -> gasUsedLastTick = v));
-        // container.track(SyncableInt.create(this::getMaxBurnTicks, v -> maxBurnTicks = v));
-        // container.track(SyncableDouble.create(this::getEfficiencyMultiplier, v -> efficiencyMultiplier = v));
+        container.track(SyncableLong.create(this::getProductionRate, v -> productionRate = v));
     }
 
     @Nullable
     public ChemicalFuel getCachedFuel() {
+        updateFuel();
         return this.cachedFuel;
+    }
+
+    private void updateFuel() {
+        ChemicalResource resource = fuelTank.resource();
+        ChemicalFuel fuel = resource.isEmpty() ? null : resource.getFuel(level == null ? null : level.registryAccess());
+        cachedFuel = fuel == null ? null : new ChemicalFuel(MathUtils.multiplyClamped(fuel.maxBurnPerTick(), BURN_RATE_MULTIPLIER), fuel.energyDensity());
+    }
+
+    @Override
+    public long getMaxOutput() {
+        ChemicalFuel fuel = getCachedFuel();
+        return fuel == null ? MathUtils.multiplyClamped(2L * BURN_RATE_MULTIPLIER * 256, ChemicalUtils.hydrogenEnergyDensity()) : MathUtils.multiplyClamped(2L * fuel.maxBurnPerTick(), fuel.energyDensity());
     }
 
     @Override
@@ -190,6 +206,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     @Override
     public int getBoundingComparatorSignal(Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         Direction back = getOppositeDirection();
         if (offset.equals(new Vec3i(back.getStepX(), 0, back.getStepZ())) || offset.equals(new Vec3i(back.getStepX(), 1, back.getStepZ()))) {
             return getCurrentRedstoneLevel();
@@ -219,6 +237,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     @Override
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         if (capability == Capabilities.CHEMICAL.block()) {
             return notChemicalPort(side, offset);
         } else if (capability == Capabilities.ENERGY.block()) {
@@ -259,12 +279,8 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
 
     // Methods relating to IComputerTile
     @Override
-    protected long getProductionRate() {
-        // return MathUtils.clampToLong(getGenerationRate() * getUsed() * getMaxBurnTicks());
-        if (cachedFuel == null) {
-            return 0;
-        }
-        return MathUtils.clampToLong(cachedFuel.energyDensity() * getUsed());
+    public long getProductionRate() {
+        return productionRate;
     }
     // End methods IComputerTile
 
@@ -272,16 +288,14 @@ public class TileEntityLargeGasGenerator extends TileEntityMoreMachineGenerator 
     public class FuelTank extends VariableCapacityChemicalTank {
 
         protected FuelTank(@Nullable IContentsListener listener) {
-            super(MoreMachineConfig.generators.LGBGTankCapacity, ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrueBi(), HAS_FUEL, null, null, null, listener);
+            super(MoreMachineConfig.generators.LGBGTankCapacity, ConstantPredicates.notExternal(), ConstantPredicates.alwaysTrueBi(),
+                    resource -> resource.getFuel(level == null ? null : level.registryAccess()) != null, null, null, null, listener);
         }
 
         @Override
         protected void onContentsChanged(@NotNull LargeResourceStack<ChemicalResource> originalState) {
             super.onContentsChanged(originalState);
-            ChemicalResource newType = resource();
-            if (!newType.isEmpty() && !originalState.matches(newType)) {
-                cachedFuel = newType.getData(IMekanismDataMapTypes.INSTANCE.chemicalFuel());
-            }
+            updateFuel();
         }
     }
 }

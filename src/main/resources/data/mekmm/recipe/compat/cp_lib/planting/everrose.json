@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "cp_lib"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "everrose"
+    }
+  ],
+  "type": "mekmm:planting",
+  "chemical_input": {
+    "amount": 1,
+    "ingredient": "mekmm:nutrient_solution"
+  },
+  "item_input": {
+    "count": 1,
+    "ingredient": "cp_lib:everrose_seeds"
+  },
+  "main_output": {
+    "count": 1,
+    "id": "everrose:raw_everrose"
+  },
+  "per_tick_usage": true
+}

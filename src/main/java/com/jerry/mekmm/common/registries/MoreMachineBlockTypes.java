@@ -21,8 +21,9 @@ import com.jerry.mekmm.common.tile.machine.TileEntityWirelessTransmissionStation
 import com.jerry.mekmm.common.util.MoreMachineEnumUtils;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
-import mekanism.api.Upgrade;
 import mekanism.api.math.MathUtils;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.common.block.attribute.*;
 import mekanism.common.content.blocktype.BlockTypeTile;
 import mekanism.common.content.blocktype.Machine;
@@ -31,6 +32,8 @@ import mekanism.common.lib.transmitter.TransmissionType;
 import mekanism.common.registries.MekanismSounds;
 import mekanism.common.tier.FactoryTier;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import com.google.common.collect.HashBasedTable;
@@ -149,7 +152,7 @@ public class MoreMachineBlockTypes {
             .createMachine(() -> MoreMachineTileEntityTypes.AMBIENT_GAS_COLLECTOR, MoreMachineLang.DESCRIPTION_AMBIENT_GAS_COLLECTOR)
             .withGui(() -> MoreMachineContainerTypes.AMBIENT_GAS_COLLECTOR)
             .withEnergyConfig(() -> MathUtils.clampToInt(MoreMachineConfig.usage.ambientGasCollector.get()), MoreMachineConfig.storage.ambientGasCollector::get)
-            .withSupportedUpgrades(Upgrade.SPEED, Upgrade.ENERGY)
+            .with(new mekanism.common.block.attribute.AttributeUpgradeSupport(net.minecraft.tags.TagKey.create(mekanism.api.MekanismRegistries.Keys.UPGRADES, com.jerry.mekmm.Mekmm.rl("ambient_gas_collector"))))
             .withCustomShape(MoreMachineBlockShapes.AMBIENT_GAS_COLLECTOR)
             .withComputerSupport("ambientGasCollector")
             .replace(Attributes.ACTIVE)

@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "hbm"
+    }
+  ],
+  "type": "mekmm:planting",
+  "chemical_input": {
+    "amount": 1,
+    "ingredient": "mekmm:nutrient_solution"
+  },
+  "item_input": {
+    "count": 1,
+    "ingredient": "hbm:plant_flower_weed"
+  },
+  "main_output": {
+    "id": "hbm:plant_flower_weed",
+    "count": 1
+  },
+  "per_tick_usage": true
+}

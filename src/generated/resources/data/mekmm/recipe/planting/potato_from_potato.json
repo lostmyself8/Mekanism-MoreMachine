@@ -2,7 +2,7 @@
   "type": "mekmm:planting",
   "chemical_input": {
     "amount": 1,
-    "chemical": "mekmm:nutrient_solution"
+    "ingredient": "mekmm:nutrient_solution"
   },
   "item_input": {
     "count": 1,

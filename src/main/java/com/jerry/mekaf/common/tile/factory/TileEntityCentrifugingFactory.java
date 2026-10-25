@@ -5,7 +5,6 @@ import com.jerry.mekaf.common.upgrade.ChemicalToChemicalUpgradeData;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
-import mekanism.api.Upgrade;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.inventory.IInventorySlot;
@@ -14,6 +13,8 @@ import mekanism.api.recipes.ChemicalToChemicalRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.api.recipes.cache.CachedRecipe.OperationTracker.RecipeError;
 import mekanism.api.recipes.cache.OneInputCachedRecipe;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.client.recipe_viewer.type.IRecipeViewerRecipeType;
 import mekanism.client.recipe_viewer.type.RecipeViewerRecipeType;
 import mekanism.common.capabilities.holder.container.MekContainerHelper;
@@ -27,6 +28,7 @@ import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
@@ -116,8 +118,8 @@ public class TileEntityCentrifugingFactory extends TileEntityChemicalToChemicalF
     // 更改加速升级的显示的，默认是10x，气体工厂是256x，当然只有速度升级需要更改
     @NotNull
     @Override
-    public List<Component> getInfo(@NotNull Upgrade upgrade) {
-        return upgrade == Upgrade.SPEED ? UpgradeUtils.getExpScaledInfo(this, upgrade) : super.getInfo(upgrade);
+    public List<Component> getUpgradeWindowInfo(Holder<Upgrade> upgrade) {
+        return upgrade.is(UpgradeIds.SPEED) ? java.util.List.of(mekanism.common.MekanismLang.UPGRADES_EFFECT.translate(Math.pow(2, getUpgrades(upgrade)))) : super.getUpgradeWindowInfo(upgrade);
     }
 
     @Override

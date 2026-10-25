@@ -40,8 +40,13 @@ public class BasicLatheRecipe extends BasicItemStackToItemStackRecipe {
         return "cnc_lathe";
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(CNC_LATHE);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                getInput().display(), getOutputDisplay(), com.jerry.mekmm.api.recipes.PortRecipeDisplays.station(getToastSymbol())));
     }
 }

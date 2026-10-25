@@ -37,8 +37,15 @@ public class ChemicalReplicatorIRecipeSingle extends MMBasicChemicalChemicalToCh
         return null;
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(MoreMachineBlocks.FLUID_REPLICATOR);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                net.minecraft.world.item.crafting.display.SlotDisplay.Empty.INSTANCE,
+                net.minecraft.world.item.crafting.display.SlotDisplay.Empty.INSTANCE,
+                new net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay(net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(getToastSymbol()))));
     }
 }

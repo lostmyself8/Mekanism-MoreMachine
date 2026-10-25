@@ -1,6 +1,5 @@
 package com.jerry.mekmm.client.render;
 
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,13 +9,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class RenderLineHelper {
-
-    public static void renderLine(PoseStack poseStack, MultiBufferSource buffers, Vector3f start, Vector3f end, float r, float g, float b, float thickness) {
-        poseStack.pushPose();
-        poseStack.translate(start.x(), start.y(), start.z());
-        renderLine(poseStack.last(), buffers.getBuffer(RenderTypes.lightning()), new Vector3f(), new Vector3f(end).sub(start), r, g, b, thickness);
-        poseStack.popPose();
-    }
 
     public static void renderLine(Pose pose, VertexConsumer consumer, Vector3f start, Vector3f end, float r, float g, float b, float thickness) {
         Vector3f dir = new Vector3f(end).sub(start);

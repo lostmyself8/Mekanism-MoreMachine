@@ -692,5 +692,5 @@
 	"mekmm.configuration.section.mekanismmoremachine.generators.toml.title": "通用机械:：更多机器 - 发电机配置",
 	"mekmm.configuration.title": "通用机械:：更多机器配置",
 
-	"fml.menu.mods.info.description.mekmm": "为通用机械添加更多机器和工厂"
+	"neoforge.screen.mods.info.description.mekmm": "为通用机械添加更多机器和工厂"
 }

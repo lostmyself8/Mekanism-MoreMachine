@@ -3,7 +3,6 @@ package com.jerry.mekmm.client.render;
 import com.jerry.mekmm.client.renderer.MoreMachineRenderType;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,33 +15,41 @@ import org.joml.Matrix4f;
 
 public class RenderTickHandler {
 
-    @SubscribeEvent
-    public void renderWorld(RenderLevelStageEvent.AfterTranslucentBlocks event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null) return;
-        PoseStack poseStack = event.getPoseStack();
-        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-        Vec3 cameraPos = mc.gameRenderer.getMainCamera().position();
-        long gameTime = mc.level.getGameTime();
+    private static final net.minecraft.util.context.ContextKey<java.util.List<Highlight>> HIGHLIGHTS = new net.minecraft.util.context.ContextKey<>(com.jerry.mekmm.Mekmm.rl("highlights"));
 
-        poseStack.pushPose();
+    private record Highlight(BlockPos pos, float red, float green, float blue, float alpha) {}
+
+    @SubscribeEvent
+    public void extract(net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent event) {
+        java.util.List<Highlight> highlights = new java.util.ArrayList<>();
+        long gameTime = event.getLevel().getGameTime();
         for (BlockPos pos : BlockHighlightManager.getInstance().getHighlightedPositions()) {
             BlockHighlightManager.HighlightData data = BlockHighlightManager.getInstance().getHighlightData(pos);
             if (data != null) {
-                renderHighlight(poseStack, bufferSource, pos, cameraPos, data, gameTime);
+                highlights.add(new Highlight(pos.immutable(), data.getRed(), data.getGreen(), data.getBlue(), data.getAlpha(gameTime)));
             }
         }
-        poseStack.popPose();
-        bufferSource.endBatch(MoreMachineRenderType.LINES_NO_DEPTH);
+        event.getRenderState().setRenderData(HIGHLIGHTS, java.util.List.copyOf(highlights));
     }
 
-    private static void renderHighlight(PoseStack poseStack, MultiBufferSource bufferSource, BlockPos pos, Vec3 cameraPos, BlockHighlightManager.HighlightData data, long gameTime) {
-        poseStack.pushPose();
-        poseStack.translate(pos.getX() - cameraPos.x, pos.getY() - cameraPos.y, pos.getZ() - cameraPos.z);
-        VertexConsumer consumer = bufferSource.getBuffer(MoreMachineRenderType.LINES_NO_DEPTH);
-        float alpha = data.getAlpha(gameTime);
-        renderLineBox(poseStack, consumer, data.getRed(), data.getGreen(), data.getBlue(), alpha);
-        poseStack.popPose();
+    @SubscribeEvent
+    public void submit(net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent event) {
+        java.util.List<Highlight> highlights = event.getLevelRenderState().getRenderData(HIGHLIGHTS);
+        if (highlights == null) return;
+        PoseStack poseStack = event.getPoseStack();
+        Vec3 cameraPos = event.getLevelRenderState().cameraRenderState.pos;
+        for (Highlight highlight : highlights) {
+            poseStack.pushPose();
+            BlockPos pos = highlight.pos();
+            poseStack.translate(pos.getX() - cameraPos.x, pos.getY() - cameraPos.y, pos.getZ() - cameraPos.z);
+            event.getSubmitNodeCollector().submitCustomGeometry(poseStack, MoreMachineRenderType.LINES_NO_DEPTH,
+                    (pose, consumer) -> {
+                        PoseStack local = new PoseStack();
+                        local.last().set(pose);
+                        renderLineBox(local, consumer, highlight.red(), highlight.green(), highlight.blue(), highlight.alpha());
+                    });
+            poseStack.popPose();
+        }
     }
 
     private static void renderLineBox(PoseStack poseStack, VertexConsumer consumer, float red, float green, float blue, float alpha) {

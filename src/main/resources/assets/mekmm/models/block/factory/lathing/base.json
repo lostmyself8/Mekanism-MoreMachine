@@ -105,7 +105,7 @@
 				"west": { "uv": [13, 4, 16, 16], "texture": "#7" },
 				"down": {
 					"uv": [16, 13, 13, 16],
-					"texture": "#missing",
+					"texture": "#0",
 					"cullface": "down"
 				}
 			}

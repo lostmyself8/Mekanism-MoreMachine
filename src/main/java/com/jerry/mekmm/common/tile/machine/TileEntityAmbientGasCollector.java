@@ -8,13 +8,14 @@ import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.SerializationConstants;
-import mekanism.api.Upgrade;
 import mekanism.api.chemical.BasicChemicalTank;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalTank;
 import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.inventory.IInventorySlot;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.capabilities.holder.container.IContainerHolder;
@@ -33,9 +34,12 @@ import mekanism.common.inventory.slot.ChemicalInventorySlot;
 import mekanism.common.inventory.slot.EnergyInventorySlot;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.util.*;
+import mekanism.common.util.UpgradeUtils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
@@ -171,7 +175,7 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
             BlockState blockState = state.get();
             Block block = blockState.getBlock();
             if (isAir(block)) {
-                ChemicalStack chemicalStack = new ChemicalStack(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS, estimateIncrementAmount());
+                ChemicalStack chemicalStack = new ChemicalStack(level.registryAccess().getOrThrow(MoreMachineChemicals.UNSTABLE_DIMENSIONAL_GAS), estimateIncrementAmount());
                 chemicalTank.insert(ChemicalResource.of(chemicalStack), chemicalStack.amount(), transaction, AutomationType.INTERNAL);
                 return true;
             }
@@ -205,11 +209,11 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
     }
 
     @Override
-    public void recalculateUpgrades(Upgrade upgrade) {
-        super.recalculateUpgrades(upgrade);
-        if (upgrade == Upgrade.SPEED) {
-            ticksRequired = MekanismUtils.getTicks(this, BASE_TICKS_REQUIRED);
-            outputRate = BASE_OUTPUT_RATE * (1 + getUpgrades(Upgrade.SPEED));
+    public void recalculateUpgrades(HolderGetter<Upgrade> upgrades, Holder<Upgrade> upgrade, int totalInstalled) {
+        super.recalculateUpgrades(upgrades, upgrade, totalInstalled);
+        if (upgrade.is(UpgradeIds.SPEED)) {
+            ticksRequired = UpgradeUtils.getTicks(BASE_TICKS_REQUIRED, upgrade, totalInstalled);
+            outputRate = BASE_OUTPUT_RATE * (1 + getUpgrades(upgrades.getOrThrow(UpgradeIds.SPEED)));
         }
     }
 
@@ -225,8 +229,8 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism {
 
     @NotNull
     @Override
-    public List<Component> getInfo(@NotNull Upgrade upgrade) {
-        return UpgradeUtils.getMultScaledInfo(this, upgrade);
+    public List<Component> getUpgradeWindowInfo(Holder<Upgrade> upgrade) {
+        return super.getUpgradeWindowInfo(upgrade);
     }
 
     public MachineEnergyContainer<TileEntityAmbientGasCollector> energyContainer() {

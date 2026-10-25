@@ -62,7 +62,7 @@ public class RenderLargeWindGeneratorItem implements SpecialModelRenderer<LargeW
                 // If the dimension is blacklisted, don't try to tick it at all
                 tickingNormally = false;
             } else {
-                int ticks = Minecraft.getInstance().levelRenderer.getTicks();
+                int ticks = (int) (net.minecraft.util.Util.getMillis() / 50L);
                 if (lastTicksUpdated != ticks) {
                     angle = (angle + SPEED) % 360;
                     lastTicksUpdated = ticks;

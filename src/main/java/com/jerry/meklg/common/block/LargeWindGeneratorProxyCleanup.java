@@ -42,9 +42,9 @@ public final class LargeWindGeneratorProxyCleanup {
         int minY = sectionY << 4;
         int minZ = chunkPos.getMinBlockZ();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        for (int x = 0; x < LevelChunkSection.SECTION_WIDTH; x++) {
-            for (int y = 0; y < LevelChunkSection.SECTION_HEIGHT; y++) {
-                for (int z = 0; z < LevelChunkSection.SECTION_WIDTH; z++) {
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < 16; y++) {
+                for (int z = 0; z < 16; z++) {
                     BlockState state = section.getBlockState(x, y, z);
                     if (!(state.getBlock() instanceof BlockLargeWindGeneratorProxy)) {
                         continue;

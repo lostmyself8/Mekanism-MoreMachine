@@ -31,6 +31,10 @@ public enum MoreMachineChemicalConstants implements IChemicalConstant {
     }
 
     @Override
+    public net.minecraft.resources.ResourceKey<mekanism.api.chemical.Chemical> key() {
+        return net.minecraft.resources.ResourceKey.create(mekanism.api.MekanismRegistries.Keys.CHEMICAL, com.jerry.mekmm.Mekmm.rl(name));
+    }
+
     public String getName() {
         return name;
     }

@@ -69,7 +69,7 @@ public abstract class GuiConnectListHolder<TILE extends TileEntityMekanism & ITi
         // TODO: Do we want to make usages of this method eventually set the text to be rendered within the gui element
         // for the screen?
         if (leftScreen != null) {// Validate it was properly set
-            leftScreen.drawScaledScrollingString(GuiGraphicsExtractor, text, x, y, TextAlignment.LEFT, screenTextColor(), leftScreen.getXSize() - x, 5, false, 0.8F);
+            leftScreen.drawScaledScrollingString(GuiGraphicsExtractor, text, x, y, TextAlignment.LEFT, screenTextColor(), leftScreen.getWidth() - x, 5, false, 0.8F);
         }
     }
 

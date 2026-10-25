@@ -1,0 +1,15 @@
+{
+  "type": "mekmm:stamper",
+  "input": {
+    "count": 1,
+    "ingredient": "minecraft:iron_ingot"
+  },
+  "mold": {
+    "count": 1,
+    "ingredient": "minecraft:paper"
+  },
+  "output": {
+    "id": "minecraft:iron_nugget",
+    "count": 9
+  }
+}

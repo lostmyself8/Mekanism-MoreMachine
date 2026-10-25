@@ -11,9 +11,9 @@ import mekanism.api.AutomationType;
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
 import mekanism.api.chemical.BasicChemicalTank;
+import mekanism.api.chemical.ChemicalAttributeValidator;
 import mekanism.api.chemical.ChemicalResource;
 import mekanism.api.chemical.IChemicalTank;
-import mekanism.api.chemical.attribute.ChemicalAttributeValidator;
 import mekanism.api.datamaps.IMekanismDataMapTypes;
 import mekanism.api.datamaps.chemical.attribute.CooledCoolant;
 import mekanism.api.fluid.IFluidTank;
@@ -349,7 +349,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             productionMultiplier += check.getProductionMultiplier();
         }
         productionMultiplier /= solarChecks.length;
-        double sunBrightness = WorldUtils.getSunBrightness(level, getBlockPos().above(3));
+        double sunBrightness = mekanism.common.util.LightLevelUtils.getSunBrightness(level, getBlockPos().above(3));
         double directionMultiplier;
         if (isEastWestFacing()) {
             double angle = calculateSunRayGroundAngle();
@@ -383,7 +383,7 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
             coolantConversionEfficiency = 0;
             return CoolantConversion.NONE;
         }
-        ChemicalResource heatedCoolant = coolantType.heat();
+        ChemicalResource heatedCoolant = ChemicalResource.of(coolantType.otherVariant());
         if (!superheatedCoolantTank.isEmpty() && !superheatedCoolantTank.resource().equals(heatedCoolant)) {
             coolantConversionEfficiency = 0;
             return CoolantConversion.NONE;
@@ -704,6 +704,8 @@ public class TileEntitySolarHeatGenerator extends TileEntityMoreMachineGenerator
 
     @Override
     public boolean isOffsetCapabilityDisabled(@NotNull BlockCapability<?, @Nullable Direction> capability, Direction side, @NotNull Vec3i offset) {
+        // Mekanism 26.2 supplies the vector from the bounding block back to the controller.
+        offset = offset.multiply(-1);
         if (capability == Capabilities.ENERGY.block()) {
             return notEnergyPort(side, offset);
         } else if (capability == Capabilities.CHEMICAL.block()) {

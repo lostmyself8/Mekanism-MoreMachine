@@ -12,8 +12,9 @@ import com.jerry.meklm.common.tile.prefab.TileEntityLargeChemicalTank;
 import com.jerry.mekmm.common.block.attribute.MoreMachineBounding;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 
-import mekanism.api.Upgrade;
 import mekanism.api.math.MathUtils;
+import mekanism.api.upgrade.Upgrade;
+import mekanism.api.upgrade.UpgradeIds;
 import mekanism.common.MekanismLang;
 import mekanism.common.block.attribute.*;
 import mekanism.common.block.attribute.AttributeHasBounding.HandleBoundingBlock;
@@ -27,6 +28,8 @@ import mekanism.common.registries.MekanismSounds;
 import mekanism.common.util.ChemicalUtils;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -84,7 +87,7 @@ public class LargeMachineBlockTypes {
             .withBounding(new HandleBoundingBlock() {
 
                 @Override
-                public <DATA> boolean handle(Level level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<Level, BlockPos, DATA> consumer) {
+                public <LEVEL extends net.minecraft.world.level.LevelReader, DATA> boolean handle(LEVEL level, BlockPos pos, BlockState state, DATA data, TriBooleanFunction<LEVEL, BlockPos, DATA> consumer) {
                     BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
                     for (int x = -1; x <= 1; x++) {
                         for (int y = 0; y <= 1; y++) {
@@ -109,7 +112,7 @@ public class LargeMachineBlockTypes {
             .createMachine(() -> LargeMachineTileEntityTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR, MekanismLang.DESCRIPTION_SOLAR_NEUTRON_ACTIVATOR)
             .withGui(() -> LargeMachineContainerTypes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
             .without(AttributeParticleFX.class)
-            .withSupportedUpgrades(Upgrade.SPEED, Upgrade.MUFFLING)
+            .with(new mekanism.common.block.attribute.AttributeUpgradeSupport(net.minecraft.tags.TagKey.create(mekanism.api.MekanismRegistries.Keys.UPGRADES, com.jerry.mekmm.Mekmm.rl("large_solar_neutron_activator"))))
             .withCustomShape(LargeMachineBlockShapes.LARGE_SOLAR_NEUTRON_ACTIVATOR)
             .with(AttributeCustomSelectionBox.JSON)
             .withSideConfig(TransmissionType.CHEMICAL, TransmissionType.ITEM)

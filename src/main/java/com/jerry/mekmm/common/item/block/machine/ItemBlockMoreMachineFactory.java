@@ -39,24 +39,23 @@ public class ItemBlockMoreMachineFactory extends ItemBlockTooltip<BlockTile<?, ?
     }
 
     public ItemBlockMoreMachineFactory(BlockMoreFactoryMachine.BlockMoreMachineFactory<?> block, Properties properties) {
-        super(block, true, properties
+        super(block, properties
                 .component(MekanismDataComponents.SORTING, false)
                 .component(MekanismDataComponents.EJECTOR, AttachedEjector.DEFAULT)
                 .component(MekanismDataComponents.SIDE_CONFIG, getSideConfig(block)));
     }
 
-    @Override
     public FactoryTier getTier() {
         return Attribute.getTierNN(getBlock(), FactoryTier.class);
     }
 
     @Override
-    protected void addTypeDetails(@NotNull ItemStack stack, @NotNull ItemAccess itemAccess, @NotNull TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, @NotNull TooltipFlag flag) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, @NotNull TooltipFlag flag) {
         // Should always be present but validate it just in case
         MoreMachineAttributeFactoryType factoryType = Attribute.get(getBlock(), MoreMachineAttributeFactoryType.class);
         if (factoryType != null) {
             tooltipAdder.accept(MekanismLang.FACTORY_TYPE.translateColored(EnumColor.INDIGO, EnumColor.GRAY, factoryType.getMoreMachineFactoryType()));
         }
-        super.addTypeDetails(stack, itemAccess, context, tooltipDisplay, tooltipAdder, flag);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
     }
 }

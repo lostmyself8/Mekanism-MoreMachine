@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "#": "mekanism:ultimate_pressurized_tube",
     "A": "#mekanism:alloys/atomic",

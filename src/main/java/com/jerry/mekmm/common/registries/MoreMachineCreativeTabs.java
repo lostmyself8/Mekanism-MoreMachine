@@ -20,13 +20,12 @@ public class MoreMachineCreativeTabs {
 
     public static final MekanismDeferredHolder<CreativeModeTab, CreativeModeTab> MEKANISM_MORE_MACHINE = MM_CREATIVE_TABS.registerMain(MoreMachineLang.MEKANISM_MORE_MACHINE,
             MoreMachineItems.SCRAP, builder -> builder.displayItems((displayParameters, output) -> {
-                CreativeTabDeferredRegister.addToDisplay(MoreMachineItems.MM_ITEMS, output);
-                CreativeTabDeferredRegister.addToDisplay(MoreMachineBlocks.MM_BLOCKS, output);
-                CreativeTabDeferredRegister.addToDisplay(AdvancedFactoryBlocks.AF_BLOCKS, output);
-                CreativeTabDeferredRegister.addToDisplay(LargeMachineBlocks.LM_BLOCKS, output);
+                CreativeTabDeferredRegister.addToDisplay(MoreMachineItems.MM_ITEMS, displayParameters, output);
+                CreativeTabDeferredRegister.addToDisplay(MoreMachineBlocks.MM_BLOCKS, displayParameters, output);
+                CreativeTabDeferredRegister.addToDisplay(AdvancedFactoryBlocks.AF_BLOCKS, displayParameters, output);
+                CreativeTabDeferredRegister.addToDisplay(LargeMachineBlocks.LM_BLOCKS, displayParameters, output);
                 if (Mekmm.hooks.mekanismgenerators.isLoaded()) {
-                    CreativeTabDeferredRegister.addToDisplay(output, LargeGeneratorBlocks.LG_BLOCKS.getSecondaryEntries(),
-                            LargeGeneratorBlocks.LARGE_WIND_GENERATOR_PROXY::secondaryKeyMatches);
+                    CreativeTabDeferredRegister.addToDisplay(displayParameters, output, LargeGeneratorBlocks.LG_BLOCKS.getSecondaryEntries().stream().filter(holder -> !LargeGeneratorBlocks.LARGE_WIND_GENERATOR_PROXY.secondaryKeyMatches(holder)).toList());
                 }
             }));
 }

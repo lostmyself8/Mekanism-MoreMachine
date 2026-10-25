@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[11,)"
+license="MIT"
+[[mods]]
+modId="mekmm_smoketests"
+version="1.0.0"
+displayName="Mekmm Development Tests"
+[[dependencies.mekmm_smoketests]]
+modId="mekmm"
+type="required"
+versionRange="[2.0.0,)"
+ordering="AFTER"
+side="BOTH"

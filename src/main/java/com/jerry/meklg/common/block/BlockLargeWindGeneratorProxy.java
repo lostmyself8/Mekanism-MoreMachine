@@ -195,7 +195,7 @@ public class BlockLargeWindGeneratorProxy extends Block implements IStateFluidLo
     }
 
     private BlockHitResult withHitResultForMain(BlockHitResult hit, BlockPos mainPos) {
-        Vec3 location = mainPos.getCenter().relative(hit.getDirection(), 0.5);
+        Vec3 location = Vec3.atCenterOf(mainPos).relative(hit.getDirection(), 0.5);
         if (hit.getType() == Type.MISS) {
             return BlockHitResult.miss(location, hit.getDirection(), mainPos);
         }

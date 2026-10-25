@@ -28,7 +28,7 @@ import java.util.function.BiPredicate;
 @NullMarked
 public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implements BiPredicate<@NotNull ItemStack, @NotNull ItemStack> {
 
-    private static final Holder<Item> STAMPER = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "stamper"));
+    private static final Holder<Item> STAMPER = DeferredHolder.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Mekmm.MOD_ID, "cnc_stamper"));
 
     @Override
     public abstract boolean test(ItemStack input, ItemStack extra);
@@ -105,8 +105,13 @@ public abstract class StamperRecipe extends MekanismRecipe<RecipeInput> implemen
         return MoreMachineRecipeTypes.TYPE_STAMPING.value();
     }
 
-    @Override
     public ItemStack getToastSymbol() {
         return new ItemStack(STAMPER);
+    }
+
+    @Override
+    public java.util.List<net.minecraft.world.item.crafting.display.RecipeDisplay> display() {
+        return java.util.List.of(new mekanism.api.recipes.display.SimpleMachineRecipeDisplay(
+                new net.minecraft.world.item.crafting.display.SlotDisplay.Composite(java.util.List.of(getInput().display(), getMold().display())), PortRecipeDisplays.items(getOutputDefinition()), PortRecipeDisplays.station(getToastSymbol())));
     }
 }
