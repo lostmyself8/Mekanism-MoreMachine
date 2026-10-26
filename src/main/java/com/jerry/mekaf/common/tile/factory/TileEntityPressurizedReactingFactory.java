@@ -103,6 +103,16 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
             NOT_ENOUGH_SPACE_GAS_OUTPUT_ERROR);
 
     private static final int BASE_DURATION = 5 * SharedConstants.TICKS_PER_SECOND;
+    /**
+     * The duration of the currently cached recipe, also used as the base for the speed upgrade calculation.
+     */
+    private int baseTicksRequired = BASE_DURATION;
+
+    @Override
+    public int getBaseTicksRequired() {
+        // Note: The super constructor calls this before the field above gets initialized, so fall back to the default
+        return baseTicksRequired > 0 ? baseTicksRequired : BASE_DURATION;
+    }
 
     private PRCProcessInfo[] processInfoSlots;
 
@@ -213,8 +223,8 @@ public class TileEntityPressurizedReactingFactory extends TileEntityAdvancedFact
             recipeDuration = recipe.getDuration();
             recipeEnergyRequired = recipe.getEnergyRequired();
         }
-        boolean update = getTicksRequired() != recipeDuration;
-        setTicksRequired(recipeDuration);
+        boolean update = baseTicksRequired != recipeDuration;
+        baseTicksRequired = recipeDuration;
         if (update) {
             recalculateUpgrades(Upgrade.SPEED);
         }

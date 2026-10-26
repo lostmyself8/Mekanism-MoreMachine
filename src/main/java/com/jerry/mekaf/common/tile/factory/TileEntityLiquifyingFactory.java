@@ -56,6 +56,7 @@ import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -130,6 +131,12 @@ public class TileEntityLiquifyingFactory extends TileEntityAdvancedFactoryBase<B
         ejectorComponent = new TileComponentEjector(this);
         ejectorComponent.setOutputData(configComponent, TransmissionType.ITEM, TransmissionType.FLUID)
                 .setCanTankEject(tank -> tank == fluidTank);
+    }
+
+    @Override
+    public int getBaseTicksRequired() {
+        // Match the single block nutritional liquifier: 5 seconds per operation
+        return 5 * SharedConstants.TICKS_PER_SECOND;
     }
 
     @Override

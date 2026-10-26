@@ -47,6 +47,7 @@ import mekanism.common.upgrade.IUpgradeData;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.StatUtils;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -214,6 +215,12 @@ public class TileEntityDissolvingFactory extends TileEntityItemToChemicalFactory
                 .setOnFinish(this::markForSave)
                 .setOperatingTicksChanged(operatingTicks -> progress[cacheIndex] = operatingTicks)
                 .setBaselineMaxOperations(this::getOperationsPerTick);
+    }
+
+    @Override
+    public int getBaseTicksRequired() {
+        // Match the single block chemical dissolution chamber: 5 seconds per operation
+        return 5 * SharedConstants.TICKS_PER_SECOND;
     }
 
     @Override

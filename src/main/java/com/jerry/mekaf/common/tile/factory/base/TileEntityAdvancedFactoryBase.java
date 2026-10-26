@@ -78,6 +78,17 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
      * How many ticks it takes, by default, to run an operation.
      */
     protected static final int BASE_TICKS_REQUIRED = 10 * SharedConstants.TICKS_PER_SECOND;
+
+    /**
+     * How many ticks it takes, by default, for this factory to run an operation.
+     * <p>
+     * Note: This is called from the constructor, so overrides must not depend on instance state that is only
+     * initialized after the super constructor has finished.
+     */
+    public int getBaseTicksRequired() {
+        return BASE_TICKS_REQUIRED;
+    }
+
     public static final long MAX_CHEMICAL = 10L * FluidType.BUCKET_VOLUME;
     public static final int MAX_FLUID = 10 * FluidType.BUCKET_VOLUME;
 
@@ -138,6 +149,7 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
             recheckAllRecipeErrors[i] = TileEntityRecipeMachine.shouldRecheckAllErrors(this);
         }
         errorTracker = new ErrorTracker(errorTypes, globalErrorTypes, tier.processes);
+        ticksRequired = getBaseTicksRequired();
     }
 
     /**
@@ -399,8 +411,9 @@ public abstract class TileEntityAdvancedFactoryBase<RECIPE extends MekanismRecip
     public void recalculateUpgrades(Upgrade upgrade) {
         super.recalculateUpgrades(upgrade);
         if (upgrade == Upgrade.SPEED) {
-            ticksRequired = MekanismUtils.getTicks(this, BASE_TICKS_REQUIRED);
-            operationsPerTick = MekanismUtils.getOperationsPerTick(this, BASE_TICKS_REQUIRED, 1);
+            int baseTicks = getBaseTicksRequired();
+            ticksRequired = MekanismUtils.getTicks(this, baseTicks);
+            operationsPerTick = MekanismUtils.getOperationsPerTick(this, baseTicks, 1);
         }
     }
 

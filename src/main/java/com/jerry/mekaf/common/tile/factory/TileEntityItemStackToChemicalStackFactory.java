@@ -22,6 +22,7 @@ import mekanism.common.recipe.lookup.ISingleRecipeLookupHandler.ItemRecipeLookup
 import mekanism.common.recipe.lookup.cache.InputRecipeCache.SingleItem;
 import mekanism.common.tile.component.TileComponentEjector;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -81,6 +82,14 @@ public class TileEntityItemStackToChemicalStackFactory extends TileEntityItemToC
     @Override
     public boolean isValidInputItem(@NotNull ItemStack stack) {
         return containsRecipe(stack);
+    }
+
+    @Override
+    public int getBaseTicksRequired() {
+        return switch (getAdvancedFactoryType()) {
+            case OXIDIZING, PIGMENT_EXTRACTING -> 5 * SharedConstants.TICKS_PER_SECOND;
+            default -> super.getBaseTicksRequired();
+        };
     }
 
     @Override
