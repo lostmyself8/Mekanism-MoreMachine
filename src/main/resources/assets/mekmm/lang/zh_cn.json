@@ -460,6 +460,8 @@
   "connector.mekmm.cleared": "连接终止",
   "connector.mekmm.lose": "%1$s处没有方块，或该方块不是连接前的方块",
   "connector.mekmm.detail": "维度：%1$s；位置：%2$s",
+  "connector.mekmm.chain_result": "连锁到%1$s的%2$s方；连接：%3$s，断开：%4$s，失败：%5$s",
+  "connector.mekmm.chain_fail": "不能连锁到%1$s的%2$s方",
 
   "general.item_replicator.recipes": "物品复制机配方",
   "general.fluid_replicator.recipes": "液体复制机配方",

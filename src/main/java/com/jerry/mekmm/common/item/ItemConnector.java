@@ -2,11 +2,13 @@ package com.jerry.mekmm.common.item;
 
 import com.jerry.mekmm.Mekmm;
 import com.jerry.mekmm.api.MoreMachineItemAbilities;
+import com.jerry.mekmm.api.connector.ConnectResult;
+import com.jerry.mekmm.api.connector.ConnectorBinding;
+import com.jerry.mekmm.api.connector.IBinding;
 import com.jerry.mekmm.common.MoreMachineLang;
 import com.jerry.mekmm.common.item.ItemConnector.ConnectorMode;
 import com.jerry.mekmm.common.registries.MoreMachineDataComponents;
 import com.jerry.mekmm.common.tile.interfaces.ITileConnect;
-import com.jerry.mekmm.common.tile.prefab.TileEntityConnectableMachine;
 import com.jerry.mekmm.common.util.MoreMachineUtils;
 
 import mekanism.api.IIncrementalEnum;
@@ -22,7 +24,6 @@ import mekanism.common.MekanismLang;
 import mekanism.common.item.interfaces.IItemHUDProvider;
 import mekanism.common.lib.radial.IRadialModeItem;
 import mekanism.common.lib.transmitter.TransmissionType;
-import mekanism.common.tile.TileEntityBoundingBlock;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.WorldUtils;
 
@@ -34,6 +35,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -54,6 +56,7 @@ import net.neoforged.neoforge.common.util.Lazy;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,6 +68,8 @@ import java.util.function.IntFunction;
 public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode>, IItemHUDProvider {
 
     private static final Lazy<RadialData<ConnectorMode>> LAZY_RADIAL_DATA = Lazy.of(() -> IRadialDataHelper.INSTANCE.dataForEnum(Mekmm.rl("connector_mode"), ConnectorMode.class));
+    /** 单点和连锁绑定共用的单目标操作。 */
+    private static final IBinding BINDING = new ConnectorBinding();
 
     public ItemConnector(Properties properties) {
         super(properties.rarity(Rarity.UNCOMMON).stacksTo(1)
@@ -120,62 +125,28 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
             if (!(tile instanceof ITileConnect)) {
                 return InteractionResult.CONSUME;
             }
-            if (!world.isClientSide) {
-                stack.set(MoreMachineDataComponents.CONNECT_FROM, GlobalPos.of(world.dimension(), pos));
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_FROM.translate(EnumColor.INDIGO, TextComponentUtil.translate(block.getDescriptionId())), true);
+            if (world.isClientSide) {
+                return InteractionResult.sidedSuccess(true);
             }
+            stack.set(MoreMachineDataComponents.CONNECT_FROM, GlobalPos.of(world.dimension(), pos));
+            player.displayClientMessage(MoreMachineLang.CONNECTOR_FROM.translate(EnumColor.INDIGO, TextComponentUtil.translate(block.getDescriptionId())), true);
+            return InteractionResult.sidedSuccess(false);
         } else {
             // 禁用交互效果在MoreMachinePlayerTracker
             GlobalPos globalPos = getStoredPosition(stack);
             if (globalPos == null) {
                 return InteractionResult.CONSUME;
             }
-            // 如果跨纬度
-            if (world.dimension() != globalPos.dimension()) {
-                // Ciallo～(∠・ω< )⌒★
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_ACROSS_DIMENSION.translate(EnumColor.DARK_RED), true);
-                return InteractionResult.CONSUME;
+            if (world.isClientSide) {
+                return InteractionResult.sidedSuccess(true);
             }
-            // 如果绑定到自己
-            if (pos.equals(globalPos.pos())) {
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
-                return InteractionResult.CONSUME;
-            }
-            // 防止出现端口在绑定方块上的情况。这个情况应当视为连接自身
-            if (tile instanceof TileEntityBoundingBlock boundingBlock) {
-                BlockPos mainPos = boundingBlock.getMainPos();
-                if (mainPos.equals(globalPos.pos())) {
-                    player.displayClientMessage(MoreMachineLang.CONNECTOR_SELF.translate(EnumColor.DARK_RED), true);
-                    return InteractionResult.CONSUME;
-                }
-            }
-            // 获取保存位置的方块实体
-            TileEntityConnectableMachine linkTile = WorldUtils.getTileEntity(TileEntityConnectableMachine.class, world, globalPos.pos(), true);
-            if (linkTile != null) {
-                Component translateName = TextComponentUtil.translate(block.getDescriptionId());
-                switch (linkTile.connectOrCut(pos, side, getMode(stack).transmissionType)) {
-                    case CONNECT -> {
-                        player.displayClientMessage(MoreMachineLang.CONNECTOR_TO.translate(EnumColor.INDIGO, translateName, EnumColor.INDIGO, side), true);
-                        return InteractionResult.SUCCESS;
-                    }
-                    case DISCONNECT -> {
-                        player.displayClientMessage(MoreMachineLang.CONNECTOR_DISCONNECT.translate(EnumColor.INDIGO, translateName, EnumColor.INDIGO, side), true);
-                        return InteractionResult.SUCCESS;
-                    }
-                    case CONNECT_FAIL -> {
-                        // 连接到没有能力或者不能连接的方块上时发出的消息
-                        player.displayClientMessage(MoreMachineLang.CONNECTOR_FAIL.translate(EnumColor.DARK_RED, translateName, EnumColor.DARK_RED, side), true);
-                        return InteractionResult.FAIL;
-                    }
-                }
-                return InteractionResult.PASS;
-            } else {
-                // 绑定后中心方块被拆除
-                player.displayClientMessage(MoreMachineLang.CONNECTOR_LOSE.translate(EnumColor.DARK_RED, MoreMachineUtils.formatPos(globalPos.pos())), true);
-                return InteractionResult.FAIL;
-            }
+            ConnectResult result = BINDING.bind((ServerPlayer) player, world, globalPos, pos, side, getMode(stack).transmissionType, true);
+            return switch (result) {
+                case CONNECT, DISCONNECT -> InteractionResult.SUCCESS;
+                case CONNECTOR_SELF, ACROSS_DIMENSION -> InteractionResult.CONSUME;
+                case CONNECT_FAIL, SOURCE_LOST -> InteractionResult.FAIL;
+            };
         }
-        return InteractionResult.sidedSuccess(world.isClientSide);
     }
 
     @Override
@@ -243,6 +214,7 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
         private final String serializedName;
         private final ILangEntry langEntry;
         @Nullable
+        @Getter
         private final TransmissionType transmissionType;
         private final EnumColor color;
         private final ResourceLocation icon;
@@ -265,12 +237,12 @@ public class ItemConnector extends Item implements IRadialModeItem<ConnectorMode
         }
 
         @Override
-        public @NotNull Component sliceName() {
+        public Component sliceName() {
             return transmissionType != null ? transmissionType.getLangEntry().translateColored(color) : getTextComponent();
         }
 
         @Override
-        public @NotNull ResourceLocation icon() {
+        public ResourceLocation icon() {
             return icon;
         }
 

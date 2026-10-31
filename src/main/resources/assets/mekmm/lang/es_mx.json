@@ -460,6 +460,8 @@
   "connector.mekmm.cleared": "Conexión terminada",
   "connector.mekmm.lose": "No hay ningún bloque en %1$s, o el bloque no es el mismo que antes de conectar",
   "connector.mekmm.detail": "Dimensión: %1$s; Posición del bloque: %2$s",
+  "connector.mekmm.chain_result": "Encadenado al lado %2$s de %1$s; conexiones: %3$s, desconexiones: %4$s, fallos: %5$s",
+  "connector.mekmm.chain_fail": "No se puede encadenar al lado %2$s de %1$s",
 
   "general.item_replicator.recipes": "Receta para el replicador de objetos ",
   "general.fluid_replicator.recipes": "Receta para el replicador de fluidos",

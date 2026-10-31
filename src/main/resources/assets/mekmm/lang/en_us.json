@@ -460,6 +460,8 @@
   "connector.mekmm.cleared": "Connection terminated",
   "connector.mekmm.lose": "There is no block at %1$s, or the block is not the one before connecting",
   "connector.mekmm.detail": "Dimension: %1$s; BlockPos: %2$s",
+  "connector.mekmm.chain_result": "Chained to %1$s's %2$s side; connected: %3$s, disconnected: %4$s, failed: %5$s",
+  "connector.mekmm.chain_fail": "Can't chain to %1$s's %2$s side",
 
   "general.item_replicator.recipes": "Recipe for Item Replicator ",
   "general.fluid_replicator.recipes": "Recipe for Fluid Replicator",

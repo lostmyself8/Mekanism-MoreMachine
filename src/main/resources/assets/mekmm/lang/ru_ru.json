@@ -460,6 +460,8 @@
   "connector.mekmm.cleared": "Соединение разорвано",
   "connector.mekmm.lose": "На %1$s нет блока, или блок не тот, что был до подключения",
   "connector.mekmm.detail": "Измерение: %1$s; Позиция: %2$s",
+  "connector.mekmm.chain_result": "Цепочка направлена к стороне %2$s блока %1$s; подключено: %3$s, отключено: %4$s, ошибок: %5$s",
+  "connector.mekmm.chain_fail": "Не удалось направить цепочку к стороне %2$s блока %1$s",
 
   "general.item_replicator.recipes": "Рецепт для Репликатора предметов",
   "general.fluid_replicator.recipes": "Рецепт для Жидкостного репликатора",
