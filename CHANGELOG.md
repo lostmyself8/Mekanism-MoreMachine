@@ -1,5 +1,20 @@
 # ChangeLog
 
+## Version [v1.4.2](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.4.1-1.21.1...v1.4.2-1.21.1)
+### Added
+
+- 使得连接器适配FTB Ultimité by @lostmyself8 in [#260](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/260)
+
+### Fixed
+
+- Fix some known issues by @lostmyself8 in [#243](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/243)
+- fix #241 by @lostmyself8 in [#253](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/253)
+- Fix large-machine hover outlines for sloped and overlapping geometry by @Japples0 in [#249](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/249)
+- fix #241 #245 #250 #254 by @lostmyself8 in [#255](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/255)
+- 修复进阶工厂与对应原版单机之间的处理耗时不一致 by @BlueMap1e in [#259](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/259)
+- 调整FTB Ultimité的检测顺序 by @lostmyself8 in [#261](https://github.com/lostmyself8/Mekanism-MoreMachine/pull/261)
+
+ 
 - no changes
 ## Version [v1.4.0](https://github.com/lostmyself8/Mekanism-MoreMachine/compare/v1.3.3-1.21.1...v1.4.0-1.21)
 ### Added
