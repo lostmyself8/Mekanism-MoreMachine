@@ -1,7 +1,5 @@
 package com.jerry.mekmm.common.integration.ultimine;
 
-import com.jerry.mekmm.Mekmm;
-
 import dev.ftb.mods.ftbultimine.api.rightclick.RegisterRightClickHandlerEvent;
 
 /**
@@ -12,8 +10,6 @@ public final class UltimineCompat {
     private UltimineCompat() {}
 
     public static void init() {
-        if (Mekmm.hooks.ftbUltimine.isLoaded()) {
-            RegisterRightClickHandlerEvent.REGISTER.register(dispatcher -> dispatcher.registerHandler(new ConnectorHandler()));
-        }
+        RegisterRightClickHandlerEvent.REGISTER.register(dispatcher -> dispatcher.registerHandler(new ConnectorHandler()));
     }
 }
