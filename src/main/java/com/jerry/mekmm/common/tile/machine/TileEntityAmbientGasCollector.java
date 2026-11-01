@@ -1,6 +1,7 @@
 package com.jerry.mekmm.common.tile.machine;
 
 import com.jerry.mekmm.common.config.AtmosphereConfig;
+import com.jerry.mekmm.common.config.AtmosphereConfig.AtmosphereEntry;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.registries.MoreMachineBlocks;
 import com.jerry.mekmm.common.registries.MoreMachineGas;
@@ -154,8 +155,8 @@ public class TileEntityAmbientGasCollector extends TileEntityMekanism implements
             Block block = blockState.getBlock();
             if (isAir(block)) {
                 // 查询维度大气配置：若当前维度有自定义大气成分，使用该气体
-                ResourceLocation dim = this.level.dimension().location();
-                AtmosphereConfig.AtmosphereEntry entry = AtmosphereConfig.getEntry(dim);
+                ResourceLocation dim = level.dimension().location();
+                AtmosphereEntry entry = AtmosphereConfig.getEntry(dim);
 
                 Gas outputGas;
                 int amount;
