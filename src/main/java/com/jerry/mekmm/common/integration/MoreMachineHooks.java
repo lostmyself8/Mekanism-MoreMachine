@@ -32,6 +32,7 @@ public final class MoreMachineHooks {
 
     public final IntegrationInfo evolvedMekanism;
     public final IntegrationInfo mekanismgenerators;
+    public final IntegrationInfo ftbUltimine;
 
     public MoreMachineHooks() {
         ModList modList = ModList.get();
@@ -39,5 +40,6 @@ public final class MoreMachineHooks {
         Predicate<String> loadedCheck = modList == null ? modId -> false : modList::isLoaded;
         evolvedMekanism = new IntegrationInfo("evolvedmekanism", loadedCheck);
         mekanismgenerators = new IntegrationInfo("mekanismgenerators", loadedCheck);
+        ftbUltimine = new IntegrationInfo("ftbultimine", loadedCheck);
     }
 }

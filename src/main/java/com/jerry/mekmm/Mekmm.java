@@ -12,6 +12,7 @@ import com.jerry.meklm.common.registries.LargeMachineTileEntityTypes;
 import com.jerry.mekmm.common.MoreMachinePlayerTracker;
 import com.jerry.mekmm.common.config.MoreMachineConfig;
 import com.jerry.mekmm.common.integration.MoreMachineHooks;
+import com.jerry.mekmm.common.integration.ultimine.UltimineCompat;
 import com.jerry.mekmm.common.network.MoreMachinePacketHandler;
 import com.jerry.mekmm.common.registries.*;
 
@@ -117,6 +118,7 @@ public class Mekmm implements IModModule {
         // Initialization notification
         LOGGER.info("Version {} initializing...", versionNumber);
         HolidayManager.init();
+        UltimineCompat.init();
         // Register player tracker
         NeoForge.EVENT_BUS.register(new MoreMachinePlayerTracker());
     }

@@ -460,6 +460,8 @@
   "connector.mekmm.cleared": "З’єднання розірвано",
   "connector.mekmm.lose": "За координатами %1$s немає блоку, або він змінився з моменту підключення",
   "connector.mekmm.detail": "Вимір: %1$s; Координати: %2$s",
+  "connector.mekmm.chain_result": "Ланцюжок спрямовано до сторони %2$s блоку %1$s; підключено: %3$s, відключено: %4$s, помилок: %5$s",
+  "connector.mekmm.chain_fail": "Не вдалося спрямувати ланцюжок до сторони %2$s блоку %1$s",
 
   "general.item_replicator.recipes": "Рецепти реплікатора предметів",
   "general.fluid_replicator.recipes": "Рецепти реплікатора рідин",

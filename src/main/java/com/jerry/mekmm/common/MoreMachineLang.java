@@ -46,6 +46,8 @@ public enum MoreMachineLang implements ILangEntry {
     CONNECTOR_CLEARED("connector", "cleared"),
     CONNECTOR_LOSE("connector", "lose"),
     CONNECTOR_DETAIL("connector", "detail"),
+    CONNECTOR_CHAIN_RESULT("connector", "chain_result"),
+    CONNECTOR_CHAIN_FAIL("connector", "chain_fail"),
     // Generator
     INACTIVE("large_wind_generator", "inactive"),
     SAME_BLOCK_NEARBY("large_wind_generator", "same_block_nearby"),
