@@ -118,7 +118,9 @@ public class Mekmm implements IModModule {
         // Initialization notification
         LOGGER.info("Version {} initializing...", versionNumber);
         HolidayManager.init();
-        UltimineCompat.init();
+        if (Mekmm.hooks.ftbUltimine.isLoaded()) {
+            UltimineCompat.init();
+        }
         // Register player tracker
         NeoForge.EVENT_BUS.register(new MoreMachinePlayerTracker());
     }
