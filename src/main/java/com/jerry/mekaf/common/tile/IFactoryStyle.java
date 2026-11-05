@@ -33,6 +33,6 @@ public interface IFactoryStyle {
      * @return 额外资源条数量
      */
     default int getBarCount() {
-        return 1;
+        return hasExtraResourceBar() ? 1 : 0;
     }
 }
