@@ -3,7 +3,7 @@ package com.jerry.meklm.common.tile.machine;
 import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.fluid.AdjustableFluidTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.INotNeedConfig;
+import com.jerry.meklm.common.tile.IConfiguratorExempt;
 
 import mekanism.api.*;
 import mekanism.api.chemical.BasicChemicalTank;
@@ -89,7 +89,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 
-public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachine<RotaryRecipe> implements IHasMode, IBoundingBlock, INotNeedConfig {
+public class TileEntityLargeRotaryCondensentrator extends TileEntityRecipeMachine<RotaryRecipe> implements IHasMode, IBoundingBlock, IConfiguratorExempt {
 
     public static final RecipeError NOT_ENOUGH_FLUID_INPUT_ERROR = RecipeError.create();
     public static final RecipeError NOT_ENOUGH_GAS_INPUT_ERROR = RecipeError.create();

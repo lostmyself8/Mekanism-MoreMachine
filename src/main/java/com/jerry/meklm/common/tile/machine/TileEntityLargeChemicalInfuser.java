@@ -2,7 +2,7 @@ package com.jerry.meklm.common.tile.machine;
 
 import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
 import com.jerry.meklm.common.registries.LargeMachineBlocks;
-import com.jerry.meklm.common.tile.INotNeedConfig;
+import com.jerry.meklm.common.tile.IConfiguratorExempt;
 
 import mekanism.api.IContentsListener;
 import mekanism.api.RelativeSide;
@@ -73,7 +73,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<ChemicalChemicalToChemicalRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<ChemicalChemicalToChemicalRecipe>, INotNeedConfig {
+public class TileEntityLargeChemicalInfuser extends TileEntityRecipeMachine<ChemicalChemicalToChemicalRecipe> implements IBoundingBlock, EitherSideChemicalRecipeLookupHandler<ChemicalChemicalToChemicalRecipe>, IConfiguratorExempt {
 
     private static final List<RecipeError> TRACKED_ERROR_TYPES = List.of(
             RecipeError.NOT_ENOUGH_ENERGY,

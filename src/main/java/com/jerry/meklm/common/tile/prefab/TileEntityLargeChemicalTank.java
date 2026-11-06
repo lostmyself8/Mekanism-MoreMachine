@@ -3,7 +3,7 @@ package com.jerry.meklm.common.tile.prefab;
 import com.jerry.meklm.api.tier.ILargeChemicalTankTier;
 import com.jerry.meklm.common.capabilities.holder.chemical.AdjustableChemicalTankHelper;
 import com.jerry.meklm.common.capabilities.holder.chemical.LargeChemicalTankChemicalTank;
-import com.jerry.meklm.common.tile.INotNeedConfig;
+import com.jerry.meklm.common.tile.IConfiguratorExempt;
 
 import mekanism.api.Action;
 import mekanism.api.IContentsListener;
@@ -61,7 +61,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> extends TileEntityConfigurableMachine implements IHasGasMode, IBoundingBlock, INotNeedConfig {
+public class TileEntityLargeChemicalTank<TIER extends ILargeChemicalTankTier> extends TileEntityConfigurableMachine implements IHasGasMode, IBoundingBlock, IConfiguratorExempt {
 
     private static final RelativeSide[] CHEMICAL_SIDES = { RelativeSide.TOP };
 
