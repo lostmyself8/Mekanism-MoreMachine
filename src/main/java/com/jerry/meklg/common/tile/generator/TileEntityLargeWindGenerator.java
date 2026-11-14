@@ -26,7 +26,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import com.jerry.meklg.common.registries.LargeGeneratorBlocks;
@@ -193,30 +196,17 @@ public class TileEntityLargeWindGenerator extends TileEntityMoreMachineGenerator
         // 使用移位运算更快
         int selfChunkX = getBlockPos().getX() >> 4;
         int selfChunkZ = getBlockPos().getZ() >> 4;
-        int minY = level.getMinBuildHeight();
-        int maxY = level.getMaxBuildHeight();
-
-        BlockPos.MutableBlockPos candidate = new BlockPos.MutableBlockPos();
         for (int cx = selfChunkX - CHUNK_RADIUS; cx <= selfChunkX + CHUNK_RADIUS; cx++) {
             for (int cz = selfChunkZ - CHUNK_RADIUS; cz <= selfChunkZ + CHUNK_RADIUS; cz++) {
-                // 跳过没加载的区块
-                if (!level.isLoaded(candidate.set(cx << 4, getBlockPos().getY(), cz << 4))) {
+                // 跳过没加载的区块，且不触发区块加载
+                if (!(level.getChunk(cx, cz, ChunkStatus.FULL, false) instanceof LevelChunk chunk)) {
                     continue;
                 }
-                int startX = cx << 4;
-                int startZ = cz << 4;
-                for (int x = startX; x < startX + 16; x++) {
-                    for (int z = startZ; z < startZ + 16; z++) {
-                        for (int y = minY; y < maxY; y++) {
-                            candidate.set(x, y, z);
-                            // Skip self
-                            if (candidate.equals(getBlockPos())) {
-                                continue;
-                            }
-                            if (level.getBlockState(candidate).getBlock() == getBlockState().getBlock()) {
-                                return true;
-                            }
-                        }
+                // 直接遍历区块自带的 BlockEntity 索引，代替逐方块扫描
+                // 大型风机只有主块挂本类BE，包围块不匹配，因此语义与按方块类型扫描一致
+                for (BlockEntity blockEntity : chunk.getBlockEntities().values()) {
+                    if (blockEntity != this && blockEntity instanceof TileEntityLargeWindGenerator && !blockEntity.isRemoved()) {
+                        return true;
                     }
                 }
             }
